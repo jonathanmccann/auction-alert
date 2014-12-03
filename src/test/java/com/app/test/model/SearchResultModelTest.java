@@ -19,16 +19,16 @@ public class SearchResultModelTest {
 
 	@Test
 	public void testConstructor() throws Exception {
-		Map<String, String> sellerInformation = new HashMap<String, String>();
-
-		sellerInformation.put("sellerUsername", "test");
-		sellerInformation.put("sellerFeedbackPercentage", "98.7");
-
 		Date endingTime = new Date();
 
 		SearchResultModel searchResultModel = new SearchResultModel(
-			"itemTitle", "itemDetails", "14.99", "http://www.ebay.com/itm/1234",
-			sellerInformation, endingTime, "Buy It Now");
+			"1234", "itemTitle", "itemDetails", 14.99, 14.99,
+			"http://www.ebay.com/itm/1234", endingTime,
+			"Buy It Now");
+
+		String itemId = searchResultModel.getItemId();
+
+		Assert.assertEquals("1234", itemId);
 
 		String itemTitle = searchResultModel.getItemTitle();
 
@@ -38,18 +38,17 @@ public class SearchResultModelTest {
 
 		Assert.assertEquals("itemDetails", itemDetails);
 
-		String itemPrice = searchResultModel.getItemPrice();
+		double itemAuctionPrice = searchResultModel.getItemAuctionPrice();
 
-		Assert.assertEquals("14.99", itemPrice);
+		Assert.assertEquals(14.99, itemAuctionPrice, 0);
+
+		double itemFixedPrice = searchResultModel.getItemFixedPrice();
+
+		Assert.assertEquals(14.99, itemFixedPrice, 0);
 
 		String itemURL = searchResultModel.getItemURL();
 
 		Assert.assertEquals("http://www.ebay.com/itm/1234", itemURL);
-
-		Map<String, String> retrievedSellerInformation =
-			searchResultModel.getSellerInformation();
-
-		Assert.assertEquals(sellerInformation, retrievedSellerInformation);
 
 		Date retrievedEndingTime = searchResultModel.getItemEndingTime();
 
@@ -58,6 +57,15 @@ public class SearchResultModelTest {
 		String typeOfAuction = searchResultModel.getTypeOfAuction();
 
 		Assert.assertEquals("Buy It Now", typeOfAuction);
+	}
+
+	@Test
+	public void testSetAndGetItemId() throws Exception {
+		_searchResultModel.setItemId("1234");
+
+		String itemId = _searchResultModel.getItemId();
+
+		Assert.assertEquals("1234", itemId);
 	}
 
 	@Test
@@ -79,12 +87,21 @@ public class SearchResultModelTest {
 	}
 
 	@Test
-	public void testSetAndGetItemPrice() throws Exception {
-		_searchResultModel.setItemPrice("14.99");
+	public void testSetAndGetItemAuctionPrice() throws Exception {
+		_searchResultModel.setItemAuctionPrice(14.99);
 
-		String itemPrice = _searchResultModel.getItemPrice();
+		double itemAuctionPrice = _searchResultModel.getItemAuctionPrice();
 
-		Assert.assertEquals("14.99", itemPrice);
+		Assert.assertEquals(14.99, itemAuctionPrice, 0);
+	}
+
+	@Test
+	public void testSetAndGetItemFixedPrice() throws Exception {
+		_searchResultModel.setItemFixedPrice(14.99);
+
+		double itemFixedPrice = _searchResultModel.getItemFixedPrice();
+
+		Assert.assertEquals(14.99, itemFixedPrice, 0);
 	}
 
 	@Test
@@ -94,21 +111,6 @@ public class SearchResultModelTest {
 		String itemURL = _searchResultModel.getItemURL();
 
 		Assert.assertEquals("http://www.ebay.com/itm/1234", itemURL);
-	}
-
-	@Test
-	public void testSetAndGetSellerInformation() throws Exception {
-		Map<String, String> sellerInformation = new HashMap<String, String>();
-
-		sellerInformation.put("sellerUsername", "test");
-		sellerInformation.put("sellerFeedbackPercentage", "98.7");
-
-		_searchResultModel.setSellerInformation(sellerInformation);
-
-		Map<String, String> retrievedSellerInformation =
-			_searchResultModel.getSellerInformation();
-
-		Assert.assertEquals(sellerInformation, retrievedSellerInformation);
 	}
 
 	@Test

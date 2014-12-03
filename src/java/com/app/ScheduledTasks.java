@@ -1,15 +1,46 @@
 package com.app;
 
+import com.app.model.SearchResultModel;
+import com.app.model.eBaySearchResultModel;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @EnableScheduling
 public class ScheduledTasks {
 
-	@Scheduled(fixedRate = 5000)
-	public void performSearch() {
-		System.out.println("The current time is: " + new Date());
+	@Scheduled(fixedRate = 300000)
+	public static void main() {
+		// Get search queries
+		// Call performSearch on queries
+		// Call filterSearchResults to remove already seen results
+		// Call textSearchResults to deliver new results
+
+		List<String> searchQueries = new ArrayList<String>();
+
+		searchQueries.add("test search query");
+
+		performSearch(searchQueries);
 	}
+
+	private static List<SearchResultModel> performSearch(List<String> searchQueries) {
+		return _eBaySearchResultModel.geteBaySearchResults(searchQueries);
+	}
+
+	private List<SearchResultModel> filterSearchResults(List<SearchResultModel> searchResultModels) {
+		// Get last five results from database
+		// Remove all from passed in list
+		// Return list
+
+		return searchResultModels;
+	}
+
+	private void textSearchResults(List<SearchResultModel> searchResultModels) {
+		// Text search results to appropriate phone number
+	}
+
+	private static eBaySearchResultModel _eBaySearchResultModel =
+		new eBaySearchResultModel();
 }

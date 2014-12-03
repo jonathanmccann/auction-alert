@@ -14,21 +14,31 @@
       <version>4.11</version>
       <scope>app.test</scope>
     </dependency>
-	  <dependency>
-		  <groupId>org.springframework</groupId>
-		  <artifactId>spring-context</artifactId>
-		  <version>4.0.0.RELEASE</version>
-	  </dependency>
-	  <dependency>
-		  <groupId>org.springframework</groupId>
-		  <artifactId>spring-web</artifactId>
-		  <version>4.0.0.RELEASE</version>
-	  </dependency>
-	  <dependency>
-		  <groupId>org.springframework</groupId>
-		  <artifactId>spring-webmvc</artifactId>
-		  <version>4.0.0.RELEASE</version>
-	  </dependency>
+	<dependency>
+	  <groupId>org.springframework</groupId>
+	  <artifactId>spring-context</artifactId>
+	  <version>4.0.0.RELEASE</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.springframework</groupId>
+	  <artifactId>spring-web</artifactId>
+	  <version>4.0.0.RELEASE</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.springframework</groupId>
+	  <artifactId>spring-webmvc</artifactId>
+	  <version>4.0.0.RELEASE</version>
+	</dependency>
+	<dependency>
+	  <groupId>log4j</groupId>
+	  <artifactId>log4j</artifactId>
+	  <version>1.2.16</version>
+	</dependency>
+	<dependency>
+	  <groupId>com.ebay</groupId>
+	  <artifactId>finding</artifactId>
+	  <version>1.0</version>
+	</dependency>
   </dependencies>
   <build>
 	<sourceDirectory>src/java</sourceDirectory>

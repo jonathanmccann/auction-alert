@@ -7,18 +7,26 @@ public class SearchResultModel {
 	public SearchResultModel() {
 	}
 
-	public SearchResultModel(String itemTitle, String itemDetails,
-		String itemPrice, String itemURL,
-		Map<String, String> sellerInformation, Date itemEndingTime,
-		String typeOfAuction) {
+	public SearchResultModel(String itemId, String itemTitle, String itemDetails,
+		double itemAuctionPrice, double itemFixedPrice, String itemURL,
+		Date itemEndingTime, String typeOfAuction) {
 
+		this._itemId = itemId;
 		this._itemTitle = itemTitle;
 		this._itemDetails = itemDetails;
-		this._itemPrice = itemPrice;
+		this._itemAuctionPrice = itemAuctionPrice;
+		this._itemFixedPrice = itemFixedPrice;
 		this._itemURL = itemURL;
-		this._sellerInformation = sellerInformation;
 		this._itemEndingTime = itemEndingTime;
 		this._typeOfAuction = typeOfAuction;
+	}
+
+	public String getItemId() {
+		return _itemId;
+	}
+
+	public void setItemId(String itemId) {
+		this._itemId = itemId;
 	}
 
 	public String getItemTitle() {
@@ -37,12 +45,20 @@ public class SearchResultModel {
 		this._itemDetails = itemDetails;
 	}
 
-	public String getItemPrice() {
-		return _itemPrice;
+	public double getItemAuctionPrice() {
+		return _itemAuctionPrice;
 	}
 
-	public void setItemPrice(String itemPrice) {
-		this._itemPrice = itemPrice;
+	public void setItemAuctionPrice(double itemPrice) {
+		this._itemAuctionPrice = itemPrice;
+	}
+
+	public double getItemFixedPrice() {
+		return _itemFixedPrice;
+	}
+
+	public void setItemFixedPrice(double itemPrice) {
+		this._itemFixedPrice = itemPrice;
 	}
 
 	public String getItemURL() {
@@ -51,14 +67,6 @@ public class SearchResultModel {
 
 	public void setItemURL(String itemURL) {
 		this._itemURL = itemURL;
-	}
-
-	public Map<String, String> getSellerInformation() {
-		return _sellerInformation;
-	}
-
-	public void setSellerInformation(Map<String, String> sellerInformation) {
-		this._sellerInformation = sellerInformation;
 	}
 
 	public Date getItemEndingTime() {
@@ -77,9 +85,11 @@ public class SearchResultModel {
 		this._typeOfAuction = typeOfAuction;
 	}
 
+	private String _itemId;
 	private String _itemTitle;
 	private String _itemDetails;
-	private String _itemPrice;
+	private double _itemAuctionPrice;
+	private double _itemFixedPrice;
 	private String _itemURL;
 	private Map<String, String> _sellerInformation;
 	private Date _itemEndingTime;
