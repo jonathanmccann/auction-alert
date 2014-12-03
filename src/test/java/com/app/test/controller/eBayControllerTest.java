@@ -1,4 +1,4 @@
-package com.app.test;
+package com.app.test.controller;
 
 import com.app.controller.eBayController;
 import org.junit.Test;
