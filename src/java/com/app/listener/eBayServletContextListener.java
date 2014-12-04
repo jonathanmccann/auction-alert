@@ -14,10 +14,17 @@ public class eBayServletContextListener implements ServletContextListener {
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent servletContextEvent) {
+	public void contextInitialized(ServletContextEvent servletContextEvent)
+		throws RuntimeException {
+
 		System.out.println("ServletContextListener started");
 
-		PropertiesUtil.loadConfigurationProperties();
+		try {
+			PropertiesUtil.loadConfigurationProperties();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
 		eBayAPIUtil.loadeBayServiceClient();
 	}

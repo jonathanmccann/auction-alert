@@ -49,6 +49,15 @@
 	<sourceDirectory>src/java</sourceDirectory>
 	<pluginManagement>
 	  <plugins>
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-surefire-plugin</artifactId>
+		  <configuration>
+		    <systemPropertyVariables>
+			  <application.id>${application.id}</application.id>
+		    </systemPropertyVariables>
+		  </configuration>
+		</plugin>
 	    <plugin>
 		  <groupId>org.apache.maven.plugins</groupId>
 		  <artifactId>maven-compiler-plugin</artifactId>
@@ -60,12 +69,12 @@
 	    </plugin>
 		<plugin>
 		  <groupId>org.apache.tomcat.maven</groupId>
-			<artifactId>tomcat7-maven-plugin</artifactId>
-			<configuration>
-			  <url>http://127.0.0.1:8080/manager/text</url>
-			  <server>tomcat</server>
-			  <path>/eBay-webapp</path>
-			</configuration>
+		  <artifactId>tomcat7-maven-plugin</artifactId>
+		  <configuration>
+		    <url>http://127.0.0.1:8080/manager/text</url>
+		    <server>tomcat</server>
+		    <path>/eBay-webapp</path>
+		  </configuration>
 		</plugin>
 	  </plugins>
 	</pluginManagement>

@@ -13,14 +13,14 @@ public class PropertiesUtil {
 		return _properties;
 	}
 
-	public static void loadConfigurationProperties() {
+	public static void loadConfigurationProperties() throws IOException {
 		String propertiesFilePath =
 			System.getProperty("catalina.base") + "/" + "config.properties";
 
 		loadConfigurationProperties(propertiesFilePath);
 	}
 
-	public static void loadConfigurationProperties(String propertiesFilePath) {
+	public static void loadConfigurationProperties(String propertiesFilePath) throws IOException {
 		Properties properties = new Properties();
 
 		try {
@@ -34,6 +34,9 @@ public class PropertiesUtil {
 		}
 		catch (IOException ioe) {
 			System.out.println(
+				"Cannot find or load properties file: " + propertiesFilePath);
+
+			throw new IOException(
 				"Cannot find or load properties file: " + propertiesFilePath);
 		}
 
