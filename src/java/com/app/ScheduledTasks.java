@@ -25,9 +25,13 @@ public class ScheduledTasks {
 
 		List<String> searchQueries = new ArrayList<String>();
 
-		searchQueries.add("test search query");
+		searchQueries.add("ebay");
 
-		performSearch(searchQueries);
+		List<SearchResultModel> searchResults = performSearch(searchQueries);
+
+		searchResults = filterSearchResults(searchResults);
+
+		textSearchResults(searchResults);
 	}
 
 	private static List<SearchResultModel> performSearch(
@@ -36,7 +40,7 @@ public class ScheduledTasks {
 		return eBaySearchResultModel.geteBaySearchResults(searchQueries);
 	}
 
-	private List<SearchResultModel> filterSearchResults(
+	private static List<SearchResultModel> filterSearchResults(
 		List<SearchResultModel> searchResultModels) {
 
 		// Get last five results from database
@@ -46,9 +50,11 @@ public class ScheduledTasks {
 		return searchResultModels;
 	}
 
-	private void textSearchResults(List<SearchResultModel> searchResultModels) {
+	private static void textSearchResults(
+		List<SearchResultModel> searchResultModels) {
 
 		// Text search results to appropriate phone number
+		// Text via email - Send email to $NUMBER@txt.att.net
 
 	}
 
