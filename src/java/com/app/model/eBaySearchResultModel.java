@@ -1,5 +1,6 @@
 package com.app.model;
 
+import com.app.util.PropertiesUtil;
 import com.ebay.services.client.ClientConfig;
 import com.ebay.services.client.FindingServiceClientFactory;
 import com.ebay.services.finding.FindItemsByKeywordsRequest;
@@ -11,38 +12,18 @@ import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 public class eBaySearchResultModel extends SearchResultModel {
 	public eBaySearchResultModel() {
-		Properties properties = new Properties();
-
-		String propertiesFilePath =
-			System.getProperty("catalina.base") + "/" + "config.properties";
-
-		try {
-			InputStream inputStream = new FileInputStream(propertiesFilePath);
-
-			if (inputStream == null) {
-				throw new FileNotFoundException();
-			}
-
-			properties.load(inputStream);
-		}
-		catch (IOException ioe) {
-			System.out.println(
-				"Cannot find or load properties file: " + propertiesFilePath);
-		}
+		Properties properties = PropertiesUtil.getConfigurationProperties();
 
 		ClientConfig config = new ClientConfig();
 
-		config.setApplicationId(properties.getProperty("application.id"));
+		config.setApplicationId(
+			properties.getProperty(PropertiesUtil.APPLICATION_ID));
 
 		_serviceClient = FindingServiceClientFactory.getServiceClient(config);
 	}
