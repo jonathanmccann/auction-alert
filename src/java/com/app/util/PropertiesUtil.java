@@ -1,5 +1,8 @@
 package com.app.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,6 +24,8 @@ public class PropertiesUtil {
 	}
 
 	public static void loadConfigurationProperties(String propertiesFilePath) throws IOException {
+		_log.debug("Reading properties from {}", propertiesFilePath);
+
 		Properties properties = new Properties();
 
 		try {
@@ -33,11 +38,10 @@ public class PropertiesUtil {
 			properties.load(inputStream);
 		}
 		catch (IOException ioe) {
-			System.out.println(
-				"Cannot find or load properties file: " + propertiesFilePath);
+			_log.error(
+				"Cannot find or load properties file: {}", propertiesFilePath);
 
-			throw new IOException(
-				"Cannot find or load properties file: " + propertiesFilePath);
+			throw new IOException();
 		}
 
 		_properties = properties;
@@ -48,4 +52,6 @@ public class PropertiesUtil {
 	}
 
 	private static Properties _properties;
+
+	private static Logger _log = LoggerFactory.getLogger(PropertiesUtil.class);
 }

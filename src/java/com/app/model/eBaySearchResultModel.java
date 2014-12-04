@@ -9,6 +9,8 @@ import com.ebay.services.finding.PaginationInput;
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,16 @@ import java.util.List;
 public class eBaySearchResultModel extends SearchResultModel {
 
 	public static List<SearchResultModel> geteBaySearchResults(List<String> searchQueries) {
+		_log.info(
+			"Getting eBay search results for {} search queries",
+			searchQueries.size());
+
+		if (_log.isDebugEnabled()) {
+			for (String searchQuery : searchQueries) {
+				_log.debug("Searching for {}", searchQuery);
+			}
+		}
+
 		List<SearchResultModel> searchResultModels = new ArrayList<SearchResultModel>();
 
         try {
@@ -76,6 +88,8 @@ public class eBaySearchResultModel extends SearchResultModel {
 			}
         }
 		catch (Exception e) {
+			_log.error("Getting eBay search results failed.");
+
             e.printStackTrace();
         }
 
@@ -83,4 +97,7 @@ public class eBaySearchResultModel extends SearchResultModel {
     }
 
 	private static final String _ebayURLPrefix = "http://www.ebay.com/itm/";
+
+	private static Logger _log = LoggerFactory.getLogger(
+		eBaySearchResultModel.class);
 }
