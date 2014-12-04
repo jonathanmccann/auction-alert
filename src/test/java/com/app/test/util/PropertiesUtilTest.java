@@ -1,12 +1,17 @@
 package com.app.test.util;
 
 import com.app.util.PropertiesUtil;
+
+import java.io.IOException;
+
+import java.util.Properties;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Properties;
-
+/**
+ * @author Jonathan McCann
+ */
 public class PropertiesUtilTest {
 
 	@Test
@@ -19,19 +24,19 @@ public class PropertiesUtilTest {
 		Assert.assertEquals(
 			"", properties.getProperty(PropertiesUtil.APPLICATION_ID));
 
-		String applicationId =
-			System.getProperty(PropertiesUtil.APPLICATION_ID);
+		String applicationId = System.getProperty(
+			PropertiesUtil.APPLICATION_ID);
 
-		properties.setProperty(
-			PropertiesUtil.APPLICATION_ID, applicationId);
+		properties.setProperty(PropertiesUtil.APPLICATION_ID, applicationId);
 
 		Assert.assertEquals(
 			applicationId,
 			properties.getProperty(PropertiesUtil.APPLICATION_ID));
 	}
 
-	@Test(expected=IOException.class)
+	@Test(expected = IOException.class)
 	public void testLoadInvalidConfigurationProperties() throws Exception {
 		PropertiesUtil.loadConfigurationProperties();
 	}
+
 }

@@ -2,12 +2,16 @@ package com.app.listener;
 
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Jonathan McCann
+ */
 public class eBayServletContextListener implements ServletContextListener {
 
 	@Override
@@ -37,6 +41,7 @@ public class eBayServletContextListener implements ServletContextListener {
 		eBayAPIUtil.loadeBayServiceClient();
 	}
 
-	private static Logger _log = LoggerFactory.getLogger(
+	private static final Logger _log = LoggerFactory.getLogger(
 		eBayServletContextListener.class);
+
 }

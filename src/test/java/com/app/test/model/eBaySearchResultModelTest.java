@@ -1,19 +1,23 @@
 package com.app.test.model;
 
 import com.app.model.SearchResultModel;
-
 import com.app.model.eBaySearchResultModel;
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * @author Jonathan McCann
+ */
 public class eBaySearchResultModelTest {
 
 	@Before
@@ -40,4 +44,5 @@ public class eBaySearchResultModelTest {
 
 		Assert.assertEquals(5, eBaySearchResults.size());
 	}
+
 }

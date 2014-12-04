@@ -6,7 +6,11 @@ import com.ebay.services.finding.FindingServicePortType;
 
 import java.util.Properties;
 
+/**
+ * @author Jonathan McCann
+ */
 public class eBayAPIUtil {
+
 	public static FindingServicePortType getServiceClient() {
 		return _serviceClient;
 	}
@@ -23,4 +27,5 @@ public class eBayAPIUtil {
 	}
 
 	private static FindingServicePortType _serviceClient;
+
 }

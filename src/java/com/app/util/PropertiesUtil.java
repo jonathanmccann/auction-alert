@@ -1,15 +1,20 @@
 package com.app.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Jonathan McCann
+ */
 public class PropertiesUtil {
+
 	public static final String APPLICATION_ID = "application.id";
 
 	public static Properties getConfigurationProperties() {
@@ -23,7 +28,9 @@ public class PropertiesUtil {
 		loadConfigurationProperties(propertiesFilePath);
 	}
 
-	public static void loadConfigurationProperties(String propertiesFilePath) throws IOException {
+	public static void loadConfigurationProperties(String propertiesFilePath)
+		throws IOException {
+
 		_log.debug("Reading properties from {}", propertiesFilePath);
 
 		Properties properties = new Properties();
@@ -51,7 +58,9 @@ public class PropertiesUtil {
 		_properties = properties;
 	}
 
+	private static final Logger _log = LoggerFactory.getLogger(
+		PropertiesUtil.class);
+
 	private static Properties _properties;
 
-	private static Logger _log = LoggerFactory.getLogger(PropertiesUtil.class);
 }

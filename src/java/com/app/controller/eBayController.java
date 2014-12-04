@@ -4,6 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * @author Jonathan McCann
+ */
 @Controller
 public class eBayController {
 
@@ -18,4 +21,5 @@ public class eBayController {
 
 		return new ModelAndView("hello_ebay_user", "message", message);
 	}
+
 }

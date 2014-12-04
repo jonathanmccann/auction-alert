@@ -1,6 +1,7 @@
 package com.app.model;
 
 import com.app.util.eBayAPIUtil;
+
 import com.ebay.services.finding.FindItemsByKeywordsRequest;
 import com.ebay.services.finding.FindItemsByKeywordsResponse;
 import com.ebay.services.finding.FindingServicePortType;
@@ -9,15 +10,21 @@ import com.ebay.services.finding.PaginationInput;
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Jonathan McCann
+ */
 public class eBaySearchResultModel extends SearchResultModel {
 
-	public static List<SearchResultModel> geteBaySearchResults(List<String> searchQueries) {
+	public static List<SearchResultModel> geteBaySearchResults(
+		List<String> searchQueries) {
+
 		_log.info(
 			"Getting eBay search results for {} search queries",
 			searchQueries.size());
@@ -28,11 +35,13 @@ public class eBaySearchResultModel extends SearchResultModel {
 			}
 		}
 
-		List<SearchResultModel> searchResultModels = new ArrayList<SearchResultModel>();
+		List<SearchResultModel> searchResultModels =
+			new ArrayList<SearchResultModel>();
 
-        try {
+		try {
 			for (String searchQuery : searchQueries) {
-				FindItemsByKeywordsRequest request = new FindItemsByKeywordsRequest();
+				FindItemsByKeywordsRequest request =
+					new FindItemsByKeywordsRequest();
 
 				request.setKeywords(searchQuery);
 
@@ -42,30 +51,34 @@ public class eBaySearchResultModel extends SearchResultModel {
 				request.setPaginationInput(paginationInput);
 				request.setSortOrder(SortOrderType.START_TIME_NEWEST);
 
-				FindingServicePortType serviceClient = eBayAPIUtil.getServiceClient();
+				FindingServicePortType serviceClient =
+					eBayAPIUtil.getServiceClient();
 
-				FindItemsByKeywordsResponse result = serviceClient.findItemsByKeywords(request);
+				FindItemsByKeywordsResponse result =
+					serviceClient.findItemsByKeywords(request);
 
 				List<SearchItem> items = result.getSearchResult().getItem();
 
 				for (SearchItem item : items) {
-					SearchResultModel searchResultModel = new SearchResultModel();
+					SearchResultModel searchResultModel =
+						new SearchResultModel();
 
 					ListingInfo listingInfo = item.getListingInfo();
 
-					// ID
 					searchResultModel.setItemId(item.getItemId());
-
-					// Title
 					searchResultModel.setItemTitle(item.getTitle());
+					searchResultModel.setTypeOfAuction(
+						listingInfo.getListingType());
+					searchResultModel.setItemURL(
+						_EBAY_URL_PREFIX + searchResultModel.getItemId());
+					searchResultModel.setItemEndingTime(
+						listingInfo.getEndTime().getTime());
 
-					// Type of Auction (Auction, AuctionWithBIN, FixedPrice, StoreInventory
-					searchResultModel.setTypeOfAuction(listingInfo.getListingType());
-
-					// Price
 					SellingStatus sellingStatus = item.getSellingStatus();
 
-					if (searchResultModel.getTypeOfAuction().contains("Auction")) {
+					if (searchResultModel.getTypeOfAuction().contains(
+							"Auction")) {
+
 						searchResultModel.setItemAuctionPrice(
 							sellingStatus.getCurrentPrice().getValue());
 					}
@@ -75,29 +88,22 @@ public class eBaySearchResultModel extends SearchResultModel {
 							listingInfo.getBuyItNowPrice().getValue());
 					}
 
-					// URL
-					searchResultModel.setItemURL(
-						_ebayURLPrefix + searchResultModel.getItemId());
-
-					// Ending time
-					searchResultModel.setItemEndingTime(
-						listingInfo.getEndTime().getTime());
-
 					searchResultModels.add(searchResultModel);
 				}
 			}
-        }
+		}
 		catch (Exception e) {
 			_log.error("Getting eBay search results failed.");
 
-            e.printStackTrace();
-        }
+			e.printStackTrace();
+		}
 
 		return searchResultModels;
-    }
+	}
 
-	private static final String _ebayURLPrefix = "http://www.ebay.com/itm/";
+	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
-	private static Logger _log = LoggerFactory.getLogger(
+	private static final Logger _log = LoggerFactory.getLogger(
 		eBaySearchResultModel.class);
+
 }

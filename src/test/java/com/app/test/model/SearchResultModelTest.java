@@ -2,14 +2,15 @@ package com.app.test.model;
 
 import com.app.model.SearchResultModel;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * @author Jonathan McCann
+ */
 public class SearchResultModelTest {
 
 	@Before
@@ -23,94 +24,31 @@ public class SearchResultModelTest {
 
 		SearchResultModel searchResultModel = new SearchResultModel(
 			"1234", "itemTitle", "itemDetails", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", endingTime,
-			"Buy It Now");
+			"http://www.ebay.com/itm/1234", endingTime, "Buy It Now");
 
-		String itemId = searchResultModel.getItemId();
-
-		Assert.assertEquals("1234", itemId);
-
-		String itemTitle = searchResultModel.getItemTitle();
-
-		Assert.assertEquals("itemTitle", itemTitle);
-
-		String itemDetails = searchResultModel.getItemDetails();
-
-		Assert.assertEquals("itemDetails", itemDetails);
-
-		double itemAuctionPrice = searchResultModel.getItemAuctionPrice();
-
-		Assert.assertEquals(14.99, itemAuctionPrice, 0);
-
-		double itemFixedPrice = searchResultModel.getItemFixedPrice();
-
-		Assert.assertEquals(14.99, itemFixedPrice, 0);
-
-		String itemURL = searchResultModel.getItemURL();
-
-		Assert.assertEquals("http://www.ebay.com/itm/1234", itemURL);
-
-		Date retrievedEndingTime = searchResultModel.getItemEndingTime();
-
-		Assert.assertEquals(endingTime, retrievedEndingTime);
-
-		String typeOfAuction = searchResultModel.getTypeOfAuction();
-
-		Assert.assertEquals("Buy It Now", typeOfAuction);
-	}
-
-	@Test
-	public void testSetAndGetItemId() throws Exception {
-		_searchResultModel.setItemId("1234");
-
-		String itemId = _searchResultModel.getItemId();
-
-		Assert.assertEquals("1234", itemId);
-	}
-
-	@Test
-	public void testSetAndGetItemTitle() throws Exception {
-		_searchResultModel.setItemTitle("itemTitle");
-
-		String itemTitle = _searchResultModel.getItemTitle();
-
-		Assert.assertEquals("itemTitle", itemTitle);
-	}
-
-	@Test
-	public void testSetAndGetItemDetails() throws Exception {
-		_searchResultModel.setItemDetails("itemDetails");
-
-		String itemDetails = _searchResultModel.getItemDetails();
-
-		Assert.assertEquals("itemDetails", itemDetails);
+		Assert.assertEquals("1234", searchResultModel.getItemId());
+		Assert.assertEquals("itemTitle", searchResultModel.getItemTitle());
+		Assert.assertEquals("itemDetails", searchResultModel.getItemDetails());
+		Assert.assertEquals(14.99, searchResultModel.getItemAuctionPrice(), 0);
+		Assert.assertEquals(14.99, searchResultModel.getItemFixedPrice(), 0);
+		Assert.assertEquals(
+			"http://www.ebay.com/itm/1234", searchResultModel.getItemURL());
+		Assert.assertEquals(endingTime, searchResultModel.getItemEndingTime());
+		Assert.assertEquals("Buy It Now", searchResultModel.getTypeOfAuction());
 	}
 
 	@Test
 	public void testSetAndGetItemAuctionPrice() throws Exception {
 		_searchResultModel.setItemAuctionPrice(14.99);
 
-		double itemAuctionPrice = _searchResultModel.getItemAuctionPrice();
-
-		Assert.assertEquals(14.99, itemAuctionPrice, 0);
+		Assert.assertEquals(14.99, _searchResultModel.getItemAuctionPrice(), 0);
 	}
 
 	@Test
-	public void testSetAndGetItemFixedPrice() throws Exception {
-		_searchResultModel.setItemFixedPrice(14.99);
+	public void testSetAndGetItemDetails() throws Exception {
+		_searchResultModel.setItemDetails("itemDetails");
 
-		double itemFixedPrice = _searchResultModel.getItemFixedPrice();
-
-		Assert.assertEquals(14.99, itemFixedPrice, 0);
-	}
-
-	@Test
-	public void testSetAndGetItemURL() throws Exception {
-		_searchResultModel.setItemURL("http://www.ebay.com/itm/1234");
-
-		String itemURL = _searchResultModel.getItemURL();
-
-		Assert.assertEquals("http://www.ebay.com/itm/1234", itemURL);
+		Assert.assertEquals("itemDetails", _searchResultModel.getItemDetails());
 	}
 
 	@Test
@@ -119,19 +57,46 @@ public class SearchResultModelTest {
 
 		_searchResultModel.setItemEndingTime(endingTime);
 
-		Date retrievedEndingTime = _searchResultModel.getItemEndingTime();
+		Assert.assertEquals(endingTime, _searchResultModel.getItemEndingTime());
+	}
 
-		Assert.assertEquals(endingTime, retrievedEndingTime);
+	@Test
+	public void testSetAndGetItemFixedPrice() throws Exception {
+		_searchResultModel.setItemFixedPrice(14.99);
+
+		Assert.assertEquals(14.99, _searchResultModel.getItemFixedPrice(), 0);
+	}
+
+	@Test
+	public void testSetAndGetItemId() throws Exception {
+		_searchResultModel.setItemId("1234");
+
+		Assert.assertEquals("1234", _searchResultModel.getItemId());
+	}
+
+	@Test
+	public void testSetAndGetItemTitle() throws Exception {
+		_searchResultModel.setItemTitle("itemTitle");
+
+		Assert.assertEquals("itemTitle", _searchResultModel.getItemTitle());
+	}
+
+	@Test
+	public void testSetAndGetItemURL() throws Exception {
+		_searchResultModel.setItemURL("http://www.ebay.com/itm/1234");
+
+		Assert.assertEquals(
+			"http://www.ebay.com/itm/1234", _searchResultModel.getItemURL());
 	}
 
 	@Test
 	public void testSetAndGetTypeOfAuction() throws Exception {
 		_searchResultModel.setTypeOfAuction("Buy It Now");
 
-		String typeOfAuction = _searchResultModel.getTypeOfAuction();
-
-		Assert.assertEquals("Buy It Now", typeOfAuction);
+		Assert.assertEquals(
+			"Buy It Now", _searchResultModel.getTypeOfAuction());
 	}
 
 	private SearchResultModel _searchResultModel;
+
 }
