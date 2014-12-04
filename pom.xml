@@ -53,6 +53,15 @@
 		    <target>1.7</target>
 		  </configuration>
 	    </plugin>
+		<plugin>
+		  <groupId>org.apache.tomcat.maven</groupId>
+			<artifactId>tomcat7-maven-plugin</artifactId>
+			<configuration>
+			  <url>http://127.0.0.1:8080/manager/text</url>
+			  <server>tomcat</server>
+			  <path>/eBay-webapp</path>
+			</configuration>
+		</plugin>
 	  </plugins>
 	</pluginManagement>
 	<finalName>eBayWebapp</finalName>
