@@ -1,6 +1,7 @@
 package com.app.listener;
 
 import com.app.util.PropertiesUtil;
+import com.app.util.eBayAPIUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -17,5 +18,7 @@ public class eBayServletContextListener implements ServletContextListener {
 		System.out.println("ServletContextListener started");
 
 		PropertiesUtil.loadConfigurationProperties();
+
+		eBayAPIUtil.loadeBayServiceClient();
 	}
 }

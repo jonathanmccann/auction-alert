@@ -1,8 +1,6 @@
 package com.app.model;
 
-import com.app.util.PropertiesUtil;
-import com.ebay.services.client.ClientConfig;
-import com.ebay.services.client.FindingServiceClientFactory;
+import com.app.util.eBayAPIUtil;
 import com.ebay.services.finding.FindItemsByKeywordsRequest;
 import com.ebay.services.finding.FindItemsByKeywordsResponse;
 import com.ebay.services.finding.FindingServicePortType;
@@ -14,19 +12,8 @@ import com.ebay.services.finding.SortOrderType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class eBaySearchResultModel extends SearchResultModel {
-	public eBaySearchResultModel() {
-		Properties properties = PropertiesUtil.getConfigurationProperties();
-
-		ClientConfig config = new ClientConfig();
-
-		config.setApplicationId(
-			properties.getProperty(PropertiesUtil.APPLICATION_ID));
-
-		_serviceClient = FindingServiceClientFactory.getServiceClient(config);
-	}
 
 	public List<SearchResultModel> geteBaySearchResults(List<String> searchQueries) {
 		List<SearchResultModel> searchResultModels = new ArrayList<SearchResultModel>();
@@ -43,7 +30,9 @@ public class eBaySearchResultModel extends SearchResultModel {
 				request.setPaginationInput(paginationInput);
 				request.setSortOrder(SortOrderType.START_TIME_NEWEST);
 
-				FindItemsByKeywordsResponse result = _serviceClient.findItemsByKeywords(request);
+				FindingServicePortType serviceClient = eBayAPIUtil.getServiceClient();
+
+				FindItemsByKeywordsResponse result = serviceClient.findItemsByKeywords(request);
 
 				System.out.println("Acknowledgement = " + result.getAck());
 				System.out.println("Found " + result.getSearchResult().getCount() + " items.");
@@ -98,6 +87,4 @@ public class eBaySearchResultModel extends SearchResultModel {
     }
 
 	private static final String _ebayURLPrefix = "http://www.ebay.com/itm/";
-
-	private static FindingServicePortType _serviceClient;
 }
