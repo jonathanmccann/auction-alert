@@ -15,7 +15,7 @@ import java.util.List;
 
 public class eBaySearchResultModel extends SearchResultModel {
 
-	public List<SearchResultModel> geteBaySearchResults(List<String> searchQueries) {
+	public static List<SearchResultModel> geteBaySearchResults(List<String> searchQueries) {
 		List<SearchResultModel> searchResultModels = new ArrayList<SearchResultModel>();
 
         try {
@@ -34,9 +34,6 @@ public class eBaySearchResultModel extends SearchResultModel {
 
 				FindItemsByKeywordsResponse result = serviceClient.findItemsByKeywords(request);
 
-				System.out.println("Acknowledgement = " + result.getAck());
-				System.out.println("Found " + result.getSearchResult().getCount() + " items.");
-
 				List<SearchItem> items = result.getSearchResult().getItem();
 
 				for (SearchItem item : items) {
@@ -45,7 +42,6 @@ public class eBaySearchResultModel extends SearchResultModel {
 					ListingInfo listingInfo = item.getListingInfo();
 
 					// ID
-					System.out.println("item.getItemId() = " + item.getItemId());
 					searchResultModel.setItemId(item.getItemId());
 
 					// Title

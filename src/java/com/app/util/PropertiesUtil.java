@@ -43,5 +43,9 @@ public class PropertiesUtil {
 		_properties = properties;
 	}
 
+	public static void setConfigurationProperties(Properties properties) {
+		_properties = properties;
+	}
+
 	private static Properties _properties;
 }

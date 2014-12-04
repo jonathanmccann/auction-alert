@@ -26,7 +26,7 @@ public class ScheduledTasks {
 	}
 
 	private static List<SearchResultModel> performSearch(List<String> searchQueries) {
-		return _eBaySearchResultModel.geteBaySearchResults(searchQueries);
+		return eBaySearchResultModel.geteBaySearchResults(searchQueries);
 	}
 
 	private List<SearchResultModel> filterSearchResults(List<SearchResultModel> searchResultModels) {
@@ -40,7 +40,4 @@ public class ScheduledTasks {
 	private void textSearchResults(List<SearchResultModel> searchResultModels) {
 		// Text search results to appropriate phone number
 	}
-
-	private static eBaySearchResultModel _eBaySearchResultModel =
-		new eBaySearchResultModel();
 }
