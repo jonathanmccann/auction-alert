@@ -8,6 +8,11 @@
   <name>eBay Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
+	<dependency>
+	  <groupId>javax.servlet</groupId>
+	  <artifactId>servlet-api</artifactId>
+	  <version>2.5</version>
+	</dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

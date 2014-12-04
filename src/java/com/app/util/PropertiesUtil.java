@@ -10,19 +10,17 @@ public class PropertiesUtil {
 	public static final String APPLICATION_ID = "application.id";
 
 	public static Properties getConfigurationProperties() {
+		return _properties;
+	}
+
+	public static void loadConfigurationProperties() {
 		String propertiesFilePath =
 			System.getProperty("catalina.base") + "/" + "config.properties";
 
-		return loadConfigurationProperties(propertiesFilePath);
+		loadConfigurationProperties(propertiesFilePath);
 	}
 
-	public Properties getConfigurationProperties(String propertiesFilePath) {
-		return loadConfigurationProperties(propertiesFilePath);
-	}
-
-	private static Properties loadConfigurationProperties(
-		String propertiesFilePath) {
-
+	public static void loadConfigurationProperties(String propertiesFilePath) {
 		Properties properties = new Properties();
 
 		try {
@@ -39,6 +37,8 @@ public class PropertiesUtil {
 				"Cannot find or load properties file: " + propertiesFilePath);
 		}
 
-		return properties;
+		_properties = properties;
 	}
+
+	private static Properties _properties;
 }
