@@ -1,10 +1,10 @@
 package com.app.test.util;
 
+import com.app.exception.DatabaseConnectionException;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class DatabaseUtilTest {
 		Assert.assertNotNull(connection);
 	}
 
-	@Test(expected = SQLException.class)
+	@Test(expected = DatabaseConnectionException.class)
 	public void testGetInvalidDatabaseConnection() throws Exception {
 		DatabaseUtil.setDatabaseProperties(
 			"test", "test", "test");
