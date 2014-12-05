@@ -38,64 +38,57 @@ public class eBaySearchResultModel extends SearchResultModel {
 		List<SearchResultModel> searchResultModels =
 			new ArrayList<SearchResultModel>();
 
-		try {
-			for (String searchQuery : searchQueries) {
-				FindItemsByKeywordsRequest request =
-					new FindItemsByKeywordsRequest();
+		for (String searchQuery : searchQueries) {
+			FindItemsByKeywordsRequest request =
+				new FindItemsByKeywordsRequest();
 
-				request.setKeywords(searchQuery);
+			request.setKeywords(searchQuery);
 
-				PaginationInput paginationInput = new PaginationInput();
-				paginationInput.setEntriesPerPage(5);
+			PaginationInput paginationInput = new PaginationInput();
+			paginationInput.setEntriesPerPage(5);
 
-				request.setPaginationInput(paginationInput);
-				request.setSortOrder(SortOrderType.START_TIME_NEWEST);
+			request.setPaginationInput(paginationInput);
+			request.setSortOrder(SortOrderType.START_TIME_NEWEST);
 
-				FindingServicePortType serviceClient =
-					eBayAPIUtil.getServiceClient();
+			FindingServicePortType serviceClient =
+				eBayAPIUtil.getServiceClient();
 
-				FindItemsByKeywordsResponse result =
-					serviceClient.findItemsByKeywords(request);
+			FindItemsByKeywordsResponse result =
+				serviceClient.findItemsByKeywords(request);
 
-				List<SearchItem> items = result.getSearchResult().getItem();
+			List<SearchItem> items = result.getSearchResult().getItem();
 
-				for (SearchItem item : items) {
-					SearchResultModel searchResultModel =
-						new SearchResultModel();
+			for (SearchItem item : items) {
+				SearchResultModel searchResultModel =
+					new SearchResultModel();
 
-					ListingInfo listingInfo = item.getListingInfo();
+				ListingInfo listingInfo = item.getListingInfo();
 
-					searchResultModel.setItemId(item.getItemId());
-					searchResultModel.setItemTitle(item.getTitle());
-					searchResultModel.setTypeOfAuction(
-						listingInfo.getListingType());
-					searchResultModel.setItemURL(
-						_EBAY_URL_PREFIX + searchResultModel.getItemId());
-					searchResultModel.setEndingTime(
-						listingInfo.getEndTime().getTime());
+				searchResultModel.setItemId(item.getItemId());
+				searchResultModel.setItemTitle(item.getTitle());
+				searchResultModel.setTypeOfAuction(
+					listingInfo.getListingType());
+				searchResultModel.setItemURL(
+					_EBAY_URL_PREFIX + searchResultModel.getItemId());
+				searchResultModel.setEndingTime(
+					listingInfo.getEndTime().getTime());
 
-					SellingStatus sellingStatus = item.getSellingStatus();
+				SellingStatus sellingStatus = item.getSellingStatus();
 
-					if (searchResultModel.getTypeOfAuction().contains(
-							"Auction")) {
+				if (searchResultModel.getTypeOfAuction().contains(
+						"Auction")) {
 
-						searchResultModel.setAuctionPrice(
-							sellingStatus.getCurrentPrice().getValue());
-					}
-
-					if (item.getListingInfo().isBuyItNowAvailable()) {
-						searchResultModel.setFixedPrice(
-							listingInfo.getBuyItNowPrice().getValue());
-					}
-
-					searchResultModels.add(searchResultModel);
+					searchResultModel.setAuctionPrice(
+						sellingStatus.getCurrentPrice().getValue());
 				}
-			}
-		}
-		catch (Exception e) {
-			_log.error("Getting eBay search results failed.");
 
-			e.printStackTrace();
+				if (item.getListingInfo().isBuyItNowAvailable()) {
+					searchResultModel.setFixedPrice(
+						listingInfo.getBuyItNowPrice().getValue());
+				}
+
+				searchResultModels.add(searchResultModel);
+			}
 		}
 
 		return searchResultModels;
