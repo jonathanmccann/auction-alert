@@ -1,19 +1,23 @@
 package com.app.dao.impl;
 
 import com.app.dao.SearchQueryDAO;
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 import com.app.util.DatabaseUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	@Override
-	public String getSearchQuery(int searchQueryId) throws Exception {
+	public String getSearchQuery(int searchQueryId) throws SQLException {
 		Connection connection = null;
 		ResultSet resultSet = null;
 
@@ -31,8 +35,14 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 				return resultSet.getString("searchQuery");
 			}
 			else {
-				return "";
+				throw new SQLException();
 			}
+		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Cannot find search query for search query ID: " +
+				searchQueryId);
+
+			throw new SQLException(exception);
 		}
 		finally {
 			if (connection != null) {
@@ -46,7 +56,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	}
 
 	@Override
-	public List<SearchQueryModel> getSearchQueries() throws Exception {
+	public List<SearchQueryModel> getSearchQueries() throws SQLException {
 		Connection connection = null;
 		ResultSet resultSet = null;
 
@@ -74,6 +84,11 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			return searchQueryModels;
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to return all search queries.");
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
@@ -86,7 +101,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	}
 
 	@Override
-	public void addSearchQuery(String searchQuery) throws Exception {
+	public void addSearchQuery(String searchQuery) throws SQLException {
 		Connection connection = null;
 
 		try {
@@ -99,6 +114,11 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			preparedStatement.executeUpdate();
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to add search query: " + searchQuery);
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
@@ -108,7 +128,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	@Override
 	public void updateSearchQuery(int searchQueryId, String searchQuery)
-		throws Exception {
+		throws SQLException {
 
 		Connection connection = null;
 
@@ -124,6 +144,12 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			preparedStatement.executeUpdate();
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to update search query: " + searchQuery +
+				" for search query ID: " + searchQueryId);
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
@@ -132,7 +158,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	}
 
 	@Override
-	public void deleteSearchQuery(int searchQueryId) throws Exception {
+	public void deleteSearchQuery(int searchQueryId) throws SQLException {
 		Connection connection = null;
 
 		try {
@@ -145,11 +171,20 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			preparedStatement.executeUpdate();
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to delete search query for search query ID: " +
+				searchQueryId);
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
 			}
 		}
 	}
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		SearchQueryDAOImpl.class);
 
 }
