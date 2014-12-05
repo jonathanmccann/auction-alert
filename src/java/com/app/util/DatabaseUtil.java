@@ -1,11 +1,15 @@
 package com.app.util;
 
+import com.app.exception.DatabaseConnectionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -13,14 +17,25 @@ import java.util.Properties;
  */
 public class DatabaseUtil {
 
-	public static Connection getDatabaseConnection() throws Exception {
-		Class.forName("com.mysql.jdbc.Driver");
+	public static Connection getDatabaseConnection()
+		throws DatabaseConnectionException {
 
-		return DriverManager.getConnection(
-			_DATABASE_URL, _DATABASE_USERNAME, _DATABASE_PASSWORD);
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+
+			return DriverManager.getConnection(
+				_DATABASE_URL, _DATABASE_USERNAME, _DATABASE_PASSWORD);
+		}
+		catch (ClassNotFoundException | SQLException exception) {
+			_log.error(
+				"Could not get a database connection. Please check your " +
+					"database settings in 'config.properties'");
+
+			throw new DatabaseConnectionException(exception);
+		}
 	}
 
-	public static void initializeDatabase() throws Exception {
+	public static void initializeDatabase() throws DatabaseConnectionException {
 		Resource resource = new ClassPathResource(
 			"/sql/defaultdb.sql");
 
@@ -48,5 +63,8 @@ public class DatabaseUtil {
 	private static String _DATABASE_PASSWORD;
 	private static String _DATABASE_URL;
 	private static String _DATABASE_USERNAME;
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		DatabaseUtil.class);
 
 }
