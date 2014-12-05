@@ -11,8 +11,8 @@ public class SearchQueryModel {
 	}
 
 	public SearchQueryModel(int searchQueryId, String searchQuery) {
-		this._searchQueryId = searchQueryId;
-		this._searchQuery = searchQuery;
+		_searchQueryId = searchQueryId;
+		_searchQuery = searchQuery;
 	}
 
 	public int getSearchQueryId() {
@@ -24,11 +24,11 @@ public class SearchQueryModel {
 	}
 
 	public void setSearchQueryId(int searchQueryId) {
-		this._searchQueryId = searchQueryId;
+		_searchQueryId = searchQueryId;
 	}
 
 	public void setSearchQuery(String _searchQuery) {
-		this._searchQuery = _searchQuery;
+		_searchQuery = _searchQuery;
 	}
 
 	private int _searchQueryId;

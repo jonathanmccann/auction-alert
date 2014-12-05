@@ -15,14 +15,14 @@ public class SearchResultModel {
 		double itemAuctionPrice, double itemFixedPrice, String itemURL,
 		Date itemEndingTime, String typeOfAuction) {
 
-		this._itemId = itemId;
-		this._itemTitle = itemTitle;
-		this._itemDetails = itemDetails;
-		this._itemAuctionPrice = itemAuctionPrice;
-		this._itemFixedPrice = itemFixedPrice;
-		this._itemURL = itemURL;
-		this._itemEndingTime = itemEndingTime;
-		this._typeOfAuction = typeOfAuction;
+		_itemId = itemId;
+		_itemTitle = itemTitle;
+		_itemDetails = itemDetails;
+		_itemAuctionPrice = itemAuctionPrice;
+		_itemFixedPrice = itemFixedPrice;
+		_itemURL = itemURL;
+		_itemEndingTime = itemEndingTime;
+		_typeOfAuction = typeOfAuction;
 	}
 
 	public double getItemAuctionPrice() {
@@ -58,35 +58,35 @@ public class SearchResultModel {
 	}
 
 	public void setItemAuctionPrice(double itemPrice) {
-		this._itemAuctionPrice = itemPrice;
+		_itemAuctionPrice = itemPrice;
 	}
 
 	public void setItemDetails(String itemDetails) {
-		this._itemDetails = itemDetails;
+		_itemDetails = itemDetails;
 	}
 
 	public void setItemEndingTime(Date itemEndingTime) {
-		this._itemEndingTime = itemEndingTime;
+		_itemEndingTime = itemEndingTime;
 	}
 
 	public void setItemFixedPrice(double itemPrice) {
-		this._itemFixedPrice = itemPrice;
+		_itemFixedPrice = itemPrice;
 	}
 
 	public void setItemId(String itemId) {
-		this._itemId = itemId;
+		_itemId = itemId;
 	}
 
 	public void setItemTitle(String itemTitle) {
-		this._itemTitle = itemTitle;
+		_itemTitle = itemTitle;
 	}
 
 	public void setItemURL(String itemURL) {
-		this._itemURL = itemURL;
+		_itemURL = itemURL;
 	}
 
 	public void setTypeOfAuction(String typeOfAuction) {
-		this._typeOfAuction = typeOfAuction;
+		_typeOfAuction = typeOfAuction;
 	}
 
 	private double _itemAuctionPrice;
