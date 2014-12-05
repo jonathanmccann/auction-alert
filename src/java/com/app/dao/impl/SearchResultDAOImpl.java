@@ -1,12 +1,16 @@
 package com.app.dao.impl;
 
 import com.app.dao.SearchResultDAO;
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResultModel;
 import com.app.util.DatabaseUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +19,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 	@Override
 	public SearchResultModel getSearchResult(int searchResultId)
-		throws Exception {
+		throws SQLException {
 
 		Connection connection = null;
 		ResultSet resultSet = null;
@@ -56,6 +60,12 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 				return new SearchResultModel();
 			}
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Cannot find search query for search result ID: " +
+				searchResultId);
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
@@ -68,7 +78,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	}
 
 	@Override
-	public List<SearchResultModel> getSearchResults() throws Exception {
+	public List<SearchResultModel> getSearchResults() throws SQLException {
 		Connection connection = null;
 		ResultSet resultSet = null;
 
@@ -108,6 +118,11 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			return searchResults;
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to return all search results.");
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
@@ -121,7 +136,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 	@Override
 	public void addSearchResult(SearchResultModel searchResultModel)
-		throws Exception {
+		throws SQLException {
 
 		Connection connection = null;
 
@@ -144,6 +159,12 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			preparedStatement.executeUpdate();
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to add search result for item ID: " +
+				searchResultModel.getItemId());
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
@@ -156,7 +177,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			String itemId, String itemTitle, double auctionPrice,
 			double fixedPrice, String itemURL,
 			Date endingTime, String typeOfAuction)
-		throws Exception{
+		throws SQLException {
 
 		Connection connection = null;
 
@@ -172,12 +193,16 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			preparedStatement.setString(2, itemTitle);
 			preparedStatement.setString(3, typeOfAuction);
 			preparedStatement.setString(4, itemURL);
-			preparedStatement.setLong(
-				5, endingTime.getTime());
+			preparedStatement.setLong(5, endingTime.getTime());
 			preparedStatement.setDouble(6, auctionPrice);
 			preparedStatement.setDouble(7, fixedPrice);
 
 			preparedStatement.executeUpdate();
+		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to add search result for item ID: " + itemId);
+
+			throw new SQLException(exception);
 		}
 		finally {
 			if (connection != null) {
@@ -187,7 +212,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	}
 
 	@Override
-	public void deleteSearchResult(int searchResultId) throws Exception {
+	public void deleteSearchResult(int searchResultId) throws SQLException {
 		Connection connection = null;
 
 		try {
@@ -200,11 +225,20 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			preparedStatement.executeUpdate();
 		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to delete search result for search result ID: " +
+				searchResultId);
+
+			throw new SQLException(exception);
+		}
 		finally {
 			if (connection != null) {
 				connection.close();
 			}
 		}
 	}
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		SearchResultDAOImpl.class);
 
 }
