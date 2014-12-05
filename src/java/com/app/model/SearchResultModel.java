@@ -11,16 +11,16 @@ public class SearchResultModel {
 	}
 
 	public SearchResultModel(
-		String itemId, String itemTitle, double itemAuctionPrice,
-		double itemFixedPrice, String itemURL,
-		Date itemEndingTime, String typeOfAuction) {
+		String itemId, String itemTitle, double auctionPrice,
+		double fixedPrice, String itemURL,
+		Date endingTime, String typeOfAuction) {
 
 		_itemId = itemId;
 		_itemTitle = itemTitle;
-		_auctionPrice = itemAuctionPrice;
-		_fixedPrice = itemFixedPrice;
+		_auctionPrice = auctionPrice;
+		_fixedPrice = fixedPrice;
 		_itemURL = itemURL;
-		_endingTime = itemEndingTime;
+		_endingTime = endingTime;
 		_typeOfAuction = typeOfAuction;
 	}
 

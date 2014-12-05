@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 	itemTitle VARCHAR(100),
 	typeOfAuction VARCHAR(25),
 	itemURL VARCHAR(50),
-	endingTime DATE,
+	endingTime LONG,
 	auctionPrice DOUBLE,
 	fixedPrice DOUBLE
 );

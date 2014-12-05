@@ -7,11 +7,11 @@ CREATE TABLE IF NOT EXISTS SearchQuery(
 
 CREATE TABLE IF NOT EXISTS SearchResult(
 	searchResultId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	itemId INT NOT NULL,
+	itemId VARCHAR(25) NOT NULL,
 	itemTitle VARCHAR(100),
 	typeOfAuction VARCHAR(25),
-	URL VARCHAR(50),
-	endingTime DATE,
+	itemURL VARCHAR(50),
+	endingTime LONG,
 	auctionPrice DOUBLE,
 	fixedPrice DOUBLE
 );
