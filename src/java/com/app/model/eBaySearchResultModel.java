@@ -71,7 +71,7 @@ public class eBaySearchResultModel extends SearchResultModel {
 						listingInfo.getListingType());
 					searchResultModel.setItemURL(
 						_EBAY_URL_PREFIX + searchResultModel.getItemId());
-					searchResultModel.setItemEndingTime(
+					searchResultModel.setEndingTime(
 						listingInfo.getEndTime().getTime());
 
 					SellingStatus sellingStatus = item.getSellingStatus();
@@ -79,12 +79,12 @@ public class eBaySearchResultModel extends SearchResultModel {
 					if (searchResultModel.getTypeOfAuction().contains(
 							"Auction")) {
 
-						searchResultModel.setItemAuctionPrice(
+						searchResultModel.setAuctionPrice(
 							sellingStatus.getCurrentPrice().getValue());
 					}
 
 					if (item.getListingInfo().isBuyItNowAvailable()) {
-						searchResultModel.setItemFixedPrice(
+						searchResultModel.setFixedPrice(
 							listingInfo.getBuyItNowPrice().getValue());
 					}
 

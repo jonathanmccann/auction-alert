@@ -23,48 +23,40 @@ public class SearchResultModelTest {
 		Date endingTime = new Date();
 
 		SearchResultModel searchResultModel = new SearchResultModel(
-			"1234", "itemTitle", "itemDetails", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", endingTime, "Buy It Now");
+			"1234", "itemTitle", 14.99, 14.99, "http://www.ebay.com/itm/1234",
+			endingTime, "Buy It Now");
 
 		Assert.assertEquals("1234", searchResultModel.getItemId());
 		Assert.assertEquals("itemTitle", searchResultModel.getItemTitle());
-		Assert.assertEquals("itemDetails", searchResultModel.getItemDetails());
-		Assert.assertEquals(14.99, searchResultModel.getItemAuctionPrice(), 0);
-		Assert.assertEquals(14.99, searchResultModel.getItemFixedPrice(), 0);
+		Assert.assertEquals(14.99, searchResultModel.getAuctionPrice(), 0);
+		Assert.assertEquals(14.99, searchResultModel.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResultModel.getItemURL());
-		Assert.assertEquals(endingTime, searchResultModel.getItemEndingTime());
+		Assert.assertEquals(endingTime, searchResultModel.getEndingTime());
 		Assert.assertEquals("Buy It Now", searchResultModel.getTypeOfAuction());
 	}
 
 	@Test
-	public void testSetAndGetItemAuctionPrice() throws Exception {
-		_searchResultModel.setItemAuctionPrice(14.99);
+	public void testSetAndGetAuctionPrice() throws Exception {
+		_searchResultModel.setAuctionPrice(14.99);
 
-		Assert.assertEquals(14.99, _searchResultModel.getItemAuctionPrice(), 0);
-	}
-
-	@Test
-	public void testSetAndGetItemDetails() throws Exception {
-		_searchResultModel.setItemDetails("itemDetails");
-
-		Assert.assertEquals("itemDetails", _searchResultModel.getItemDetails());
+		Assert.assertEquals(14.99, _searchResultModel.getAuctionPrice(), 0);
 	}
 
 	@Test
 	public void testSetAndGetItemEndingTime() throws Exception {
 		Date endingTime = new Date();
 
-		_searchResultModel.setItemEndingTime(endingTime);
+		_searchResultModel.setEndingTime(endingTime);
 
-		Assert.assertEquals(endingTime, _searchResultModel.getItemEndingTime());
+		Assert.assertEquals(endingTime, _searchResultModel.getEndingTime());
 	}
 
 	@Test
-	public void testSetAndGetItemFixedPrice() throws Exception {
-		_searchResultModel.setItemFixedPrice(14.99);
+	public void testSetAndGetFixedPrice() throws Exception {
+		_searchResultModel.setFixedPrice(14.99);
 
-		Assert.assertEquals(14.99, _searchResultModel.getItemFixedPrice(), 0);
+		Assert.assertEquals(14.99, _searchResultModel.getFixedPrice(), 0);
 	}
 
 	@Test

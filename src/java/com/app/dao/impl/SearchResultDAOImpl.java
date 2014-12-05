@@ -2,50 +2,67 @@ package com.app.dao.impl;
 
 import com.app.dao.SearchResultDAO;
 import com.app.model.SearchResultModel;
+import com.app.util.DatabaseUtil;
 
-import java.util.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 public class SearchResultDAOImpl implements SearchResultDAO {
 
 	@Override
-	public int getItemId(int searchResultId) {
-		return 0;
-	}
+	public SearchResultModel getSearchResult(int searchResultId)
+		throws Exception {
 
-	@Override
-	public String getItemTitle(int searchResultId) {
-		return null;
-	}
+		Connection connection = null;
+		ResultSet resultSet = null;
 
-	@Override
-	public String getTypeOfAuction(int searchResultId) {
-		return null;
-	}
+		try {
+			connection = DatabaseUtil.getDatabaseConnection();
 
-	@Override
-	public String getURL(int searchResultId) {
-		return null;
-	}
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				"SELECT * FROM SearchQueryResult WHERE searchResultId = ?");
 
-	@Override
-	public Date getEndingTime(int searchResultId) {
-		return null;
-	}
+			preparedStatement.setInt(1, searchResultId);
 
-	@Override
-	public String getAuctionPrice(int searchResultId) {
-		return null;
-	}
+			resultSet = preparedStatement.executeQuery();
 
-	@Override
-	public String getFixedPrice(int searchResultId) {
-		return null;
-	}
+			if (resultSet.next()) {
+				SearchResultModel searchResult = new SearchResultModel();
 
-	@Override
-	public SearchResultModel getSearchResult(int searchResultId) {
-		return null;
+				searchResult.setSearchResultId(
+					resultSet.getInt("searchResultId"));
+				searchResult.setItemId(
+					resultSet.getString("itemId"));
+				searchResult.setItemTitle(
+					resultSet.getString("itemTitle"));
+				searchResult.setTypeOfAuction(
+					resultSet.getString("typeOfAuction"));
+				searchResult.setItemURL(
+					resultSet.getString("itemURL"));
+				searchResult.setEndingTime(
+					resultSet.getDate("endingTime"));
+				searchResult.setAuctionPrice(
+					resultSet.getDouble("auctionPrice"));
+				searchResult.setFixedPrice(
+					resultSet.getDouble("fixedPrice"));
+
+				return searchResult;
+			}
+			else {
+				return new SearchResultModel();
+			}
+		}
+		finally {
+			if (connection != null) {
+				connection.close();
+			}
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+		}
 	}
 
 	@Override

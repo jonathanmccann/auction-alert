@@ -11,34 +11,29 @@ public class SearchResultModel {
 	}
 
 	public SearchResultModel(
-		String itemId, String itemTitle, String itemDetails,
-		double itemAuctionPrice, double itemFixedPrice, String itemURL,
+		String itemId, String itemTitle, double itemAuctionPrice,
+		double itemFixedPrice, String itemURL,
 		Date itemEndingTime, String typeOfAuction) {
 
 		_itemId = itemId;
 		_itemTitle = itemTitle;
-		_itemDetails = itemDetails;
-		_itemAuctionPrice = itemAuctionPrice;
-		_itemFixedPrice = itemFixedPrice;
+		_auctionPrice = itemAuctionPrice;
+		_fixedPrice = itemFixedPrice;
 		_itemURL = itemURL;
-		_itemEndingTime = itemEndingTime;
+		_endingTime = itemEndingTime;
 		_typeOfAuction = typeOfAuction;
 	}
 
-	public double getItemAuctionPrice() {
-		return _itemAuctionPrice;
+	public double getAuctionPrice() {
+		return _auctionPrice;
 	}
 
-	public String getItemDetails() {
-		return _itemDetails;
+	public Date getEndingTime() {
+		return _endingTime;
 	}
 
-	public Date getItemEndingTime() {
-		return _itemEndingTime;
-	}
-
-	public double getItemFixedPrice() {
-		return _itemFixedPrice;
+	public double getFixedPrice() {
+		return _fixedPrice;
 	}
 
 	public String getItemId() {
@@ -53,24 +48,24 @@ public class SearchResultModel {
 		return _itemURL;
 	}
 
+	public int getSearchResultId() {
+		return _searchResultId;
+	}
+
 	public String getTypeOfAuction() {
 		return _typeOfAuction;
 	}
 
-	public void setItemAuctionPrice(double itemPrice) {
-		_itemAuctionPrice = itemPrice;
+	public void setAuctionPrice(double auctionPrice) {
+		_auctionPrice = auctionPrice;
 	}
 
-	public void setItemDetails(String itemDetails) {
-		_itemDetails = itemDetails;
+	public void setEndingTime(Date itemEndingTime) {
+		_endingTime = itemEndingTime;
 	}
 
-	public void setItemEndingTime(Date itemEndingTime) {
-		_itemEndingTime = itemEndingTime;
-	}
-
-	public void setItemFixedPrice(double itemPrice) {
-		_itemFixedPrice = itemPrice;
+	public void setFixedPrice(double fixedPrice) {
+		_fixedPrice = fixedPrice;
 	}
 
 	public void setItemId(String itemId) {
@@ -85,17 +80,21 @@ public class SearchResultModel {
 		_itemURL = itemURL;
 	}
 
+	public void setSearchResultId(int searchResultId) {
+		_searchResultId = searchResultId;
+	}
+
 	public void setTypeOfAuction(String typeOfAuction) {
 		_typeOfAuction = typeOfAuction;
 	}
 
-	private double _itemAuctionPrice;
-	private String _itemDetails;
-	private Date _itemEndingTime;
-	private double _itemFixedPrice;
+	private double _auctionPrice;
+	private Date _endingTime;
+	private double _fixedPrice;
 	private String _itemId;
 	private String _itemTitle;
 	private String _itemURL;
+	private int _searchResultId;
 	private String _typeOfAuction;
 
 }

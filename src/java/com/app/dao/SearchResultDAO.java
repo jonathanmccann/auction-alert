@@ -7,21 +7,7 @@ import java.util.List;
 
 public interface SearchResultDAO {
 
-	public int getItemId(int searchResultId);
-
-	public String getItemTitle(int searchResultId);
-
-	public String getTypeOfAuction(int searchResultId);
-
-	public String getURL(int searchResultId);
-
-	public Date getEndingTime(int searchResultId);
-
-	public String getAuctionPrice(int searchResultId);
-
-	public String getFixedPrice(int searchResultId);
-
-	public SearchResultModel getSearchResult(int searchResultId);
+	public SearchResultModel getSearchResult(int searchResultId) throws Exception;
 
 	public List<SearchResultModel> getSearchResults();
 
