@@ -1,5 +1,6 @@
 package com.app.listener;
 
+import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
 
@@ -31,14 +32,22 @@ public class eBayServletContextListener implements ServletContextListener {
 			_log.info("Loading configuration properties");
 
 			PropertiesUtil.loadConfigurationProperties();
+
+			_log.info("Loading eBay service client");
+
+			eBayAPIUtil.loadeBayServiceClient();
+
+			_log.info("Loading database properties");
+
+			DatabaseUtil.loadDatabaseProperties();
+
+			_log.info("Initializing database");
+
+			DatabaseUtil.initializeDatabase();
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
-		_log.info("Loading eBay service client");
-
-		eBayAPIUtil.loadeBayServiceClient();
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(

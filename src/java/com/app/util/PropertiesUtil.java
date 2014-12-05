@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 public class PropertiesUtil {
 
 	public static final String APPLICATION_ID = "application.id";
+	public static final String DATABASE_PASSWORD = "jdbc.default.password";
+	public static final String DATABASE_URL = "jdbc.default.url";
+	public static final String DATABASE_USERNAME = "jdbc.default.username";
 
 	public static Properties getConfigurationProperties() {
 		return _properties;

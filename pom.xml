@@ -75,6 +75,9 @@
 		  <configuration>
 		    <systemPropertyVariables>
 			  <application.id>${application.id}</application.id>
+			  <jdbc.default.password>${jdbc.default.password}</jdbc.default.password>
+			  <jdbc.default.url>${jdbc.default.url}</jdbc.default.url>
+			  <jdbc.default.username>${jdbc.default.username}</jdbc.default.username>
 		    </systemPropertyVariables>
 		  </configuration>
 		</plugin>
