@@ -3,13 +3,13 @@ CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQuery VARCHAR(100) null
 );
 
-CREATE TABLE IF NOT EXISTS SearchQueryResult(
-	searchQueryResultId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS SearchResult(
+	searchResultId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	itemId INT NOT NULL,
 	itemTitle VARCHAR(100),
-	itemTypeOfAuction VARCHAR(25),
-	itemURL VARCHAR(50),
-	itemEndingTime DATE,
-	itemAuctionPrice DOUBLE,
-	itemFixedPrice DOUBLE
+	typeOfAuction VARCHAR(25),
+	URL VARCHAR(50),
+	endingTime DATE,
+	auctionPrice DOUBLE,
+	fixedPrice DOUBLE
 );
