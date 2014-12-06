@@ -11,9 +11,8 @@ public class SearchResultModel {
 	}
 
 	public SearchResultModel(
-		String itemId, String itemTitle, double auctionPrice,
-		double fixedPrice, String itemURL,
-		Date endingTime, String typeOfAuction) {
+		String itemId, String itemTitle, double auctionPrice, double fixedPrice,
+		String itemURL, Date endingTime, String typeOfAuction) {
 
 		_itemId = itemId;
 		_itemTitle = itemTitle;

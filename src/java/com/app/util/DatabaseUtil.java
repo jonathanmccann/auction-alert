@@ -1,16 +1,19 @@
 package com.app.util;
 
 import com.app.exception.DatabaseConnectionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 /**
  * @author Jonathan McCann
@@ -36,8 +39,7 @@ public class DatabaseUtil {
 	}
 
 	public static void initializeDatabase() throws DatabaseConnectionException {
-		Resource resource = new ClassPathResource(
-			"/sql/defaultdb.sql");
+		Resource resource = new ClassPathResource("/sql/defaultdb.sql");
 
 		ScriptUtils.executeSqlScript(getDatabaseConnection(), resource);
 	}
@@ -46,10 +48,10 @@ public class DatabaseUtil {
 		Properties properties = PropertiesUtil.getConfigurationProperties();
 
 		_DATABASE_URL = properties.getProperty(PropertiesUtil.DATABASE_URL);
-		_DATABASE_PASSWORD =
-			properties.getProperty(PropertiesUtil.DATABASE_PASSWORD);
-		_DATABASE_USERNAME =
-			properties.getProperty(PropertiesUtil.DATABASE_USERNAME);
+		_DATABASE_PASSWORD = properties.getProperty(
+			PropertiesUtil.DATABASE_PASSWORD);
+		_DATABASE_USERNAME = properties.getProperty(
+			PropertiesUtil.DATABASE_USERNAME);
 	}
 
 	public static void setDatabaseProperties(
@@ -61,7 +63,9 @@ public class DatabaseUtil {
 	}
 
 	private static String _DATABASE_PASSWORD;
+
 	private static String _DATABASE_URL;
+
 	private static String _DATABASE_USERNAME;
 
 	private static final Logger _log = LoggerFactory.getLogger(

@@ -44,19 +44,19 @@ public class SearchResultModelTest {
 	}
 
 	@Test
+	public void testSetAndGetFixedPrice() throws Exception {
+		_searchResultModel.setFixedPrice(14.99);
+
+		Assert.assertEquals(14.99, _searchResultModel.getFixedPrice(), 0);
+	}
+
+	@Test
 	public void testSetAndGetItemEndingTime() throws Exception {
 		Date endingTime = new Date();
 
 		_searchResultModel.setEndingTime(endingTime);
 
 		Assert.assertEquals(endingTime, _searchResultModel.getEndingTime());
-	}
-
-	@Test
-	public void testSetAndGetFixedPrice() throws Exception {
-		_searchResultModel.setFixedPrice(14.99);
-
-		Assert.assertEquals(14.99, _searchResultModel.getFixedPrice(), 0);
 	}
 
 	@Test

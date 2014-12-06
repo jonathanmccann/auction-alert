@@ -59,8 +59,7 @@ public class eBaySearchResultModel extends SearchResultModel {
 			List<SearchItem> items = result.getSearchResult().getItem();
 
 			for (SearchItem item : items) {
-				SearchResultModel searchResultModel =
-					new SearchResultModel();
+				SearchResultModel searchResultModel = new SearchResultModel();
 
 				ListingInfo listingInfo = item.getListingInfo();
 
@@ -75,9 +74,7 @@ public class eBaySearchResultModel extends SearchResultModel {
 
 				SellingStatus sellingStatus = item.getSellingStatus();
 
-				if (searchResultModel.getTypeOfAuction().contains(
-						"Auction")) {
-
+				if (searchResultModel.getTypeOfAuction().contains("Auction")) {
 					searchResultModel.setAuctionPrice(
 						sellingStatus.getCurrentPrice().getValue());
 				}

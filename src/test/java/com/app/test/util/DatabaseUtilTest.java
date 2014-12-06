@@ -32,8 +32,7 @@ public class DatabaseUtilTest {
 
 	@Test(expected = DatabaseConnectionException.class)
 	public void testGetInvalidDatabaseConnection() throws Exception {
-		DatabaseUtil.setDatabaseProperties(
-			"test", "test", "test");
+		DatabaseUtil.setDatabaseProperties("test", "test", "test");
 
 		DatabaseUtil.getDatabaseConnection();
 	}

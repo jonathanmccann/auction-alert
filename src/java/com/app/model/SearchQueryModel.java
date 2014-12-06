@@ -13,23 +13,23 @@ public class SearchQueryModel {
 		_searchQuery = searchQuery;
 	}
 
-	public int getSearchQueryId() {
-		return _searchQueryId;
-	}
-
 	public String getSearchQuery() {
 		return _searchQuery;
 	}
 
-	public void setSearchQueryId(int searchQueryId) {
-		_searchQueryId = searchQueryId;
+	public int getSearchQueryId() {
+		return _searchQueryId;
 	}
 
 	public void setSearchQuery(String _searchQuery) {
 		_searchQuery = _searchQuery;
 	}
 
-	private int _searchQueryId;
+	public void setSearchQueryId(int searchQueryId) {
+		_searchQueryId = searchQueryId;
+	}
+
 	private String _searchQuery;
+	private int _searchQueryId;
 
 }

@@ -4,15 +4,18 @@ import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.model.SearchQueryModel;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
+
+import java.sql.Connection;
+
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
-
-import java.sql.Connection;
-import java.util.List;
 
 /**
  * @author Jonathan McCann
@@ -34,26 +37,29 @@ public class SearchQueryDAOTest {
 
 		Connection connection = DatabaseUtil.getDatabaseConnection();
 
-		Resource resource = new ClassPathResource(
-			"/sql/testdb.sql");
+		Resource resource = new ClassPathResource("/sql/testdb.sql");
 
 		ScriptUtils.executeSqlScript(connection, resource);
 	}
 
 	@Test
 	public void testSearchQueryDAO() throws Exception {
+
 		// Test add
+
 		SearchQueryDAOImpl searchQueryDAOImpl = new SearchQueryDAOImpl();
 
 		searchQueryDAOImpl.addSearchQuery("First test search query");
 		searchQueryDAOImpl.addSearchQuery("Second test search query");
 
 		// Test get
+
 		String searchQuery = searchQueryDAOImpl.getSearchQuery(1);
 
 		Assert.assertEquals("First test search query", searchQuery);
 
 		// Test get multiple
+
 		List<SearchQueryModel> searchQueryModels =
 			searchQueryDAOImpl.getSearchQueries();
 
@@ -68,6 +74,7 @@ public class SearchQueryDAOTest {
 			searchQueryModels.get(1).getSearchQuery());
 
 		// Test update
+
 		searchQueryDAOImpl.updateSearchQuery(1, "Updated test search query");
 
 		String updatedSearchQuery = searchQueryDAOImpl.getSearchQuery(1);
@@ -75,6 +82,7 @@ public class SearchQueryDAOTest {
 		Assert.assertEquals("Updated test search query", updatedSearchQuery);
 
 		// Test delete multiple
+
 		searchQueryDAOImpl.deleteSearchQuery(1);
 		searchQueryDAOImpl.deleteSearchQuery(2);
 

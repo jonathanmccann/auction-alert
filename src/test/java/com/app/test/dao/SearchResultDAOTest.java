@@ -4,16 +4,19 @@ import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.model.SearchResultModel;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
+
+import java.sql.Connection;
+
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
-
-import java.sql.Connection;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author Jonathan McCann
@@ -35,15 +38,16 @@ public class SearchResultDAOTest {
 
 		Connection connection = DatabaseUtil.getDatabaseConnection();
 
-		Resource resource = new ClassPathResource(
-			"/sql/testdb.sql");
+		Resource resource = new ClassPathResource("/sql/testdb.sql");
 
 		ScriptUtils.executeSqlScript(connection, resource);
 	}
 
 	@Test
 	public void testSearchResultDAO() throws Exception {
+
 		// Test add
+
 		SearchResultDAOImpl searchResultDAOImpl = new SearchResultDAOImpl();
 
 		Date endingTime = new Date();
@@ -58,6 +62,7 @@ public class SearchResultDAOTest {
 			endingTime, "Buy It Now");
 
 		// Test get
+
 		SearchResultModel searchResult = searchResultDAOImpl.getSearchResult(1);
 
 		Assert.assertEquals(1, searchResult.getSearchResultId());
@@ -71,6 +76,7 @@ public class SearchResultDAOTest {
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
 		// Test get multiple
+
 		List<SearchResultModel> searchResultModels =
 			searchResultDAOImpl.getSearchResults();
 
@@ -86,9 +92,11 @@ public class SearchResultDAOTest {
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/5678", secondSearchResult.getItemURL());
 		Assert.assertEquals(endingTime, secondSearchResult.getEndingTime());
-		Assert.assertEquals("Buy It Now", secondSearchResult.getTypeOfAuction());
+		Assert.assertEquals(
+			"Buy It Now", secondSearchResult.getTypeOfAuction());
 
 		// Test delete multiple
+
 		searchResultDAOImpl.deleteSearchResult(1);
 		searchResultDAOImpl.deleteSearchResult(2);
 

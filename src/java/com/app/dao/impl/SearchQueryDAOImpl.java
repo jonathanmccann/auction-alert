@@ -4,43 +4,39 @@ import com.app.dao.SearchQueryDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 import com.app.util.DatabaseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Jonathan McCann
+ */
 public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	@Override
-	public String getSearchQuery(int searchQueryId) throws SQLException {
+	public void addSearchQuery(String searchQuery) throws SQLException {
 		Connection connection = null;
-		ResultSet resultSet = null;
 
 		try {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"SELECT searchQuery FROM SearchQuery WHERE searchQueryId = ?");
+				"INSERT INTO SearchQuery(searchQuery) VALUES(?)");
 
-			preparedStatement.setInt(1, searchQueryId);
+			preparedStatement.setString(1, searchQuery);
 
-			resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return resultSet.getString("searchQuery");
-			}
-			else {
-				throw new SQLException();
-			}
+			preparedStatement.executeUpdate();
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Cannot find search query for search query ID: " +
-				searchQueryId);
+			_log.error("Unable to add search query: " + searchQuery);
 
 			throw new SQLException(exception);
 		}
@@ -48,9 +44,33 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			if (connection != null) {
 				connection.close();
 			}
+		}
+	}
 
-			if (resultSet != null) {
-				resultSet.close();
+	@Override
+	public void deleteSearchQuery(int searchQueryId) throws SQLException {
+		Connection connection = null;
+
+		try {
+			connection = DatabaseUtil.getDatabaseConnection();
+
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				"DELETE FROM SearchQuery WHERE searchQueryId = ?");
+
+			preparedStatement.setInt(1, searchQueryId);
+
+			preparedStatement.executeUpdate();
+		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error(
+				"Unable to delete search query for search query ID: " +
+					searchQueryId);
+
+			throw new SQLException(exception);
+		}
+		finally {
+			if (connection != null) {
+				connection.close();
 			}
 		}
 	}
@@ -101,27 +121,41 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	}
 
 	@Override
-	public void addSearchQuery(String searchQuery) throws SQLException {
+	public String getSearchQuery(int searchQueryId) throws SQLException {
 		Connection connection = null;
+		ResultSet resultSet = null;
 
 		try {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"INSERT INTO SearchQuery(searchQuery) VALUES(?)");
+				"SELECT searchQuery FROM SearchQuery WHERE searchQueryId = ?");
 
-			preparedStatement.setString(1, searchQuery);
+			preparedStatement.setInt(1, searchQueryId);
 
-			preparedStatement.executeUpdate();
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				return resultSet.getString("searchQuery");
+			}
+			else {
+				throw new SQLException();
+			}
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to add search query: " + searchQuery);
+			_log.error(
+				"Cannot find search query for search query ID: " +
+					searchQueryId);
 
 			throw new SQLException(exception);
 		}
 		finally {
 			if (connection != null) {
 				connection.close();
+			}
+
+			if (resultSet != null) {
+				resultSet.close();
 			}
 		}
 	}
@@ -145,35 +179,9 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			preparedStatement.executeUpdate();
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to update search query: " + searchQuery +
-				" for search query ID: " + searchQueryId);
-
-			throw new SQLException(exception);
-		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
-	}
-
-	@Override
-	public void deleteSearchQuery(int searchQueryId) throws SQLException {
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				"DELETE FROM SearchQuery WHERE searchQueryId = ?");
-
-			preparedStatement.setInt(1, searchQueryId);
-
-			preparedStatement.executeUpdate();
-		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to delete search query for search query ID: " +
-				searchQueryId);
+			_log.error(
+				"Unable to update search query: " + searchQuery +
+					" for search query ID: " + searchQueryId);
 
 			throw new SQLException(exception);
 		}

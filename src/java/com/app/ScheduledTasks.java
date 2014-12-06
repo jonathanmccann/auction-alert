@@ -34,12 +34,6 @@ public class ScheduledTasks {
 		textSearchResults(searchResults);
 	}
 
-	private static List<SearchResultModel> performSearch(
-		List<String> searchQueries) {
-
-		return eBaySearchResultModel.geteBaySearchResults(searchQueries);
-	}
-
 	private static List<SearchResultModel> filterSearchResults(
 		List<SearchResultModel> searchResultModels) {
 
@@ -48,6 +42,12 @@ public class ScheduledTasks {
 		// Return list
 
 		return searchResultModels;
+	}
+
+	private static List<SearchResultModel> performSearch(
+		List<String> searchQueries) {
+
+		return eBaySearchResultModel.geteBaySearchResults(searchQueries);
 	}
 
 	private static void textSearchResults(
