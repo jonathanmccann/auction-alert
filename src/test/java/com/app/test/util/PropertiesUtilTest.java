@@ -15,46 +15,54 @@ import org.junit.Test;
 public class PropertiesUtilTest {
 
 	@Test
-	public void testLoadAndGetConfigurationProperties() throws Exception {
+	public void testLoadConfigurationProperties() throws Exception {
 		PropertiesUtil.loadConfigurationProperties(
-			getClass().getResource("/config.properties").getPath());
+			getClass().getResource("/test-config.properties").getPath());
 
 		Properties properties = PropertiesUtil.getConfigurationProperties();
 
 		Assert.assertEquals(
-			"", properties.getProperty(PropertiesUtil.APPLICATION_ID));
-		Assert.assertEquals(
-			"", properties.getProperty(PropertiesUtil.DATABASE_PASSWORD));
-		Assert.assertEquals(
-			"", properties.getProperty(PropertiesUtil.DATABASE_URL));
-		Assert.assertEquals(
-			"", properties.getProperty(PropertiesUtil.DATABASE_USERNAME));
-
-		String applicationId = System.getProperty(
-			PropertiesUtil.APPLICATION_ID);
-		String databasePassword = System.getProperty(
-			PropertiesUtil.DATABASE_PASSWORD);
-		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesUtil.DATABASE_USERNAME);
-
-		properties.setProperty(PropertiesUtil.APPLICATION_ID, applicationId);
-		properties.setProperty(
-			PropertiesUtil.DATABASE_PASSWORD, databasePassword);
-		properties.setProperty(PropertiesUtil.DATABASE_URL, databaseURL);
-		properties.setProperty(
-			PropertiesUtil.DATABASE_USERNAME, databaseUsername);
-
-		Assert.assertEquals(
-			applicationId,
+			"Application ID",
 			properties.getProperty(PropertiesUtil.APPLICATION_ID));
 		Assert.assertEquals(
-			databasePassword,
+			"JDBC Default Password",
 			properties.getProperty(PropertiesUtil.DATABASE_PASSWORD));
 		Assert.assertEquals(
-			databaseURL, properties.getProperty(PropertiesUtil.DATABASE_URL));
+			"JDBC Default URL",
+			properties.getProperty(PropertiesUtil.DATABASE_URL));
 		Assert.assertEquals(
-			databaseUsername,
+			"JDBC Default Username",
+			properties.getProperty(PropertiesUtil.DATABASE_USERNAME));
+	}
+
+	@Test
+	public void testSetConfigurationProperties() throws Exception {
+		Properties properties = new Properties();
+
+		properties.setProperty(
+			PropertiesUtil.APPLICATION_ID, "Updated Application ID");
+		properties.setProperty(
+			PropertiesUtil.DATABASE_PASSWORD, "Updated JDBC Default Password");
+		properties.setProperty(
+			PropertiesUtil.DATABASE_URL, "Updated JDBC Default URL");
+		properties.setProperty(
+			PropertiesUtil.DATABASE_USERNAME, "Updated JDBC Default Username");
+
+		PropertiesUtil.setConfigurationProperties(properties);
+
+		properties = PropertiesUtil.getConfigurationProperties();
+
+		Assert.assertEquals(
+			"Updated Application ID",
+			properties.getProperty(PropertiesUtil.APPLICATION_ID));
+		Assert.assertEquals(
+			"Updated JDBC Default Password",
+			properties.getProperty(PropertiesUtil.DATABASE_PASSWORD));
+		Assert.assertEquals(
+			"Updated JDBC Default URL",
+			properties.getProperty(PropertiesUtil.DATABASE_URL));
+		Assert.assertEquals(
+			"Updated JDBC Default Username",
 			properties.getProperty(PropertiesUtil.DATABASE_USERNAME));
 	}
 
