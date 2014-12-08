@@ -18,7 +18,12 @@ public interface SearchResultDAO {
 		double fixedPrice, String itemURL, Date endingTime,
 		String typeOfAuction) throws Exception;
 
+	public void deleteSearchQueryResults(int searchQueryId) throws Exception;
+
 	public void deleteSearchResult(int searchResultId) throws Exception;
+
+	public List<SearchResultModel> getSearchQueryResults(int searchQueryId)
+		throws Exception;
 
 	public SearchResultModel getSearchResult(int searchResultId)
 		throws Exception;

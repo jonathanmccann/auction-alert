@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.springframework.core.io.ClassPathResource;
@@ -23,8 +24,8 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
  */
 public class SearchResultDAOTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		String databasePassword = System.getProperty(
 			PropertiesUtil.DATABASE_PASSWORD);
 		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
@@ -41,29 +42,43 @@ public class SearchResultDAOTest {
 		Resource resource = new ClassPathResource("/sql/testdb.sql");
 
 		ScriptUtils.executeSqlScript(connection, resource);
+
+		_searchResultDAOImpl = new SearchResultDAOImpl();
 	}
 
 	@Test
 	public void testSearchResultDAO() throws Exception {
 
-		// Test add
+		// Test add with constructor
 
-		SearchResultDAOImpl searchResultDAOImpl = new SearchResultDAOImpl();
-
-		Date endingTime = new Date();
+		_endingTime = new Date();
 
 		SearchResultModel searchResultModel = new SearchResultModel(
 			1, "1234", "First Item", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", endingTime, "Auction");
+			"http://www.ebay.com/itm/1234", _endingTime, "Auction");
 
-		searchResultDAOImpl.addSearchResult(searchResultModel);
-		searchResultDAOImpl.addSearchResult(
-			2, "5678", "Second Item", 29.99, 29.99,
-			"http://www.ebay.com/itm/5678", endingTime, "Buy It Now");
+		_searchResultDAOImpl.addSearchResult(searchResultModel);
+
+		searchResultModel = new SearchResultModel(
+			1, "2345", "Second Item", 14.99, 14.99,
+			"http://www.ebay.com/itm/2345", _endingTime, "Auction");
+
+		_searchResultDAOImpl.addSearchResult(searchResultModel);
+
+		// Test add
+
+		_searchResultDAOImpl.addSearchResult(
+			2, "5678", "Third Item", 29.99, 29.99,
+			"http://www.ebay.com/itm/5678", _endingTime, "Buy It Now");
+
+		_searchResultDAOImpl.addSearchResult(
+			2, "6789", "Fourth Item", 29.99, 29.99,
+			"http://www.ebay.com/itm/6789", _endingTime, "Buy It Now");
 
 		// Test get
 
-		SearchResultModel searchResult = searchResultDAOImpl.getSearchResult(1);
+		SearchResultModel searchResult =
+			_searchResultDAOImpl.getSearchResult(1);
 
 		Assert.assertEquals(1, searchResult.getSearchResultId());
 		Assert.assertEquals(1, searchResult.getSearchQueryId());
@@ -73,38 +88,55 @@ public class SearchResultDAOTest {
 		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
-		Assert.assertEquals(endingTime, searchResult.getEndingTime());
+		Assert.assertEquals(_endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
 		// Test get multiple
 
 		List<SearchResultModel> searchResultModels =
-			searchResultDAOImpl.getSearchResults();
+			_searchResultDAOImpl.getSearchResults();
 
-		Assert.assertEquals(2, searchResultModels.size());
+		Assert.assertEquals(4, searchResultModels.size());
 
-		SearchResultModel secondSearchResult = searchResultModels.get(1);
+		SearchResultModel secondSearchResult = searchResultModels.get(2);
 
-		Assert.assertEquals(2, secondSearchResult.getSearchResultId());
+		Assert.assertEquals(3, secondSearchResult.getSearchResultId());
 		Assert.assertEquals(2, secondSearchResult.getSearchQueryId());
 		Assert.assertEquals("5678", secondSearchResult.getItemId());
-		Assert.assertEquals("Second Item", secondSearchResult.getItemTitle());
+		Assert.assertEquals("Third Item", secondSearchResult.getItemTitle());
 		Assert.assertEquals(29.99, secondSearchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(29.99, secondSearchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/5678", secondSearchResult.getItemURL());
-		Assert.assertEquals(endingTime, secondSearchResult.getEndingTime());
+		Assert.assertEquals(_endingTime, secondSearchResult.getEndingTime());
 		Assert.assertEquals(
 			"Buy It Now", secondSearchResult.getTypeOfAuction());
 
 		// Test delete multiple
 
-		searchResultDAOImpl.deleteSearchResult(1);
-		searchResultDAOImpl.deleteSearchResult(2);
+		_searchResultDAOImpl.deleteSearchResult(1);
+		_searchResultDAOImpl.deleteSearchResult(2);
 
-		searchResultModels = searchResultDAOImpl.getSearchResults();
+		searchResultModels = _searchResultDAOImpl.getSearchResults();
+
+		Assert.assertEquals(2, searchResultModels.size());
+
+		// Test find by search query
+
+		searchResultModels = _searchResultDAOImpl.getSearchQueryResults(2);
+
+		Assert.assertEquals(2, searchResultModels.size());
+
+		_searchResultDAOImpl.deleteSearchQueryResults(2);
+
+		searchResultModels = _searchResultDAOImpl.getSearchQueryResults(2);
 
 		Assert.assertEquals(0, searchResultModels.size());
 	}
+
+	private static SearchResultDAOImpl _searchResultDAOImpl =
+		new SearchResultDAOImpl();
+
+	private static Date _endingTime;
 
 }

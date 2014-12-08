@@ -132,6 +132,97 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	}
 
 	@Override
+	public void deleteSearchQueryResults(int searchQueryId)
+		throws SQLException {
+
+		Connection connection = null;
+
+		try {
+			connection = DatabaseUtil.getDatabaseConnection();
+
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				"DELETE FROM SearchResult WHERE searchQueryId = ?");
+
+			preparedStatement.setInt(1, searchQueryId);
+
+			preparedStatement.executeUpdate();
+		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error(
+				"Unable to delete search results for search query ID: " +
+					searchQueryId);
+
+			throw new SQLException(exception);
+		}
+		finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	@Override
+	public List<SearchResultModel> getSearchQueryResults(int searchQueryId)
+		throws SQLException {
+
+		Connection connection = null;
+		ResultSet resultSet = null;
+
+		try {
+			connection = DatabaseUtil.getDatabaseConnection();
+
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				"SELECT * FROM SearchResult WHERE searchQueryId = ?");
+
+			preparedStatement.setInt(1, searchQueryId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			List<SearchResultModel> searchResults =
+				new ArrayList<SearchResultModel>();
+
+			while (resultSet.next()) {
+				SearchResultModel searchResult = new SearchResultModel();
+
+				searchResult.setSearchResultId(
+					resultSet.getInt("searchResultId"));
+				searchResult.setSearchQueryId(
+					resultSet.getInt("searchQueryId"));
+				searchResult.setItemId(resultSet.getString("itemId"));
+				searchResult.setItemTitle(resultSet.getString("itemTitle"));
+				searchResult.setTypeOfAuction(
+					resultSet.getString("typeOfAuction"));
+				searchResult.setItemURL(resultSet.getString("itemURL"));
+				searchResult.setEndingTime(
+					new Date(resultSet.getLong("endingTime")));
+				searchResult.setAuctionPrice(
+					resultSet.getDouble("auctionPrice"));
+				searchResult.setFixedPrice(resultSet.getDouble("fixedPrice"));
+
+				searchResults.add(searchResult);
+			}
+
+			return searchResults;
+		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error(
+				"Unable to return all search query results for search query " +
+					"ID: " + searchQueryId);
+
+			throw new SQLException(exception);
+		}
+		finally {
+			if (connection != null) {
+				connection.close();
+			}
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+		}
+	}
+
+	@Override
 	public SearchResultModel getSearchResult(int searchResultId)
 		throws SQLException {
 
