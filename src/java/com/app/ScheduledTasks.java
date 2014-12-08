@@ -23,13 +23,6 @@ public class ScheduledTasks {
 
 	@Scheduled(fixedRate = 300000)
 	public static void main() {
-
-		// Get search queries
-		// Call performSearch on queries
-		// Call filterSearchResults to remove already seen results
-		// Remove old results, save new results to database
-		// Call textSearchResults to deliver new results
-
 		try {
 			List<SearchQueryModel> searchQueries =
 				_searchQueryDAOImpl.getSearchQueries();

@@ -24,8 +24,6 @@ public class eBayServletContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent)
 		throws RuntimeException {
 
-		System.out.println("ServletContextListener started");
-
 		_log.info("Initializing servlet context");
 
 		try {
