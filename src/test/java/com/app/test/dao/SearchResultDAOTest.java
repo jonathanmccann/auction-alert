@@ -53,19 +53,20 @@ public class SearchResultDAOTest {
 		Date endingTime = new Date();
 
 		SearchResultModel searchResultModel = new SearchResultModel(
-			"1234", "First Item", 14.99, 14.99, "http://www.ebay.com/itm/1234",
-			endingTime, "Auction");
+			1, "1234", "First Item", 14.99, 14.99,
+			"http://www.ebay.com/itm/1234", endingTime, "Auction");
 
 		searchResultDAOImpl.addSearchResult(searchResultModel);
 		searchResultDAOImpl.addSearchResult(
-			"5678", "Second Item", 29.99, 29.99, "http://www.ebay.com/itm/5678",
-			endingTime, "Buy It Now");
+			2, "5678", "Second Item", 29.99, 29.99,
+			"http://www.ebay.com/itm/5678", endingTime, "Buy It Now");
 
 		// Test get
 
 		SearchResultModel searchResult = searchResultDAOImpl.getSearchResult(1);
 
 		Assert.assertEquals(1, searchResult.getSearchResultId());
+		Assert.assertEquals(1, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
 		Assert.assertEquals(14.99, searchResult.getAuctionPrice(), 0);
@@ -85,6 +86,7 @@ public class SearchResultDAOTest {
 		SearchResultModel secondSearchResult = searchResultModels.get(1);
 
 		Assert.assertEquals(2, secondSearchResult.getSearchResultId());
+		Assert.assertEquals(2, secondSearchResult.getSearchQueryId());
 		Assert.assertEquals("5678", secondSearchResult.getItemId());
 		Assert.assertEquals("Second Item", secondSearchResult.getItemTitle());
 		Assert.assertEquals(29.99, secondSearchResult.getAuctionPrice(), 0);

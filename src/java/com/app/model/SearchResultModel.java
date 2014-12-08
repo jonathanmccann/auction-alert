@@ -11,9 +11,11 @@ public class SearchResultModel {
 	}
 
 	public SearchResultModel(
-		String itemId, String itemTitle, double auctionPrice, double fixedPrice,
-		String itemURL, Date endingTime, String typeOfAuction) {
+		int searchQueryId, String itemId, String itemTitle, double auctionPrice,
+		double fixedPrice, String itemURL, Date endingTime,
+		String typeOfAuction) {
 
+		_searchQueryId = searchQueryId;
 		_itemId = itemId;
 		_itemTitle = itemTitle;
 		_auctionPrice = auctionPrice;
@@ -45,6 +47,10 @@ public class SearchResultModel {
 
 	public String getItemURL() {
 		return _itemURL;
+	}
+
+	public int getSearchQueryId() {
+		return _searchQueryId;
 	}
 
 	public int getSearchResultId() {
@@ -79,6 +85,10 @@ public class SearchResultModel {
 		_itemURL = itemURL;
 	}
 
+	public void setSearchQueryId(int searchQueryId) {
+		_searchQueryId = searchQueryId;
+	}
+
 	public void setSearchResultId(int searchResultId) {
 		_searchResultId = searchResultId;
 	}
@@ -93,6 +103,7 @@ public class SearchResultModel {
 	private String _itemId;
 	private String _itemTitle;
 	private String _itemURL;
+	private int _searchQueryId;
 	private int _searchResultId;
 	private String _typeOfAuction;
 

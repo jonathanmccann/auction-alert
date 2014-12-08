@@ -14,8 +14,9 @@ public interface SearchResultDAO {
 		throws Exception;
 
 	public void addSearchResult(
-		String itemId, String itemTitle, double auctionPrice, double fixedPrice,
-		String itemURL, Date endingTime, String typeOfAuction) throws Exception;
+		int searchQueryId, String itemId, String itemTitle, double auctionPrice,
+		double fixedPrice, String itemURL, Date endingTime,
+		String typeOfAuction) throws Exception;
 
 	public void deleteSearchResult(int searchResultId) throws Exception;
 

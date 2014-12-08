@@ -32,19 +32,20 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"INSERT INTO SearchResult(itemId, itemTitle, typeOfAuction, " +
-					"itemURL, endingTime, auctionPrice, fixedPrice) " +
-						"VALUES(?, ? ,?, ?, ?, ?, ?)");
+				"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, " +
+					"typeOfAuction, itemURL, endingTime, auctionPrice, " +
+						" fixedPrice) VALUES(?, ?, ? ,?, ?, ?, ?, ?)");
 
-			preparedStatement.setString(1, searchResultModel.getItemId());
-			preparedStatement.setString(2, searchResultModel.getItemTitle());
+			preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
+			preparedStatement.setString(2, searchResultModel.getItemId());
+			preparedStatement.setString(3, searchResultModel.getItemTitle());
 			preparedStatement.setString(
-				3, searchResultModel.getTypeOfAuction());
-			preparedStatement.setString(4, searchResultModel.getItemURL());
+				4, searchResultModel.getTypeOfAuction());
+			preparedStatement.setString(5, searchResultModel.getItemURL());
 			preparedStatement.setLong(
-				5, searchResultModel.getEndingTime().getTime());
-			preparedStatement.setDouble(6, searchResultModel.getAuctionPrice());
-			preparedStatement.setDouble(7, searchResultModel.getFixedPrice());
+				6, searchResultModel.getEndingTime().getTime());
+			preparedStatement.setDouble(7, searchResultModel.getAuctionPrice());
+			preparedStatement.setDouble(8, searchResultModel.getFixedPrice());
 
 			preparedStatement.executeUpdate();
 		}
@@ -64,9 +65,9 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 	@Override
 	public void addSearchResult(
-			String itemId, String itemTitle, double auctionPrice,
-			double fixedPrice, String itemURL, Date endingTime,
-			String typeOfAuction)
+			int searchQueryId, String itemId, String itemTitle,
+			double auctionPrice, double fixedPrice, String itemURL,
+			Date endingTime, String typeOfAuction)
 		throws SQLException {
 
 		Connection connection = null;
@@ -75,17 +76,18 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"INSERT INTO SearchResult(itemId, itemTitle, typeOfAuction, " +
-					"itemURL, endingTime, auctionPrice, fixedPrice) " +
-						"VALUES(?, ? ,?, ?, ?, ?, ?)");
+				"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, " +
+					"typeOfAuction, itemURL, endingTime, auctionPrice, " +
+						"fixedPrice) VALUES(?, ?, ? ,?, ?, ?, ?, ?)");
 
-			preparedStatement.setString(1, itemId);
-			preparedStatement.setString(2, itemTitle);
-			preparedStatement.setString(3, typeOfAuction);
-			preparedStatement.setString(4, itemURL);
-			preparedStatement.setLong(5, endingTime.getTime());
-			preparedStatement.setDouble(6, auctionPrice);
-			preparedStatement.setDouble(7, fixedPrice);
+			preparedStatement.setInt(1, searchQueryId);
+			preparedStatement.setString(2, itemId);
+			preparedStatement.setString(3, itemTitle);
+			preparedStatement.setString(4, typeOfAuction);
+			preparedStatement.setString(5, itemURL);
+			preparedStatement.setLong(6, endingTime.getTime());
+			preparedStatement.setDouble(7, auctionPrice);
+			preparedStatement.setDouble(8, fixedPrice);
 
 			preparedStatement.executeUpdate();
 		}
@@ -151,6 +153,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 				searchResult.setSearchResultId(
 					resultSet.getInt("searchResultId"));
+				searchResult.setSearchQueryId(
+					resultSet.getInt("searchQueryId"));
 				searchResult.setItemId(resultSet.getString("itemId"));
 				searchResult.setItemTitle(resultSet.getString("itemTitle"));
 				searchResult.setTypeOfAuction(
@@ -207,6 +211,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 				searchResult.setSearchResultId(
 					resultSet.getInt("searchResultId"));
+				searchResult.setSearchQueryId(
+					resultSet.getInt("searchQueryId"));
 				searchResult.setItemId(resultSet.getString("itemId"));
 				searchResult.setItemTitle(resultSet.getString("itemTitle"));
 				searchResult.setTypeOfAuction(

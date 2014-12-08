@@ -23,9 +23,10 @@ public class SearchResultModelTest {
 		Date endingTime = new Date();
 
 		SearchResultModel searchResultModel = new SearchResultModel(
-			"1234", "itemTitle", 14.99, 14.99, "http://www.ebay.com/itm/1234",
-			endingTime, "Buy It Now");
+			1, "1234", "itemTitle", 14.99, 14.99,
+			"http://www.ebay.com/itm/1234", endingTime, "Buy It Now");
 
+		Assert.assertEquals(1, searchResultModel.getSearchQueryId());
 		Assert.assertEquals("1234", searchResultModel.getItemId());
 		Assert.assertEquals("itemTitle", searchResultModel.getItemTitle());
 		Assert.assertEquals(14.99, searchResultModel.getAuctionPrice(), 0);
