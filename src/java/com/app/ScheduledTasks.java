@@ -46,8 +46,6 @@ public class ScheduledTasks {
 					searchQueryModel.getSearchQueryId(), searchResults);
 
 				if (searchResults.size() > 0) {
-					saveNewResultsAndRemoveOldResults(searchResults);
-
 					textSearchResults(searchResults);
 				}
 			}
@@ -58,21 +56,24 @@ public class ScheduledTasks {
 	}
 
 	private static List<SearchResultModel> filterSearchResults(
-			int searchQueryId, List<SearchResultModel> searchResultModels)
+			int searchQueryId, List<SearchResultModel> newSearchResultModels)
 		throws SQLException {
 
-		SearchResultDAOImpl searchResultDAOImpl = new SearchResultDAOImpl();
-
 		List<SearchResultModel> existingSearchResultModels =
-			searchResultDAOImpl.getSearchQueryResults(searchQueryId);
+			_searchResultDAOImpl.getSearchQueryResults(searchQueryId);
 
-		searchResultModels.removeAll(existingSearchResultModels);
+		newSearchResultModels.removeAll(existingSearchResultModels);
+
+		if (newSearchResultModels.size() > 0) {
+			saveNewResultsAndRemoveOldResults(
+				existingSearchResultModels, newSearchResultModels);
+		}
 
 		_log.info(
 			"Found {} search results for search query ID: {}",
-				searchResultModels.size(), searchQueryId);
+				newSearchResultModels.size(), searchQueryId);
 
-		return searchResultModels;
+		return newSearchResultModels;
 	}
 
 	private static List<SearchResultModel> performSearch(
@@ -82,11 +83,26 @@ public class ScheduledTasks {
 	}
 
 	private static void saveNewResultsAndRemoveOldResults(
-		List<SearchResultModel> searchResultModels) {
+			List<SearchResultModel> existingSearchResultModels,
+			List<SearchResultModel> newSearchResultModels)
+		throws SQLException{
 
-		// Remove old results
+		int numberOfSearchResultsToRemove =
+			existingSearchResultModels.size() + newSearchResultModels.size() - 5;
 
-		// Save new results
+		if (numberOfSearchResultsToRemove > 0) {
+			for (int i = 0; i < (numberOfSearchResultsToRemove - 1); i++) {
+				SearchResultModel searchResult =
+					existingSearchResultModels.get(i);
+
+				_searchResultDAOImpl.deleteSearchResult(
+					searchResult.getSearchResultId());
+			}
+		}
+
+		for (SearchResultModel searchResultModel : newSearchResultModels) {
+			_searchResultDAOImpl.addSearchResult(searchResultModel);
+		}
 	}
 
 	private static void textSearchResults(
@@ -102,5 +118,8 @@ public class ScheduledTasks {
 
 	private static SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
+
+	private static SearchResultDAOImpl _searchResultDAOImpl =
+		new SearchResultDAOImpl();
 
 }
