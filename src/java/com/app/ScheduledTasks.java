@@ -91,7 +91,7 @@ public class ScheduledTasks {
 			existingSearchResultModels.size() + newSearchResultModels.size() - 5;
 
 		if (numberOfSearchResultsToRemove > 0) {
-			for (int i = 0; i < (numberOfSearchResultsToRemove - 1); i++) {
+			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
 				SearchResultModel searchResult =
 					existingSearchResultModels.get(i);
 
