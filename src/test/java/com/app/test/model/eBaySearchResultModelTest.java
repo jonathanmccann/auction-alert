@@ -7,7 +7,6 @@ import com.app.util.eBayAPIUtil;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -35,12 +34,8 @@ public class eBaySearchResultModelTest {
 
 	@Test
 	public void testGeteBaySearchResults() throws Exception {
-		List<String> searchQueries = new ArrayList<String>();
-
-		searchQueries.add("ebay");
-
 		List<SearchResultModel> eBaySearchResults =
-			eBaySearchResultModel.geteBaySearchResults(searchQueries);
+			eBaySearchResultModel.geteBaySearchResults("eBay");
 
 		Assert.assertEquals(5, eBaySearchResults.size());
 	}

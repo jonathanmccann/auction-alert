@@ -1,11 +1,17 @@
 package com.app;
 
+import com.app.dao.impl.SearchQueryDAOImpl;
+import com.app.dao.impl.SearchResultDAOImpl;
+import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 import com.app.model.eBaySearchResultModel;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -21,33 +27,66 @@ public class ScheduledTasks {
 		// Get search queries
 		// Call performSearch on queries
 		// Call filterSearchResults to remove already seen results
+		// Remove old results, save new results to database
 		// Call textSearchResults to deliver new results
 
-		List<String> searchQueries = new ArrayList<String>();
+		try {
+			List<SearchQueryModel> searchQueries =
+				_searchQueryDAOImpl.getSearchQueries();
 
-		searchQueries.add("ebay");
+			_log.info(
+				"Getting eBay search results for {} search queries",
+					searchQueries.size());
 
-		List<SearchResultModel> searchResults = performSearch(searchQueries);
+			for (SearchQueryModel searchQueryModel : searchQueries) {
+				List<SearchResultModel> searchResults =
+					performSearch(searchQueryModel.getSearchQuery());
 
-		searchResults = filterSearchResults(searchResults);
+				searchResults = filterSearchResults(
+					searchQueryModel.getSearchQueryId(), searchResults);
 
-		textSearchResults(searchResults);
+				if (searchResults.size() > 0) {
+					saveNewResultsAndRemoveOldResults(searchResults);
+
+					textSearchResults(searchResults);
+				}
+			}
+		}
+		catch (SQLException sqle) {
+			_log.error("Unable to get all of the search queries");
+		}
 	}
 
 	private static List<SearchResultModel> filterSearchResults(
-		List<SearchResultModel> searchResultModels) {
+			int searchQueryId, List<SearchResultModel> searchResultModels)
+		throws SQLException {
 
-		// Get last five results from database
-		// Remove all from passed in list
-		// Return list
+		SearchResultDAOImpl searchResultDAOImpl = new SearchResultDAOImpl();
+
+		List<SearchResultModel> existingSearchResultModels =
+			searchResultDAOImpl.getSearchQueryResults(searchQueryId);
+
+		searchResultModels.removeAll(existingSearchResultModels);
+
+		_log.info(
+			"Found {} search results for search query ID: {}",
+				searchResultModels.size(), searchQueryId);
 
 		return searchResultModels;
 	}
 
 	private static List<SearchResultModel> performSearch(
-		List<String> searchQueries) {
+		String searchQuery) {
 
-		return eBaySearchResultModel.geteBaySearchResults(searchQueries);
+		return eBaySearchResultModel.geteBaySearchResults(searchQuery);
+	}
+
+	private static void saveNewResultsAndRemoveOldResults(
+		List<SearchResultModel> searchResultModels) {
+
+		// Remove old results
+
+		// Save new results
 	}
 
 	private static void textSearchResults(
@@ -57,5 +96,11 @@ public class ScheduledTasks {
 		// Text via email - Send email to $NUMBER@txt.att.net
 
 	}
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		ScheduledTasks.class);
+
+	private static SearchQueryDAOImpl _searchQueryDAOImpl =
+		new SearchQueryDAOImpl();
 
 }
