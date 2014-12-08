@@ -59,23 +59,37 @@ public class eBaySearchResultModel extends SearchResultModel {
 
 			searchResultModel.setItemId(item.getItemId());
 			searchResultModel.setItemTitle(item.getTitle());
-			searchResultModel.setTypeOfAuction(
-				listingInfo.getListingType());
 			searchResultModel.setItemURL(
 				_EBAY_URL_PREFIX + searchResultModel.getItemId());
 			searchResultModel.setEndingTime(
 				listingInfo.getEndTime().getTime());
 
+			String typeOfAuction = listingInfo.getListingType();
+
+			searchResultModel.setTypeOfAuction(
+				typeOfAuction);
+
 			SellingStatus sellingStatus = item.getSellingStatus();
 
-			if (searchResultModel.getTypeOfAuction().contains("Auction")) {
+			if (typeOfAuction.equals("Auction")) {
 				searchResultModel.setAuctionPrice(
 					sellingStatus.getCurrentPrice().getValue());
 			}
+			else if (typeOfAuction.equals("FixedPrice") ||
+				typeOfAuction.equals("StoreInventory")) {
 
-			if (item.getListingInfo().isBuyItNowAvailable()) {
+				searchResultModel.setFixedPrice(
+					sellingStatus.getCurrentPrice().getValue());
+			}
+			else if (typeOfAuction.equals("AuctionWithBIN")) {
+				searchResultModel.setAuctionPrice(
+					sellingStatus.getCurrentPrice().getValue());
+
 				searchResultModel.setFixedPrice(
 					listingInfo.getBuyItNowPrice().getValue());
+			}
+			else {
+				_log.error("Unknown type of auction: {}", typeOfAuction);
 			}
 
 			searchResultModels.add(searchResultModel);
