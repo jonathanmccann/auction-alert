@@ -23,6 +23,13 @@ public class DatabaseUtil {
 	public static Connection getDatabaseConnection()
 		throws DatabaseConnectionException {
 
+		if (!_IS_PROPERTIES_SET) {
+			_log.error(
+				"The database properties are not set");
+
+			throw new DatabaseConnectionException();
+		}
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -52,6 +59,8 @@ public class DatabaseUtil {
 			PropertiesUtil.DATABASE_PASSWORD);
 		_DATABASE_USERNAME = properties.getProperty(
 			PropertiesUtil.DATABASE_USERNAME);
+
+		_IS_PROPERTIES_SET = true;
 	}
 
 	public static void setDatabaseProperties(
@@ -60,7 +69,11 @@ public class DatabaseUtil {
 		_DATABASE_PASSWORD = databasePassword;
 		_DATABASE_URL = databaseURL;
 		_DATABASE_USERNAME = databaseUsername;
+
+		_IS_PROPERTIES_SET = true;
 	}
+
+	private static boolean _IS_PROPERTIES_SET = false;
 
 	private static String _DATABASE_PASSWORD;
 
