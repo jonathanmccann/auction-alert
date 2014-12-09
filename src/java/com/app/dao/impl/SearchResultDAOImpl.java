@@ -34,16 +34,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_SEARCH_RESULT_SQL);
 
-			preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
-			preparedStatement.setString(2, searchResultModel.getItemId());
-			preparedStatement.setString(3, searchResultModel.getItemTitle());
-			preparedStatement.setString(
-				4, searchResultModel.getTypeOfAuction());
-			preparedStatement.setString(5, searchResultModel.getItemURL());
-			preparedStatement.setLong(
-				6, searchResultModel.getEndingTime().getTime());
-			preparedStatement.setDouble(7, searchResultModel.getAuctionPrice());
-			preparedStatement.setDouble(8, searchResultModel.getFixedPrice());
+			populateAddSearchResultPreparedStatement(
+				preparedStatement, searchResultModel);
 
 			preparedStatement.executeUpdate();
 		}
@@ -330,6 +322,23 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 				resultSet.close();
 			}
 		}
+	}
+
+	private static void populateAddSearchResultPreparedStatement(
+			PreparedStatement preparedStatement,
+			SearchResultModel searchResultModel)
+		throws SQLException {
+
+		preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
+		preparedStatement.setString(2, searchResultModel.getItemId());
+		preparedStatement.setString(3, searchResultModel.getItemTitle());
+		preparedStatement.setString(
+			4, searchResultModel.getTypeOfAuction());
+		preparedStatement.setString(5, searchResultModel.getItemURL());
+		preparedStatement.setLong(
+			6, searchResultModel.getEndingTime().getTime());
+		preparedStatement.setDouble(7, searchResultModel.getAuctionPrice());
+		preparedStatement.setDouble(8, searchResultModel.getFixedPrice());
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
