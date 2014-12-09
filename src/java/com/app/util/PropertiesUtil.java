@@ -32,7 +32,7 @@ public class PropertiesUtil {
 
 	public static void loadConfigurationProperties() throws IOException {
 		String propertiesFilePath =
-			System.getProperty("catalina.base") + "/" + "config.properties";
+			System.getProperty("catalina.base") + '/' + "config.properties";
 
 		loadConfigurationProperties(propertiesFilePath);
 	}
