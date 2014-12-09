@@ -7,6 +7,7 @@ import com.app.util.eBayAPIUtil;
 
 import java.io.IOException;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,7 +22,13 @@ public class eBaySearchResultModelTest {
 
 	@Before
 	public void setUp() throws IOException {
-		Properties properties = new Properties();
+		Class<?> clazz = getClass();
+
+		URL resource = clazz.getResource("/test-config.properties");
+
+		PropertiesUtil.loadConfigurationProperties(resource.getPath());
+
+		Properties properties = PropertiesUtil.getConfigurationProperties();
 
 		properties.setProperty(
 			PropertiesUtil.APPLICATION_ID,

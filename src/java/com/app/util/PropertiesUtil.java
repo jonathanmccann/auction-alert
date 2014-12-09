@@ -23,6 +23,9 @@ public class PropertiesUtil {
 
 	public static final String DATABASE_USERNAME = "jdbc.default.username";
 
+	public static final String NUMBER_OF_SEARCH_RESULTS =
+		"number.of.search.results";
+
 	public static Properties getConfigurationProperties() {
 		return _properties;
 	}
@@ -54,6 +57,10 @@ public class PropertiesUtil {
 		}
 
 		_properties = properties;
+	}
+
+	public static String getConfigurationProperty(String propertyKey) {
+		return _properties.getProperty(propertyKey);
 	}
 
 	public static void setConfigurationProperties(Properties properties) {

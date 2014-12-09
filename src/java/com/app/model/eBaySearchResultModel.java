@@ -1,5 +1,6 @@
 package com.app.model;
 
+import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
 
 import com.ebay.services.finding.Amount;
@@ -110,7 +111,9 @@ public class eBaySearchResultModel extends SearchResultModel {
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
-	private static final int _NUMBER_OF_SEARCH_RESULTS = 5;
+	private static final int _NUMBER_OF_SEARCH_RESULTS =
+		Integer.valueOf(PropertiesUtil.getConfigurationProperty(
+			PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		eBaySearchResultModel.class);

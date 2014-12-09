@@ -23,20 +23,26 @@ public class PropertiesUtilTest {
 
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 
-		Properties properties = PropertiesUtil.getConfigurationProperties();
-
 		Assert.assertEquals(
 			"Application ID",
-			properties.getProperty(PropertiesUtil.APPLICATION_ID));
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.APPLICATION_ID));
 		Assert.assertEquals(
 			"JDBC Default Password",
-			properties.getProperty(PropertiesUtil.DATABASE_PASSWORD));
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.DATABASE_PASSWORD));
 		Assert.assertEquals(
 			"JDBC Default URL",
-			properties.getProperty(PropertiesUtil.DATABASE_URL));
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.DATABASE_URL));
 		Assert.assertEquals(
 			"JDBC Default Username",
-			properties.getProperty(PropertiesUtil.DATABASE_USERNAME));
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.DATABASE_USERNAME));
+		Assert.assertEquals(
+			"5",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
 	}
 
 	@Test
