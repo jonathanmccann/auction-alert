@@ -7,7 +7,6 @@ import com.app.model.SearchResultModel;
 import com.app.model.eBaySearchResultModel;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;

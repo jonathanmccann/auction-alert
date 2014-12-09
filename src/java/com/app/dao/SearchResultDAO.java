@@ -2,7 +2,6 @@ package com.app.dao;
 
 import com.app.model.SearchResultModel;
 
-import java.util.Date;
 import java.util.List;
 
 /**
