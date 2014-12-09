@@ -40,6 +40,8 @@ public class SearchQueryDAOTest {
 		Resource resource = new ClassPathResource("/sql/testdb.sql");
 
 		ScriptUtils.executeSqlScript(connection, resource);
+		
+		_searchQueryDAOImpl = new SearchQueryDAOImpl();
 	}
 
 	@Test
@@ -47,21 +49,19 @@ public class SearchQueryDAOTest {
 
 		// Test add
 
-		SearchQueryDAOImpl searchQueryDAOImpl = new SearchQueryDAOImpl();
-
-		searchQueryDAOImpl.addSearchQuery("First test search query");
-		searchQueryDAOImpl.addSearchQuery("Second test search query");
+		_searchQueryDAOImpl.addSearchQuery("First test search query");
+		_searchQueryDAOImpl.addSearchQuery("Second test search query");
 
 		// Test get
 
-		String searchQuery = searchQueryDAOImpl.getSearchQuery(1);
+		String searchQuery = _searchQueryDAOImpl.getSearchQuery(1);
 
 		Assert.assertEquals("First test search query", searchQuery);
 
 		// Test get multiple
 
 		List<SearchQueryModel> searchQueryModels =
-			searchQueryDAOImpl.getSearchQueries();
+			_searchQueryDAOImpl.getSearchQueries();
 
 		Assert.assertEquals(2, searchQueryModels.size());
 		Assert.assertEquals(1, searchQueryModels.get(0).getSearchQueryId());
@@ -75,20 +75,21 @@ public class SearchQueryDAOTest {
 
 		// Test update
 
-		searchQueryDAOImpl.updateSearchQuery(1, "Updated test search query");
+		_searchQueryDAOImpl.updateSearchQuery(1, "Updated test search query");
 
-		String updatedSearchQuery = searchQueryDAOImpl.getSearchQuery(1);
+		String updatedSearchQuery = _searchQueryDAOImpl.getSearchQuery(1);
 
 		Assert.assertEquals("Updated test search query", updatedSearchQuery);
 
 		// Test delete multiple
 
-		searchQueryDAOImpl.deleteSearchQuery(1);
-		searchQueryDAOImpl.deleteSearchQuery(2);
+		_searchQueryDAOImpl.deleteSearchQuery(1);
+		_searchQueryDAOImpl.deleteSearchQuery(2);
 
-		searchQueryModels = searchQueryDAOImpl.getSearchQueries();
+		searchQueryModels = _searchQueryDAOImpl.getSearchQueries();
 
 		Assert.assertEquals(0, searchQueryModels.size());
 	}
 
+	private static SearchQueryDAOImpl _searchQueryDAOImpl;
 }
