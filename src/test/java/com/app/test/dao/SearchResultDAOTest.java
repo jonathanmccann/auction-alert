@@ -60,20 +60,10 @@ public class SearchResultDAOTest {
 		_searchResultDAOImpl.addSearchResult(searchResultModel);
 
 		searchResultModel = new SearchResultModel(
-			1, "2345", "Second Item", 14.99, 14.99,
-			"http://www.ebay.com/itm/2345", _endingTime, "Auction");
+			2, "2345", "Second Item", 14.99, 14.99,
+			"http://www.ebay.com/itm/2345", _endingTime, "FixedPrice");
 
 		_searchResultDAOImpl.addSearchResult(searchResultModel);
-
-		// Test add
-
-		_searchResultDAOImpl.addSearchResult(
-			2, "5678", "Third Item", 29.99, 29.99,
-			"http://www.ebay.com/itm/5678", _endingTime, "Buy It Now");
-
-		_searchResultDAOImpl.addSearchResult(
-			2, "6789", "Fourth Item", 29.99, 29.99,
-			"http://www.ebay.com/itm/6789", _endingTime, "Buy It Now");
 
 		// Test get
 
@@ -96,36 +86,35 @@ public class SearchResultDAOTest {
 		List<SearchResultModel> searchResultModels =
 			_searchResultDAOImpl.getSearchResults();
 
-		Assert.assertEquals(4, searchResultModels.size());
+		Assert.assertEquals(2, searchResultModels.size());
 
-		SearchResultModel secondSearchResult = searchResultModels.get(2);
+		SearchResultModel secondSearchResult = searchResultModels.get(1);
 
-		Assert.assertEquals(3, secondSearchResult.getSearchResultId());
+		Assert.assertEquals(2, secondSearchResult.getSearchResultId());
 		Assert.assertEquals(2, secondSearchResult.getSearchQueryId());
-		Assert.assertEquals("5678", secondSearchResult.getItemId());
-		Assert.assertEquals("Third Item", secondSearchResult.getItemTitle());
-		Assert.assertEquals(29.99, secondSearchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(29.99, secondSearchResult.getFixedPrice(), 0);
+		Assert.assertEquals("2345", secondSearchResult.getItemId());
+		Assert.assertEquals("Second Item", secondSearchResult.getItemTitle());
+		Assert.assertEquals(14.99, secondSearchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(14.99, secondSearchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
-			"http://www.ebay.com/itm/5678", secondSearchResult.getItemURL());
+			"http://www.ebay.com/itm/2345", secondSearchResult.getItemURL());
 		Assert.assertEquals(_endingTime, secondSearchResult.getEndingTime());
 		Assert.assertEquals(
-			"Buy It Now", secondSearchResult.getTypeOfAuction());
+			"FixedPrice", secondSearchResult.getTypeOfAuction());
 
-		// Test delete multiple
+		// Test delete
 
 		_searchResultDAOImpl.deleteSearchResult(1);
-		_searchResultDAOImpl.deleteSearchResult(2);
 
 		searchResultModels = _searchResultDAOImpl.getSearchResults();
 
-		Assert.assertEquals(2, searchResultModels.size());
+		Assert.assertEquals(1, searchResultModels.size());
 
 		// Test find by search query
 
 		searchResultModels = _searchResultDAOImpl.getSearchQueryResults(2);
 
-		Assert.assertEquals(2, searchResultModels.size());
+		Assert.assertEquals(1, searchResultModels.size());
 
 		_searchResultDAOImpl.deleteSearchQueryResults(2);
 

@@ -13,11 +13,6 @@ public interface SearchResultDAO {
 	public void addSearchResult(SearchResultModel searchResultModel)
 		throws Exception;
 
-	public void addSearchResult(
-		int searchQueryId, String itemId, String itemTitle, double auctionPrice,
-		double fixedPrice, String itemURL, Date endingTime,
-		String typeOfAuction) throws Exception;
-
 	public void deleteSearchQueryResults(int searchQueryId) throws Exception;
 
 	public void deleteSearchResult(int searchResultId) throws Exception;

@@ -54,44 +54,6 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	}
 
 	@Override
-	public void addSearchResult(
-			int searchQueryId, String itemId, String itemTitle,
-			double auctionPrice, double fixedPrice, String itemURL,
-			Date endingTime, String typeOfAuction)
-		throws SQLException {
-
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_RESULT_SQL);
-
-			preparedStatement.setInt(1, searchQueryId);
-			preparedStatement.setString(2, itemId);
-			preparedStatement.setString(3, itemTitle);
-			preparedStatement.setString(4, typeOfAuction);
-			preparedStatement.setString(5, itemURL);
-			preparedStatement.setLong(6, endingTime.getTime());
-			preparedStatement.setDouble(7, auctionPrice);
-			preparedStatement.setDouble(8, fixedPrice);
-
-			preparedStatement.executeUpdate();
-		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to add search result for item ID: " + itemId);
-
-			throw new SQLException(exception);
-		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
-	}
-
-	@Override
 	public void deleteSearchResult(int searchResultId) throws SQLException {
 		Connection connection = null;
 
