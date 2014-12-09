@@ -46,7 +46,7 @@ public class PropertiesUtil {
 
 			properties.load(inputStream);
 		}
-		catch (IOException ioe) {
+		catch (FileNotFoundException fnfe) {
 			_log.error(
 				"Cannot find or load properties file: {}", propertiesFilePath);
 

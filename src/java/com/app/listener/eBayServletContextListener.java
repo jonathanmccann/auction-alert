@@ -1,8 +1,11 @@
 package com.app.listener;
 
+import com.app.exception.DatabaseConnectionException;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
+
+import java.io.IOException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -43,8 +46,8 @@ public class eBayServletContextListener implements ServletContextListener {
 
 			DatabaseUtil.initializeDatabase();
 		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
+		catch (DatabaseConnectionException | IOException exception) {
+			throw new RuntimeException(exception);
 		}
 	}
 

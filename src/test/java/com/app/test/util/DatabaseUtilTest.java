@@ -15,7 +15,7 @@ import org.junit.Test;
 public class DatabaseUtilTest {
 
 	@Test
-	public void testGetDatabaseConnection() throws Exception {
+	public void testGetDatabaseConnection() throws DatabaseConnectionException {
 		String databasePassword = System.getProperty(
 			PropertiesUtil.DATABASE_PASSWORD);
 		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
@@ -31,7 +31,9 @@ public class DatabaseUtilTest {
 	}
 
 	@Test(expected = DatabaseConnectionException.class)
-	public void testGetInvalidDatabaseConnection() throws Exception {
+	public void testGetInvalidDatabaseConnection()
+		throws DatabaseConnectionException {
+
 		DatabaseUtil.setDatabaseProperties("test", "test", "test");
 
 		DatabaseUtil.getDatabaseConnection();

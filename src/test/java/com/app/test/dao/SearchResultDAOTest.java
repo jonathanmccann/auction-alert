@@ -1,11 +1,13 @@
 package com.app.test.dao;
 
 import com.app.dao.impl.SearchResultDAOImpl;
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResultModel;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +26,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 public class SearchResultDAOTest {
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() throws DatabaseConnectionException {
 		String databasePassword = System.getProperty(
 			PropertiesUtil.DATABASE_PASSWORD);
 		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
@@ -46,7 +48,7 @@ public class SearchResultDAOTest {
 	}
 
 	@Test
-	public void testSearchResultDAO() throws Exception {
+	public void testSearchResultDAO() throws SQLException {
 
 		// Test add with constructor
 

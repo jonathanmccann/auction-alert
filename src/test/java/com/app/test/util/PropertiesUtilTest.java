@@ -16,7 +16,7 @@ import org.junit.Test;
 public class PropertiesUtilTest {
 
 	@Test
-	public void testLoadConfigurationProperties() throws Exception {
+	public void testLoadConfigurationProperties() throws IOException {
 		Class<?> clazz = getClass();
 
 		URL resource = clazz.getResource("/test-config.properties");
@@ -40,7 +40,7 @@ public class PropertiesUtilTest {
 	}
 
 	@Test
-	public void testSetConfigurationProperties() throws Exception {
+	public void testSetConfigurationProperties() throws IOException {
 		Properties properties = new Properties();
 
 		properties.setProperty(
