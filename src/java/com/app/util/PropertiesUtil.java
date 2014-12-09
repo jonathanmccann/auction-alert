@@ -50,7 +50,7 @@ public class PropertiesUtil {
 			_log.error(
 				"Cannot find or load properties file: {}", propertiesFilePath);
 
-			throw new IOException();
+			throw new IOException(fnfe);
 		}
 
 		_properties = properties;
