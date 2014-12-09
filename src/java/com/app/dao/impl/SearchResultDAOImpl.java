@@ -132,24 +132,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 				new ArrayList<SearchResultModel>();
 
 			while (resultSet.next()) {
-				SearchResultModel searchResult = new SearchResultModel();
-
-				searchResult.setSearchResultId(
-					resultSet.getInt("searchResultId"));
-				searchResult.setSearchQueryId(
-					resultSet.getInt("searchQueryId"));
-				searchResult.setItemId(resultSet.getString("itemId"));
-				searchResult.setItemTitle(resultSet.getString("itemTitle"));
-				searchResult.setTypeOfAuction(
-					resultSet.getString("typeOfAuction"));
-				searchResult.setItemURL(resultSet.getString("itemURL"));
-				searchResult.setEndingTime(
-					new Date(resultSet.getLong("endingTime")));
-				searchResult.setAuctionPrice(
-					resultSet.getDouble("auctionPrice"));
-				searchResult.setFixedPrice(resultSet.getDouble("fixedPrice"));
-
-				searchResults.add(searchResult);
+				searchResults.add(createSearchResultFromResultSet(resultSet));
 			}
 
 			return searchResults;
@@ -190,24 +173,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
-				SearchResultModel searchResult = new SearchResultModel();
-
-				searchResult.setSearchResultId(
-					resultSet.getInt("searchResultId"));
-				searchResult.setSearchQueryId(
-					resultSet.getInt("searchQueryId"));
-				searchResult.setItemId(resultSet.getString("itemId"));
-				searchResult.setItemTitle(resultSet.getString("itemTitle"));
-				searchResult.setTypeOfAuction(
-					resultSet.getString("typeOfAuction"));
-				searchResult.setItemURL(resultSet.getString("itemURL"));
-				searchResult.setEndingTime(
-					new Date(resultSet.getLong("endingTime")));
-				searchResult.setAuctionPrice(
-					resultSet.getDouble("auctionPrice"));
-				searchResult.setFixedPrice(resultSet.getDouble("fixedPrice"));
-
-				return searchResult;
+				return createSearchResultFromResultSet(resultSet);
 			}
 			else {
 				return new SearchResultModel();
@@ -248,24 +214,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 				new ArrayList<SearchResultModel>();
 
 			while (resultSet.next()) {
-				SearchResultModel searchResult = new SearchResultModel();
-
-				searchResult.setSearchResultId(
-					resultSet.getInt("searchResultId"));
-				searchResult.setSearchQueryId(
-					resultSet.getInt("searchQueryId"));
-				searchResult.setItemId(resultSet.getString("itemId"));
-				searchResult.setItemTitle(resultSet.getString("itemTitle"));
-				searchResult.setTypeOfAuction(
-					resultSet.getString("typeOfAuction"));
-				searchResult.setItemURL(resultSet.getString("itemURL"));
-				searchResult.setEndingTime(
-					new Date(resultSet.getLong("endingTime")));
-				searchResult.setAuctionPrice(
-					resultSet.getDouble("auctionPrice"));
-				searchResult.setFixedPrice(resultSet.getDouble("fixedPrice"));
-
-				searchResults.add(searchResult);
+				searchResults.add(createSearchResultFromResultSet(resultSet));
 			}
 
 			return searchResults;
@@ -284,6 +233,30 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 				resultSet.close();
 			}
 		}
+	}
+
+	private static SearchResultModel createSearchResultFromResultSet(
+			ResultSet resultSet)
+		throws SQLException {
+
+		SearchResultModel searchResult = new SearchResultModel();
+
+		searchResult.setSearchResultId(
+			resultSet.getInt("searchResultId"));
+		searchResult.setSearchQueryId(
+			resultSet.getInt("searchQueryId"));
+		searchResult.setItemId(resultSet.getString("itemId"));
+		searchResult.setItemTitle(resultSet.getString("itemTitle"));
+		searchResult.setTypeOfAuction(
+			resultSet.getString("typeOfAuction"));
+		searchResult.setItemURL(resultSet.getString("itemURL"));
+		searchResult.setEndingTime(
+			new Date(resultSet.getLong("endingTime")));
+		searchResult.setAuctionPrice(
+			resultSet.getDouble("auctionPrice"));
+		searchResult.setFixedPrice(resultSet.getDouble("fixedPrice"));
+
+		return searchResult;
 	}
 
 	private static void populateAddSearchResultPreparedStatement(
