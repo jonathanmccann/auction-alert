@@ -41,7 +41,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
-				"Unable to add search result for item ID: " +
+				"Unable to add search result for item ID: {}",
 					searchResultModel.getItemId());
 
 			throw new SQLException(exception);
@@ -69,7 +69,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
-				"Unable to delete search result for search result ID: " +
+				"Unable to delete search result for search result ID: {}",
 					searchResultId);
 
 			throw new SQLException(exception);
@@ -99,7 +99,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
-				"Unable to delete search results for search query ID: " +
+				"Unable to delete search results for search query ID: {}",
 					searchQueryId);
 
 			throw new SQLException(exception);
@@ -139,7 +139,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
 				"Unable to return all search query results for search query " +
-					"ID: " + searchQueryId);
+					"ID: {}", searchQueryId);
 
 			throw new SQLException(exception);
 		}
@@ -180,7 +180,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
-				"Cannot find search query for search result ID: " +
+				"Cannot find search query for search result ID: {}",
 					searchResultId);
 
 			throw new SQLException(exception);

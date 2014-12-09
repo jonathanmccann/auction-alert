@@ -36,7 +36,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			preparedStatement.executeUpdate();
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to add search query: " + searchQuery);
+			_log.error("Unable to add search query: {}", searchQuery);
 
 			throw new SQLException(exception);
 		}
@@ -63,7 +63,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
-				"Unable to delete search query for search query ID: " +
+				"Unable to delete search query for search query ID: {}",
 					searchQueryId);
 
 			throw new SQLException(exception);
@@ -143,7 +143,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
-				"Cannot find search query for search query ID: " +
+				"Cannot find search query for search query ID: {}",
 					searchQueryId);
 
 			throw new SQLException(exception);
@@ -178,8 +178,8 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
-				"Unable to update search query: " + searchQuery +
-					" for search query ID: " + searchQueryId);
+				"Unable to update search query: {} for search query ID: {}",
+					searchQuery, searchQueryId);
 
 			throw new SQLException(exception);
 		}
