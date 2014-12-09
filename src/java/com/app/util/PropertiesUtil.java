@@ -44,10 +44,6 @@ public class PropertiesUtil {
 		try {
 			InputStream inputStream = new FileInputStream(propertiesFilePath);
 
-			if (inputStream == null) {
-				throw new FileNotFoundException();
-			}
-
 			properties.load(inputStream);
 		}
 		catch (IOException ioe) {
