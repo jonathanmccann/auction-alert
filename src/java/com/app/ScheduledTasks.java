@@ -37,7 +37,7 @@ public class ScheduledTasks {
 				searchResults = filterSearchResults(
 					searchQueryModel.getSearchQueryId(), searchResults);
 
-				if (searchResults.size() > 0) {
+				if (!searchResults.isEmpty()) {
 					textSearchResults(searchResults);
 				}
 			}
@@ -56,7 +56,7 @@ public class ScheduledTasks {
 
 		newSearchResultModels.removeAll(existingSearchResultModels);
 
-		if (newSearchResultModels.size() > 0) {
+		if (!newSearchResultModels.isEmpty()) {
 			saveNewResultsAndRemoveOldResults(
 				existingSearchResultModels, newSearchResultModels);
 		}
