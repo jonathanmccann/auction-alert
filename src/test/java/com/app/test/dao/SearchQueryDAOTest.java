@@ -65,16 +65,17 @@ public class SearchQueryDAOTest {
 		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
 
-		SearchQueryModel firstSearchQuery = searchQueryModels.get(0);
-		SearchQueryModel secondSearchQuery = searchQueryModels.get(1);
+		SearchQueryModel firstSearchQueryModel = searchQueryModels.get(0);
+		SearchQueryModel secondSearchQueryModel = searchQueryModels.get(1);
 
 		Assert.assertEquals(2, searchQueryModels.size());
-		Assert.assertEquals(1, firstSearchQuery.getSearchQueryId());
-		Assert.assertEquals(2, secondSearchQuery.getSearchQueryId());
+		Assert.assertEquals(1, firstSearchQueryModel.getSearchQueryId());
+		Assert.assertEquals(2, secondSearchQueryModel.getSearchQueryId());
 		Assert.assertEquals(
-			"First test search query", firstSearchQuery.getSearchQuery());
+			"First test search query", firstSearchQueryModel.getSearchQuery());
 		Assert.assertEquals(
-			"Second test search query", secondSearchQuery.getSearchQuery());
+			"Second test search query",
+			secondSearchQueryModel.getSearchQuery());
 
 		// Test update
 

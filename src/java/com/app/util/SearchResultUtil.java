@@ -41,14 +41,14 @@ public class SearchResultUtil {
 	}
 
 	public static void performSearch() throws SQLException {
-		List<SearchQueryModel> searchQueries =
+		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
 
 		_log.info(
 			"Getting eBay search results for {} search queries",
-				searchQueries.size());
+			searchQueryModels.size());
 
-		for (SearchQueryModel searchQueryModel : searchQueries) {
+		for (SearchQueryModel searchQueryModel : searchQueryModels) {
 			List<SearchResultModel> searchResults =
 				performeBaySearch(searchQueryModel.getSearchQuery());
 
