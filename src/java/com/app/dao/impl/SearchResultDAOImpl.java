@@ -26,13 +26,9 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	public void addSearchResult(SearchResultModel searchResultModel)
 		throws SQLException {
 
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_RESULT_SQL);
+				_ADD_SEARCH_RESULT_SQL)) {
 
 			populateAddSearchResultPreparedStatement(
 				preparedStatement, searchResultModel);
@@ -46,22 +42,13 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
 	}
 
 	@Override
 	public void deleteSearchResult(int searchResultId) throws SQLException {
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_RESULT_SQL);
+				_DELETE_SEARCH_RESULT_SQL)) {
 
 			preparedStatement.setInt(1, searchResultId);
 
@@ -74,24 +61,15 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
 	}
 
 	@Override
 	public void deleteSearchQueryResults(int searchQueryId)
 		throws SQLException {
 
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_RESULT_WITH_SEARCH_QUERY_SQL);
+				_DELETE_SEARCH_QUERY_RESULTS)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -104,37 +82,28 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
 	}
 
 	@Override
 	public List<SearchResultModel> getSearchQueryResults(int searchQueryId)
 		throws SQLException {
 
-		Connection connection = null;
-		ResultSet resultSet = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_RESULT_SQL);
+				_GET_SEARCH_QUERY_RESULTS_SQL)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
-			resultSet = preparedStatement.executeQuery();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				List<SearchResultModel> searchResults = new ArrayList<>();
 
-			List<SearchResultModel> searchResults = new ArrayList<>();
+				while (resultSet.next()) {
+					searchResults.add(
+						createSearchResultFromResultSet(resultSet));
+				}
 
-			while (resultSet.next()) {
-				searchResults.add(createSearchResultFromResultSet(resultSet));
+				return searchResults;
 			}
-
-			return searchResults;
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error(
@@ -143,39 +112,25 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-
-			if (resultSet != null) {
-				resultSet.close();
-			}
-		}
 	}
 
 	@Override
 	public SearchResultModel getSearchResult(int searchResultId)
 		throws SQLException {
 
-		Connection connection = null;
-		ResultSet resultSet = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_RESULT_SQL);
+				_GET_SEARCH_RESULT_SQL)) {
 
 			preparedStatement.setInt(1, searchResultId);
 
-			resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return createSearchResultFromResultSet(resultSet);
-			}
-			else {
-				return new SearchResultModel();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return createSearchResultFromResultSet(resultSet);
+				}
+				else {
+					return new SearchResultModel();
+				}
 			}
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
@@ -185,51 +140,29 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-
-			if (resultSet != null) {
-				resultSet.close();
-			}
-		}
 	}
 
 	@Override
 	public List<SearchResultModel> getSearchResults() throws SQLException {
-		Connection connection = null;
-		ResultSet resultSet = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_RESULTS_SQL);
+				_GET_SEARCH_RESULTS_SQL)) {
 
-			resultSet = preparedStatement.executeQuery();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				List<SearchResultModel> searchResults = new ArrayList<>();
 
-			List<SearchResultModel> searchResults = new ArrayList<>();
+				while (resultSet.next()) {
+					searchResults.add(
+						createSearchResultFromResultSet(resultSet));
+				}
 
-			while (resultSet.next()) {
-				searchResults.add(createSearchResultFromResultSet(resultSet));
+				return searchResults;
 			}
-
-			return searchResults;
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
 			_log.error("Unable to return all search results.");
 
 			throw new SQLException(exception);
-		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-
-			if (resultSet != null) {
-				resultSet.close();
-			}
 		}
 	}
 
@@ -287,10 +220,13 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	private static final String _DELETE_SEARCH_RESULT_SQL =
 		"DELETE FROM SearchResult WHERE searchResultId = ?";
 
-	private static final String _DELETE_SEARCH_RESULT_WITH_SEARCH_QUERY_SQL =
+	private static final String _DELETE_SEARCH_QUERY_RESULTS =
 		"DELETE FROM SearchResult WHERE searchQueryId = ?";
 
 	private static final String _GET_SEARCH_RESULT_SQL =
+		"SELECT * FROM SearchResult WHERE searchResultId = ?";
+
+	private static final String _GET_SEARCH_QUERY_RESULTS_SQL =
 		"SELECT * FROM SearchResult WHERE searchQueryId = ?";
 
 	private static final String _GET_SEARCH_RESULTS_SQL =

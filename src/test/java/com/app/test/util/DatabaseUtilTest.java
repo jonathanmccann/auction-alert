@@ -5,6 +5,7 @@ import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,9 @@ import org.junit.Test;
 public class DatabaseUtilTest {
 
 	@Test
-	public void testGetDatabaseConnection() throws DatabaseConnectionException {
+	public void testGetDatabaseConnection()
+		throws DatabaseConnectionException, SQLException {
+
 		String databasePassword = System.getProperty(
 			PropertiesUtil.DATABASE_PASSWORD);
 		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
@@ -25,9 +28,9 @@ public class DatabaseUtilTest {
 		DatabaseUtil.setDatabaseProperties(
 			databaseURL, databaseUsername, databasePassword);
 
-		Connection connection = DatabaseUtil.getDatabaseConnection();
-
-		Assert.assertNotNull(connection);
+		try (Connection connection = DatabaseUtil.getDatabaseConnection()) {
+			Assert.assertNotNull(connection);
+		}
 	}
 
 	@Test(expected = DatabaseConnectionException.class)

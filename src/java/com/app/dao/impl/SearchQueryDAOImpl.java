@@ -23,13 +23,9 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	@Override
 	public void addSearchQuery(String searchQuery) throws SQLException {
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_QUERY_SQL);
+				_ADD_SEARCH_QUERY_SQL)) {
 
 			preparedStatement.setString(1, searchQuery);
 
@@ -40,22 +36,13 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
 	}
 
 	@Override
 	public void deleteSearchQuery(int searchQueryId) throws SQLException {
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_QUERY_SQL);
+				_DELETE_SEARCH_QUERY_SQL)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -68,25 +55,14 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
 	}
 
 	@Override
 	public List<SearchQueryModel> getSearchQueries() throws SQLException {
-		Connection connection = null;
-		ResultSet resultSet = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERIES_SQL);
-
-			resultSet = preparedStatement.executeQuery();
+			ResultSet resultSet = preparedStatement.executeQuery()) {
 
 			List<SearchQueryModel> searchQueryModels = new ArrayList<>();
 
@@ -108,37 +84,23 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-
-			if (resultSet != null) {
-				resultSet.close();
-			}
-		}
 	}
 
 	@Override
 	public String getSearchQuery(int searchQueryId) throws SQLException {
-		Connection connection = null;
-		ResultSet resultSet = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_QUERY);
+				_GET_SEARCH_QUERY)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
-			resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return resultSet.getString("searchQuery");
-			}
-			else {
-				throw new SQLException();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return resultSet.getString("searchQuery");
+				}
+				else {
+					throw new SQLException();
+				}
 			}
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
@@ -148,28 +110,15 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			throw new SQLException(exception);
 		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
-
-			if (resultSet != null) {
-				resultSet.close();
-			}
-		}
 	}
 
 	@Override
 	public void updateSearchQuery(int searchQueryId, String searchQuery)
 		throws SQLException {
 
-		Connection connection = null;
-
-		try {
-			connection = DatabaseUtil.getDatabaseConnection();
-
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_UPDATE_SEARCH_QUERY);
+				_UPDATE_SEARCH_QUERY)) {
 
 			preparedStatement.setString(1, searchQuery);
 			preparedStatement.setInt(2, searchQueryId);
@@ -182,11 +131,6 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 					searchQuery, searchQueryId);
 
 			throw new SQLException(exception);
-		}
-		finally {
-			if (connection != null) {
-				connection.close();
-			}
 		}
 	}
 
