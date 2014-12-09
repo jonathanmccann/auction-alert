@@ -1,7 +1,7 @@
 package com.app.test.model;
 
 import com.app.model.SearchResultModel;
-import com.app.model.eBaySearchResultModel;
+import com.app.model.eBaySearchResult;
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
 
@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * @author Jonathan McCann
  */
-public class eBaySearchResultModelTest {
+public class eBaySearchResultTest {
 
 	@Before
 	public void setUp() throws IOException {
@@ -42,7 +42,7 @@ public class eBaySearchResultModelTest {
 	@Test
 	public void testGeteBaySearchResults() throws Exception {
 		List<SearchResultModel> eBaySearchResults =
-			eBaySearchResultModel.geteBaySearchResults("eBay");
+			eBaySearchResult.geteBaySearchResults("eBay");
 
 		Assert.assertEquals(5, eBaySearchResults.size());
 	}

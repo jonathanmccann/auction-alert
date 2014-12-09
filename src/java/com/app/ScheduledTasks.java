@@ -4,7 +4,7 @@ import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
-import com.app.model.eBaySearchResultModel;
+import com.app.model.eBaySearchResult;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -71,7 +71,7 @@ public class ScheduledTasks {
 	private static List<SearchResultModel> performSearch(
 		String searchQuery) {
 
-		return eBaySearchResultModel.geteBaySearchResults(searchQuery);
+		return eBaySearchResult.geteBaySearchResults(searchQuery);
 	}
 
 	private static void saveNewResultsAndRemoveOldResults(

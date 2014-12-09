@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jonathan McCann
  */
-public class eBaySearchResultModel extends SearchResultModel {
+public class eBaySearchResult {
 
 	public static List<SearchResultModel> geteBaySearchResults(
 		String searchQuery) {
@@ -115,6 +115,6 @@ public class eBaySearchResultModel extends SearchResultModel {
 			PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		eBaySearchResultModel.class);
+		eBaySearchResult.class);
 
 }
