@@ -2,16 +2,19 @@ package com.app.model;
 
 import com.app.util.eBayAPIUtil;
 
+import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsByKeywordsRequest;
 import com.ebay.services.finding.FindItemsByKeywordsResponse;
 import com.ebay.services.finding.FindingServicePortType;
 import com.ebay.services.finding.ListingInfo;
 import com.ebay.services.finding.PaginationInput;
 import com.ebay.services.finding.SearchItem;
+import com.ebay.services.finding.SearchResult;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -50,7 +53,9 @@ public class eBaySearchResultModel extends SearchResultModel {
 		FindItemsByKeywordsResponse result =
 			serviceClient.findItemsByKeywords(request);
 
-		List<SearchItem> items = result.getSearchResult().getItem();
+		SearchResult searchResults = result.getSearchResult();
+
+		List<SearchItem> items = searchResults.getItem();
 
 		for (SearchItem item : items) {
 			SearchResultModel searchResultModel = new SearchResultModel();
@@ -61,8 +66,10 @@ public class eBaySearchResultModel extends SearchResultModel {
 			searchResultModel.setItemTitle(item.getTitle());
 			searchResultModel.setItemURL(
 				_EBAY_URL_PREFIX + searchResultModel.getItemId());
-			searchResultModel.setEndingTime(
-				listingInfo.getEndTime().getTime());
+
+			Calendar endTimeCalendar = listingInfo.getEndTime();
+
+			searchResultModel.setEndingTime(endTimeCalendar.getTime());
 
 			String typeOfAuction = listingInfo.getListingType();
 
@@ -72,21 +79,24 @@ public class eBaySearchResultModel extends SearchResultModel {
 			SellingStatus sellingStatus = item.getSellingStatus();
 
 			if (typeOfAuction.equals("Auction")) {
-				searchResultModel.setAuctionPrice(
-					sellingStatus.getCurrentPrice().getValue());
+				Amount currentPrice = sellingStatus.getCurrentPrice();
+
+				searchResultModel.setAuctionPrice(currentPrice.getValue());
 			}
 			else if (typeOfAuction.equals("FixedPrice") ||
 				typeOfAuction.equals("StoreInventory")) {
 
-				searchResultModel.setFixedPrice(
-					sellingStatus.getCurrentPrice().getValue());
+				Amount currentPrice = sellingStatus.getCurrentPrice();
+
+				searchResultModel.setFixedPrice(currentPrice.getValue());
 			}
 			else if (typeOfAuction.equals("AuctionWithBIN")) {
-				searchResultModel.setAuctionPrice(
-					sellingStatus.getCurrentPrice().getValue());
+				Amount currentPrice = sellingStatus.getCurrentPrice();
+				Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
 
-				searchResultModel.setFixedPrice(
-					listingInfo.getBuyItNowPrice().getValue());
+				searchResultModel.setAuctionPrice(currentPrice.getValue());
+
+				searchResultModel.setFixedPrice(buyItNowPrice.getValue());
 			}
 			else {
 				_log.error("Unknown type of auction: {}", typeOfAuction);

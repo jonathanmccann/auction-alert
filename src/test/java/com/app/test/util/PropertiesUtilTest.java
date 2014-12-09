@@ -4,6 +4,7 @@ import com.app.util.PropertiesUtil;
 
 import java.io.IOException;
 
+import java.net.URL;
 import java.util.Properties;
 
 import org.junit.Assert;
@@ -16,8 +17,11 @@ public class PropertiesUtilTest {
 
 	@Test
 	public void testLoadConfigurationProperties() throws Exception {
-		PropertiesUtil.loadConfigurationProperties(
-			getClass().getResource("/test-config.properties").getPath());
+		Class<?> clazz = getClass();
+
+		URL resource = clazz.getResource("/test-config.properties");
+
+		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 
 		Properties properties = PropertiesUtil.getConfigurationProperties();
 

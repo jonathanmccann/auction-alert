@@ -270,8 +270,10 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		preparedStatement.setString(
 			4, searchResultModel.getTypeOfAuction());
 		preparedStatement.setString(5, searchResultModel.getItemURL());
-		preparedStatement.setLong(
-			6, searchResultModel.getEndingTime().getTime());
+
+		Date endingTime = searchResultModel.getEndingTime();
+
+		preparedStatement.setLong(6, endingTime.getTime());
 		preparedStatement.setDouble(7, searchResultModel.getAuctionPrice());
 		preparedStatement.setDouble(8, searchResultModel.getFixedPrice());
 	}
