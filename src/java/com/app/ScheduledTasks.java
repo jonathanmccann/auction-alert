@@ -108,10 +108,10 @@ public class ScheduledTasks {
 	private static final Logger _log = LoggerFactory.getLogger(
 		ScheduledTasks.class);
 
-	private static SearchQueryDAOImpl _searchQueryDAOImpl =
+	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
 
-	private static SearchResultDAOImpl _searchResultDAOImpl =
+	private static final SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
 
 }
