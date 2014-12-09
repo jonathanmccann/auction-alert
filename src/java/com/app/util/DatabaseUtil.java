@@ -73,7 +73,7 @@ public class DatabaseUtil {
 		_IS_PROPERTIES_SET = true;
 	}
 
-	private static boolean _IS_PROPERTIES_SET = false;
+	private static boolean _IS_PROPERTIES_SET;
 
 	private static String _DATABASE_PASSWORD;
 
