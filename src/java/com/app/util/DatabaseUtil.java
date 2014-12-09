@@ -23,7 +23,7 @@ public class DatabaseUtil {
 	public static Connection getDatabaseConnection()
 		throws DatabaseConnectionException {
 
-		if (!_IS_PROPERTIES_SET) {
+		if (!_isPropertiesSet) {
 			_log.error(
 				"The database properties are not set");
 
@@ -34,7 +34,7 @@ public class DatabaseUtil {
 			Class.forName("com.mysql.jdbc.Driver");
 
 			return DriverManager.getConnection(
-				_DATABASE_URL, _DATABASE_USERNAME, _DATABASE_PASSWORD);
+				_databaseURL, _databaseUsername, _databasePassword);
 		}
 		catch (ClassNotFoundException | SQLException exception) {
 			_log.error(
@@ -54,32 +54,32 @@ public class DatabaseUtil {
 	public static void loadDatabaseProperties() {
 		Properties properties = PropertiesUtil.getConfigurationProperties();
 
-		_DATABASE_URL = properties.getProperty(PropertiesUtil.DATABASE_URL);
-		_DATABASE_PASSWORD = properties.getProperty(
+		_databaseURL = properties.getProperty(PropertiesUtil.DATABASE_URL);
+		_databasePassword = properties.getProperty(
 			PropertiesUtil.DATABASE_PASSWORD);
-		_DATABASE_USERNAME = properties.getProperty(
+		_databaseUsername = properties.getProperty(
 			PropertiesUtil.DATABASE_USERNAME);
 
-		_IS_PROPERTIES_SET = true;
+		_isPropertiesSet = true;
 	}
 
 	public static void setDatabaseProperties(
 		String databaseURL, String databaseUsername, String databasePassword) {
 
-		_DATABASE_PASSWORD = databasePassword;
-		_DATABASE_URL = databaseURL;
-		_DATABASE_USERNAME = databaseUsername;
+		_databasePassword = databasePassword;
+		_databaseURL = databaseURL;
+		_databaseUsername = databaseUsername;
 
-		_IS_PROPERTIES_SET = true;
+		_isPropertiesSet = true;
 	}
 
-	private static boolean _IS_PROPERTIES_SET;
+	private static boolean _isPropertiesSet;
 
-	private static String _DATABASE_PASSWORD;
+	private static String _databasePassword;
 
-	private static String _DATABASE_URL;
+	private static String _databaseURL;
 
-	private static String _DATABASE_USERNAME;
+	private static String _databaseUsername;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		DatabaseUtil.class);
