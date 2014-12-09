@@ -1,53 +1,19 @@
-package com.app;
+package com.app.util;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 import com.app.model.eBaySearchResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+public class SearchResultUtil {
 
-/**
- * @author Jonathan McCann
- */
-@EnableScheduling
-public class ScheduledTasks {
-
-	@Scheduled(fixedRate = 300000)
-	public static void main() {
-		try {
-			List<SearchQueryModel> searchQueries =
-				_searchQueryDAOImpl.getSearchQueries();
-
-			_log.info(
-				"Getting eBay search results for {} search queries",
-					searchQueries.size());
-
-			for (SearchQueryModel searchQueryModel : searchQueries) {
-				List<SearchResultModel> searchResults =
-					performSearch(searchQueryModel.getSearchQuery());
-
-				searchResults = filterSearchResults(
-					searchQueryModel.getSearchQueryId(), searchResults);
-
-				if (!searchResults.isEmpty()) {
-					textSearchResults(searchResults);
-				}
-			}
-		}
-		catch (SQLException sqle) {
-			_log.error("Unable to get all of the search queries");
-		}
-	}
-
-	private static List<SearchResultModel> filterSearchResults(
+	public static List<SearchResultModel> filterSearchResults(
 			int searchQueryId, List<SearchResultModel> newSearchResultModels)
 		throws SQLException {
 
@@ -68,13 +34,34 @@ public class ScheduledTasks {
 		return newSearchResultModels;
 	}
 
-	private static List<SearchResultModel> performSearch(
+	public static List<SearchResultModel> performeBaySearch(
 		String searchQuery) {
 
 		return eBaySearchResult.geteBaySearchResults(searchQuery);
 	}
 
-	private static void saveNewResultsAndRemoveOldResults(
+	public static void performSearch() throws SQLException {
+		List<SearchQueryModel> searchQueries =
+			_searchQueryDAOImpl.getSearchQueries();
+
+		_log.info(
+			"Getting eBay search results for {} search queries",
+				searchQueries.size());
+
+		for (SearchQueryModel searchQueryModel : searchQueries) {
+			List<SearchResultModel> searchResults =
+				performeBaySearch(searchQueryModel.getSearchQuery());
+
+			searchResults = filterSearchResults(
+				searchQueryModel.getSearchQueryId(), searchResults);
+
+			if (!searchResults.isEmpty()) {
+				textSearchResults(searchResults);
+			}
+		}
+	}
+
+	public static void saveNewResultsAndRemoveOldResults(
 			List<SearchResultModel> existingSearchResultModels,
 			List<SearchResultModel> newSearchResultModels)
 		throws SQLException{
@@ -106,7 +93,7 @@ public class ScheduledTasks {
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		ScheduledTasks.class);
+		SearchResultUtil.class);
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
