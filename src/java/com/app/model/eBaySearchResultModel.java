@@ -42,7 +42,7 @@ public class eBaySearchResultModel extends SearchResultModel {
 		request.setKeywords(searchQuery);
 
 		PaginationInput paginationInput = new PaginationInput();
-		paginationInput.setEntriesPerPage(5);
+		paginationInput.setEntriesPerPage(_NUMBER_OF_SEARCH_RESULTS);
 
 		request.setPaginationInput(paginationInput);
 		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
@@ -109,6 +109,8 @@ public class eBaySearchResultModel extends SearchResultModel {
 	}
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
+
+	private static final int _NUMBER_OF_SEARCH_RESULTS = 5;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		eBaySearchResultModel.class);
