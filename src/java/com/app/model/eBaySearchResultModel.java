@@ -34,8 +34,7 @@ public class eBaySearchResultModel extends SearchResultModel {
 				"Searching for {}", searchQuery);
 		}
 
-		List<SearchResultModel> searchResultModels =
-			new ArrayList<SearchResultModel>();
+		List<SearchResultModel> searchResultModels = new ArrayList<>();
 
 		FindItemsByKeywordsRequest request =
 			new FindItemsByKeywordsRequest();

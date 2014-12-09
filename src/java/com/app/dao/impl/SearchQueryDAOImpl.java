@@ -88,8 +88,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-			List<SearchQueryModel> searchQueryModels =
-				new ArrayList<SearchQueryModel>();
+			List<SearchQueryModel> searchQueryModels = new ArrayList<>();
 
 			while (resultSet.next()) {
 				int searchQueryId = resultSet.getInt("searchQueryId");

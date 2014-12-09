@@ -128,8 +128,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-			List<SearchResultModel> searchResults =
-				new ArrayList<SearchResultModel>();
+			List<SearchResultModel> searchResults = new ArrayList<>();
 
 			while (resultSet.next()) {
 				searchResults.add(createSearchResultFromResultSet(resultSet));
@@ -210,8 +209,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-			List<SearchResultModel> searchResults =
-				new ArrayList<SearchResultModel>();
+			List<SearchResultModel> searchResults = new ArrayList<>();
 
 			while (resultSet.next()) {
 				searchResults.add(createSearchResultFromResultSet(resultSet));
