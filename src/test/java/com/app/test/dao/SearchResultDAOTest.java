@@ -51,17 +51,17 @@ public class SearchResultDAOTest {
 
 		// Test add with constructor
 
-		_endingTime = new Date();
+		Date endingTime = new Date();
 
 		SearchResultModel searchResultModel = new SearchResultModel(
 			1, "1234", "First Item", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", _endingTime, "Auction");
+			"http://www.ebay.com/itm/1234", endingTime, "Auction");
 
 		_searchResultDAOImpl.addSearchResult(searchResultModel);
 
 		searchResultModel = new SearchResultModel(
 			2, "2345", "Second Item", 14.99, 14.99,
-			"http://www.ebay.com/itm/2345", _endingTime, "FixedPrice");
+			"http://www.ebay.com/itm/2345", endingTime, "FixedPrice");
 
 		_searchResultDAOImpl.addSearchResult(searchResultModel);
 
@@ -78,7 +78,7 @@ public class SearchResultDAOTest {
 		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
-		Assert.assertEquals(_endingTime, searchResult.getEndingTime());
+		Assert.assertEquals(endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
 		// Test get multiple
@@ -98,7 +98,7 @@ public class SearchResultDAOTest {
 		Assert.assertEquals(14.99, secondSearchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/2345", secondSearchResult.getItemURL());
-		Assert.assertEquals(_endingTime, secondSearchResult.getEndingTime());
+		Assert.assertEquals(endingTime, secondSearchResult.getEndingTime());
 		Assert.assertEquals(
 			"FixedPrice", secondSearchResult.getTypeOfAuction());
 
@@ -125,7 +125,5 @@ public class SearchResultDAOTest {
 
 	private static SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
-
-	private static Date _endingTime;
 
 }
