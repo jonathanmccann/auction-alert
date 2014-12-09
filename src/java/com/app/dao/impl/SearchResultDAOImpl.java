@@ -32,9 +32,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, " +
-					"typeOfAuction, itemURL, endingTime, auctionPrice, " +
-						" fixedPrice) VALUES(?, ?, ? ,?, ?, ?, ?, ?)");
+				_ADD_SEARCH_RESULT_SQL);
 
 			preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
 			preparedStatement.setString(2, searchResultModel.getItemId());
@@ -76,9 +74,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, " +
-					"typeOfAuction, itemURL, endingTime, auctionPrice, " +
-						"fixedPrice) VALUES(?, ?, ? ,?, ?, ?, ?, ?)");
+				_ADD_SEARCH_RESULT_SQL);
 
 			preparedStatement.setInt(1, searchQueryId);
 			preparedStatement.setString(2, itemId);
@@ -111,7 +107,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"DELETE FROM SearchResult WHERE searchResultId = ?");
+				_DELETE_SEARCH_RESULT_SQL);
 
 			preparedStatement.setInt(1, searchResultId);
 
@@ -141,7 +137,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"DELETE FROM SearchResult WHERE searchQueryId = ?");
+				_DELETE_SEARCH_RESULT_WITH_SEARCH_QUERY_SQL);
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -172,7 +168,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"SELECT * FROM SearchResult WHERE searchQueryId = ?");
+				_GET_SEARCH_RESULT_SQL);
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -233,7 +229,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"SELECT * FROM SearchResult WHERE searchResultId = ?");
+				_GET_SEARCH_RESULT_SQL);
 
 			preparedStatement.setInt(1, searchResultId);
 
@@ -290,7 +286,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"SELECT * FROM SearchResult");
+				_GET_SEARCH_RESULTS_SQL);
 
 			resultSet = preparedStatement.executeQuery();
 
@@ -339,4 +335,20 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultDAOImpl.class);
 
+	private static final String _ADD_SEARCH_RESULT_SQL =
+		"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, " +
+			"typeOfAuction, itemURL, endingTime, auctionPrice, " +
+				" fixedPrice) VALUES(?, ?, ? ,?, ?, ?, ?, ?)";
+
+	private static final String _DELETE_SEARCH_RESULT_SQL =
+		"DELETE FROM SearchResult WHERE searchResultId = ?";
+
+	private static final String _DELETE_SEARCH_RESULT_WITH_SEARCH_QUERY_SQL =
+		"DELETE FROM SearchResult WHERE searchQueryId = ?";
+
+	private static final String _GET_SEARCH_RESULT_SQL =
+		"SELECT * FROM SearchResult WHERE searchQueryId = ?";
+
+	private static final String _GET_SEARCH_RESULTS_SQL =
+		"SELECT * FROM SearchResult";
 }

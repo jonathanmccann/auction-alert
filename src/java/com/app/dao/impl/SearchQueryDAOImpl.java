@@ -29,7 +29,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"INSERT INTO SearchQuery(searchQuery) VALUES(?)");
+				_ADD_SEARCH_QUERY_SQL);
 
 			preparedStatement.setString(1, searchQuery);
 
@@ -55,7 +55,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"DELETE FROM SearchQuery WHERE searchQueryId = ?");
+				_DELETE_SEARCH_QUERY_SQL);
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -84,7 +84,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"SELECT * FROM SearchQuery");
+				_GET_SEARCH_QUERIES_SQL);
 
 			resultSet = preparedStatement.executeQuery();
 
@@ -129,7 +129,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"SELECT searchQuery FROM SearchQuery WHERE searchQueryId = ?");
+				_GET_SEARCH_QUERY);
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -170,8 +170,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			connection = DatabaseUtil.getDatabaseConnection();
 
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				"UPDATE SearchQuery SET searchQuery = ? WHERE " +
-					"searchQueryId = ?");
+				_UPDATE_SEARCH_QUERY);
 
 			preparedStatement.setString(1, searchQuery);
 			preparedStatement.setInt(2, searchQueryId);
@@ -194,5 +193,20 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryDAOImpl.class);
+
+	private static final String _ADD_SEARCH_QUERY_SQL =
+		"INSERT INTO SearchQuery(searchQuery) VALUES(?)";
+
+	private static final String _DELETE_SEARCH_QUERY_SQL =
+		"DELETE FROM SearchQuery WHERE searchQueryId = ?";
+
+	private static final String _GET_SEARCH_QUERIES_SQL =
+		"SELECT * FROM SearchQuery";
+
+	private static final String _GET_SEARCH_QUERY =
+		"SELECT searchQuery FROM SearchQuery WHERE searchQueryId = ?";
+
+	private static final String _UPDATE_SEARCH_QUERY =
+		"UPDATE SearchQuery SET searchQuery = ? WHERE searchQueryId = ?";
 
 }
