@@ -21,8 +21,8 @@ public class SearchQueryModel {
 		return _searchQueryId;
 	}
 
-	public void setSearchQuery(String _searchQuery) {
-		_searchQuery = _searchQuery;
+	public void setSearchQuery(String searchQuery) {
+		_searchQuery = searchQuery;
 	}
 
 	public void setSearchQueryId(int searchQueryId) {
