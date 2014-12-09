@@ -78,19 +78,19 @@ public class eBaySearchResultModel extends SearchResultModel {
 
 			SellingStatus sellingStatus = item.getSellingStatus();
 
-			if (typeOfAuction.equals("Auction")) {
+			if ("Auction".equals(typeOfAuction)) {
 				Amount currentPrice = sellingStatus.getCurrentPrice();
 
 				searchResultModel.setAuctionPrice(currentPrice.getValue());
 			}
-			else if (typeOfAuction.equals("FixedPrice") ||
-				typeOfAuction.equals("StoreInventory")) {
+			else if ("FixedPrice".equals(typeOfAuction) ||
+				"StoreInventory".equals(typeOfAuction)) {
 
 				Amount currentPrice = sellingStatus.getCurrentPrice();
 
 				searchResultModel.setFixedPrice(currentPrice.getValue());
 			}
-			else if (typeOfAuction.equals("AuctionWithBIN")) {
+			else if ("AuctionWithBIN".equals(typeOfAuction)) {
 				Amount currentPrice = sellingStatus.getCurrentPrice();
 				Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
 
