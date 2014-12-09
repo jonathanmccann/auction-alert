@@ -36,16 +36,7 @@ public class eBaySearchResult {
 
 		List<SearchResultModel> searchResultModels = new ArrayList<>();
 
-		FindItemsByKeywordsRequest request =
-			new FindItemsByKeywordsRequest();
-
-		request.setKeywords(searchQuery);
-
-		PaginationInput paginationInput = new PaginationInput();
-		paginationInput.setEntriesPerPage(_NUMBER_OF_SEARCH_RESULTS);
-
-		request.setPaginationInput(paginationInput);
-		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
+		FindItemsByKeywordsRequest request = setUpRequest(searchQuery);
 
 		FindingServicePortType serviceClient =
 			eBayAPIUtil.getServiceClient();
@@ -58,54 +49,82 @@ public class eBaySearchResult {
 		List<SearchItem> items = searchResults.getItem();
 
 		for (SearchItem item : items) {
-			SearchResultModel searchResultModel = new SearchResultModel();
-
-			ListingInfo listingInfo = item.getListingInfo();
-
-			searchResultModel.setItemId(item.getItemId());
-			searchResultModel.setItemTitle(item.getTitle());
-			searchResultModel.setItemURL(
-				_EBAY_URL_PREFIX + searchResultModel.getItemId());
-
-			Calendar endTimeCalendar = listingInfo.getEndTime();
-
-			searchResultModel.setEndingTime(endTimeCalendar.getTime());
-
-			String typeOfAuction = listingInfo.getListingType();
-
-			searchResultModel.setTypeOfAuction(
-				typeOfAuction);
-
-			SellingStatus sellingStatus = item.getSellingStatus();
-
-			if ("Auction".equals(typeOfAuction)) {
-				Amount currentPrice = sellingStatus.getCurrentPrice();
-
-				searchResultModel.setAuctionPrice(currentPrice.getValue());
-			}
-			else if ("FixedPrice".equals(typeOfAuction) ||
-				"StoreInventory".equals(typeOfAuction)) {
-
-				Amount currentPrice = sellingStatus.getCurrentPrice();
-
-				searchResultModel.setFixedPrice(currentPrice.getValue());
-			}
-			else if ("AuctionWithBIN".equals(typeOfAuction)) {
-				Amount currentPrice = sellingStatus.getCurrentPrice();
-				Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
-
-				searchResultModel.setAuctionPrice(currentPrice.getValue());
-
-				searchResultModel.setFixedPrice(buyItNowPrice.getValue());
-			}
-			else {
-				_log.error("Unknown type of auction: {}", typeOfAuction);
-			}
+			SearchResultModel searchResultModel = createSearchResult(item);
 
 			searchResultModels.add(searchResultModel);
 		}
 
 		return searchResultModels;
+	}
+
+	private static SearchResultModel createSearchResult(SearchItem item) {
+		SearchResultModel searchResultModel = new SearchResultModel();
+
+		ListingInfo listingInfo = item.getListingInfo();
+
+		searchResultModel.setItemId(item.getItemId());
+		searchResultModel.setItemTitle(item.getTitle());
+		searchResultModel.setItemURL(
+			_EBAY_URL_PREFIX + searchResultModel.getItemId());
+
+		Calendar endTimeCalendar = listingInfo.getEndTime();
+
+		searchResultModel.setEndingTime(endTimeCalendar.getTime());
+
+		String typeOfAuction = listingInfo.getListingType();
+
+		searchResultModel.setTypeOfAuction(
+			typeOfAuction);
+
+		setPrice(
+			searchResultModel, listingInfo, item.getSellingStatus(),
+			typeOfAuction);
+
+		return searchResultModel;
+	}
+
+	private static void setPrice(
+		SearchResultModel searchResultModel, ListingInfo listingInfo,
+		SellingStatus sellingStatus, String typeOfAuction) {
+
+		if ("Auction".equals(typeOfAuction)) {
+			Amount currentPrice = sellingStatus.getCurrentPrice();
+
+			searchResultModel.setAuctionPrice(currentPrice.getValue());
+		}
+		else if ("FixedPrice".equals(typeOfAuction) ||
+			"StoreInventory".equals(typeOfAuction)) {
+
+			Amount currentPrice = sellingStatus.getCurrentPrice();
+
+			searchResultModel.setFixedPrice(currentPrice.getValue());
+		}
+		else if ("AuctionWithBIN".equals(typeOfAuction)) {
+			Amount currentPrice = sellingStatus.getCurrentPrice();
+			Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
+
+			searchResultModel.setAuctionPrice(currentPrice.getValue());
+
+			searchResultModel.setFixedPrice(buyItNowPrice.getValue());
+		}
+		else {
+			_log.error("Unknown type of auction: {}", typeOfAuction);
+		}
+	}
+
+	private static FindItemsByKeywordsRequest setUpRequest(String searchQuery) {
+		FindItemsByKeywordsRequest request =
+			new FindItemsByKeywordsRequest();
+
+		request.setKeywords(searchQuery);
+
+		PaginationInput paginationInput = new PaginationInput();
+		paginationInput.setEntriesPerPage(_NUMBER_OF_SEARCH_RESULTS);
+
+		request.setPaginationInput(paginationInput);
+		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
+
+		return request;
 	}
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
