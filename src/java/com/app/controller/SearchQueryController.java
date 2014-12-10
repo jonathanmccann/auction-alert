@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class SearchQueryController {
 
 	@RequestMapping(
-		value = {"/query", "/search_query", "/view_search_query"},
+		value = {
+			"/query", "/search_query", "/view_search_query",
+			"/view_search_queries"
+		},
 		method = RequestMethod.GET)
 	public String viewSearchQueries(Map<String, Object> model) throws SQLException {
 		List<SearchQueryModel> searchQueryModels =
@@ -51,7 +54,7 @@ public class SearchQueryController {
 
 		model.put("searchQueryModels", searchQueryModels);
 
-		return "view_search_queries";
+		return "redirect:view_search_queries";
 	}
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
