@@ -1,9 +1,13 @@
 package com.app.controller;
 
+import java.sql.SQLException;
 import java.util.Map;
 
+import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.model.SearchQueryModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +24,7 @@ public class SearchQueryController {
 	}
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
-	public String viewAddSearchQuery(Map<String, Object> model) {
+	public String addSearchQuery(Map<String, Object> model) {
 		SearchQueryModel searchQueryModel = new SearchQueryModel();
 
 		model.put("searchQueryModel", searchQueryModel);
@@ -29,12 +33,28 @@ public class SearchQueryController {
 	}
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
-	public String processRegistration(
+	public String addSearchQuery(
 		@ModelAttribute("searchQueryModel") SearchQueryModel searchQueryModel,
 		Map<String, Object> model) {
 
-		System.out.println("Search Query: " + searchQueryModel.getSearchQuery());
+		try {
+			_searchQueryDAOImpl.addSearchQuery(
+				searchQueryModel.getSearchQuery());
 
-		return "view_search_queries";
+			return "view_search_queries";
+		}
+		catch (SQLException sqle) {
+			_log.error(
+				"Could not add search query: {}",
+				searchQueryModel.getSearchQuery());
+
+			return "add_search_query";
+		}
 	}
+
+	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
+		new SearchQueryDAOImpl();
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		SearchQueryController.class);
 }
