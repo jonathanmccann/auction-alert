@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -11,12 +11,13 @@
 	<div align="center">
 		<table border="0">
 			<tr>
-				<td colspan="2" align="center"><h2>Add Search Query</h2></td>
+				<td colspan="2" align="center"><h2>Current Search Queries</h2></td>
 			</tr>
-			<tr>
-				<td>Search Query:</td>
-				<td>${searchQueryModel.searchQuery}</td>
-			</tr>
+			<c:forEach items="${searchQueryModels}" var="searchQueryModel">
+				<tr>
+					<td><c:out value="${searchQueryModel.searchQuery}"/><td>
+				</tr>
+			</c:forEach>
 		</table>
 
 		<a href="/eBay-webapp/add_search_query">Add a Search Query</a>

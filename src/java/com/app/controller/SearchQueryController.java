@@ -1,6 +1,7 @@
 package com.app.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
@@ -19,8 +20,13 @@ public class SearchQueryController {
 	@RequestMapping(
 		value = {"/query", "/search_query", "/view_search_query"},
 		method = RequestMethod.GET)
-	public String viewSearchQueries() {
-		return "view_search_queries";
+	public String viewSearchQueries(Map<String, Object> model) throws SQLException {
+		List<SearchQueryModel> searchQueryModels =
+			_searchQueryDAOImpl.getSearchQueries();
+
+		model.put("searchQueryModels", searchQueryModels);
+
+ 		return "view_search_queries";
 	}
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
@@ -34,10 +40,16 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
 	public String addSearchQuery(
-			@ModelAttribute("searchQueryModel") SearchQueryModel searchQueryModel)
+			@ModelAttribute("searchQueryModel") SearchQueryModel searchQueryModel,
+			Map<String, Object> model)
 		throws SQLException {
 
 		_searchQueryDAOImpl.addSearchQuery(searchQueryModel.getSearchQuery());
+
+		List<SearchQueryModel> searchQueryModels =
+			_searchQueryDAOImpl.getSearchQueries();
+
+		model.put("searchQueryModels", searchQueryModels);
 
 		return "view_search_queries";
 	}
