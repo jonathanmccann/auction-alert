@@ -13,12 +13,14 @@
 			<tr>
 				<td colspan="2" align="center"><h2>Current Search Results</h2></td>
 			</tr>
-			<c:forEach items="${searchResultModels}" var="searchResultModel">
+			<c:forEach items="${searchResultModelMap}" var="entry">
 				<tr>
-					<td><c:out value="${searchResultModel.searchQueryId}"/><td>
+					<td><c:out value="Search Query - ${entry.key}"/><td>
+					<c:forEach items="${entry.value}" var="item">
 						<tr>
-							<td><c:out value="${searchResultModel.itemTitle}"/><td>
+							<td><c:out value="${item.itemTitle}"/><td>
 						</tr>
+					</c:forEach>
 				</tr>
 			</c:forEach>
 		</table>
