@@ -34,22 +34,12 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
 	public String addSearchQuery(
-		@ModelAttribute("searchQueryModel") SearchQueryModel searchQueryModel,
-		Map<String, Object> model) {
+			@ModelAttribute("searchQueryModel") SearchQueryModel searchQueryModel)
+		throws SQLException {
 
-		try {
-			_searchQueryDAOImpl.addSearchQuery(
-				searchQueryModel.getSearchQuery());
+		_searchQueryDAOImpl.addSearchQuery(searchQueryModel.getSearchQuery());
 
-			return "view_search_queries";
-		}
-		catch (SQLException sqle) {
-			_log.error(
-				"Could not add search query: {}",
-				searchQueryModel.getSearchQuery());
-
-			return "add_search_query";
-		}
+		return "view_search_queries";
 	}
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =

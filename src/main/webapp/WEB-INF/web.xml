@@ -24,4 +24,8 @@
 		<error-code>404</error-code>
 		<location>/WEB-INF/jsp/error.jsp</location>
 	</error-page>
+	<error-page>
+		<error-code>java.sql.SQLException</error-code>
+		<location>/WEB-INF/jsp/add_search_query_error.jsp</location>
+	</error-page>
 </web-app>
