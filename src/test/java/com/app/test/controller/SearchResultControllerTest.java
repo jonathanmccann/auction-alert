@@ -32,7 +32,7 @@ public class SearchResultControllerTest extends BaseDatabaseTestCase {
 	private MockMvc mockMvc;
 
 	@Before
-	public void setup() throws DatabaseConnectionException {
+	public void doSetUp() throws DatabaseConnectionException {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 

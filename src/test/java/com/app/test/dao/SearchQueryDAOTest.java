@@ -19,7 +19,7 @@ import org.junit.Test;
 public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 
 	@Before
-	public void setUp() throws DatabaseConnectionException {
+	public void doSetUp() throws DatabaseConnectionException {
 		_searchQueryDAOImpl = new SearchQueryDAOImpl();
 	}
 

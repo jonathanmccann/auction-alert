@@ -49,6 +49,10 @@ public abstract class BaseDatabaseTestCase {
 		ScriptUtils.executeSqlScript(connection, resource);
 
 		connection.close();
+
+		doSetUp();
 	}
+
+	protected abstract void doSetUp() throws Exception;
 
 }

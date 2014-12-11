@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -19,8 +19,8 @@ import org.junit.Test;
  */
 public class SearchResultDAOTest extends BaseDatabaseTestCase {
 
-	@BeforeClass
-	public static void setUpClass() throws DatabaseConnectionException {
+	@Before
+	public void doSetUp() throws DatabaseConnectionException {
 		_searchResultDAOImpl = new SearchResultDAOImpl();
 	}
 
