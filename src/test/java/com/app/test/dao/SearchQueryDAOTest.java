@@ -3,10 +3,8 @@ package com.app.test.dao;
 import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
-import com.app.util.DatabaseUtil;
-import com.app.util.PropertiesUtil;
+import com.app.test.BaseDatabaseTestCase;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.util.List;
@@ -15,34 +13,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
-
 /**
  * @author Jonathan McCann
  */
-public class SearchQueryDAOTest {
+public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 
 	@Before
 	public void setUp() throws DatabaseConnectionException {
-		String databasePassword = System.getProperty(
-			PropertiesUtil.DATABASE_PASSWORD);
-		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesUtil.DATABASE_USERNAME);
-
-		DatabaseUtil.setDatabaseProperties(
-			databaseURL, databaseUsername, databasePassword);
-
-		DatabaseUtil.initializeDatabase();
-
-		Connection connection = DatabaseUtil.getDatabaseConnection();
-
-		Resource resource = new ClassPathResource("/sql/testdb.sql");
-
-		ScriptUtils.executeSqlScript(connection, resource);
-		
 		_searchQueryDAOImpl = new SearchQueryDAOImpl();
 	}
 
