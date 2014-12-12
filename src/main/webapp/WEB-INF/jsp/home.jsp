@@ -5,15 +5,20 @@
 
 <html>
 <head>
-<title>View Search Queries</title>
+<title>Home</title>
 </head>
 <body>
 	<div align="center">
-		<a href="/eBay-webapp/add_search_query">Add a Search Query</a>
+		<h1>eBay Searcher</h1>
 		</br>
-		<a href="/eBay-webapp/view_search_queries">View Search Queries</a>
-		</br>
-		<a href="/eBay-webapp/view_search_query_results">View Search Query Results</a>
+		<h3>View and update search queries and results</h3>
+		<div>
+			<a href="/eBay-webapp/add_search_query">Add a Search Query</a>
+			</br>
+			<a href="/eBay-webapp/view_search_queries">View Search Queries</a>
+			</br>
+			<a href="/eBay-webapp/view_search_query_results">View Search Query Results</a>
+		</div>
 	</div>
 </body>
 </html>
