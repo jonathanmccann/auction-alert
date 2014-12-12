@@ -24,8 +24,10 @@
 				</tr>
 			</c:forEach>
 		</table>
-
+		</br>
 		<a href="/eBay-webapp/add_search_query">Add a Search Query</a>
+		</br>
+		<a href="/eBay-webapp/view_search_queries">View Search Queries</a>
 	</div>
 </body>
 </html>

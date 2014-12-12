@@ -41,7 +41,7 @@ public class SearchResultControllerTest extends BaseDatabaseTestCase {
 		this.mockMvc.perform(get("/result"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("view_search_results"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/view_search_results.jsp"));
+			.andExpect(forwardedUrl("/WEB-INF/jsp/view_search_query_results.jsp"));
 	}
 
 }

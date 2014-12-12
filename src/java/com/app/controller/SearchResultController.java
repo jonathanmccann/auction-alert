@@ -22,7 +22,7 @@ public class SearchResultController {
 	@RequestMapping(
 		value = {
 			"/result", "/search_result", "/view_search_result",
-			"/view_search_results"
+			"/view_search_results", "view_search_query_results"
 		},
 		method = RequestMethod.GET)
 	public String viewSearchResults(Map<String, Object> model)
@@ -47,7 +47,7 @@ public class SearchResultController {
 
 		model.put("searchResultModelMap", searchResultModelMap);
 
- 		return "view_search_results";
+ 		return "view_search_query_results";
 	}
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =

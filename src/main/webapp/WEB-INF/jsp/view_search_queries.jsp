@@ -21,6 +21,8 @@
 		</table>
 
 		<a href="/eBay-webapp/add_search_query">Add a Search Query</a>
+		</br>
+		<a href="/eBay-webapp/view_search_query_results">View Search Query Results</a>
 	</div>
 </body>
 </html>
