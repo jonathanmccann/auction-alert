@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
+import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.model.SearchQueryModel;
 
 import org.slf4j.Logger;
@@ -62,8 +63,11 @@ public class SearchQueryController {
 		throws SQLException {
 
 		for (String searchQueryId : searchQueryIds) {
-			_searchQueryDAOImpl.deleteSearchQuery(
-				Integer.valueOf(searchQueryId));
+			int searchQueryIdInteger = Integer.valueOf(searchQueryId);
+
+			_searchQueryDAOImpl.deleteSearchQuery(searchQueryIdInteger);
+
+			_searchResultDAOImpl.deleteSearchQueryResults(searchQueryIdInteger);
 		}
 
 		return "redirect:view_search_queries";
@@ -71,6 +75,9 @@ public class SearchQueryController {
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
+
+	private static final SearchResultDAOImpl _searchResultDAOImpl =
+		new SearchResultDAOImpl();
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
