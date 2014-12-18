@@ -62,12 +62,15 @@ public class SearchQueryController {
 	public String deleteSearchQuery(String[] searchQueryIds)
 		throws SQLException {
 
-		for (String searchQueryId : searchQueryIds) {
-			int searchQueryIdInteger = Integer.valueOf(searchQueryId);
+		if ((searchQueryIds != null) && (searchQueryIds.length > 0)) {
+			for (String searchQueryId : searchQueryIds) {
+				int searchQueryIdInteger = Integer.valueOf(searchQueryId);
 
-			_searchQueryDAOImpl.deleteSearchQuery(searchQueryIdInteger);
+				_searchQueryDAOImpl.deleteSearchQuery(searchQueryIdInteger);
 
-			_searchResultDAOImpl.deleteSearchQueryResults(searchQueryIdInteger);
+				_searchResultDAOImpl.deleteSearchQueryResults(
+					searchQueryIdInteger);
+			}
 		}
 
 		return "redirect:view_search_queries";

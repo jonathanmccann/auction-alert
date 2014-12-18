@@ -59,4 +59,14 @@ public class SearchQueryControllerTest extends BaseDatabaseTestCase {
 			.andExpect(forwardedUrl("/WEB-INF/jsp/view_search_queries.jsp"));
 	}
 
+	@Test
+	public void testDeleteSearchQuery() throws Exception {
+		String[] searchQueryIds = new String[] { "1" };
+
+		this.mockMvc.perform(post("/delete_search_query")
+			.sessionAttr("searchQueryIds", searchQueryIds))
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"));
+	}
+
 }
