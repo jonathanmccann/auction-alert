@@ -17,6 +17,7 @@ import com.ebay.services.finding.SortOrderType;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -49,6 +50,8 @@ public class eBaySearchResult {
 		SearchResult searchResults = result.getSearchResult();
 
 		List<SearchItem> items = searchResults.getItem();
+
+		Collections.reverse(items);
 
 		for (SearchItem item : items) {
 			SearchResultModel searchResultModel = createSearchResult(item);
