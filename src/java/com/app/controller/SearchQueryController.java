@@ -57,6 +57,18 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
+	@RequestMapping(value = "/delete_search_query", method = RequestMethod.POST)
+	public String deleteSearchQuery(String[] searchQueryIds)
+		throws SQLException {
+
+		for (String searchQueryId : searchQueryIds) {
+			_searchQueryDAOImpl.deleteSearchQuery(
+				Integer.valueOf(searchQueryId));
+		}
+
+		return "redirect:view_search_queries";
+	}
+
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
 
