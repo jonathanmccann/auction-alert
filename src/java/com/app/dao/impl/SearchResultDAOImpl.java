@@ -181,6 +181,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		searchResult.setTypeOfAuction(
 			resultSet.getString("typeOfAuction"));
 		searchResult.setItemURL(resultSet.getString("itemURL"));
+		searchResult.setGalleryURL(resultSet.getString("galleryURL"));
 		searchResult.setEndingTime(
 			new Date(resultSet.getLong("endingTime")));
 		searchResult.setAuctionPrice(
@@ -201,12 +202,13 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		preparedStatement.setString(
 			4, searchResultModel.getTypeOfAuction());
 		preparedStatement.setString(5, searchResultModel.getItemURL());
+		preparedStatement.setString(6, searchResultModel.getGalleryURL());
 
 		Date endingTime = searchResultModel.getEndingTime();
 
-		preparedStatement.setLong(6, endingTime.getTime());
-		preparedStatement.setDouble(7, searchResultModel.getAuctionPrice());
-		preparedStatement.setDouble(8, searchResultModel.getFixedPrice());
+		preparedStatement.setLong(7, endingTime.getTime());
+		preparedStatement.setDouble(8, searchResultModel.getAuctionPrice());
+		preparedStatement.setDouble(9, searchResultModel.getFixedPrice());
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
@@ -214,8 +216,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 	private static final String _ADD_SEARCH_RESULT_SQL =
 		"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, " +
-			"typeOfAuction, itemURL, endingTime, auctionPrice, " +
-				" fixedPrice) VALUES(?, ?, ? ,?, ?, ?, ?, ?)";
+			"typeOfAuction, itemURL, galleryURL, endingTime, auctionPrice, " +
+				" fixedPrice) VALUES(?, ?, ? , ?, ?, ?, ?, ?, ?)";
 
 	private static final String _DELETE_SEARCH_RESULT_SQL =
 		"DELETE FROM SearchResult WHERE searchResultId = ?";

@@ -33,13 +33,15 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 
 		SearchResultModel searchResultModel = new SearchResultModel(
 			1, "1234", "First Item", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", endingTime, "Auction");
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
+			endingTime, "Auction");
 
 		_searchResultDAOImpl.addSearchResult(searchResultModel);
 
 		searchResultModel = new SearchResultModel(
 			2, "2345", "Second Item", 14.99, 14.99,
-			"http://www.ebay.com/itm/2345", endingTime, "FixedPrice");
+			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
+			endingTime, "FixedPrice");
 
 		_searchResultDAOImpl.addSearchResult(searchResultModel);
 
@@ -56,6 +58,8 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
+		Assert.assertEquals(
+			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
 		Assert.assertEquals(endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
@@ -76,6 +80,8 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 		Assert.assertEquals(14.99, secondSearchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/2345", secondSearchResult.getItemURL());
+		Assert.assertEquals(
+			"http://www.ebay.com/234.jpg", secondSearchResult.getGalleryURL());
 		Assert.assertEquals(endingTime, secondSearchResult.getEndingTime());
 		Assert.assertEquals(
 			"FixedPrice", secondSearchResult.getTypeOfAuction());

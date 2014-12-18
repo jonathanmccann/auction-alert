@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 	itemTitle VARCHAR(100),
 	typeOfAuction VARCHAR(25),
 	itemURL VARCHAR(50),
+	galleryURL VARCHAR(100),
 	endingTime LONG,
 	auctionPrice DOUBLE,
 	fixedPrice DOUBLE

@@ -70,6 +70,7 @@ public class eBaySearchResult {
 		searchResultModel.setItemTitle(item.getTitle());
 		searchResultModel.setItemURL(
 			_EBAY_URL_PREFIX + searchResultModel.getItemId());
+		searchResultModel.setGalleryURL(item.getGalleryURL());
 
 		Calendar endTimeCalendar = listingInfo.getEndTime();
 

@@ -24,7 +24,8 @@ public class SearchResultModelTest {
 
 		SearchResultModel searchResultModel = new SearchResultModel(
 			1, "1234", "itemTitle", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", endingTime, "Buy It Now");
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
+			endingTime, "Buy It Now");
 
 		Assert.assertEquals(1, searchResultModel.getSearchQueryId());
 		Assert.assertEquals("1234", searchResultModel.getItemId());
@@ -33,6 +34,8 @@ public class SearchResultModelTest {
 		Assert.assertEquals(14.99, searchResultModel.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResultModel.getItemURL());
+		Assert.assertEquals(
+			"http://www.ebay.com/123.jpg", searchResultModel.getGalleryURL());
 		Assert.assertEquals(endingTime, searchResultModel.getEndingTime());
 		Assert.assertEquals("Buy It Now", searchResultModel.getTypeOfAuction());
 	}
@@ -80,6 +83,14 @@ public class SearchResultModelTest {
 
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", _searchResultModel.getItemURL());
+	}
+
+	@Test
+	public void testSetAndGetGalleryURL() throws Exception {
+		_searchResultModel.setGalleryURL("http://www.ebay.com/123.jpg");
+
+		Assert.assertEquals(
+			"http://www.ebay.com/123.jpg", _searchResultModel.getGalleryURL());
 	}
 
 	@Test
