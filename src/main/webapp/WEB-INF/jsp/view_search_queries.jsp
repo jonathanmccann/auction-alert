@@ -16,14 +16,21 @@
 				<tr>
 					<td colspan="2" align="center"><h2>Current Search Queries</h2></td>
 				</tr>
-				<c:forEach items="${searchQueryModels}" var="searchQueryModel">
-					<tr>
-						<td><input name="searchQueryIds" type="checkbox" id="checkboxes" value="${searchQueryModel.searchQueryId}" /><label>${searchQueryModel.searchQuery}</label></td>
-					</tr>
-				</c:forEach>
-				<tr>
-					<td colspan="2" align="center"><input type="submit" value="Delete Search Query" /></td>
-				</tr>
+				<c:choose>
+					<c:when test="${empty searchQueryModels}">
+						<td>There are currently no search queries<td>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${searchQueryModels}" var="searchQueryModel">
+							<tr>
+								<td><input name="searchQueryIds" type="checkbox" id="checkboxes" value="${searchQueryModel.searchQueryId}" /><label>${searchQueryModel.searchQuery}</label></td>
+							</tr>
+						</c:forEach>
+						<tr>
+							<td colspan="2" align="center"><input type="submit" value="Delete Search Query" /></td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
 			</table>
 		</form:form>
 		</br>

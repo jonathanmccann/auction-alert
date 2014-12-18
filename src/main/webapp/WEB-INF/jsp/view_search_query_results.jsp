@@ -13,16 +13,23 @@
 			<tr>
 				<td colspan="2" align="center"><h2>Current Search Results</h2></td>
 			</tr>
-			<c:forEach items="${searchResultModelMap}" var="entry">
-				<tr>
-					<td><c:out value="Search Query - ${entry.key}"/><td>
-					<c:forEach items="${entry.value}" var="item">
+			<c:choose>
+				<c:when test="${empty searchQueryModels}">
+					<td>There are currently no search query results</td>
+				</c:when>
+				<c:otherwise>
+					<c:forEach items="${searchResultModelMap}" var="entry">
 						<tr>
-							<td><c:out value="${item.itemTitle}"/><td>
+							<td><c:out value="Search Query - ${entry.key}"/></td>
+							<c:forEach items="${entry.value}" var="item">
+								<tr>
+									<td><c:out value="${item.itemTitle}"/></td>
+								</tr>
+							</c:forEach>
 						</tr>
 					</c:forEach>
-				</tr>
-			</c:forEach>
+				</c:otherwise>
+			</c:choose>
 		</table>
 		</br>
 		<a href="/eBay-webapp/add_search_query">Add a Search Query</a>
