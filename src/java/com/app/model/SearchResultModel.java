@@ -26,6 +26,14 @@ public class SearchResultModel {
 		_typeOfAuction = typeOfAuction;
 	}
 
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof SearchResultModel)) {
+			return false;
+		}
+
+		return (_itemId.equals(((SearchResultModel)obj).getItemId()));
+	}
+
 	public double getAuctionPrice() {
 		return _auctionPrice;
 	}
@@ -64,6 +72,10 @@ public class SearchResultModel {
 
 	public String getTypeOfAuction() {
 		return _typeOfAuction;
+	}
+
+	public int hashCode() {
+		return Integer.valueOf(_itemId);
 	}
 
 	public void setAuctionPrice(double auctionPrice) {
