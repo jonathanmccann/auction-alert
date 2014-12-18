@@ -14,7 +14,7 @@
 				<td colspan="2" align="center"><h2>Current Search Results</h2></td>
 			</tr>
 			<c:choose>
-				<c:when test="${empty searchQueryModels}">
+				<c:when test="${empty searchResultModelMap}">
 					<td>There are currently no search query results</td>
 				</c:when>
 				<c:otherwise>
