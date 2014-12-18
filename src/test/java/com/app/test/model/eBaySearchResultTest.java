@@ -1,5 +1,6 @@
 package com.app.test.model;
 
+import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 import com.app.model.eBaySearchResult;
 import com.app.util.PropertiesUtil;
@@ -41,8 +42,10 @@ public class eBaySearchResultTest {
 
 	@Test
 	public void testGeteBaySearchResults() throws Exception {
+		SearchQueryModel searchQueryModel = new SearchQueryModel(1, "eBay");
+
 		List<SearchResultModel> eBaySearchResults =
-			eBaySearchResult.geteBaySearchResults("eBay");
+			eBaySearchResult.geteBaySearchResults(searchQueryModel);
 
 		Assert.assertEquals(5, eBaySearchResults.size());
 	}

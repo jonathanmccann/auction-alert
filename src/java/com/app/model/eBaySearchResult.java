@@ -27,16 +27,17 @@ import org.slf4j.LoggerFactory;
 public class eBaySearchResult {
 
 	public static List<SearchResultModel> geteBaySearchResults(
-		String searchQuery) {
+		SearchQueryModel searchQueryModel) {
 
 		if (_log.isDebugEnabled()) {
 			_log.debug(
-				"Searching for {}", searchQuery);
+				"Searching for {}", searchQueryModel.getSearchQuery());
 		}
 
 		List<SearchResultModel> searchResultModels = new ArrayList<>();
 
-		FindItemsByKeywordsRequest request = setUpRequest(searchQuery);
+		FindItemsByKeywordsRequest request = setUpRequest(
+			searchQueryModel.getSearchQuery());
 
 		FindingServicePortType serviceClient =
 			eBayAPIUtil.getServiceClient();
@@ -50,6 +51,9 @@ public class eBaySearchResult {
 
 		for (SearchItem item : items) {
 			SearchResultModel searchResultModel = createSearchResult(item);
+
+			searchResultModel.setSearchQueryId(
+				searchQueryModel.getSearchQueryId());
 
 			searchResultModels.add(searchResultModel);
 		}

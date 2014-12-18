@@ -35,9 +35,9 @@ public class SearchResultUtil {
 	}
 
 	public static List<SearchResultModel> performeBaySearch(
-		String searchQuery) {
+		SearchQueryModel searchQueryModel) {
 
-		return eBaySearchResult.geteBaySearchResults(searchQuery);
+		return eBaySearchResult.geteBaySearchResults(searchQueryModel);
 	}
 
 	public static void performSearch() throws SQLException {
@@ -50,7 +50,7 @@ public class SearchResultUtil {
 
 		for (SearchQueryModel searchQueryModel : searchQueryModels) {
 			List<SearchResultModel> searchResults =
-				performeBaySearch(searchQueryModel.getSearchQuery());
+				performeBaySearch(searchQueryModel);
 
 			searchResults = filterSearchResults(
 				searchQueryModel.getSearchQueryId(), searchResults);
