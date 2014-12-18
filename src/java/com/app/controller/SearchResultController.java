@@ -28,7 +28,7 @@ public class SearchResultController {
 	public String viewSearchResults(Map<String, Object> model)
 		throws SQLException {
 
-		Map<Integer, List<SearchResultModel>> searchResultModelMap =
+		Map<String, List<SearchResultModel>> searchResultModelMap =
 			new HashMap<>();
 
 		List<SearchQueryModel> searchQueryModels =
@@ -37,11 +37,13 @@ public class SearchResultController {
 		for (SearchQueryModel searchQueryModel : searchQueryModels) {
 			int searchQueryId = searchQueryModel.getSearchQueryId();
 
+			String searchQuery = searchQueryModel.getSearchQuery();
+
 			List<SearchResultModel> searchResultModels =
 				_searchResultDAOImpl.getSearchQueryResults(searchQueryId);
 
 			if (!searchResultModels.isEmpty()) {
-				searchResultModelMap.put(searchQueryId, searchResultModels);
+				searchResultModelMap.put(searchQuery, searchResultModels);
 			}
 		}
 

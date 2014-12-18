@@ -20,10 +20,19 @@
 				<c:otherwise>
 					<c:forEach items="${searchResultModelMap}" var="entry">
 						<tr>
-							<td><c:out value="Search Query - ${entry.key}"/></td>
+							<td><h4><c:out value="${entry.key}:"/></h4></td>
 							<c:forEach items="${entry.value}" var="item">
 								<tr>
-									<td><c:out value="${item.itemTitle}"/></td>
+									<td><img alt="${item.galleryURL}" src="${item.galleryURL}"></td>
+									<td>
+										<a href="${item.itemURL}" target="_blank">${item.itemTitle}</a></br>
+										<c:if test="${item.auctionPrice gt 0.00}">
+											Auction Price: $${item.auctionPrice}</br>
+										</c:if>
+										<c:if test="${item.fixedPrice gt 0.00}">
+											Fixed Price: $${item.fixedPrice}
+										</c:if>
+									</td>
 								</tr>
 							</c:forEach>
 						</tr>
