@@ -41,9 +41,7 @@
 			</c:choose>
 		</table>
 		</br>
-		<a href="/eBay-webapp/add_search_query">Add a Search Query</a>
-		</br>
-		<a href="/eBay-webapp/view_search_queries">View Search Queries</a>
+		<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | View Search Query Results
 	</div>
 </body>
 </html>

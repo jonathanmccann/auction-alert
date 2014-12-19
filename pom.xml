@@ -107,7 +107,7 @@
 		  <configuration>
 		    <url>http://127.0.0.1:8080/manager/text</url>
 		    <server>tomcat</server>
-		    <path>/eBay-webapp</path>
+		    <path>/ROOT</path>
 		  </configuration>
 		</plugin>
 	  </plugins>
