@@ -43,6 +43,42 @@ public class PropertiesUtilTest {
 			"5",
 			PropertiesUtil.getConfigurationProperty(
 				PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
+		Assert.assertEquals(
+			"test@test.com",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.OUTBOUND_EMAIL_ADDRESS));
+		Assert.assertEquals(
+			"test",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.OUTBOUND_EMAIL_ADDRESS_PASSWORD));
+		Assert.assertEquals(
+			"true",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.MAIL_SMTP_AUTH));
+		Assert.assertEquals(
+			"true",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.MAIL_SMTP_STARTTLS_ENABLE));
+		Assert.assertEquals(
+			"smtp.gmail.com",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.MAIL_SMTP_HOST));
+		Assert.assertEquals(
+			"587",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.MAIL_SMTP_PORT));
+		Assert.assertEquals(
+			"test@test.com,test2@test2.com",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.RECIPIENT_EMAIL_ADDRESSES));
+		Assert.assertEquals(
+			"1234567890,2345678901",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.RECIPIENT_PHONE_NUMBERS));
+		Assert.assertEquals(
+			"AT&T",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.RECIPIENT_PHONE_CARRIER));
 	}
 
 	@Test
