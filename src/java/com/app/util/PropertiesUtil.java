@@ -33,7 +33,7 @@ public class PropertiesUtil {
 		"mail.smtp.auth";
 
 	public static final String MAIL_SMTP_STARTTLS_ENABLE =
-		"mail.smtp.starttls.enabled";
+		"mail.smtp.starttls.enable";
 
 	public static final String MAIL_SMTP_HOST =
 		"mail.smtp.host";
