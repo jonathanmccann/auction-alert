@@ -67,7 +67,8 @@ public class SearchResultUtil {
 		throws SQLException{
 
 		int numberOfSearchResultsToRemove =
-			existingSearchResultModels.size() + newSearchResultModels.size() - 5;
+			existingSearchResultModels.size() + newSearchResultModels.size() -
+				_NUMBER_OF_SEARCH_RESULTS;
 
 		if (numberOfSearchResultsToRemove > 0) {
 			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
@@ -89,6 +90,10 @@ public class SearchResultUtil {
 
 		MailUtil.sendSearchResultsToRecipients(searchResultModels);
 	}
+
+	private static final int _NUMBER_OF_SEARCH_RESULTS =
+		Integer.valueOf(PropertiesUtil.getConfigurationProperty(
+			PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultUtil.class);
