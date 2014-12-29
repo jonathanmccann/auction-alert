@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -31,10 +32,10 @@
 											<td>
 												<a href="${item.itemURL}" target="_blank">${item.itemTitle}</a></br>
 												<c:if test="${item.auctionPrice gt 0.00}">
-													Auction Price: $${item.auctionPrice}</br>
+													Auction Price: <fmt:formatNumber value="${item.auctionPrice}" type="currency"/></br>
 												</c:if>
 												<c:if test="${item.fixedPrice gt 0.00}">
-													Fixed Price: $${item.fixedPrice}
+													Fixed Price: <fmt:formatNumber value="${item.fixedPrice}" type="currency"/>
 												</c:if>
 											</td>
 										</tr>

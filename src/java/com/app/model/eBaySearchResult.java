@@ -96,33 +96,24 @@ public class eBaySearchResult {
 		SearchResultModel searchResultModel, ListingInfo listingInfo,
 		SellingStatus sellingStatus, String typeOfAuction) {
 
-		DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
 		if ("Auction".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
-			String auctionPrice = decimalFormat.format(currentPrice.getValue());
-
-			searchResultModel.setAuctionPrice(Double.valueOf(auctionPrice));
+			searchResultModel.setAuctionPrice(currentPrice.getValue());
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
 			"StoreInventory".equals(typeOfAuction)) {
 
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
-			String fixedPrice = decimalFormat.format(currentPrice.getValue());
-
-			searchResultModel.setFixedPrice(Double.valueOf(fixedPrice));
+			searchResultModel.setFixedPrice(currentPrice.getValue());
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 			Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
 
-			String auctionPrice = decimalFormat.format(currentPrice.getValue());
-			String fixedPrice = decimalFormat.format(buyItNowPrice.getValue());
-
-			searchResultModel.setAuctionPrice(Double.valueOf(auctionPrice));
-			searchResultModel.setFixedPrice(Double.valueOf(fixedPrice));
+			searchResultModel.setAuctionPrice(currentPrice.getValue());
+			searchResultModel.setFixedPrice(buyItNowPrice.getValue());
 		}
 		else {
 			_log.error("Unknown type of auction: {}", typeOfAuction);
