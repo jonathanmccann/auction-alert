@@ -5,7 +5,7 @@
 
 <html>
 <head>
-<title>View Search Queries</title>
+<title>View Search Query Results</title>
 <link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
 <script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
 <script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
