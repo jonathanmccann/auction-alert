@@ -2,26 +2,30 @@ package com.app.test.util;
 
 import com.app.model.SearchResultModel;
 import com.app.util.MailUtil;
+import com.app.util.PropertiesUtil;
+
+import freemarker.template.Template;
 
 import java.lang.reflect.Method;
+
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
-import com.app.util.PropertiesUtil;
-import freemarker.template.Template;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+
+import org.hamcrest.CoreMatchers;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Jonathan McCann
@@ -46,8 +50,8 @@ public class MailUtilTest {
 	@Test
 	public void testConvertPhoneNumbersToEmailAddresses() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"convertPhoneNumbersToEmailAddresses",
-			List.class, Properties.class);
+			"convertPhoneNumbersToEmailAddresses", List.class,
+			Properties.class);
 
 		method.setAccessible(true);
 
@@ -65,19 +69,28 @@ public class MailUtilTest {
 	}
 
 	@Test
+	public void testGetEmailTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod("getEmailTemplate");
+
+		method.setAccessible(true);
+
+		Template template = (Template)method.invoke(_classInstance);
+
+		Assert.assertNotNull(template);
+	}
+
+	@Test
 	public void testGetRecipientEmailAddresses() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
 			"getRecipientEmailAddresses", Properties.class);
 
 		method.setAccessible(true);
 
-		List<String> recipientEmailAddresses =
-			(List<String>)method.invoke(_classInstance,  _properties);
+		List<String> recipientEmailAddresses = (List<String>)method.invoke(
+			_classInstance,  _properties);
 
-		Assert.assertEquals(
-			"test@test.com", recipientEmailAddresses.get(0));
-		Assert.assertEquals(
-			"test2@test2.com", recipientEmailAddresses.get(1));
+		Assert.assertEquals("test@test.com", recipientEmailAddresses.get(0));
+		Assert.assertEquals("test2@test2.com", recipientEmailAddresses.get(1));
 	}
 
 	@Test
@@ -87,24 +100,13 @@ public class MailUtilTest {
 
 		method.setAccessible(true);
 
-		List<String> recipientEmailAddresses =
-			(List<String>)method.invoke(_classInstance,  _properties);
+		List<String> recipientEmailAddresses = (List<String>)method.invoke(
+			_classInstance,  _properties);
 
 		Assert.assertEquals(
 			"1234567890@txt.att.net", recipientEmailAddresses.get(0));
 		Assert.assertEquals(
 			"2345678901@txt.att.net", recipientEmailAddresses.get(1));
-	}
-
-	@Test
-	public void testGetEmailTemplate() throws Exception {
-		Method method = _clazz.getDeclaredMethod("getEmailTemplate");
-
-		method.setAccessible(true);
-
-		Template template = (Template)method.invoke(_classInstance);
-
-		Assert.assertNotNull(template);
 	}
 
 	@Test
@@ -242,10 +244,8 @@ public class MailUtilTest {
 		method.invoke(_classInstance, recipientEmailAddresses);
 
 		Assert.assertEquals(2, recipientEmailAddresses.size());
-		Assert.assertEquals(
-			"test@test.com", recipientEmailAddresses.get(0));
-		Assert.assertEquals(
-			"test2@test2.com", recipientEmailAddresses.get(1));
+		Assert.assertEquals("test@test.com", recipientEmailAddresses.get(0));
+		Assert.assertEquals("test2@test2.com", recipientEmailAddresses.get(1));
 	}
 
 	@Test
@@ -265,16 +265,12 @@ public class MailUtilTest {
 		method.invoke(_classInstance, recipientPhoneNumbers);
 
 		Assert.assertEquals(2, recipientPhoneNumbers.size());
-		Assert.assertEquals(
-			"1234567890", recipientPhoneNumbers.get(0));
-		Assert.assertEquals(
-			"2345678901", recipientPhoneNumbers.get(1));
+		Assert.assertEquals("1234567890", recipientPhoneNumbers.get(0));
+		Assert.assertEquals("2345678901", recipientPhoneNumbers.get(1));
 	}
 
-	private static Properties _properties;
-
-	private static Class _clazz;
-
 	private static Object _classInstance;
+	private static Class _clazz;
+	private static Properties _properties;
 
 }

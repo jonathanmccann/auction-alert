@@ -134,9 +134,6 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 		}
 	}
 
-	private static final Logger _log = LoggerFactory.getLogger(
-		SearchQueryDAOImpl.class);
-
 	private static final String _ADD_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(searchQuery) VALUES(?)";
 
@@ -151,5 +148,8 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	private static final String _UPDATE_SEARCH_QUERY =
 		"UPDATE SearchQuery SET searchQuery = ? WHERE searchQueryId = ?";
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		SearchQueryDAOImpl.class);
 
 }

@@ -23,26 +23,23 @@ public class PropertiesUtil {
 
 	public static final String DATABASE_USERNAME = "jdbc.default.username";
 
+	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
+
+	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
+
+	public static final String MAIL_SMTP_PORT = "mail.smtp.port";
+
+	public static final String MAIL_SMTP_STARTTLS_ENABLE =
+		"mail.smtp.starttls.enable";
+
+	public static final String NUMBER_OF_SEARCH_RESULTS =
+		"number.of.search.results";
+
 	public static final String OUTBOUND_EMAIL_ADDRESS =
 		"outbound.email.address";
 
 	public static final String OUTBOUND_EMAIL_ADDRESS_PASSWORD =
 		"outbound.email.address.password";
-
-	public static final String MAIL_SMTP_AUTH =
-		"mail.smtp.auth";
-
-	public static final String MAIL_SMTP_STARTTLS_ENABLE =
-		"mail.smtp.starttls.enable";
-
-	public static final String MAIL_SMTP_HOST =
-		"mail.smtp.host";
-
-	public static final String MAIL_SMTP_PORT =
-		"mail.smtp.port";
-
-	public static final String NUMBER_OF_SEARCH_RESULTS =
-		"number.of.search.results";
 
 	public static final String RECIPIENT_EMAIL_ADDRESSES =
 		"recipient.email.addresses";
@@ -55,6 +52,10 @@ public class PropertiesUtil {
 
 	public static Properties getConfigurationProperties() {
 		return _properties;
+	}
+
+	public static String getConfigurationProperty(String propertyKey) {
+		return _properties.getProperty(propertyKey);
 	}
 
 	public static void loadConfigurationProperties() throws IOException {
@@ -84,10 +85,6 @@ public class PropertiesUtil {
 		}
 
 		_properties = properties;
-	}
-
-	public static String getConfigurationProperty(String propertyKey) {
-		return _properties.getProperty(propertyKey);
 	}
 
 	public static void setConfigurationProperties(Properties properties) {

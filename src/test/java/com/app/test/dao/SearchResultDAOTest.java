@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -19,7 +18,7 @@ import org.junit.Test;
  */
 public class SearchResultDAOTest extends BaseDatabaseTestCase {
 
-	@Before
+	@Override
 	public void doSetUp() throws DatabaseConnectionException {
 		_searchResultDAOImpl = new SearchResultDAOImpl();
 	}
@@ -47,8 +46,8 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 
 		// Test get
 
-		SearchResultModel searchResult =
-			_searchResultDAOImpl.getSearchResult(1);
+		SearchResultModel searchResult = _searchResultDAOImpl.getSearchResult(
+			1);
 
 		Assert.assertEquals(1, searchResult.getSearchResultId());
 		Assert.assertEquals(1, searchResult.getSearchQueryId());

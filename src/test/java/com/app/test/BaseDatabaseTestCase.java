@@ -17,12 +17,13 @@ package com.app.test;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 
+import java.sql.Connection;
+
 import org.junit.Before;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
-
-import java.sql.Connection;
 
 /**
  * @author Jonathan McCann

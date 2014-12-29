@@ -24,8 +24,7 @@ public class DatabaseUtil {
 		throws DatabaseConnectionException {
 
 		if (!_isPropertiesSet) {
-			_log.error(
-				"The database properties are not set");
+			_log.error("The database properties are not set");
 
 			throw new DatabaseConnectionException();
 		}
@@ -73,15 +72,12 @@ public class DatabaseUtil {
 		_isPropertiesSet = true;
 	}
 
-	private static boolean _isPropertiesSet;
-
-	private static String _databasePassword;
-
-	private static String _databaseURL;
-
-	private static String _databaseUsername;
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		DatabaseUtil.class);
+
+	private static String _databasePassword;
+	private static String _databaseURL;
+	private static String _databaseUsername;
+	private static boolean _isPropertiesSet;
 
 }

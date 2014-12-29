@@ -46,6 +46,10 @@ public class SearchResultModel {
 		return _fixedPrice;
 	}
 
+	public String getGalleryURL() {
+		return _galleryURL;
+	}
+
 	public String getItemId() {
 		return _itemId;
 	}
@@ -56,10 +60,6 @@ public class SearchResultModel {
 
 	public String getItemURL() {
 		return _itemURL;
-	}
-
-	public String getGalleryURL() {
-		return _galleryURL;
 	}
 
 	public int getSearchQueryId() {
@@ -90,6 +90,10 @@ public class SearchResultModel {
 		_fixedPrice = fixedPrice;
 	}
 
+	public void setGalleryURL(String galleryURL) {
+		_galleryURL = galleryURL;
+	}
+
 	public void setItemId(String itemId) {
 		_itemId = itemId;
 	}
@@ -100,10 +104,6 @@ public class SearchResultModel {
 
 	public void setItemURL(String itemURL) {
 		_itemURL = itemURL;
-	}
-
-	public void setGalleryURL(String galleryURL) {
-		_galleryURL = galleryURL;
 	}
 
 	public void setSearchQueryId(int searchQueryId) {
@@ -121,10 +121,10 @@ public class SearchResultModel {
 	private double _auctionPrice;
 	private Date _endingTime;
 	private double _fixedPrice;
+	private String _galleryURL;
 	private String _itemId;
 	private String _itemTitle;
 	private String _itemURL;
-	private String _galleryURL;
 	private int _searchQueryId;
 	private int _searchResultId;
 	private String _typeOfAuction;

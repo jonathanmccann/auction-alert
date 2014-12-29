@@ -1,10 +1,12 @@
 package com.app;
 
+import com.app.util.SearchResultUtil;
+
 import java.sql.SQLException;
 
-import com.app.util.SearchResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 

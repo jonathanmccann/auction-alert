@@ -5,6 +5,7 @@ import com.app.util.PropertiesUtil;
 import java.io.IOException;
 
 import java.net.URL;
+
 import java.util.Properties;
 
 import org.junit.Assert;
@@ -81,6 +82,11 @@ public class PropertiesUtilTest {
 				PropertiesUtil.RECIPIENT_PHONE_CARRIER));
 	}
 
+	@Test(expected = IOException.class)
+	public void testLoadInvalidConfigurationProperties() throws Exception {
+		PropertiesUtil.loadConfigurationProperties();
+	}
+
 	@Test
 	public void testSetConfigurationProperties() throws IOException {
 		Properties properties = new Properties();
@@ -110,11 +116,6 @@ public class PropertiesUtilTest {
 		Assert.assertEquals(
 			"Updated JDBC Default Username",
 			properties.getProperty(PropertiesUtil.DATABASE_USERNAME));
-	}
-
-	@Test(expected = IOException.class)
-	public void testLoadInvalidConfigurationProperties() throws Exception {
-		PropertiesUtil.loadConfigurationProperties();
 	}
 
 }

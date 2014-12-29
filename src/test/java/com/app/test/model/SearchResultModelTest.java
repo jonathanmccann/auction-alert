@@ -55,6 +55,14 @@ public class SearchResultModelTest {
 	}
 
 	@Test
+	public void testSetAndGetGalleryURL() throws Exception {
+		_searchResultModel.setGalleryURL("http://www.ebay.com/123.jpg");
+
+		Assert.assertEquals(
+			"http://www.ebay.com/123.jpg", _searchResultModel.getGalleryURL());
+	}
+
+	@Test
 	public void testSetAndGetItemEndingTime() throws Exception {
 		Date endingTime = new Date();
 
@@ -83,14 +91,6 @@ public class SearchResultModelTest {
 
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", _searchResultModel.getItemURL());
-	}
-
-	@Test
-	public void testSetAndGetGalleryURL() throws Exception {
-		_searchResultModel.setGalleryURL("http://www.ebay.com/123.jpg");
-
-		Assert.assertEquals(
-			"http://www.ebay.com/123.jpg", _searchResultModel.getGalleryURL());
 	}
 
 	@Test

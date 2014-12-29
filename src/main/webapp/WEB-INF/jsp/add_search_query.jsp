@@ -1,5 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -12,14 +12,14 @@
 		<form:form action="add_search_query" commandName="searchQueryModel" method="post">
 			<table border="0">
 				<tr>
-					<td colspan="2" align="center"><h2>Add Search Query</h2></td>
+					<td align="center" colspan="2"><h2>Add Search Query</h2></td>
 				</tr>
 				<tr>
 					<td>Search Query:</td>
 					<td><form:input path="searchQuery" /></td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><input type="submit" value="Add Search Query" /></td>
+					<td align="center" colspan="2"><input type="submit" value="Add Search Query" /></td>
 				</tr>
 			</table>
 		</form:form>

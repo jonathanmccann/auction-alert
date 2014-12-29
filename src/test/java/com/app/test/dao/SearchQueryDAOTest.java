@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -18,7 +17,7 @@ import org.junit.Test;
  */
 public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 
-	@Before
+	@Override
 	public void doSetUp() throws DatabaseConnectionException {
 		_searchQueryDAOImpl = new SearchQueryDAOImpl();
 	}
@@ -73,4 +72,5 @@ public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 	}
 
 	private static SearchQueryDAOImpl _searchQueryDAOImpl;
+
 }

@@ -14,7 +14,6 @@ import com.ebay.services.finding.SearchResult;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -32,8 +31,7 @@ public class eBaySearchResult {
 		SearchQueryModel searchQueryModel) {
 
 		if (_log.isDebugEnabled()) {
-			_log.debug(
-				"Searching for {}", searchQueryModel.getSearchQuery());
+			_log.debug("Searching for {}", searchQueryModel.getSearchQuery());
 		}
 
 		List<SearchResultModel> searchResultModels = new ArrayList<>();
@@ -41,11 +39,10 @@ public class eBaySearchResult {
 		FindItemsByKeywordsRequest request = setUpRequest(
 			searchQueryModel.getSearchQuery());
 
-		FindingServicePortType serviceClient =
-			eBayAPIUtil.getServiceClient();
+		FindingServicePortType serviceClient = eBayAPIUtil.getServiceClient();
 
-		FindItemsByKeywordsResponse result =
-			serviceClient.findItemsByKeywords(request);
+		FindItemsByKeywordsResponse result = serviceClient.findItemsByKeywords(
+			request);
 
 		SearchResult searchResults = result.getSearchResult();
 
@@ -82,8 +79,7 @@ public class eBaySearchResult {
 
 		String typeOfAuction = listingInfo.getListingType();
 
-		searchResultModel.setTypeOfAuction(
-			typeOfAuction);
+		searchResultModel.setTypeOfAuction(typeOfAuction);
 
 		setPrice(
 			searchResultModel, listingInfo, item.getSellingStatus(),
@@ -102,7 +98,7 @@ public class eBaySearchResult {
 			searchResultModel.setAuctionPrice(currentPrice.getValue());
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
-			"StoreInventory".equals(typeOfAuction)) {
+				 "StoreInventory".equals(typeOfAuction)) {
 
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
@@ -121,8 +117,7 @@ public class eBaySearchResult {
 	}
 
 	private static FindItemsByKeywordsRequest setUpRequest(String searchQuery) {
-		FindItemsByKeywordsRequest request =
-			new FindItemsByKeywordsRequest();
+		FindItemsByKeywordsRequest request = new FindItemsByKeywordsRequest();
 
 		request.setKeywords(searchQuery);
 
@@ -138,8 +133,9 @@ public class eBaySearchResult {
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
 	private static final int _NUMBER_OF_SEARCH_RESULTS =
-		Integer.valueOf(PropertiesUtil.getConfigurationProperty(
-			PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
+		Integer.valueOf(
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		eBaySearchResult.class);

@@ -45,25 +45,6 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	}
 
 	@Override
-	public void deleteSearchResult(int searchResultId) throws SQLException {
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_RESULT_SQL)) {
-
-			preparedStatement.setInt(1, searchResultId);
-
-			preparedStatement.executeUpdate();
-		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to delete search result for search result ID: {}",
-					searchResultId);
-
-			throw new SQLException(exception);
-		}
-	}
-
-	@Override
 	public void deleteSearchQueryResults(int searchQueryId)
 		throws SQLException {
 
@@ -79,6 +60,25 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			_log.error(
 				"Unable to delete search results for search query ID: {}",
 					searchQueryId);
+
+			throw new SQLException(exception);
+		}
+	}
+
+	@Override
+	public void deleteSearchResult(int searchResultId) throws SQLException {
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_SEARCH_RESULT_SQL)) {
+
+			preparedStatement.setInt(1, searchResultId);
+
+			preparedStatement.executeUpdate();
+		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error(
+				"Unable to delete search result for search result ID: {}",
+					searchResultId);
 
 			throw new SQLException(exception);
 		}
@@ -172,20 +172,15 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 		SearchResultModel searchResult = new SearchResultModel();
 
-		searchResult.setSearchResultId(
-			resultSet.getInt("searchResultId"));
-		searchResult.setSearchQueryId(
-			resultSet.getInt("searchQueryId"));
+		searchResult.setSearchResultId(resultSet.getInt("searchResultId"));
+		searchResult.setSearchQueryId(resultSet.getInt("searchQueryId"));
 		searchResult.setItemId(resultSet.getString("itemId"));
 		searchResult.setItemTitle(resultSet.getString("itemTitle"));
-		searchResult.setTypeOfAuction(
-			resultSet.getString("typeOfAuction"));
+		searchResult.setTypeOfAuction(resultSet.getString("typeOfAuction"));
 		searchResult.setItemURL(resultSet.getString("itemURL"));
 		searchResult.setGalleryURL(resultSet.getString("galleryURL"));
-		searchResult.setEndingTime(
-			new Date(resultSet.getLong("endingTime")));
-		searchResult.setAuctionPrice(
-			resultSet.getDouble("auctionPrice"));
+		searchResult.setEndingTime(new Date(resultSet.getLong("endingTime")));
+		searchResult.setAuctionPrice(resultSet.getDouble("auctionPrice"));
 		searchResult.setFixedPrice(resultSet.getDouble("fixedPrice"));
 
 		return searchResult;
@@ -199,8 +194,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
 		preparedStatement.setString(2, searchResultModel.getItemId());
 		preparedStatement.setString(3, searchResultModel.getItemTitle());
-		preparedStatement.setString(
-			4, searchResultModel.getTypeOfAuction());
+		preparedStatement.setString(4, searchResultModel.getTypeOfAuction());
 		preparedStatement.setString(5, searchResultModel.getItemURL());
 		preparedStatement.setString(6, searchResultModel.getGalleryURL());
 
@@ -211,26 +205,27 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 		preparedStatement.setDouble(9, searchResultModel.getFixedPrice());
 	}
 
-	private static final Logger _log = LoggerFactory.getLogger(
-		SearchResultDAOImpl.class);
-
 	private static final String _ADD_SEARCH_RESULT_SQL =
 		"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, " +
 			"typeOfAuction, itemURL, galleryURL, endingTime, auctionPrice, " +
 				" fixedPrice) VALUES(?, ?, ? , ?, ?, ?, ?, ?, ?)";
 
-	private static final String _DELETE_SEARCH_RESULT_SQL =
-		"DELETE FROM SearchResult WHERE searchResultId = ?";
-
 	private static final String _DELETE_SEARCH_QUERY_RESULTS =
 		"DELETE FROM SearchResult WHERE searchQueryId = ?";
 
-	private static final String _GET_SEARCH_RESULT_SQL =
-		"SELECT * FROM SearchResult WHERE searchResultId = ?";
+	private static final String _DELETE_SEARCH_RESULT_SQL =
+		"DELETE FROM SearchResult WHERE searchResultId = ?";
 
 	private static final String _GET_SEARCH_QUERY_RESULTS_SQL =
 		"SELECT * FROM SearchResult WHERE searchQueryId = ?";
 
+	private static final String _GET_SEARCH_RESULT_SQL =
+		"SELECT * FROM SearchResult WHERE searchResultId = ?";
+
 	private static final String _GET_SEARCH_RESULTS_SQL =
 		"SELECT * FROM SearchResult";
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		SearchResultDAOImpl.class);
+
 }

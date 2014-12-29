@@ -1,18 +1,18 @@
 /* CSS for the expanding and collapsing divs */
 
 .container {
-    border: 1px solid black;
+	border: 1px solid black;
 	width: 50%;
 }
 .container div {
 
 }
 .container .header {
-    padding: 2px;
-    cursor: pointer;
-    font-weight: bold;
+	padding: 2px;
+	cursor: pointer;
+	font-weight: bold;
 }
 .container .content {
-    display: none;
-    padding : 5px;
+	display: none;
+	padding : 5px;
 }

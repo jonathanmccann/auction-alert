@@ -5,12 +5,13 @@ import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 import com.app.model.eBaySearchResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public class SearchResultUtil {
 
 	public static List<SearchResultModel> filterSearchResults(
@@ -49,8 +50,8 @@ public class SearchResultUtil {
 			searchQueryModels.size());
 
 		for (SearchQueryModel searchQueryModel : searchQueryModels) {
-			List<SearchResultModel> searchResults =
-				performeBaySearch(searchQueryModel);
+			List<SearchResultModel> searchResults = performeBaySearch(
+				searchQueryModel);
 
 			searchResults = filterSearchResults(
 				searchQueryModel.getSearchQueryId(), searchResults);
@@ -64,16 +65,15 @@ public class SearchResultUtil {
 	public static void saveNewResultsAndRemoveOldResults(
 			List<SearchResultModel> existingSearchResultModels,
 			List<SearchResultModel> newSearchResultModels)
-		throws SQLException{
+		throws SQLException {
 
 		int numberOfSearchResultsToRemove =
-			existingSearchResultModels.size() + newSearchResultModels.size() -
-				_NUMBER_OF_SEARCH_RESULTS;
+			existingSearchResultModels.size() + newSearchResultModels.size() - 5;
 
 		if (numberOfSearchResultsToRemove > 0) {
 			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
-				SearchResultModel searchResult =
-					existingSearchResultModels.get(i);
+				SearchResultModel searchResult = existingSearchResultModels.get(
+					i);
 
 				_searchResultDAOImpl.deleteSearchResult(
 					searchResult.getSearchResultId());
@@ -91,16 +91,11 @@ public class SearchResultUtil {
 		MailUtil.sendSearchResultsToRecipients(searchResultModels);
 	}
 
-	private static final int _NUMBER_OF_SEARCH_RESULTS =
-		Integer.valueOf(PropertiesUtil.getConfigurationProperty(
-			PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultUtil.class);
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
-
 	private static final SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
 
