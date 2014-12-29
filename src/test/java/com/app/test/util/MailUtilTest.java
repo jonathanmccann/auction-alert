@@ -97,8 +97,8 @@ public class MailUtilTest {
 	}
 
 	@Test
-	public void testGetTemplate() throws Exception {
-		Method method = _clazz.getDeclaredMethod("getTemplate");
+	public void testGetEmailTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod("getEmailTemplate");
 
 		method.setAccessible(true);
 
@@ -108,9 +108,20 @@ public class MailUtilTest {
 	}
 
 	@Test
-	public void testPopulateMessage() throws Exception {
+	public void testGetTextTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod("getTextTemplate");
+
+		method.setAccessible(true);
+
+		Template template = (Template)method.invoke(_classInstance);
+
+		Assert.assertNotNull(template);
+	}
+
+	@Test
+	public void testPopulateEmailMessage() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"populateMessage", List.class, String.class, Properties.class,
+			"populateEmailMessage", List.class, List.class, String.class,
 			Session.class);
 
 		method.setAccessible(true);
@@ -125,6 +136,11 @@ public class MailUtilTest {
 
 		searchResultModels.add(searchResultModel);
 
+		List<String> emailAddresses = new ArrayList<>();
+
+		emailAddresses.add("test@test.com");
+		emailAddresses.add("test2@test2.com");
+
 		Session session = Session.getInstance(
 			_properties,
 			new Authenticator() {
@@ -138,7 +154,7 @@ public class MailUtilTest {
 			});
 
 		Message message = (Message)method.invoke(
-			_classInstance, searchResultModels, "test@test.com", _properties,
+			_classInstance, searchResultModels, emailAddresses, "test@test.com",
 			session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
@@ -150,12 +166,61 @@ public class MailUtilTest {
 				"Fixed Price: $29.99\nURL: http://www.ebay.com/itm/1234",
 			message.getContent());
 
-		InternetAddress[] internetAddresses = new InternetAddress[4];
+		InternetAddress[] internetAddresses = new InternetAddress[2];
 
 		internetAddresses[0] = new InternetAddress("test@test.com");
 		internetAddresses[1] = new InternetAddress("test2@test2.com");
-		internetAddresses[2] = new InternetAddress("1234567890@txt.att.net");
-		internetAddresses[3] = new InternetAddress("2345678901@txt.att.net");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+	}
+
+	@Test
+	public void testPopulateTextMessage() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"populateTextMessage", List.class, List.class, Session.class);
+
+		method.setAccessible(true);
+
+		List<SearchResultModel> searchResultModels = new ArrayList<>();
+
+		Date endingTime = new Date();
+
+		SearchResultModel searchResultModel = new SearchResultModel(
+			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
+			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+
+		searchResultModels.add(searchResultModel);
+
+		List<String> phoneNumberEmailAddresses = new ArrayList<>();
+
+		phoneNumberEmailAddresses.add("1234567890@txt.att.net");
+		phoneNumberEmailAddresses.add("2345678901@txt.att.net");
+
+		Session session = Session.getInstance(
+			_properties,
+			new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(
+						_properties.getProperty(
+							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
+						_properties.getProperty(
+							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS_PASSWORD));
+				}
+			});
+
+		Message message = (Message)method.invoke(
+			_classInstance, searchResultModels, phoneNumberEmailAddresses,
+			session);
+
+		Assert.assertEquals(
+			"itemTitle\nhttp://www.ebay.com/itm/1234\n",
+			message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[2];
+
+		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
+		internetAddresses[1] = new InternetAddress("2345678901@txt.att.net");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.CC));

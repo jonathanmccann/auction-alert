@@ -2,11 +2,11 @@
 <#list searchResultModels as searchResultModel>
 	Item: ${searchResultModel.getItemTitle()}
 
-	<#if (searchResultModel.getAuctionPrice() > 0) >
+	<#if (searchResultModel.getAuctionPrice() > 0)>
 		Auction Price: ${searchResultModel.getAuctionPrice()?string.currency}
 	</#if>
 
-	<#if (searchResultModel.getFixedPrice() > 0) >
+	<#if (searchResultModel.getFixedPrice() > 0)>
 		Fixed Price: ${searchResultModel.getFixedPrice()?string.currency}
 	</#if>
 

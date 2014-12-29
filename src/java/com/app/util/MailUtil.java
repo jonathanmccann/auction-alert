@@ -10,7 +10,6 @@ import org.springframework.core.io.Resource;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -42,12 +41,27 @@ public class MailUtil {
 
 			Session session = authenticateOutboundEmailAddress(properties);
 
-			Message message = populateMessage(
-				searchResultModels,
-				session.getProperty(PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
-				properties, session);
+			List<String> recipientEmailAddresses = getRecipientEmailAddresses(
+				properties);
 
-			Transport.send(message);
+			if (recipientEmailAddresses.size() > 0) {
+				Message emailMessage = populateEmailMessage(
+					searchResultModels, recipientEmailAddresses,
+					session.getProperty(PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
+					session);
+
+				Transport.send(emailMessage);
+			}
+
+			List<String> recipientPhoneNumbers = getRecipientPhoneNumbers(
+				properties);
+
+			if (recipientPhoneNumbers.size() > 0) {
+				Message textMessage = populateTextMessage(
+					searchResultModels, recipientPhoneNumbers, session);
+
+				Transport.send(textMessage);
+			}
 		}
 		catch (Exception e) {
 			_log.error(
@@ -164,7 +178,7 @@ public class MailUtil {
 		}
 	}
 
-	private static Template getTemplate() throws IOException {
+	private static Template getEmailTemplate() throws IOException {
 		Resource resource = new ClassPathResource("/template");
 
 		_configuration.setDirectoryForTemplateLoading(resource.getFile());
@@ -172,54 +186,71 @@ public class MailUtil {
 		return _configuration.getTemplate("/email_body.ftl");
 	}
 
-	private static Message populateMessage(
-			List<SearchResultModel> searchResultModels, String emailFrom,
-			Properties properties, Session session)
+	private static Template getTextTemplate() throws IOException {
+		Resource resource = new ClassPathResource("/template");
+
+		_configuration.setDirectoryForTemplateLoading(resource.getFile());
+
+		return _configuration.getTemplate("/text_body.ftl");
+	}
+
+	private static Message populateEmailMessage(
+			List<SearchResultModel> searchResultModels,
+			List<String> recipientEmailAddresses, String emailFrom,
+			Session session)
 		throws Exception {
 
-		List<String> recipientEmailAddresses = getRecipientEmailAddresses(
-			properties);
-		List<String> recipientPhoneNumbers = getRecipientPhoneNumbers(
-			properties);
+		Message message = new MimeMessage(session);
 
-		try {
-			Message message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(emailFrom));
 
-			message.setFrom(new InternetAddress(emailFrom));
-
-			for (String recipientEmailAddress : recipientEmailAddresses) {
-				message.addRecipient(
-					Message.RecipientType.CC,
-					new InternetAddress(recipientEmailAddress));
-			}
-
-			for (String recipientPhoneNumber : recipientPhoneNumbers) {
-				message.addRecipient(
-					Message.RecipientType.CC,
-					new InternetAddress(recipientPhoneNumber));
-			}
-
-			message.setSubject(
-				"New Search Results - " +
-					_DATE_FORMAT.format(new Date()));
-
-			Map<String, Object> rootMap = new HashMap<String, Object>();
-
-			rootMap.put("searchResultModels", searchResultModels);
-
-			StringWriter stringWriter = new StringWriter();
-
-			Template template = getTemplate();
-
-			template.process(rootMap, stringWriter);
-
-			message.setText(stringWriter.toString());
-
-			return message;
+		for (String recipientEmailAddress : recipientEmailAddresses) {
+			message.addRecipient(
+				Message.RecipientType.CC,
+				new InternetAddress(recipientEmailAddress));
 		}
-		catch (IOException | MessagingException exception) {
-			throw new Exception(exception);
+
+		message.setSubject(
+			"New Search Results - " +
+				_DATE_FORMAT.format(new Date()));
+
+		populateMessage(searchResultModels, message, getEmailTemplate());
+
+		return message;
+	}
+
+	private static Message populateTextMessage(
+			List<SearchResultModel> searchResultModels,
+			List<String> recipientPhoneNumbers, Session session)
+		throws Exception {
+
+		Message message = new MimeMessage(session);
+
+		for (String recipientPhoneNumber : recipientPhoneNumbers) {
+			message.addRecipient(
+				Message.RecipientType.CC,
+				new InternetAddress(recipientPhoneNumber));
 		}
+
+		populateMessage(searchResultModels, message, getTextTemplate());
+
+		return message;
+	}
+
+	private static void populateMessage(
+			List<SearchResultModel> searchResultModels, Message message,
+			Template template)
+		throws Exception {
+
+		Map<String, Object> rootMap = new HashMap<String, Object>();
+
+		rootMap.put("searchResultModels", searchResultModels);
+
+		StringWriter stringWriter = new StringWriter();
+
+		template.process(rootMap, stringWriter);
+
+		message.setText(stringWriter.toString());
 	}
 
 	private static Configuration _configuration = new Configuration(
