@@ -162,8 +162,8 @@ public class MailUtilTest {
 			message.getSubject(),
 			CoreMatchers.containsString("New Search Results - "));
 		Assert.assertEquals(
-			"Item: itemTitle\nAuction Price: $14.99\n" +
-				"Fixed Price: $29.99\nURL: http://www.ebay.com/itm/1234",
+			"Item: itemTitle\nAuction Price: $14.99\nFixed Price: $29.99\n" +
+				"URL: http://www.ebay.com/itm/1234\n",
 			message.getContent());
 
 		InternetAddress[] internetAddresses = new InternetAddress[2];
