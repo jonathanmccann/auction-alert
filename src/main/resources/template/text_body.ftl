@@ -1,4 +1,4 @@
 <#list searchResultModels as searchResultModel>
 ${searchResultModel.getItemTitle()}
-${searchResultModel.getItemURL()}
+m.ebay.com/itm/${searchResultModel.getItemId()}
 </#list>

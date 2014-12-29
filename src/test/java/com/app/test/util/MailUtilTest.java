@@ -214,7 +214,7 @@ public class MailUtilTest {
 			session);
 
 		Assert.assertEquals(
-			"itemTitle\nhttp://www.ebay.com/itm/1234\n",
+			"itemTitle\nm.ebay.com/itm/1234\n",
 			message.getContent());
 
 		InternetAddress[] internetAddresses = new InternetAddress[2];
