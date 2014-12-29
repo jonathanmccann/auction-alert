@@ -253,7 +253,5 @@ public class MailUtil {
 		_CARRIER_SUFFIX_MAP.put("Alltel", "@message.alltel.com");
 		_CARRIER_SUFFIX_MAP.put("Ptel", "@ptel.com");
 		_CARRIER_SUFFIX_MAP.put("U.S. Cellular", "@email.uscc.net");
-
-
 	}
 }
