@@ -87,9 +87,7 @@ public class SearchResultUtil {
 	private static void textSearchResults(
 		List<SearchResultModel> searchResultModels) {
 
-		// Text search results to appropriate phone number
-		// Text via email - Send email to $NUMBER@txt.att.net
-
+		MailUtil.sendSearchResultsToRecipients(searchResultModels);
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(

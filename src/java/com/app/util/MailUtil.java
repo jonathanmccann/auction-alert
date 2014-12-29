@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,14 +43,15 @@ public class MailUtil {
 			Session session = authenticateOutboundEmailAddress(properties);
 
 			Message message = populateMessage(
-				searchResultModels, session.getProperty("username"), properties,
-				session);
+				searchResultModels,
+				session.getProperty(PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
+				properties, session);
 
 			Transport.send(message);
 		}
 		catch (Exception e) {
 			_log.error(
-				"Unable to send search result to recipients", e.getCause());
+				"Unable to send search result to recipients: " + e.getMessage());
 		}
 	}
 
@@ -89,12 +91,19 @@ public class MailUtil {
 		String recipientEmailAddresses =
 			properties.getProperty(PropertiesUtil.RECIPIENT_EMAIL_ADDRESSES);
 
-		List<String> recipientEmailAddressesList =
-			Arrays.asList(recipientEmailAddresses.split(","));
+		if ((recipientEmailAddresses != null) &&
+			(!recipientEmailAddresses.equals(""))) {
 
-		validateEmailAddresses(recipientEmailAddressesList);
+			List<String> recipientEmailAddressesList =
+				Arrays.asList(recipientEmailAddresses.split(","));
 
-		return recipientEmailAddressesList;
+			validateEmailAddresses(recipientEmailAddressesList);
+
+			return recipientEmailAddressesList;
+		}
+		else {
+			return new ArrayList<>();
+		}
 	}
 
 	private static List<String> getRecipientPhoneNumbers(
@@ -103,15 +112,22 @@ public class MailUtil {
 		String recipientPhoneNumbers =
 			properties.getProperty(PropertiesUtil.RECIPIENT_PHONE_NUMBERS);
 
-		List<String> recipientPhoneNumbersList =
-			Arrays.asList(recipientPhoneNumbers.split(","));
+		if ((recipientPhoneNumbers != null) &&
+			(!recipientPhoneNumbers.equals(""))) {
 
-		validatePhoneNumbers(recipientPhoneNumbersList);
+			List<String> recipientPhoneNumbersList =
+				Arrays.asList(recipientPhoneNumbers.split(","));
 
-		convertPhoneNumbersToEmailAddresses(
-			recipientPhoneNumbersList, properties);
+			validatePhoneNumbers(recipientPhoneNumbersList);
 
-		return recipientPhoneNumbersList;
+			convertPhoneNumbersToEmailAddresses(
+				recipientPhoneNumbersList, properties);
+
+			return recipientPhoneNumbersList;
+		}
+		else {
+			return new ArrayList<>();
+		}
 	}
 
 	private static void validateEmailAddresses(
