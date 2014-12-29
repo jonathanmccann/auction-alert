@@ -1,22 +1,32 @@
 package com.app.test.util;
 
+import com.app.model.SearchResultModel;
 import com.app.util.MailUtil;
 
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import com.app.util.PropertiesUtil;
+import freemarker.template.Template;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+
 /**
  * @author Jonathan McCann
  */
-public class MailUtilTest extends MailUtil {
+public class MailUtilTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -87,6 +97,71 @@ public class MailUtilTest extends MailUtil {
 	}
 
 	@Test
+	public void testGetTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod("getTemplate");
+
+		method.setAccessible(true);
+
+		Template template = (Template)method.invoke(_classInstance);
+
+		Assert.assertNotNull(template);
+	}
+
+	@Test
+	public void testPopulateMessage() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"populateMessage", List.class, String.class, Properties.class,
+			Session.class);
+
+		method.setAccessible(true);
+
+		List<SearchResultModel> searchResultModels = new ArrayList<>();
+
+		Date endingTime = new Date();
+
+		SearchResultModel searchResultModel = new SearchResultModel(
+			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
+			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+
+		searchResultModels.add(searchResultModel);
+
+		Session session = Session.getInstance(
+			_properties,
+			new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(
+						_properties.getProperty(
+							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
+						_properties.getProperty(
+							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS_PASSWORD));
+				}
+			});
+
+		Message message = (Message)method.invoke(
+			_classInstance, searchResultModels, "test@test.com", _properties,
+			session);
+
+		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertThat(
+			message.getSubject(),
+			CoreMatchers.containsString("New Search Results - "));
+		Assert.assertEquals(
+			"Item: itemTitle\nAuction Price: $14.99\n" +
+				"Fixed Price: $29.99\nURL: http://www.ebay.com/itm/1234",
+			message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[4];
+
+		internetAddresses[0] = new InternetAddress("test@test.com");
+		internetAddresses[1] = new InternetAddress("test2@test2.com");
+		internetAddresses[2] = new InternetAddress("1234567890@txt.att.net");
+		internetAddresses[3] = new InternetAddress("2345678901@txt.att.net");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+	}
+
+	@Test
 	public void testValidateEmailAddresses() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
 			"validateEmailAddresses", List.class);
@@ -99,7 +174,7 @@ public class MailUtilTest extends MailUtil {
 		recipientEmailAddresses.add("invalidEmailAddress");
 		recipientEmailAddresses.add("test2@test2.com");
 
-		method.invoke(_classInstance,  recipientEmailAddresses);
+		method.invoke(_classInstance, recipientEmailAddresses);
 
 		Assert.assertEquals(2, recipientEmailAddresses.size());
 		Assert.assertEquals(

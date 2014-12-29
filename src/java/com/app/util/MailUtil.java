@@ -1,18 +1,27 @@
 package com.app.util;
 
 import com.app.model.SearchResultModel;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,18 +148,66 @@ public class MailUtil {
 		}
 	}
 
+	private static Template getTemplate() throws IOException {
+		Resource resource = new ClassPathResource("/template");
+
+		_configuration.setDirectoryForTemplateLoading(resource.getFile());
+
+		return _configuration.getTemplate("/email_body.ftl");
+	}
+
 	private static Message populateMessage(
 			List<SearchResultModel> searchResultModels, String emailFrom,
 			Properties properties, Session session)
 		throws Exception {
 
-		List<String> recipientEmailAddress = getRecipientEmailAddresses(
+		List<String> recipientEmailAddresses = getRecipientEmailAddresses(
 			properties);
 		List<String> recipientPhoneNumbers = getRecipientPhoneNumbers(
 			properties);
 
-		return new MimeMessage(session);
+		try {
+			Message message = new MimeMessage(session);
+
+			message.setFrom(new InternetAddress(emailFrom));
+
+			for (String recipientEmailAddress : recipientEmailAddresses) {
+				message.addRecipient(
+					Message.RecipientType.CC,
+					new InternetAddress(recipientEmailAddress));
+			}
+
+			for (String recipientPhoneNumber : recipientPhoneNumbers) {
+				message.addRecipient(
+					Message.RecipientType.CC,
+					new InternetAddress(recipientPhoneNumber));
+			}
+
+			message.setSubject(
+				"New Search Results - " +
+					_DATE_FORMAT.format(new Date()));
+
+			Map<String, Object> rootMap = new HashMap<String, Object>();
+
+			rootMap.put("searchResultModels", searchResultModels);
+
+			StringWriter stringWriter = new StringWriter();
+
+			Template template = getTemplate();
+
+			template.process(rootMap, stringWriter);
+
+			message.setText(stringWriter.toString());
+
+			return message;
+		}
+		catch (IOException | MessagingException exception) {
+			throw new Exception(exception);
+		}
 	}
+
+	private static Configuration _configuration = new Configuration(
+		Configuration.VERSION_2_3_21);
 
 	private static Pattern _emailAddressPattern = Pattern.compile(
 		"[a-zA-Z0-9]*@[a-zA-Z0-9]*\\.[a-zA-Z]{1,6}");
@@ -160,6 +217,9 @@ public class MailUtil {
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		MailUtil.class);
+
+	private static final DateFormat _DATE_FORMAT =
+		new SimpleDateFormat("MM/dd/yyyy");
 
 	private static final Map<String, String> _CARRIER_SUFFIX_MAP =
 		new HashMap<>();
@@ -177,5 +237,7 @@ public class MailUtil {
 		_CARRIER_SUFFIX_MAP.put("Alltel", "@message.alltel.com");
 		_CARRIER_SUFFIX_MAP.put("Ptel", "@ptel.com");
 		_CARRIER_SUFFIX_MAP.put("U.S. Cellular", "@email.uscc.net");
+
+
 	}
 }
