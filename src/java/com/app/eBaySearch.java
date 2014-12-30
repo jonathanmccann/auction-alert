@@ -36,7 +36,7 @@ public class eBaySearch {
 			SearchResultUtil.performSearch();
 		}
 		catch (SQLException sqle) {
-			_log.error("Unable to get all of the search queries");
+			_log.error("Unable to perform eBay search: " + sqle.getMessage());
 		}
 	}
 
