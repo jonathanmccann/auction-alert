@@ -64,6 +64,9 @@ public class PropertiesUtil {
 	public static final String RECIPIENT_PHONE_NUMBERS =
 		"recipient.phone.numbers";
 
+	public static final String TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
+		"total.number.of.search.queries.allowed";
+
 	public static Properties getConfigurationProperties() {
 		return _properties;
 	}

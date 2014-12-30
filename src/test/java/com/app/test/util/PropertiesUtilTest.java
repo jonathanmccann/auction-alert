@@ -94,6 +94,10 @@ public class PropertiesUtilTest {
 			"AT&T",
 			PropertiesUtil.getConfigurationProperty(
 				PropertiesUtil.RECIPIENT_PHONE_CARRIER));
+		Assert.assertEquals(
+			"15",
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED));
 	}
 
 	@Test(expected = IOException.class)
