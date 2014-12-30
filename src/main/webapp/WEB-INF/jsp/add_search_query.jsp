@@ -15,6 +15,7 @@
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -35,7 +36,16 @@
 					<td><form:input path="searchQuery" /></td>
 				</tr>
 				<tr>
-					<td align="center" colspan="2"><input type="submit" value="Add Search Query" /></td>
+					<td align="center" colspan="2">
+						<c:choose>
+							<c:when test="${disabled}">
+								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled title="" type="submit" value="Add Search Query" />
+							</c:when>
+							<c:otherwise>
+								<input type="submit" value="Add Search Query" />
+							</c:otherwise>
+						</c:choose>
+					</td>
 				</tr>
 			</table>
 		</form:form>

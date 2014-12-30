@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.app.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,10 +39,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class SearchQueryController {
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
-	public String addSearchQuery(Map<String, Object> model) {
+	public String addSearchQuery(Map<String, Object> model)
+		throws SQLException {
+
 		SearchQueryModel searchQueryModel = new SearchQueryModel();
 
 		model.put("searchQueryModel", searchQueryModel);
+
+		String totalNumberOfSearchQueriesAllowed =
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesUtil.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
+
+		int searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
+
+		if ((searchQueryCount + 1) >
+				Integer.valueOf(totalNumberOfSearchQueriesAllowed)) {
+
+			model.put("disabled", true);
+		}
 
 		return "add_search_query";
 	}
