@@ -53,6 +53,8 @@ public class SearchResultController {
 		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
 
+		_log.debug("Found {} search query results", searchQueryModels.size());
+
 		for (SearchQueryModel searchQueryModel : searchQueryModels) {
 			int searchQueryId = searchQueryModel.getSearchQueryId();
 
@@ -72,7 +74,7 @@ public class SearchResultController {
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		SearchQueryController.class);
+		SearchResultController.class);
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
