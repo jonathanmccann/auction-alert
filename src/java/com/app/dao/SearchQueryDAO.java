@@ -31,6 +31,8 @@ public interface SearchQueryDAO {
 
 	public String getSearchQuery(int searchQueryId) throws Exception;
 
+	public int getSearchQueryCount() throws Exception;
+
 	public void updateSearchQuery(int searchQueryId, String searchQuery)
 		throws Exception;
 

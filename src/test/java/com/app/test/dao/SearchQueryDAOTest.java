@@ -67,6 +67,12 @@ public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 			"Second test search query",
 			secondSearchQueryModel.getSearchQuery());
 
+		// Test count
+
+		int searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
+
+		Assert.assertEquals(2, searchQueryCount);
+
 		// Test update
 
 		_searchQueryDAOImpl.updateSearchQuery(1, "Updated test search query");
@@ -83,6 +89,10 @@ public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 		searchQueryModels = _searchQueryDAOImpl.getSearchQueries();
 
 		Assert.assertEquals(0, searchQueryModels.size());
+
+		searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
+
+		Assert.assertEquals(0, searchQueryCount);
 	}
 
 	private static SearchQueryDAOImpl _searchQueryDAOImpl;

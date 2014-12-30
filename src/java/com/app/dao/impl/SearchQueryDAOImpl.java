@@ -127,6 +127,28 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	}
 
 	@Override
+	public int getSearchQueryCount() throws SQLException {
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_SEARCH_QUERY_COUNT_SQL);
+			ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			int searchQueryCount = 0;
+
+			while (resultSet.next()) {
+				searchQueryCount = resultSet.getInt(1);
+			}
+
+			return searchQueryCount;
+		}
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to return all search queries.");
+
+			throw new SQLException(exception);
+		}
+	}
+
+	@Override
 	public void updateSearchQuery(int searchQueryId, String searchQuery)
 		throws SQLException {
 
@@ -156,6 +178,9 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	private static final String _GET_SEARCH_QUERIES_SQL =
 		"SELECT * FROM SearchQuery";
+
+	private static final String _GET_SEARCH_QUERY_COUNT_SQL =
+		"SELECT COUNT(*) FROM SearchQuery";
 
 	private static final String _GET_SEARCH_QUERY =
 		"SELECT searchQuery FROM SearchQuery WHERE searchQueryId = ?";
