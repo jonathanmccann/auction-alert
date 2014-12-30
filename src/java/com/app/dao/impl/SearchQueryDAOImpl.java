@@ -142,7 +142,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			return searchQueryCount;
 		}
 		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to return all search queries.");
+			_log.error("Unable to get the search query count.");
 
 			throw new SQLException(exception);
 		}
