@@ -18,9 +18,6 @@ import com.app.dao.impl.SearchQueryDAOImpl;
 
 import java.sql.SQLException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Jonathan McCann
  */
@@ -39,9 +36,6 @@ public class SearchQueryUtil {
 
 		return false;
 	}
-
-	private static final Logger _log = LoggerFactory.getLogger(
-		SearchQueryUtil.class);
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
