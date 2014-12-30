@@ -53,12 +53,6 @@ public class SearchResultUtil {
 		return newSearchResultModels;
 	}
 
-	public static List<SearchResultModel> performeBaySearch(
-		SearchQueryModel searchQueryModel) {
-
-		return eBaySearchResult.geteBaySearchResults(searchQueryModel);
-	}
-
 	public static void performSearch() throws SQLException {
 		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
@@ -68,14 +62,14 @@ public class SearchResultUtil {
 			searchQueryModels.size());
 
 		for (SearchQueryModel searchQueryModel : searchQueryModels) {
-			List<SearchResultModel> searchResults = performeBaySearch(
-				searchQueryModel);
+			List<SearchResultModel> searchResultModels =
+				eBaySearchResult.geteBaySearchResults(searchQueryModel);
 
-			searchResults = filterSearchResults(
-				searchQueryModel.getSearchQueryId(), searchResults);
+			searchResultModels = filterSearchResults(
+				searchQueryModel.getSearchQueryId(), searchResultModels);
 
-			if (!searchResults.isEmpty()) {
-				textSearchResults(searchResults);
+			if (!searchResultModels.isEmpty()) {
+				MailUtil.sendSearchResultsToRecipients(searchResultModels);
 			}
 		}
 	}
@@ -101,12 +95,6 @@ public class SearchResultUtil {
 		for (SearchResultModel searchResultModel : newSearchResultModels) {
 			_searchResultDAOImpl.addSearchResult(searchResultModel);
 		}
-	}
-
-	private static void textSearchResults(
-		List<SearchResultModel> searchResultModels) {
-
-		MailUtil.sendSearchResultsToRecipients(searchResultModels);
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
