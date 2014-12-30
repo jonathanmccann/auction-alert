@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import com.app.util.PropertiesUtil;
 import com.app.util.SearchQueryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +47,10 @@ public class SearchQueryController {
 		model.put("searchQueryModel", searchQueryModel);
 
 		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
+			_log.debug(
+				"Unable to add more search queries since it would exceed the " +
+					"total number of search queries allowed");
+
 			model.put("disabled", true);
 		}
 
@@ -61,6 +64,10 @@ public class SearchQueryController {
 		throws SQLException {
 
 		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
+			_log.debug(
+				"Unable to add more search queries since it would exceed the " +
+					"total number of search queries allowed");
+
 			return "redirect:add_search_query";
 		}
 		else {
