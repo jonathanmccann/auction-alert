@@ -42,13 +42,13 @@ public class SearchResultUtil {
 		newSearchResultModels.removeAll(existingSearchResultModels);
 
 		if (!newSearchResultModels.isEmpty()) {
+			_log.info(
+				"Found {} new search results for search query ID: {}",
+					newSearchResultModels.size(), searchQueryId);
+
 			saveNewResultsAndRemoveOldResults(
 				existingSearchResultModels, newSearchResultModels);
 		}
-
-		_log.info(
-			"Found {} search results for search query ID: {}",
-				newSearchResultModels.size(), searchQueryId);
 
 		return newSearchResultModels;
 	}
