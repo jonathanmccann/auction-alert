@@ -104,9 +104,8 @@ public class MailUtil {
 	private static void convertPhoneNumbersToEmailAddresses(
 		List<String> recipientPhoneNumbers) {
 
-		String phoneCarrier = PropertiesValues.RECIPIENT_PHONE_CARRIER;
-
-		String phoneCarrierEmailSuffix = _carrierSuffixMap.get(phoneCarrier);
+		String phoneCarrierEmailSuffix = _carrierSuffixMap.get(
+			PropertiesValues.RECIPIENT_PHONE_CARRIER);
 
 		for (int i = 0; i < recipientPhoneNumbers.size(); i++) {
 			recipientPhoneNumbers.set(
