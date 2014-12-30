@@ -14,7 +14,9 @@
 
 package com.app.test.util;
 
+import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
+import com.app.util.PropertiesValues;
 
 import java.io.IOException;
 
@@ -40,64 +42,49 @@ public class PropertiesUtilTest {
 
 		Assert.assertEquals(
 			"Application ID",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.APPLICATION_ID));
+			PropertiesValues.APPLICATION_ID);
 		Assert.assertEquals(
 			"JDBC Default Password",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.DATABASE_PASSWORD));
+			PropertiesValues.JDBC_DEFAULT_PASSWORD);
 		Assert.assertEquals(
 			"JDBC Default URL",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.DATABASE_URL));
+			PropertiesValues.JDBC_DEFAULT_URL);
 		Assert.assertEquals(
 			"JDBC Default Username",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.DATABASE_USERNAME));
+			PropertiesValues.JDBC_DEFAULT_USERNAME);
 		Assert.assertEquals(
-			"5",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
+			5,
+			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
 		Assert.assertEquals(
 			"test@test.com",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.OUTBOUND_EMAIL_ADDRESS));
+			PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 		Assert.assertEquals(
 			"test",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.OUTBOUND_EMAIL_ADDRESS_PASSWORD));
+			PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 		Assert.assertEquals(
 			"true",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.MAIL_SMTP_AUTH));
+			PropertiesValues.MAIL_SMTP_AUTH);
 		Assert.assertEquals(
 			"true",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.MAIL_SMTP_STARTTLS_ENABLE));
+			PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
 		Assert.assertEquals(
 			"smtp.gmail.com",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.MAIL_SMTP_HOST));
+			PropertiesValues.MAIL_SMTP_HOST);
 		Assert.assertEquals(
 			"587",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.MAIL_SMTP_PORT));
+			PropertiesValues.MAIL_SMTP_PORT);
 		Assert.assertEquals(
 			"test@test.com,test2@test2.com",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.RECIPIENT_EMAIL_ADDRESSES));
+			PropertiesValues.RECIPIENT_EMAIL_ADDRESSES);
 		Assert.assertEquals(
 			"1234567890,2345678901",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.RECIPIENT_PHONE_NUMBERS));
+			PropertiesValues.RECIPIENT_PHONE_NUMBERS);
 		Assert.assertEquals(
 			"AT&T",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.RECIPIENT_PHONE_CARRIER));
+			PropertiesValues.RECIPIENT_PHONE_CARRIER);
 		Assert.assertEquals(
-			"15",
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED));
+			15,
+			PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}
 
 	@Test(expected = IOException.class)
@@ -110,13 +97,15 @@ public class PropertiesUtilTest {
 		Properties properties = new Properties();
 
 		properties.setProperty(
-			PropertiesUtil.APPLICATION_ID, "Updated Application ID");
+			PropertiesKeys.APPLICATION_ID, "Updated Application ID");
 		properties.setProperty(
-			PropertiesUtil.DATABASE_PASSWORD, "Updated JDBC Default Password");
+			PropertiesKeys.JDBC_DEFAULT_PASSWORD,
+			"Updated JDBC Default Password");
 		properties.setProperty(
-			PropertiesUtil.DATABASE_URL, "Updated JDBC Default URL");
+			PropertiesKeys.JDBC_DEFAULT_URL, "Updated JDBC Default URL");
 		properties.setProperty(
-			PropertiesUtil.DATABASE_USERNAME, "Updated JDBC Default Username");
+			PropertiesKeys.JDBC_DEFAULT_USERNAME,
+			"Updated JDBC Default Username");
 
 		PropertiesUtil.setConfigurationProperties(properties);
 
@@ -124,16 +113,16 @@ public class PropertiesUtilTest {
 
 		Assert.assertEquals(
 			"Updated Application ID",
-			properties.getProperty(PropertiesUtil.APPLICATION_ID));
+			properties.getProperty(PropertiesKeys.APPLICATION_ID));
 		Assert.assertEquals(
 			"Updated JDBC Default Password",
-			properties.getProperty(PropertiesUtil.DATABASE_PASSWORD));
+			properties.getProperty(PropertiesKeys.JDBC_DEFAULT_PASSWORD));
 		Assert.assertEquals(
 			"Updated JDBC Default URL",
-			properties.getProperty(PropertiesUtil.DATABASE_URL));
+			properties.getProperty(PropertiesKeys.JDBC_DEFAULT_URL));
 		Assert.assertEquals(
 			"Updated JDBC Default Username",
-			properties.getProperty(PropertiesUtil.DATABASE_USERNAME));
+			properties.getProperty(PropertiesKeys.JDBC_DEFAULT_USERNAME));
 	}
 
 }

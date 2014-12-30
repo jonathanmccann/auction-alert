@@ -17,6 +17,7 @@ package com.app.test.util;
 import com.app.model.SearchResultModel;
 import com.app.util.MailUtil;
 import com.app.util.PropertiesUtil;
+import com.app.util.PropertiesValues;
 
 import freemarker.template.Template;
 
@@ -64,8 +65,7 @@ public class MailUtilTest {
 	@Test
 	public void testConvertPhoneNumbersToEmailAddresses() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"convertPhoneNumbersToEmailAddresses", List.class,
-			Properties.class);
+			"convertPhoneNumbersToEmailAddresses", List.class);
 
 		method.setAccessible(true);
 
@@ -74,7 +74,7 @@ public class MailUtilTest {
 		recipientPhoneNumbers.add("1234567890");
 		recipientPhoneNumbers.add("2345678901");
 
-		method.invoke(_classInstance, recipientPhoneNumbers, _properties);
+		method.invoke(_classInstance, recipientPhoneNumbers);
 
 		Assert.assertEquals(
 			"1234567890@txt.att.net", recipientPhoneNumbers.get(0));
@@ -95,13 +95,12 @@ public class MailUtilTest {
 
 	@Test
 	public void testGetRecipientEmailAddresses() throws Exception {
-		Method method = _clazz.getDeclaredMethod(
-			"getRecipientEmailAddresses", Properties.class);
+		Method method = _clazz.getDeclaredMethod("getRecipientEmailAddresses");
 
 		method.setAccessible(true);
 
 		List<String> recipientEmailAddresses = (List<String>)method.invoke(
-			_classInstance,  _properties);
+			_classInstance);
 
 		Assert.assertEquals("test@test.com", recipientEmailAddresses.get(0));
 		Assert.assertEquals("test2@test2.com", recipientEmailAddresses.get(1));
@@ -109,13 +108,12 @@ public class MailUtilTest {
 
 	@Test
 	public void testGetRecipientPhoneNumbers() throws Exception {
-		Method method = _clazz.getDeclaredMethod(
-			"getRecipientPhoneNumbers", Properties.class);
+		Method method = _clazz.getDeclaredMethod("getRecipientPhoneNumbers");
 
 		method.setAccessible(true);
 
 		List<String> recipientEmailAddresses = (List<String>)method.invoke(
-			_classInstance,  _properties);
+			_classInstance);
 
 		Assert.assertEquals(
 			"1234567890@txt.att.net", recipientEmailAddresses.get(0));
@@ -162,10 +160,8 @@ public class MailUtilTest {
 			new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication(
-						_properties.getProperty(
-							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
-						_properties.getProperty(
-							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS_PASSWORD));
+						PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
+						PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 				}
 			});
 
@@ -218,10 +214,8 @@ public class MailUtilTest {
 			new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication(
-						_properties.getProperty(
-							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
-						_properties.getProperty(
-							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS_PASSWORD));
+						PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
+						PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 				}
 			});
 

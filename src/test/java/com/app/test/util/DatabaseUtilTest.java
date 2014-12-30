@@ -16,7 +16,7 @@ package com.app.test.util;
 
 import com.app.exception.DatabaseConnectionException;
 import com.app.util.DatabaseUtil;
-import com.app.util.PropertiesUtil;
+import com.app.util.PropertiesKeys;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,10 +34,11 @@ public class DatabaseUtilTest {
 		throws DatabaseConnectionException, SQLException {
 
 		String databasePassword = System.getProperty(
-			PropertiesUtil.DATABASE_PASSWORD);
-		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
+			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+		String databaseURL = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_URL);
 		String databaseUsername = System.getProperty(
-			PropertiesUtil.DATABASE_USERNAME);
+			PropertiesKeys.JDBC_DEFAULT_USERNAME);
 
 		DatabaseUtil.setDatabaseProperties(
 			databaseURL, databaseUsername, databasePassword);

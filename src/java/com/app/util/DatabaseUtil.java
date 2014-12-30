@@ -65,13 +65,9 @@ public class DatabaseUtil {
 	}
 
 	public static void loadDatabaseProperties() {
-		Properties properties = PropertiesUtil.getConfigurationProperties();
-
-		_databaseURL = properties.getProperty(PropertiesUtil.DATABASE_URL);
-		_databasePassword = properties.getProperty(
-			PropertiesUtil.DATABASE_PASSWORD);
-		_databaseUsername = properties.getProperty(
-			PropertiesUtil.DATABASE_USERNAME);
+		_databaseURL = PropertiesValues.JDBC_DEFAULT_URL;
+		_databasePassword = PropertiesValues.JDBC_DEFAULT_PASSWORD;
+		_databaseUsername = PropertiesValues.JDBC_DEFAULT_USERNAME;
 
 		_isPropertiesSet = true;
 	}

@@ -15,6 +15,7 @@
 package com.app.model;
 
 import com.app.util.PropertiesUtil;
+import com.app.util.PropertiesValues;
 import com.app.util.eBayAPIUtil;
 
 import com.ebay.services.finding.Amount;
@@ -136,7 +137,8 @@ public class eBaySearchResult {
 		request.setKeywords(searchQuery);
 
 		PaginationInput paginationInput = new PaginationInput();
-		paginationInput.setEntriesPerPage(_NUMBER_OF_SEARCH_RESULTS);
+		paginationInput.setEntriesPerPage(
+			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
 
 		request.setPaginationInput(paginationInput);
 		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
@@ -145,11 +147,6 @@ public class eBaySearchResult {
 	}
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
-
-	private static final int _NUMBER_OF_SEARCH_RESULTS =
-		Integer.valueOf(
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.NUMBER_OF_SEARCH_RESULTS));
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		eBaySearchResult.class);

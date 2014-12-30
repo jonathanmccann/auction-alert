@@ -18,8 +18,6 @@ import com.ebay.services.client.ClientConfig;
 import com.ebay.services.client.FindingServiceClientFactory;
 import com.ebay.services.finding.FindingServicePortType;
 
-import java.util.Properties;
-
 /**
  * @author Jonathan McCann
  */
@@ -30,12 +28,17 @@ public class eBayAPIUtil {
 	}
 
 	public static void loadeBayServiceClient() {
-		Properties properties = PropertiesUtil.getConfigurationProperties();
-
 		ClientConfig config = new ClientConfig();
 
-		config.setApplicationId(
-			properties.getProperty(PropertiesUtil.APPLICATION_ID));
+		config.setApplicationId(PropertiesValues.APPLICATION_ID);
+
+		_serviceClient = FindingServiceClientFactory.getServiceClient(config);
+	}
+
+	public static void loadeBayServiceClient(String applicationId) {
+		ClientConfig config = new ClientConfig();
+
+		config.setApplicationId(applicationId);
 
 		_serviceClient = FindingServiceClientFactory.getServiceClient(config);
 	}

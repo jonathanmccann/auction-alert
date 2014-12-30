@@ -29,14 +29,10 @@ public class SearchQueryUtil {
 	public static boolean isExceedsTotalNumberOfSearchQueriesAllowed()
 		throws SQLException {
 
-		String totalNumberOfSearchQueriesAllowed =
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
-
 		int searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
 
 		if ((searchQueryCount + 1) >
-				Integer.valueOf(totalNumberOfSearchQueriesAllowed)) {
+			PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED) {
 
 			return true;
 		}

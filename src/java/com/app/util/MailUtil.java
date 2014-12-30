@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,24 +59,20 @@ public class MailUtil {
 		try {
 			_log.info("Sending {} search results", searchResultModels.size());
 
-			Properties properties = PropertiesUtil.getConfigurationProperties();
+			Session session = authenticateOutboundEmailAddress();
 
-			Session session = authenticateOutboundEmailAddress(properties);
-
-			List<String> recipientEmailAddresses = getRecipientEmailAddresses(
-				properties);
+			List<String> recipientEmailAddresses = getRecipientEmailAddresses();
 
 			if (recipientEmailAddresses.size() > 0) {
 				Message emailMessage = populateEmailMessage(
 					searchResultModels, recipientEmailAddresses,
-					session.getProperty(PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
+					session.getProperty(PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
 					session);
 
 				Transport.send(emailMessage);
 			}
 
-			List<String> recipientPhoneNumbers = getRecipientPhoneNumbers(
-				properties);
+			List<String> recipientPhoneNumbers = getRecipientPhoneNumbers();
 
 			if (recipientPhoneNumbers.size() > 0) {
 				Message textMessage = populateTextMessage(
@@ -93,27 +88,23 @@ public class MailUtil {
 		}
 	}
 
-	private static Session authenticateOutboundEmailAddress(
-		final Properties properties) {
+	private static Session authenticateOutboundEmailAddress() {
 
 		return Session.getInstance(
-			properties,
+			PropertiesUtil.getConfigurationProperties(),
 			new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication(
-						properties.getProperty(
-							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS),
-						properties.getProperty(
-							PropertiesUtil.OUTBOUND_EMAIL_ADDRESS_PASSWORD));
+						PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
+						PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 				}
 			});
 	}
 
 	private static void convertPhoneNumbersToEmailAddresses(
-		List<String> recipientPhoneNumbers, Properties properties) {
+		List<String> recipientPhoneNumbers) {
 
-		String phoneCarrier = properties.getProperty(
-			PropertiesUtil.RECIPIENT_PHONE_CARRIER);
+		String phoneCarrier = PropertiesValues.RECIPIENT_PHONE_CARRIER;
 
 		String phoneCarrierEmailSuffix = _carrierSuffixMap.get(phoneCarrier);
 
@@ -131,11 +122,10 @@ public class MailUtil {
 		return _configuration.getTemplate("/email_body.ftl");
 	}
 
-	private static List<String> getRecipientEmailAddresses(
-		Properties properties) {
+	private static List<String> getRecipientEmailAddresses() {
 
-		String recipientEmailAddresses = properties.getProperty(
-			PropertiesUtil.RECIPIENT_EMAIL_ADDRESSES);
+		String recipientEmailAddresses =
+			PropertiesValues.RECIPIENT_EMAIL_ADDRESSES;
 
 		if ((recipientEmailAddresses != null) &&
 			!recipientEmailAddresses.equals("")) {
@@ -152,11 +142,9 @@ public class MailUtil {
 		}
 	}
 
-	private static List<String> getRecipientPhoneNumbers(
-		Properties properties) {
+	private static List<String> getRecipientPhoneNumbers() {
 
-		String recipientPhoneNumbers = properties.getProperty(
-			PropertiesUtil.RECIPIENT_PHONE_NUMBERS);
+		String recipientPhoneNumbers = PropertiesValues.RECIPIENT_PHONE_NUMBERS;
 
 		if ((recipientPhoneNumbers != null) &&
 			!recipientPhoneNumbers.equals("")) {
@@ -166,8 +154,7 @@ public class MailUtil {
 
 			validatePhoneNumbers(recipientPhoneNumbersList);
 
-			convertPhoneNumbersToEmailAddresses(
-				recipientPhoneNumbersList, properties);
+			convertPhoneNumbersToEmailAddresses(recipientPhoneNumbersList);
 
 			return recipientPhoneNumbersList;
 		}

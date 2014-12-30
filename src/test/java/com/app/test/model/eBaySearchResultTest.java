@@ -17,6 +17,7 @@ package com.app.test.model;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 import com.app.model.eBaySearchResult;
+import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
 
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import java.util.List;
-import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,15 +44,8 @@ public class eBaySearchResultTest {
 
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 
-		Properties properties = PropertiesUtil.getConfigurationProperties();
-
-		properties.setProperty(
-			PropertiesUtil.APPLICATION_ID,
-				System.getProperty(PropertiesUtil.APPLICATION_ID));
-
-		PropertiesUtil.setConfigurationProperties(properties);
-
-		eBayAPIUtil.loadeBayServiceClient();
+		eBayAPIUtil.loadeBayServiceClient(
+			System.getProperty(PropertiesKeys.APPLICATION_ID));
 	}
 
 	@Test

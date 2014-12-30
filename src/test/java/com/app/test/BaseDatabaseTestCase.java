@@ -15,6 +15,7 @@
 package com.app.test;
 
 import com.app.util.DatabaseUtil;
+import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 
 import java.sql.Connection;
@@ -33,10 +34,11 @@ public abstract class BaseDatabaseTestCase {
 	@Before
 	public void setUp() throws Exception {
 		String databasePassword = System.getProperty(
-			PropertiesUtil.DATABASE_PASSWORD);
-		String databaseURL = System.getProperty(PropertiesUtil.DATABASE_URL);
+			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+		String databaseURL = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_URL);
 		String databaseUsername = System.getProperty(
-			PropertiesUtil.DATABASE_USERNAME);
+			PropertiesKeys.JDBC_DEFAULT_USERNAME);
 
 		DatabaseUtil.setDatabaseProperties(
 			databaseURL, databaseUsername, databasePassword);
