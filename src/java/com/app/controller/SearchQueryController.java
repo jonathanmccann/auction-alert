@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.app.util.PropertiesUtil;
+import com.app.util.SearchQueryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,15 +47,7 @@ public class SearchQueryController {
 
 		model.put("searchQueryModel", searchQueryModel);
 
-		String totalNumberOfSearchQueriesAllowed =
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesUtil.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
-
-		int searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
-
-		if ((searchQueryCount + 1) >
-				Integer.valueOf(totalNumberOfSearchQueriesAllowed)) {
-
+		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
 			model.put("disabled", true);
 		}
 
@@ -67,14 +60,20 @@ public class SearchQueryController {
 			Map<String, Object> model)
 		throws SQLException {
 
-		_searchQueryDAOImpl.addSearchQuery(searchQueryModel.getSearchQuery());
+		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
+			return "redirect:add_search_query";
+		}
+		else {
+			_searchQueryDAOImpl.addSearchQuery(
+				searchQueryModel.getSearchQuery());
 
-		List<SearchQueryModel> searchQueryModels =
-			_searchQueryDAOImpl.getSearchQueries();
+			List<SearchQueryModel> searchQueryModels =
+				_searchQueryDAOImpl.getSearchQueries();
 
-		model.put("searchQueryModels", searchQueryModels);
+			model.put("searchQueryModels", searchQueryModels);
 
-		return "redirect:view_search_queries";
+			return "redirect:view_search_queries";
+		}
 	}
 
 	@RequestMapping(value = "/delete_search_query", method = RequestMethod.POST)
