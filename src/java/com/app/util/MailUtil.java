@@ -14,6 +14,7 @@
 
 package com.app.util;
 
+import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 
 import freemarker.template.Configuration;
@@ -54,6 +55,7 @@ import org.springframework.core.io.Resource;
 public class MailUtil {
 
 	public static void sendSearchResultsToRecipients(
+		SearchQueryModel searchQueryModel,
 		List<SearchResultModel> searchResultModels) {
 
 		try {
@@ -65,7 +67,8 @@ public class MailUtil {
 
 			if (recipientEmailAddresses.size() > 0) {
 				Message emailMessage = populateEmailMessage(
-					searchResultModels, recipientEmailAddresses,
+					searchQueryModel, searchResultModels,
+					recipientEmailAddresses,
 					session.getProperty(PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
 					session);
 
@@ -171,6 +174,7 @@ public class MailUtil {
 	}
 
 	private static Message populateEmailMessage(
+			SearchQueryModel searchQueryModel,
 			List<SearchResultModel> searchResultModels,
 			List<String> recipientEmailAddresses, String emailFrom,
 			Session session)
@@ -189,18 +193,21 @@ public class MailUtil {
 		message.setSubject(
 			"New Search Results - " + _DATE_FORMAT.format(new Date()));
 
-		populateMessage(searchResultModels, message, getEmailTemplate());
+		populateMessage(
+			searchQueryModel, searchResultModels, message, getEmailTemplate());
 
 		return message;
 	}
 
 	private static void populateMessage(
+			SearchQueryModel searchQueryModel,
 			List<SearchResultModel> searchResultModels, Message message,
 			Template template)
 		throws Exception {
 
 		Map<String, Object> rootMap = new HashMap<String, Object>();
 
+		rootMap.put("searchQueryModel", searchQueryModel);
 		rootMap.put("searchResultModels", searchResultModels);
 
 		StringWriter stringWriter = new StringWriter();
@@ -223,7 +230,7 @@ public class MailUtil {
 				new InternetAddress(recipientPhoneNumber));
 		}
 
-		populateMessage(searchResultModels, message, getTextTemplate());
+		populateMessage(null, searchResultModels, message, getTextTemplate());
 
 		return message;
 	}

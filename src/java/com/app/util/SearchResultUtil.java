@@ -69,7 +69,8 @@ public class SearchResultUtil {
 				searchQueryModel.getSearchQueryId(), searchResultModels);
 
 			if (!searchResultModels.isEmpty()) {
-				MailUtil.sendSearchResultsToRecipients(searchResultModels);
+				MailUtil.sendSearchResultsToRecipients(
+					searchQueryModel, searchResultModels);
 			}
 		}
 	}

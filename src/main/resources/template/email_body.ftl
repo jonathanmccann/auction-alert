@@ -1,4 +1,5 @@
 <#ftl strip_whitespace = true>
+Search Query: ${searchQueryModel.getSearchQuery()}
 <#list searchResultModels as searchResultModel>
 Item: ${searchResultModel.getItemTitle()}
 <#if (searchResultModel.getAuctionPrice() > 0)>
