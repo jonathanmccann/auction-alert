@@ -124,7 +124,7 @@ public class SearchQueryController {
 
 	@ExceptionHandler(Exception.class)
 	public String handleError(HttpServletRequest request, Exception exception) {
-		_log.error("Request: " + request.getRequestURL() + "failed", exception);
+		_log.error("Request: {}", request.getRequestURL(), exception);
 
 		return "redirect:error.jsp";
 	}

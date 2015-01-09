@@ -51,17 +51,9 @@ public class PropertiesUtil {
 
 		Properties properties = new Properties();
 
-		try {
-			InputStream inputStream = new FileInputStream(propertiesFilePath);
+		InputStream inputStream = new FileInputStream(propertiesFilePath);
 
-			properties.load(inputStream);
-		}
-		catch (FileNotFoundException fnfe) {
-			_log.error(
-				"Cannot find or load properties file: {}", propertiesFilePath);
-
-			throw new IOException(fnfe);
-		}
+		properties.load(inputStream);
 
 		_properties = properties;
 	}

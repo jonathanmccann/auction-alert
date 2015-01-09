@@ -85,9 +85,7 @@ public class MailUtil {
 			}
 		}
 		catch (Exception e) {
-			_log.error(
-				"Unable to send search result to recipients: " +
-					e.getMessage());
+			_log.error("Unable to send search result to recipients", e);
 		}
 	}
 

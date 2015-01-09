@@ -45,9 +45,7 @@ public class eBaySearchResult {
 	public static List<SearchResultModel> geteBaySearchResults(
 		SearchQueryModel searchQueryModel) {
 
-		if (_log.isDebugEnabled()) {
-			_log.debug("Searching for {}", searchQueryModel.getSearchQuery());
-		}
+		_log.debug("Searching for {}", searchQueryModel.getSearchQuery());
 
 		List<SearchResultModel> searchResultModels = new ArrayList<>();
 
