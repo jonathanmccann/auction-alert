@@ -16,6 +16,7 @@ package com.app.controller;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 
 import java.sql.SQLException;
@@ -28,9 +29,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Jonathan McCann
@@ -40,7 +44,7 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
 	public String addSearchQuery(Map<String, Object> model)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		SearchQueryModel searchQueryModel = new SearchQueryModel();
 
@@ -61,7 +65,7 @@ public class SearchQueryController {
 	public String addSearchQuery(
 			@ModelAttribute("searchQueryModel")SearchQueryModel searchQueryModel,
 			Map<String, Object> model)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
 			_log.debug(
@@ -85,7 +89,7 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/delete_search_query", method = RequestMethod.POST)
 	public String deleteSearchQuery(String[] searchQueryIds)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		if ((searchQueryIds != null) && (searchQueryIds.length > 0)) {
 			for (String searchQueryId : searchQueryIds) {
@@ -108,7 +112,7 @@ public class SearchQueryController {
 		},
 		method = RequestMethod.GET)
 	public String viewSearchQueries(Map<String, Object> model)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
@@ -116,6 +120,13 @@ public class SearchQueryController {
 		model.put("searchQueryModels", searchQueryModels);
 
 		return "view_search_queries";
+	}
+
+	@ExceptionHandler(Exception.class)
+	public String handleError(HttpServletRequest request, Exception exception) {
+		_log.error("Request: " + request.getRequestURL() + "failed", exception);
+
+		return "redirect:error.jsp";
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(

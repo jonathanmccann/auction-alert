@@ -16,6 +16,7 @@ package com.app.util;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 import com.app.model.eBaySearchResult;
@@ -53,7 +54,9 @@ public class SearchResultUtil {
 		return newSearchResultModels;
 	}
 
-	public static void performSearch() throws SQLException {
+	public static void performSearch()
+		throws DatabaseConnectionException, SQLException {
+
 		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
 

@@ -36,7 +36,9 @@ import org.slf4j.LoggerFactory;
 public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	@Override
-	public void addSearchQuery(String searchQuery) throws SQLException {
+	public void addSearchQuery(String searchQuery)
+		throws DatabaseConnectionException, SQLException {
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_SEARCH_QUERY_SQL)) {
@@ -45,15 +47,12 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			preparedStatement.executeUpdate();
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to add search query: {}", searchQuery);
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
-	public void deleteSearchQuery(int searchQueryId) throws SQLException {
+	public void deleteSearchQuery(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_QUERY_SQL)) {
@@ -62,17 +61,12 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			preparedStatement.executeUpdate();
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to delete search query for search query ID: {}",
-					searchQueryId);
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
-	public List<SearchQueryModel> getSearchQueries() throws SQLException {
+	public List<SearchQueryModel> getSearchQueries()
+		throws DatabaseConnectionException, SQLException {
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERIES_SQL);
@@ -93,15 +87,12 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			return searchQueryModels;
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to return all search queries.");
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
-	public String getSearchQuery(int searchQueryId) throws SQLException {
+	public String getSearchQuery(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERY)) {
@@ -117,17 +108,12 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 				}
 			}
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Cannot find search query for search query ID: {}",
-					searchQueryId);
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
-	public int getSearchQueryCount() throws SQLException {
+	public int getSearchQueryCount()
+		throws DatabaseConnectionException, SQLException {
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERY_COUNT_SQL);
@@ -141,16 +127,11 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			return searchQueryCount;
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to get the search query count.");
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
 	public void updateSearchQuery(int searchQueryId, String searchQuery)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -160,13 +141,6 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 			preparedStatement.setInt(2, searchQueryId);
 
 			preparedStatement.executeUpdate();
-		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to update search query: {} for search query ID: {}",
-					searchQuery, searchQueryId);
-
-			throw new SQLException(exception);
 		}
 	}
 

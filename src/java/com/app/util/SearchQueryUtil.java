@@ -15,6 +15,7 @@
 package com.app.util;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
+import com.app.exception.DatabaseConnectionException;
 
 import java.sql.SQLException;
 
@@ -24,7 +25,7 @@ import java.sql.SQLException;
 public class SearchQueryUtil {
 
 	public static boolean isExceedsTotalNumberOfSearchQueriesAllowed()
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		int searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
 

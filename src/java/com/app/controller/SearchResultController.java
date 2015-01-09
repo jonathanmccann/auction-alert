@@ -16,6 +16,7 @@ package com.app.controller;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 
@@ -29,8 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Jonathan McCann
@@ -45,7 +49,7 @@ public class SearchResultController {
 		},
 		method = RequestMethod.GET)
 	public String viewSearchResults(Map<String, Object> model)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		Map<String, List<SearchResultModel>> searchResultModelMap =
 			new HashMap<>();
@@ -71,6 +75,13 @@ public class SearchResultController {
 		model.put("searchResultModelMap", searchResultModelMap);
 
 		return "view_search_query_results";
+	}
+
+	@ExceptionHandler(Exception.class)
+	public String handleError(HttpServletRequest request, Exception exception) {
+		_log.error("Request: " + request.getRequestURL() + "failed", exception);
+
+		return "redirect:error.jsp";
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(

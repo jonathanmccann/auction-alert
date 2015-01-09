@@ -14,6 +14,7 @@
 
 package com.app;
 
+import com.app.exception.DatabaseConnectionException;
 import com.app.util.SearchResultUtil;
 
 import java.sql.SQLException;
@@ -35,8 +36,8 @@ public class eBaySearch {
 		try {
 			SearchResultUtil.performSearch();
 		}
-		catch (SQLException sqle) {
-			_log.error("Unable to perform eBay search: " + sqle.getMessage());
+		catch (DatabaseConnectionException | SQLException exception) {
+			_log.error("Unable to perform eBay search", exception);
 		}
 	}
 
