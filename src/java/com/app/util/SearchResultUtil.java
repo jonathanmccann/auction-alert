@@ -36,18 +36,21 @@ import org.slf4j.LoggerFactory;
 public class SearchResultUtil {
 
 	public static List<SearchResultModel> filterSearchResults(
-			int searchQueryId, List<SearchResultModel> newSearchResultModels)
+			SearchQueryModel searchQueryModel,
+			List<SearchResultModel> newSearchResultModels)
 		throws DatabaseConnectionException, SQLException {
 
 		List<SearchResultModel> existingSearchResultModels =
-			_searchResultDAOImpl.getSearchQueryResults(searchQueryId);
+			_searchResultDAOImpl.getSearchQueryResults(
+				searchQueryModel.getSearchQueryId());
 
 		newSearchResultModels.removeAll(existingSearchResultModels);
 
 		if (!newSearchResultModels.isEmpty()) {
-			_log.info(
+			_log.debug(
 				"Found {} new search results for search query ID: {}",
-					newSearchResultModels.size(), searchQueryId);
+				newSearchResultModels.size(),
+				searchQueryModel.getSearchQuery());
 
 			saveNewResultsAndRemoveOldResults(
 				existingSearchResultModels, newSearchResultModels);
@@ -74,7 +77,7 @@ public class SearchResultUtil {
 				eBaySearchResult.geteBaySearchResults(searchQueryModel);
 
 			searchResultModels = filterSearchResults(
-				searchQueryModel.getSearchQueryId(), searchResultModels);
+				searchQueryModel, searchResultModels);
 
 			if (!searchResultModels.isEmpty()) {
 				searchQueryResultMap.put(searchQueryModel, searchResultModels);

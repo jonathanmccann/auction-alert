@@ -39,6 +39,8 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	public void addSearchQuery(String searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug("Adding new searchQuery: {}", searchQuery);
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_SEARCH_QUERY_SQL)) {
@@ -53,6 +55,8 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	public void deleteSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug("Deleting search query ID: {}", searchQueryId);
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_QUERY_SQL)) {
@@ -66,6 +70,8 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	@Override
 	public List<SearchQueryModel> getSearchQueries()
 		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Getting all search queries");
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -93,6 +99,8 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	public String getSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug("Getting search query ID: {}", searchQueryId);
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERY)) {
@@ -114,6 +122,8 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	public int getSearchQueryCount()
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug("Getting search query count");
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERY_COUNT_SQL);
@@ -132,6 +142,9 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	@Override
 	public void updateSearchQuery(int searchQueryId, String searchQuery)
 		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Updating search query ID: {} to: {}", searchQueryId, searchQuery);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(

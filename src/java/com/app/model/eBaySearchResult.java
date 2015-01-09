@@ -14,7 +14,6 @@
 
 package com.app.model;
 
-import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.eBayAPIUtil;
 
@@ -45,7 +44,7 @@ public class eBaySearchResult {
 	public static List<SearchResultModel> geteBaySearchResults(
 		SearchQueryModel searchQueryModel) {
 
-		_log.debug("Searching for {}", searchQueryModel.getSearchQuery());
+		_log.debug("Searching for: {}", searchQueryModel.getSearchQuery());
 
 		List<SearchResultModel> searchResultModels = new ArrayList<>();
 

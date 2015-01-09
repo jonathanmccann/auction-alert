@@ -40,6 +40,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	public void addSearchResult(SearchResultModel searchResultModel)
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug("Adding new search result: {}", searchResultModel);
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_SEARCH_RESULT_SQL)) {
@@ -55,6 +57,10 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	public void deleteSearchQueryResults(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug(
+			"Deleting search query results for search query ID: {}",
+			searchQueryId);
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_QUERY_RESULTS)) {
@@ -69,6 +75,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	public void deleteSearchResult(int searchResultId)
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug("Deleting search result ID: {}", searchResultId);
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_RESULT_SQL)) {
@@ -82,6 +90,10 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	@Override
 	public List<SearchResultModel> getSearchQueryResults(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Getting search query results for search query ID: {}",
+			searchQueryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -106,6 +118,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	public SearchResultModel getSearchResult(int searchResultId)
 		throws DatabaseConnectionException, SQLException {
 
+		_log.debug("Getting search result for ID: {}", searchResultId);
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_RESULT_SQL)) {
@@ -126,6 +140,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	@Override
 	public List<SearchResultModel> getSearchResults()
 		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Getting all search results");
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -148,6 +164,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			ResultSet resultSet)
 		throws SQLException {
 
+		_log.debug("Creating search result from result set");
+
 		SearchResultModel searchResult = new SearchResultModel();
 
 		searchResult.setSearchResultId(resultSet.getInt("searchResultId"));
@@ -168,6 +186,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			PreparedStatement preparedStatement,
 			SearchResultModel searchResultModel)
 		throws SQLException {
+
+		_log.debug("Populating and adding search result to prepared statement");
 
 		preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
 		preparedStatement.setString(2, searchResultModel.getItemId());
