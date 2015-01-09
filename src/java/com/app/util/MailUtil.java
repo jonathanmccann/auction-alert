@@ -55,33 +55,44 @@ import org.springframework.core.io.Resource;
 public class MailUtil {
 
 	public static void sendSearchResultsToRecipients(
-		SearchQueryModel searchQueryModel,
-		List<SearchResultModel> searchResultModels) {
+		Map<SearchQueryModel, List<SearchResultModel>> searchQueryResultMap) {
+
+		_log.info(
+			"Sending search results for {} queries",
+			searchQueryResultMap.size());
+
+		Session session = authenticateOutboundEmailAddress();
+
+		List<String> recipientEmailAddresses = getRecipientEmailAddresses();
+
+		boolean sendViaEmail = recipientEmailAddresses.size() > 0;
+
+		List<String> recipientPhoneNumbers = getRecipientPhoneNumbers();
+
+		boolean sendViaText = recipientPhoneNumbers.size() > 0;
 
 		try {
-			_log.info("Sending {} search results", searchResultModels.size());
+			for (Map.Entry<SearchQueryModel, List<SearchResultModel>> mapEntry :
+					searchQueryResultMap.entrySet()) {
 
-			Session session = authenticateOutboundEmailAddress();
+				if (sendViaEmail) {
+					Message emailMessage = populateEmailMessage(
+						mapEntry.getKey(),
+						mapEntry.getValue(),
+						recipientEmailAddresses,
+						session.getProperty(
+							PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
+						session);
 
-			List<String> recipientEmailAddresses = getRecipientEmailAddresses();
+					Transport.send(emailMessage);
+				}
 
-			if (recipientEmailAddresses.size() > 0) {
-				Message emailMessage = populateEmailMessage(
-					searchQueryModel, searchResultModels,
-					recipientEmailAddresses,
-					session.getProperty(PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
-					session);
+				if (sendViaText) {
+					Message textMessage = populateTextMessage(
+						mapEntry.getValue(), recipientPhoneNumbers, session);
 
-				Transport.send(emailMessage);
-			}
-
-			List<String> recipientPhoneNumbers = getRecipientPhoneNumbers();
-
-			if (recipientPhoneNumbers.size() > 0) {
-				Message textMessage = populateTextMessage(
-					searchResultModels, recipientPhoneNumbers, session);
-
-				Transport.send(textMessage);
+					Transport.send(textMessage);
+				}
 			}
 		}
 		catch (Exception e) {
