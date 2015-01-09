@@ -35,7 +35,7 @@ public class SearchResultUtil {
 
 	public static List<SearchResultModel> filterSearchResults(
 			int searchQueryId, List<SearchResultModel> newSearchResultModels)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		List<SearchResultModel> existingSearchResultModels =
 			_searchResultDAOImpl.getSearchQueryResults(searchQueryId);
@@ -81,7 +81,7 @@ public class SearchResultUtil {
 	public static void saveNewResultsAndRemoveOldResults(
 			List<SearchResultModel> existingSearchResultModels,
 			List<SearchResultModel> newSearchResultModels)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		int numberOfSearchResultsToRemove =
 			existingSearchResultModels.size() + newSearchResultModels.size() - 5;

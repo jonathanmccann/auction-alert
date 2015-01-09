@@ -38,7 +38,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 	@Override
 	public void addSearchResult(SearchResultModel searchResultModel)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -49,18 +49,11 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			preparedStatement.executeUpdate();
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to add search result for item ID: {}",
-					searchResultModel.getItemId());
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
 	public void deleteSearchQueryResults(int searchQueryId)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -70,17 +63,12 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			preparedStatement.executeUpdate();
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to delete search results for search query ID: {}",
-					searchQueryId);
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
-	public void deleteSearchResult(int searchResultId) throws SQLException {
+	public void deleteSearchResult(int searchResultId)
+		throws DatabaseConnectionException, SQLException {
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_RESULT_SQL)) {
@@ -89,18 +77,11 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 			preparedStatement.executeUpdate();
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to delete search result for search result ID: {}",
-					searchResultId);
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
 	public List<SearchResultModel> getSearchQueryResults(int searchQueryId)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -119,18 +100,11 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 				return searchResults;
 			}
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to return all search query results for search query " +
-					"ID: {}", searchQueryId);
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
 	public SearchResultModel getSearchResult(int searchResultId)
-		throws SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -147,17 +121,12 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 				}
 			}
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Cannot find search query for search result ID: {}",
-					searchResultId);
-
-			throw new SQLException(exception);
-		}
 	}
 
 	@Override
-	public List<SearchResultModel> getSearchResults() throws SQLException {
+	public List<SearchResultModel> getSearchResults()
+		throws DatabaseConnectionException, SQLException {
+
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_RESULTS_SQL)) {
@@ -172,11 +141,6 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 				return searchResults;
 			}
-		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to return all search results.");
-
-			throw new SQLException(exception);
 		}
 	}
 

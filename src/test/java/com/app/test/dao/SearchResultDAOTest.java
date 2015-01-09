@@ -38,7 +38,8 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 	}
 
 	@Test
-	public void testSearchResultDAO() throws SQLException {
+	public void testSearchResultDAO()
+		throws DatabaseConnectionException, SQLException {
 
 		// Test add with constructor
 
