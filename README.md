@@ -6,12 +6,7 @@ This Java webapp will hook into eBay's API in order to serve custom search resul
 Configuration
 ========
 
-A "config.properties" file is required in the Catalina base directory. The following properties are expected:
-
-* application.id -- You eBay Developer application ID
-* jdbc.default.url -- The URL to your database
-* jdbc.default.username -- The username for your database
-* jdbc.default.password -- The password for your database
+A "config.properties" file is required in the Catalina base directory. Please see [config.properties](https://github.com/jonathanmccann/ebay-webapp/blob/master/src/main/resources/config.properties) for a full listing of properties.
 
 License
 ========
