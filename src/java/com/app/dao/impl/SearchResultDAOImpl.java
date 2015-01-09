@@ -40,7 +40,8 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 	public void addSearchResult(SearchResultModel searchResultModel)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Adding new search result: {}", searchResultModel);
+		_log.debug(
+			"Adding new search result: {}", searchResultModel.getItemId());
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -164,8 +165,6 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			ResultSet resultSet)
 		throws SQLException {
 
-		_log.debug("Creating search result from result set");
-
 		SearchResultModel searchResult = new SearchResultModel();
 
 		searchResult.setSearchResultId(resultSet.getInt("searchResultId"));
@@ -186,8 +185,6 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			PreparedStatement preparedStatement,
 			SearchResultModel searchResultModel)
 		throws SQLException {
-
-		_log.debug("Populating and adding search result to prepared statement");
 
 		preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
 		preparedStatement.setString(2, searchResultModel.getItemId());

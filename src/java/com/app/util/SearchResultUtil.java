@@ -48,7 +48,7 @@ public class SearchResultUtil {
 
 		if (!newSearchResultModels.isEmpty()) {
 			_log.debug(
-				"Found {} new search results for search query ID: {}",
+				"Found {} new search results for search query: {}",
 				newSearchResultModels.size(),
 				searchQueryModel.getSearchQuery());
 
