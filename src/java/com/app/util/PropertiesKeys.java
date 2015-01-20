@@ -54,6 +54,9 @@ public class PropertiesKeys {
 	public static final String RECIPIENT_PHONE_NUMBERS =
 		"recipient.phone.numbers";
 
+	public static final String SEND_NOTIFICATIONS_BASED_ON_TIME =
+		"send.notifications.based.on.time";
+
 	public static final String TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
 		"total.number.of.search.queries.allowed";
 
