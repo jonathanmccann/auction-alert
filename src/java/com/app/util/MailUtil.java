@@ -43,6 +43,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,17 +66,16 @@ public class MailUtil {
 
 		List<String> recipientEmailAddresses = getRecipientEmailAddresses();
 
-		boolean sendViaEmail = recipientEmailAddresses.size() > 0;
-
 		List<String> recipientPhoneNumbers = getRecipientPhoneNumbers();
 
-		boolean sendViaText = recipientPhoneNumbers.size() > 0;
+		setNotificationDeliveryMethods(
+			recipientEmailAddresses, recipientPhoneNumbers);
 
 		try {
 			for (Map.Entry<SearchQueryModel, List<SearchResultModel>> mapEntry :
 					searchQueryResultMap.entrySet()) {
 
-				if (sendViaEmail) {
+				if (_sendViaEmail) {
 					Message emailMessage = populateEmailMessage(
 						mapEntry.getKey(),
 						mapEntry.getValue(),
@@ -87,7 +87,7 @@ public class MailUtil {
 					Transport.send(emailMessage);
 				}
 
-				if (sendViaText) {
+				if (_sendViaText) {
 					Message textMessage = populateTextMessage(
 						mapEntry.getValue(), recipientPhoneNumbers, session);
 
@@ -98,6 +98,42 @@ public class MailUtil {
 		catch (Exception e) {
 			_log.error("Unable to send search result to recipients", e);
 		}
+	}
+
+	private static void setNotificationDeliveryMethods(
+		List<String> recipientEmailAddresses,
+		List<String> recipientPhoneNumbers) {
+
+		if (PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME) {
+			DateTime dateTime = new DateTime();
+
+			int hourOfDay = dateTime.getHourOfDay();
+			int dayOfWeek = dateTime.getDayOfWeek();
+
+			if ((dayOfWeek == _SATURDAY) | (dayOfWeek == _SUNDAY)) {
+				_sendViaEmail = false;
+				_sendViaText = true;
+			}
+			else if ((hourOfDay < _START_OF_DAY) || (hourOfDay > _END_OF_DAY)) {
+				_sendViaEmail = false;
+				_sendViaText = true;
+			}
+			else {
+				_sendViaEmail = true;
+				_sendViaText = false;
+			}
+		}
+
+		if (recipientEmailAddresses.size() == 0) {
+			_sendViaEmail = false;
+		}
+
+		if (recipientPhoneNumbers.size() == 0) {
+			_sendViaText = false;
+		}
+
+		_log.debug("Sending via email: {}", _sendViaEmail);
+		_log.debug("Sending via text: {}", _sendViaText);
 	}
 
 	private static Session authenticateOutboundEmailAddress() {
@@ -278,11 +314,18 @@ public class MailUtil {
 		}
 	}
 
+	private static boolean _sendViaEmail = false;
+	private static boolean _sendViaText = false;
+
 	private static final DateFormat _DATE_FORMAT = new SimpleDateFormat(
 		"MM/dd/yyyy");
 
 	private static final Logger _log = LoggerFactory.getLogger(MailUtil.class);
 
+	private static final int _SATURDAY = 7;
+	private static final int _SUNDAY = 7;
+	private static final int _START_OF_DAY = 7;
+	private static final int _END_OF_DAY = 17;
 	private static final Map<String, String> _carrierSuffixMap =
 		new HashMap<>();
 	private static Configuration _configuration = new Configuration(
