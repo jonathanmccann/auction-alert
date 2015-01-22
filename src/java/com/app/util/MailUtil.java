@@ -114,7 +114,7 @@ public class MailUtil {
 				_sendViaEmail = false;
 				_sendViaText = true;
 			}
-			else if ((hourOfDay < _START_OF_DAY) || (hourOfDay > _END_OF_DAY)) {
+			else if ((hourOfDay < _START_OF_DAY) || (hourOfDay >= _END_OF_DAY)) {
 				_sendViaEmail = false;
 				_sendViaText = true;
 			}
@@ -322,7 +322,7 @@ public class MailUtil {
 
 	private static final Logger _log = LoggerFactory.getLogger(MailUtil.class);
 
-	private static final int _SATURDAY = 7;
+	private static final int _SATURDAY = 6;
 	private static final int _SUNDAY = 7;
 	private static final int _START_OF_DAY = 7;
 	private static final int _END_OF_DAY = 17;
