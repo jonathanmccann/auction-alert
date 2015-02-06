@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -283,16 +284,19 @@ public class MailUtil {
 	private static void validateEmailAddresses(
 		List<String> recipientEmailAddressesArray) {
 
-		for (int i = 0; i < recipientEmailAddressesArray.size(); i++) {
-			Matcher matcher = _emailAddressPattern.matcher(
-				recipientEmailAddressesArray.get(i));
+		Iterator<String> iterator = recipientEmailAddressesArray.iterator();
+
+		while (iterator.hasNext()) {
+			String emailAddress = iterator.next();
+
+			Matcher matcher = _emailAddressPattern.matcher(emailAddress);
 
 			if (!matcher.matches()) {
 				_log.debug(
 					"{} is not a valid email address",
-					recipientEmailAddressesArray.get(i));
+					emailAddress);
 
-				recipientEmailAddressesArray.remove(i);
+				iterator.remove();
 			}
 		}
 	}
@@ -300,16 +304,19 @@ public class MailUtil {
 	private static void validatePhoneNumbers(
 		List<String> recipientPhoneNumbersArray) {
 
-		for (int i = 0; i < recipientPhoneNumbersArray.size(); i++) {
-			Matcher matcher = _phoneNumberPattern.matcher(
-				recipientPhoneNumbersArray.get(i));
+		Iterator<String> iterator = recipientPhoneNumbersArray.iterator();
+
+		while (iterator.hasNext()) {
+			String phoneNumber = iterator.next();
+
+			Matcher matcher = _phoneNumberPattern.matcher(phoneNumber);
 
 			if (!matcher.matches()) {
 				_log.debug(
-					"{} is not a valid phone number",
-					recipientPhoneNumbersArray.get(i));
+					"{} is not a valid email address",
+					phoneNumber);
 
-				recipientPhoneNumbersArray.remove(i);
+				iterator.remove();
 			}
 		}
 	}

@@ -252,6 +252,7 @@ public class MailUtilTest {
 
 		recipientEmailAddresses.add("test@test.com");
 		recipientEmailAddresses.add("invalidEmailAddress");
+		recipientEmailAddresses.add("anotherInvalidEmailAddress");
 		recipientEmailAddresses.add("test2@test2.com");
 
 		method.invoke(_classInstance, recipientEmailAddresses);
@@ -272,8 +273,8 @@ public class MailUtilTest {
 
 		recipientPhoneNumbers.add("1234567890");
 		recipientPhoneNumbers.add("1234");
-		recipientPhoneNumbers.add("2345678901");
 		recipientPhoneNumbers.add("test");
+		recipientPhoneNumbers.add("2345678901");
 
 		method.invoke(_classInstance, recipientPhoneNumbers);
 
