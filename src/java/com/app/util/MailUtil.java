@@ -246,7 +246,19 @@ public class MailUtil {
 
 		_configuration.setDirectoryForTemplateLoading(resource.getFile());
 
-		_textTemplate = _configuration.getTemplate("/text_body.ftl");
+		String template = "/text_body.ftl";
+
+		String recipientMobileOperatingSystem =
+			PropertiesValues.RECIPIENT_MOBILE_OPERATING_SYSTEM;
+
+		if (recipientMobileOperatingSystem.equalsIgnoreCase("iOS")) {
+			template = "/text_body_ios.ftl";
+		}
+		else if (recipientMobileOperatingSystem.equalsIgnoreCase("Android")) {
+			template = "/text_body_android.ftl";
+		}
+
+		_textTemplate = _configuration.getTemplate(template);
 
 		return _textTemplate;
 	}

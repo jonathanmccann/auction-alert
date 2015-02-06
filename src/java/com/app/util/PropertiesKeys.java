@@ -48,6 +48,9 @@ public class PropertiesKeys {
 	public static final String RECIPIENT_EMAIL_ADDRESSES =
 		"recipient.email.addresses";
 
+	public static final String RECIPIENT_MOBILE_OPERATING_SYSTEM =
+		"recipient.mobile.operating.system";
+
 	public static final String RECIPIENT_PHONE_CARRIER =
 		"recipient.phone.carrier";
 

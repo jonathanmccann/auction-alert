@@ -66,6 +66,10 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.RECIPIENT_EMAIL_ADDRESSES);
 
+	public static final String RECIPIENT_MOBILE_OPERATING_SYSTEM =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.RECIPIENT_MOBILE_OPERATING_SYSTEM);
+
 	public static final String RECIPIENT_PHONE_CARRIER =
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.RECIPIENT_PHONE_CARRIER);
