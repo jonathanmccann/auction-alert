@@ -163,11 +163,17 @@ public class MailUtil {
 	}
 
 	private static Template getEmailTemplate() throws IOException {
+		if (null != _emailTemplate) {
+			return _emailTemplate;
+		}
+
 		Resource resource = new ClassPathResource("/template");
 
 		_configuration.setDirectoryForTemplateLoading(resource.getFile());
 
-		return _configuration.getTemplate("/email_body.ftl");
+		_emailTemplate = _configuration.getTemplate("/email_body.ftl");
+
+		return _emailTemplate;
 	}
 
 	private static List<String> getRecipientEmailAddresses() {
@@ -230,11 +236,17 @@ public class MailUtil {
 	}
 
 	private static Template getTextTemplate() throws IOException {
+		if (null != _textTemplate) {
+			return _textTemplate;
+		}
+
 		Resource resource = new ClassPathResource("/template");
 
 		_configuration.setDirectoryForTemplateLoading(resource.getFile());
 
-		return _configuration.getTemplate("/text_body.ftl");
+		_textTemplate = _configuration.getTemplate("/text_body.ftl");
+
+		return _textTemplate;
 	}
 
 	private static Message populateEmailMessage(
@@ -341,6 +353,9 @@ public class MailUtil {
 
 	private static List<String> _recipientEmailAddresses = new ArrayList<>();
 	private static List<String> _recipientPhoneNumbers = new ArrayList<>();
+
+	private static Template _emailTemplate;
+	private static Template _textTemplate;
 
 	private static boolean _initializedEmailAddresses = false;
 	private static boolean _initializedPhoneNumbers = false;
