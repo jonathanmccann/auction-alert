@@ -115,7 +115,9 @@ public class MailUtil {
 				_sendViaEmail = false;
 				_sendViaText = true;
 			}
-			else if ((hourOfDay < _START_OF_DAY) || (hourOfDay >= _END_OF_DAY)) {
+			else if ((hourOfDay < _START_OF_DAY) ||
+					 (hourOfDay >= _END_OF_DAY)) {
+
 				_sendViaEmail = false;
 				_sendViaText = true;
 			}
