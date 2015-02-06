@@ -105,6 +105,14 @@ public class MailUtilTest {
 
 		Assert.assertEquals("test@test.com", recipientEmailAddresses.get(0));
 		Assert.assertEquals("test2@test2.com", recipientEmailAddresses.get(1));
+
+		List<String> storedRecipientEmailAddresses =
+			(List<String>)method.invoke(_classInstance);
+
+		Assert.assertEquals(
+			"test@test.com", storedRecipientEmailAddresses.get(0));
+		Assert.assertEquals(
+			"test2@test2.com", storedRecipientEmailAddresses.get(1));
 	}
 
 	@Test
@@ -120,6 +128,14 @@ public class MailUtilTest {
 			"1234567890@txt.att.net", recipientEmailAddresses.get(0));
 		Assert.assertEquals(
 			"2345678901@txt.att.net", recipientEmailAddresses.get(1));
+
+		List<String> storedRecipientEmailAddresses =
+			(List<String>)method.invoke(_classInstance);
+
+		Assert.assertEquals(
+			"1234567890@txt.att.net", storedRecipientEmailAddresses.get(0));
+		Assert.assertEquals(
+			"2345678901@txt.att.net", storedRecipientEmailAddresses.get(1));
 	}
 
 	@Test

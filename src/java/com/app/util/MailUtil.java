@@ -171,6 +171,11 @@ public class MailUtil {
 	}
 
 	private static List<String> getRecipientEmailAddresses() {
+		if (_initializedEmailAddresses) {
+			return _recipientEmailAddresses;
+		}
+
+		_initializedEmailAddresses = true;
 
 		String recipientEmailAddresses =
 			PropertiesValues.RECIPIENT_EMAIL_ADDRESSES;
@@ -183,14 +188,23 @@ public class MailUtil {
 
 			validateEmailAddresses(recipientEmailAddressesList);
 
-			return recipientEmailAddressesList;
+			_recipientEmailAddresses = recipientEmailAddressesList;
+
+			return _recipientEmailAddresses;
 		}
 		else {
-			return new ArrayList<>();
+			_recipientEmailAddresses = new ArrayList<>();
+
+			return _recipientEmailAddresses;
 		}
 	}
 
 	private static List<String> getRecipientPhoneNumbers() {
+		if (_initializedPhoneNumbers) {
+			return _recipientPhoneNumbers;
+		}
+
+		_initializedPhoneNumbers = true;
 
 		String recipientPhoneNumbers = PropertiesValues.RECIPIENT_PHONE_NUMBERS;
 
@@ -204,10 +218,14 @@ public class MailUtil {
 
 			convertPhoneNumbersToEmailAddresses(recipientPhoneNumbersList);
 
-			return recipientPhoneNumbersList;
+			_recipientPhoneNumbers = recipientPhoneNumbersList;
+
+			return _recipientPhoneNumbers;
 		}
 		else {
-			return new ArrayList<>();
+			_recipientPhoneNumbers = new ArrayList<>();
+
+			return _recipientPhoneNumbers;
 		}
 	}
 
@@ -321,6 +339,11 @@ public class MailUtil {
 		}
 	}
 
+	private static List<String> _recipientEmailAddresses = new ArrayList<>();
+	private static List<String> _recipientPhoneNumbers = new ArrayList<>();
+
+	private static boolean _initializedEmailAddresses = false;
+	private static boolean _initializedPhoneNumbers = false;
 	private static boolean _sendViaEmail = false;
 	private static boolean _sendViaText = false;
 
