@@ -111,7 +111,7 @@ public class MailUtil {
 			int hourOfDay = dateTime.getHourOfDay();
 			int dayOfWeek = dateTime.getDayOfWeek();
 
-			if ((dayOfWeek == _SATURDAY) | (dayOfWeek == _SUNDAY)) {
+			if ((dayOfWeek == _SATURDAY) || (dayOfWeek == _SUNDAY)) {
 				_sendViaEmail = false;
 				_sendViaText = true;
 			}
