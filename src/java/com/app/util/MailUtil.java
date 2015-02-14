@@ -251,10 +251,10 @@ public class MailUtil {
 		String recipientMobileOperatingSystem =
 			PropertiesValues.RECIPIENT_MOBILE_OPERATING_SYSTEM;
 
-		if (recipientMobileOperatingSystem.equalsIgnoreCase("iOS")) {
+		if ("iOS".equalsIgnoreCase(recipientMobileOperatingSystem)) {
 			template = "/text_body_ios.ftl";
 		}
-		else if (recipientMobileOperatingSystem.equalsIgnoreCase("Android")) {
+		else if ("Android".equalsIgnoreCase(recipientMobileOperatingSystem)) {
 			template = "/text_body_android.ftl";
 		}
 
