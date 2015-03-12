@@ -64,6 +64,14 @@ public class SearchQueryPreviousResultDAOTest extends BaseDatabaseTestCase {
 		Assert.assertEquals(
 			expectedSearchQueryPreviousResults, searchQueryPreviousResults);
 
+		// Test get count
+
+		int searchQueryPreviousResultsCount =
+			_searchQueryPreviousResultDAOImpl.
+				getSearchQueryPreviousResultsCount(1);
+
+		Assert.assertEquals(3, searchQueryPreviousResultsCount);
+
 		// Test delete oldest entry
 
 		_searchQueryPreviousResultDAOImpl.deleteSearchQueryPreviousResult(1);

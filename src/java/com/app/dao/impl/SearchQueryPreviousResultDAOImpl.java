@@ -120,6 +120,30 @@ public class SearchQueryPreviousResultDAOImpl implements SearchQueryPreviousResu
 		}
 	}
 
+	@Override
+	public int getSearchQueryPreviousResultsCount(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Getting search query previous results count count");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_SEARCH_QUERY_PREVIOUS_RESULTS_COUNT_SQL)) {
+
+			preparedStatement.setInt(1, searchQueryId);
+
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				int searchQueryCount = 0;
+
+				while (resultSet.next()) {
+					searchQueryCount = resultSet.getInt(1);
+				}
+
+				return searchQueryCount;
+			}
+		}
+	}
+
 	private static final String _ADD_SEARCH_QUERY_PREVIOUS_RESULT_SQL =
 		"INSERT INTO SearchQueryPreviousResult(searchQueryId, " +
 			"searchResultItemId) VALUES(?, ?)";
@@ -132,6 +156,9 @@ public class SearchQueryPreviousResultDAOImpl implements SearchQueryPreviousResu
 
 	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_SQL =
 		"SELECT * FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
+
+	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_COUNT_SQL =
+		"SELECT COUNT(*) FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryPreviousResultDAOImpl.class);

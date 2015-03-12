@@ -38,4 +38,7 @@ public interface SearchQueryPreviousResultDAO {
 			int searchQueryId)
 		throws DatabaseConnectionException, SQLException;
 
+	public int getSearchQueryPreviousResultsCount(int searchQueryId)
+		throws DatabaseConnectionException, SQLException;
+
 }
