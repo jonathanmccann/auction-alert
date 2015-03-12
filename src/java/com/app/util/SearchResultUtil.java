@@ -15,6 +15,7 @@
 package com.app.util;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
+import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
@@ -24,6 +25,7 @@ import com.app.model.eBaySearchResult;
 import java.sql.SQLException;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,17 +42,32 @@ public class SearchResultUtil {
 			List<SearchResultModel> newSearchResultModels)
 		throws DatabaseConnectionException, SQLException {
 
-		List<SearchResultModel> existingSearchResultModels =
-			_searchResultDAOImpl.getSearchQueryResults(
+		List<String> searchQueryPreviousResults =
+			_searchQueryPreviousResultDAOImpl.getSearchQueryPreviousResults(
 				searchQueryModel.getSearchQueryId());
 
-		newSearchResultModels.removeAll(existingSearchResultModels);
+		Iterator iterator = newSearchResultModels.iterator();
+
+		while (iterator.hasNext()) {
+			SearchResultModel searchResultModel =
+				(SearchResultModel)iterator.next();
+
+			if (searchQueryPreviousResults.contains(
+					searchResultModel.getItemId())) {
+
+				iterator.remove();
+			}
+		}
 
 		if (!newSearchResultModels.isEmpty()) {
 			_log.debug(
 				"Found {} new search results for search query: {}",
 				newSearchResultModels.size(),
 				searchQueryModel.getSearchQuery());
+
+			List<SearchResultModel> existingSearchResultModels =
+				_searchResultDAOImpl.getSearchQueryResults(
+					searchQueryModel.getSearchQueryId());
 
 			saveNewResultsAndRemoveOldResults(
 				existingSearchResultModels, newSearchResultModels);
@@ -109,6 +126,21 @@ public class SearchResultUtil {
 
 		for (SearchResultModel searchResultModel : newSearchResultModels) {
 			_searchResultDAOImpl.addSearchResult(searchResultModel);
+
+			int searchQueryPreviousResultsCount =
+				_searchQueryPreviousResultDAOImpl.
+					getSearchQueryPreviousResultsCount(
+						searchResultModel.getSearchQueryId());
+
+			if (searchQueryPreviousResultsCount == 10) {
+				_searchQueryPreviousResultDAOImpl.
+					deleteSearchQueryPreviousResult(
+						searchResultModel.getSearchQueryId());
+			}
+
+			_searchQueryPreviousResultDAOImpl.addSearchQueryPreviousResult(
+				searchResultModel.getSearchQueryId(),
+				searchResultModel.getItemId());
 		}
 	}
 
@@ -117,6 +149,9 @@ public class SearchResultUtil {
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
+	private static final
+		SearchQueryPreviousResultDAOImpl _searchQueryPreviousResultDAOImpl =
+			new SearchQueryPreviousResultDAOImpl();
 	private static final SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
 
