@@ -60,6 +60,9 @@ public class PropertiesKeys {
 	public static final String SEND_NOTIFICATIONS_BASED_ON_TIME =
 		"send.notifications.based.on.time";
 
+	public static final String TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
+		"total.number.of.preivous.search.result.ids";
+
 	public static final String TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
 		"total.number.of.search.queries.allowed";
 

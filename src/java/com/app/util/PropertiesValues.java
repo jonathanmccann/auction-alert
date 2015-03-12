@@ -82,6 +82,10 @@ public class PropertiesValues {
 		Boolean.valueOf(PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.SEND_NOTIFICATIONS_BASED_ON_TIME));
 
+	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
+		Integer.valueOf(PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS));
+
 	public static final int TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
 		Integer.valueOf(PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED));
