@@ -15,3 +15,8 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 	auctionPrice DOUBLE,
 	fixedPrice DOUBLE
 );
+
+CREATE TABLE IF NOT EXISTS SearchQueryPreviousResult(
+	searchQueryId INT NOT NULL,
+	searchResultItemId VARCHAR(25) NOT NULL PRIMARY KEY
+);
