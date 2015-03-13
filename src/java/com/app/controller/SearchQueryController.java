@@ -15,6 +15,7 @@
 package com.app.controller;
 
 import com.app.dao.impl.SearchQueryDAOImpl;
+import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
@@ -99,6 +100,9 @@ public class SearchQueryController {
 
 				_searchResultDAOImpl.deleteSearchQueryResults(
 					searchQueryIdInteger);
+
+				_searchQueryPreviousResultDAOImpl.
+					deleteSearchQueryPreviousResults(searchQueryIdInteger);
 			}
 		}
 
@@ -134,6 +138,9 @@ public class SearchQueryController {
 
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
+	private static final SearchQueryPreviousResultDAOImpl
+		_searchQueryPreviousResultDAOImpl =
+			new SearchQueryPreviousResultDAOImpl();
 	private static final SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
 
