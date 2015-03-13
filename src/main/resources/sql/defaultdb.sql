@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 );
 
 CREATE TABLE IF NOT EXISTS SearchQueryPreviousResult(
+	searchQueryPreviousResultId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	searchQueryId INT NOT NULL,
-	searchResultItemId VARCHAR(25) NOT NULL PRIMARY KEY
+	searchResultItemId VARCHAR(25) NOT NULL
 );
