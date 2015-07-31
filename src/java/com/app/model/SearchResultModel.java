@@ -89,7 +89,7 @@ public class SearchResultModel {
 	}
 
 	public int hashCode() {
-		return Integer.valueOf(_itemId);
+		return Integer.parseInt(_itemId);
 	}
 
 	public void setAuctionPrice(double auctionPrice) {

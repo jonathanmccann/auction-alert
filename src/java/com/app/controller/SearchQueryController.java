@@ -94,7 +94,7 @@ public class SearchQueryController {
 
 		if ((searchQueryIds != null) && (searchQueryIds.length > 0)) {
 			for (String searchQueryId : searchQueryIds) {
-				int searchQueryIdInteger = Integer.valueOf(searchQueryId);
+				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
 				_searchQueryDAOImpl.deleteSearchQuery(searchQueryIdInteger);
 
