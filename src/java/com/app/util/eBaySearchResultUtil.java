@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.app.model;
+package com.app.util;
 
-import com.app.util.PropertiesValues;
-import com.app.util.eBayAPIUtil;
+import com.app.model.SearchQueryModel;
+import com.app.model.SearchResultModel;
 
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsByKeywordsRequest;
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jonathan McCann
  */
-public class eBaySearchResult {
+public class eBaySearchResultUtil {
 
 	public static List<SearchResultModel> geteBaySearchResults(
 		SearchQueryModel searchQueryModel) {
@@ -146,6 +146,6 @@ public class eBaySearchResult {
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		eBaySearchResult.class);
+		eBaySearchResultUtil.class);
 
 }

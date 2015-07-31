@@ -20,7 +20,6 @@ import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
-import com.app.model.eBaySearchResult;
 
 import java.sql.SQLException;
 
@@ -52,7 +51,7 @@ public class SearchResultUtil {
 
 		for (SearchQueryModel searchQueryModel : searchQueryModels) {
 			List<SearchResultModel> searchResultModels =
-				eBaySearchResult.geteBaySearchResults(searchQueryModel);
+				eBaySearchResultUtil.geteBaySearchResults(searchQueryModel);
 
 			searchResultModels = _filterSearchResults(
 				searchQueryModel, searchResultModels);
