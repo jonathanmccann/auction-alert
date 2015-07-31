@@ -387,11 +387,11 @@ public class MailUtil {
 	private static final int _END_OF_DAY = 17;
 	private static final Map<String, String> _carrierSuffixMap =
 		new HashMap<>();
-	private static Configuration _configuration = new Configuration(
+	private static final Configuration _configuration = new Configuration(
 		Configuration.VERSION_2_3_21);
-	private static Pattern _emailAddressPattern = Pattern.compile(
+	private static final Pattern _emailAddressPattern = Pattern.compile(
 		"[a-zA-Z0-9]*@[a-zA-Z0-9]*\\.[a-zA-Z]{1,6}");
-	private static Pattern _phoneNumberPattern = Pattern.compile(
+	private static final Pattern _phoneNumberPattern = Pattern.compile(
 		"[0-9]{10,10}");
 
 	static {
