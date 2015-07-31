@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS SearchQuery, SearchResult;
+DROP TABLE IF EXISTS SearchQuery, SearchResult, Category;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -22,4 +22,10 @@ CREATE TABLE IF NOT EXISTS SearchQueryPreviousResult(
 	searchQueryPreviousResultId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	searchQueryId INT NOT NULL,
 	searchResultItemId VARCHAR(25) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Category(
+	uuid INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	categoryId VARCHAR(10) NOT NULL,
+	categoryName VARCHAR(50) NOT NULL
 );
