@@ -17,13 +17,7 @@ package com.app.test;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 
-import java.sql.Connection;
-
 import org.junit.Before;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 /**
  * @author Jonathan McCann
@@ -42,19 +36,12 @@ public abstract class BaseDatabaseTestCase {
 		DatabaseUtil.setDatabaseProperties(
 			databaseURL, databaseUsername, databasePassword);
 
-		DatabaseUtil.initializeDatabase();
-
-		Connection connection = DatabaseUtil.getDatabaseConnection();
-
-		Resource resource = new ClassPathResource("/sql/testdb.sql");
-
-		ScriptUtils.executeSqlScript(connection, resource);
-
-		connection.close();
+		DatabaseUtil.initializeDatabase(_TEST_DATABASE_PATH);
 
 		doSetUp();
 	}
 
 	protected abstract void doSetUp() throws Exception;
 
+	private static final String _TEST_DATABASE_PATH = "/sql/testdb.sql";
 }

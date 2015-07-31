@@ -56,10 +56,16 @@ public class DatabaseUtil {
 		}
 	}
 
-	public static void initializeDatabase() throws DatabaseConnectionException {
-		Resource resource = new ClassPathResource("/sql/defaultdb.sql");
+	public static void initializeDatabase(String path)
+		throws DatabaseConnectionException {
+
+		Resource resource = new ClassPathResource(path);
 
 		ScriptUtils.executeSqlScript(getDatabaseConnection(), resource);
+	}
+
+	public static void initializeDatabase() throws DatabaseConnectionException {
+		initializeDatabase(_DEFAULT_DATABASE_PATH);
 	}
 
 	public static void loadDatabaseProperties() {
@@ -82,6 +88,8 @@ public class DatabaseUtil {
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		DatabaseUtil.class);
+
+	private static final String _DEFAULT_DATABASE_PATH = "/sql/defaultdb.sql";
 
 	private static String _databasePassword;
 	private static String _databaseURL;
