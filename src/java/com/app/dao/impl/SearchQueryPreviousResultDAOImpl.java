@@ -15,9 +15,7 @@
 package com.app.dao.impl;
 
 import com.app.dao.SearchQueryPreviousResultDAO;
-import com.app.dao.SearchResultDAO;
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchResultModel;
 import com.app.util.DatabaseUtil;
 
 import java.sql.Connection;
@@ -26,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;

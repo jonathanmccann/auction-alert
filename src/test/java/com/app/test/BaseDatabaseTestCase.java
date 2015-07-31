@@ -16,7 +16,6 @@ package com.app.test;
 
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
-import com.app.util.PropertiesUtil;
 
 import java.sql.Connection;
 
