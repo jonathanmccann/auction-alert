@@ -50,9 +50,11 @@ public class PropertiesUtil {
 
 		Properties properties = new Properties();
 
-		InputStream inputStream = new FileInputStream(propertiesFilePath);
+		try (InputStream inputStream =
+				new FileInputStream(propertiesFilePath)) {
 
-		properties.load(inputStream);
+			properties.load(inputStream);
+		}
 
 		_properties = properties;
 	}
