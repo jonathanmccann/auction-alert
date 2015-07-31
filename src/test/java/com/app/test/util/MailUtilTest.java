@@ -186,8 +186,8 @@ public class MailUtilTest {
 			});
 
 		Message message = (Message)method.invoke(
-			_classInstance, searchQueryModel,
-			searchResultModels, emailAddresses, "test@test.com", session);
+			_classInstance, searchQueryModel, searchResultModels,
+			emailAddresses, "test@test.com", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertThat(
@@ -245,8 +245,7 @@ public class MailUtilTest {
 			session);
 
 		Assert.assertEquals(
-			"itemTitle\nm.ebay.com/itm/1234\n",
-			message.getContent());
+			"itemTitle\nm.ebay.com/itm/1234\n", message.getContent());
 
 		InternetAddress[] internetAddresses = new InternetAddress[2];
 

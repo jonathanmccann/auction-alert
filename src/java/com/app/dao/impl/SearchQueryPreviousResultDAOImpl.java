@@ -32,7 +32,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jonathan McCann
  */
-public class SearchQueryPreviousResultDAOImpl implements SearchQueryPreviousResultDAO {
+public class SearchQueryPreviousResultDAOImpl
+	implements SearchQueryPreviousResultDAO {
 
 	@Override
 	public void addSearchQueryPreviousResult(
@@ -55,24 +56,6 @@ public class SearchQueryPreviousResultDAOImpl implements SearchQueryPreviousResu
 	}
 
 	@Override
-	public void deleteSearchQueryPreviousResults(int searchQueryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug(
-			"Deleting previous search query results for search query ID: {}",
-			searchQueryId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_QUERY_PREVIOUS_RESULTS)) {
-
-			preparedStatement.setInt(1, searchQueryId);
-
-			preparedStatement.executeUpdate();
-		}
-	}
-
-	@Override
 	public void deleteSearchQueryPreviousResult(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -83,6 +66,24 @@ public class SearchQueryPreviousResultDAOImpl implements SearchQueryPreviousResu
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_QUERY_PREVIOUS_RESULT)) {
+
+			preparedStatement.setInt(1, searchQueryId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@Override
+	public void deleteSearchQueryPreviousResults(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Deleting previous search query results for search query ID: {}",
+			searchQueryId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_SEARCH_QUERY_PREVIOUS_RESULTS)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -145,18 +146,19 @@ public class SearchQueryPreviousResultDAOImpl implements SearchQueryPreviousResu
 		"INSERT INTO SearchQueryPreviousResult(searchQueryId, " +
 			"searchResultItemId) VALUES(?, ?)";
 
-	private static final String _DELETE_SEARCH_QUERY_PREVIOUS_RESULTS =
-		"DELETE FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
-
 	private static final String _DELETE_SEARCH_QUERY_PREVIOUS_RESULT =
 		"DELETE FROM SearchQueryPreviousResult WHERE searchQueryId = ? LIMIT 1";
 
-	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_SQL =
-		"SELECT * FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
+	private static final String _DELETE_SEARCH_QUERY_PREVIOUS_RESULTS =
+		"DELETE FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
 
 	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_COUNT_SQL =
 		"SELECT COUNT(*) FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
 
+	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_SQL =
+		"SELECT * FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
+
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryPreviousResultDAOImpl.class);
+
 }

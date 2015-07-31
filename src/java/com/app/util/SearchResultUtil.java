@@ -133,7 +133,8 @@ public class SearchResultUtil {
 						searchResultModel.getSearchQueryId());
 
 			if (searchQueryPreviousResultsCount ==
-				PropertiesValues.TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS) {
+					PropertiesValues.
+						TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS) {
 
 				_searchQueryPreviousResultDAOImpl.
 					deleteSearchQueryPreviousResult(

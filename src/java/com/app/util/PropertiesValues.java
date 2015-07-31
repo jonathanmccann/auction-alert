@@ -35,16 +35,13 @@ public class PropertiesValues {
 			PropertiesKeys.JDBC_DEFAULT_USERNAME);
 
 	public static final String MAIL_SMTP_AUTH =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.MAIL_SMTP_AUTH);
+		PropertiesUtil.getConfigurationProperty(PropertiesKeys.MAIL_SMTP_AUTH);
 
 	public static final String MAIL_SMTP_HOST =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.MAIL_SMTP_HOST);
+		PropertiesUtil.getConfigurationProperty(PropertiesKeys.MAIL_SMTP_HOST);
 
 	public static final String MAIL_SMTP_PORT =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.MAIL_SMTP_PORT);
+		PropertiesUtil.getConfigurationProperty(PropertiesKeys.MAIL_SMTP_PORT);
 
 	public static final String MAIL_SMTP_STARTTLS_ENABLE =
 		PropertiesUtil.getConfigurationProperty(

@@ -40,53 +40,32 @@ public class PropertiesUtilTest {
 
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 
+		Assert.assertEquals("Application ID", PropertiesValues.APPLICATION_ID);
 		Assert.assertEquals(
-			"Application ID",
-			PropertiesValues.APPLICATION_ID);
+			"JDBC Default Password", PropertiesValues.JDBC_DEFAULT_PASSWORD);
 		Assert.assertEquals(
-			"JDBC Default Password",
-			PropertiesValues.JDBC_DEFAULT_PASSWORD);
+			"JDBC Default URL", PropertiesValues.JDBC_DEFAULT_URL);
 		Assert.assertEquals(
-			"JDBC Default URL",
-			PropertiesValues.JDBC_DEFAULT_URL);
+			"JDBC Default Username", PropertiesValues.JDBC_DEFAULT_USERNAME);
+		Assert.assertEquals(5, PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
 		Assert.assertEquals(
-			"JDBC Default Username",
-			PropertiesValues.JDBC_DEFAULT_USERNAME);
+			"test@test.com", PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 		Assert.assertEquals(
-			5,
-			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
-		Assert.assertEquals(
-			"test@test.com",
-			PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		Assert.assertEquals(
-			"test",
-			PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
-		Assert.assertEquals(
-			"true",
-			PropertiesValues.MAIL_SMTP_AUTH);
-		Assert.assertEquals(
-			"true",
-			PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
-		Assert.assertEquals(
-			"smtp.gmail.com",
-			PropertiesValues.MAIL_SMTP_HOST);
-		Assert.assertEquals(
-			"587",
-			PropertiesValues.MAIL_SMTP_PORT);
+			"test", PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
+		Assert.assertEquals("true", PropertiesValues.MAIL_SMTP_AUTH);
+		Assert.assertEquals("true", PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
+		Assert.assertEquals("smtp.gmail.com", PropertiesValues.MAIL_SMTP_HOST);
+		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
 		Assert.assertEquals(
 			"test@test.com,test2@test2.com",
 			PropertiesValues.RECIPIENT_EMAIL_ADDRESSES);
 		Assert.assertEquals(
-			"1234567890,2345678901",
-			PropertiesValues.RECIPIENT_PHONE_NUMBERS);
-		Assert.assertEquals(
-			"AT&T",
-			PropertiesValues.RECIPIENT_PHONE_CARRIER);
+			"1234567890,2345678901", PropertiesValues.RECIPIENT_PHONE_NUMBERS);
+		Assert.assertEquals("AT&T", PropertiesValues.RECIPIENT_PHONE_CARRIER);
 		Assert.assertEquals(
 			false, PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME);
 		Assert.assertEquals(
-			15,
-			PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
+			15, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}
 
 	@Test(expected = IOException.class)

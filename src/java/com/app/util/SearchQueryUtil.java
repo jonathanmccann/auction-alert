@@ -30,7 +30,7 @@ public class SearchQueryUtil {
 		int searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
 
 		if ((searchQueryCount + 1) >
-			PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED) {
+				PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED) {
 
 			return true;
 		}

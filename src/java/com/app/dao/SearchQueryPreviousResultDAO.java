@@ -17,6 +17,7 @@ package com.app.dao;
 import com.app.exception.DatabaseConnectionException;
 
 import java.sql.SQLException;
+
 import java.util.List;
 
 /**
@@ -28,14 +29,13 @@ public interface SearchQueryPreviousResultDAO {
 			int searchQueryId, String searchResultItemId)
 		throws DatabaseConnectionException, SQLException;
 
-	public void deleteSearchQueryPreviousResults(int searchQueryId)
-		throws DatabaseConnectionException, SQLException;
-
 	public void deleteSearchQueryPreviousResult(int searchQueryId)
 		throws DatabaseConnectionException, SQLException;
 
-	public List<String> getSearchQueryPreviousResults(
-			int searchQueryId)
+	public void deleteSearchQueryPreviousResults(int searchQueryId)
+		throws DatabaseConnectionException, SQLException;
+
+	public List<String> getSearchQueryPreviousResults(int searchQueryId)
 		throws DatabaseConnectionException, SQLException;
 
 	public int getSearchQueryPreviousResultsCount(int searchQueryId)

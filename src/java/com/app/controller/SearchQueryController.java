@@ -19,13 +19,15 @@ import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
+import com.app.util.SearchQueryUtil;
 
 import java.sql.SQLException;
 
 import java.util.List;
 import java.util.Map;
 
-import com.app.util.SearchQueryUtil;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +36,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Jonathan McCann
@@ -109,12 +109,20 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
+	@ExceptionHandler(Exception.class)
+	public String handleError(HttpServletRequest request, Exception exception) {
+		_log.error("Request: {}", request.getRequestURL(), exception);
+
+		return "redirect:error.jsp";
+	}
+
 	@RequestMapping(
 		value = {
 			"/query", "/search_query", "/view_search_query",
 			"/view_search_queries"
 		},
-		method = RequestMethod.GET)
+		method = RequestMethod.GET
+	)
 	public String viewSearchQueries(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
@@ -124,13 +132,6 @@ public class SearchQueryController {
 		model.put("searchQueryModels", searchQueryModels);
 
 		return "view_search_queries";
-	}
-
-	@ExceptionHandler(Exception.class)
-	public String handleError(HttpServletRequest request, Exception exception) {
-		_log.error("Request: {}", request.getRequestURL(), exception);
-
-		return "redirect:error.jsp";
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
