@@ -280,8 +280,10 @@ public class MailUtil {
 				new InternetAddress(recipientEmailAddress));
 		}
 
+		DateFormat dateFormat = _DATE_FORMAT.get();
+
 		message.setSubject(
-			"New Search Results - " + _DATE_FORMAT.format(new Date()));
+			"New Search Results - " + dateFormat.format(new Date()));
 
 		populateMessage(
 			searchQueryModel, searchResultModels, message, getEmailTemplate());
@@ -376,8 +378,16 @@ public class MailUtil {
 	private static boolean _sendViaEmail = false;
 	private static boolean _sendViaText = false;
 
-	private static final DateFormat _DATE_FORMAT = new SimpleDateFormat(
-		"MM/dd/yyyy");
+	//private static final DateFormat _DATE_FORMAT = new SimpleDateFormat(
+		//"MM/dd/yyyy");
+
+	private static final ThreadLocal<DateFormat> _DATE_FORMAT =
+		new ThreadLocal<DateFormat>() {
+			@Override
+			protected DateFormat initialValue() {
+				return new SimpleDateFormat("MM/dd/yyyy");
+			}
+		};
 
 	private static final Logger _log = LoggerFactory.getLogger(MailUtil.class);
 
