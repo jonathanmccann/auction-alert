@@ -295,7 +295,7 @@ public class MailUtil {
 			Template template)
 		throws Exception {
 
-		Map<String, Object> rootMap = new HashMap<String, Object>();
+		Map<String, Object> rootMap = new HashMap<>();
 
 		rootMap.put("searchQueryModel", searchQueryModel);
 		rootMap.put("searchResultModels", searchResultModels);
