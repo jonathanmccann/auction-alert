@@ -8,6 +8,13 @@ Configuration
 
 A "config.properties" file is required in the Catalina base directory. Please see [config.properties](https://github.com/jonathanmccann/ebay-webapp/blob/master/src/main/resources/config.properties) for a full listing of properties.
 
+Running Tests
+========
+
+In order to run the tests, the application ID and JDBC connection configuration properties need to be specified. The format to run all of the tests is the following, inserting valid information for each property:
+
+mvn clean test -Dapplication.id="${application.id}" -Djdbc.default.password="${jdbc.default.password}" -Djdbc.default.url="${jdbc.default.url}" -Djdbc.default.username="${jdbc.default.username}"
+
 License
 ========
 
