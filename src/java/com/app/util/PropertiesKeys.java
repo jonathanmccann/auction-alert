@@ -61,7 +61,7 @@ public class PropertiesKeys {
 		"send.notifications.based.on.time";
 
 	public static final String TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
-		"total.number.of.preivous.search.result.ids";
+		"total.number.of.previous.search.result.ids";
 
 	public static final String TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
 		"total.number.of.search.queries.allowed";
