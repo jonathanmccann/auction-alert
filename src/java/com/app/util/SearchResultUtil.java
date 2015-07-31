@@ -37,7 +37,37 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchResultUtil {
 
-	public static List<SearchResultModel> filterSearchResults(
+	public static void performSearch()
+		throws DatabaseConnectionException, SQLException {
+
+		List<SearchQueryModel> searchQueryModels =
+			_searchQueryDAOImpl.getSearchQueries();
+
+		_log.info(
+			"Getting eBay search results for {} search queries",
+			searchQueryModels.size());
+
+		Map<SearchQueryModel, List<SearchResultModel>> searchQueryResultMap =
+			new HashMap<>();
+
+		for (SearchQueryModel searchQueryModel : searchQueryModels) {
+			List<SearchResultModel> searchResultModels =
+				eBaySearchResult.geteBaySearchResults(searchQueryModel);
+
+			searchResultModels = _filterSearchResults(
+				searchQueryModel, searchResultModels);
+
+			if (!searchResultModels.isEmpty()) {
+				searchQueryResultMap.put(searchQueryModel, searchResultModels);
+			}
+		}
+
+		if (!searchQueryResultMap.isEmpty()) {
+			MailUtil.sendSearchResultsToRecipients(searchQueryResultMap);
+		}
+	}
+
+	private static List<SearchResultModel> _filterSearchResults(
 			SearchQueryModel searchQueryModel,
 			List<SearchResultModel> newSearchResultModels)
 		throws DatabaseConnectionException, SQLException {
@@ -69,44 +99,14 @@ public class SearchResultUtil {
 				_searchResultDAOImpl.getSearchQueryResults(
 					searchQueryModel.getSearchQueryId());
 
-			saveNewResultsAndRemoveOldResults(
+			_saveNewResultsAndRemoveOldResults(
 				existingSearchResultModels, newSearchResultModels);
 		}
 
 		return newSearchResultModels;
 	}
 
-	public static void performSearch()
-		throws DatabaseConnectionException, SQLException {
-
-		List<SearchQueryModel> searchQueryModels =
-			_searchQueryDAOImpl.getSearchQueries();
-
-		_log.info(
-			"Getting eBay search results for {} search queries",
-			searchQueryModels.size());
-
-		Map<SearchQueryModel, List<SearchResultModel>> searchQueryResultMap =
-			new HashMap<>();
-
-		for (SearchQueryModel searchQueryModel : searchQueryModels) {
-			List<SearchResultModel> searchResultModels =
-				eBaySearchResult.geteBaySearchResults(searchQueryModel);
-
-			searchResultModels = filterSearchResults(
-				searchQueryModel, searchResultModels);
-
-			if (!searchResultModels.isEmpty()) {
-				searchQueryResultMap.put(searchQueryModel, searchResultModels);
-			}
-		}
-
-		if (!searchQueryResultMap.isEmpty()) {
-			MailUtil.sendSearchResultsToRecipients(searchQueryResultMap);
-		}
-	}
-
-	public static void saveNewResultsAndRemoveOldResults(
+	private static void _saveNewResultsAndRemoveOldResults(
 			List<SearchResultModel> existingSearchResultModels,
 			List<SearchResultModel> newSearchResultModels)
 		throws DatabaseConnectionException, SQLException {
