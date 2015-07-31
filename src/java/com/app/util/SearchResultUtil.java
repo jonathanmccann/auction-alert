@@ -42,6 +42,12 @@ public class SearchResultUtil {
 		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
 
+		if (searchQueryModels.size() == 0) {
+			_log.info("There are no search queries");
+
+			return;
+		}
+
 		_log.info(
 			"Getting eBay search results for {} search queries",
 			searchQueryModels.size());
