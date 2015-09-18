@@ -1,4 +1,7 @@
 *.iml
+/build
+/gradle
+/.gradle
 /.idea
 /target
 to-do.txt
