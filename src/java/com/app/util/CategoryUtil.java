@@ -40,14 +40,14 @@ public class CategoryUtil {
 		getCategoriesCall.setLevelLimit(_ROOT_CATEGORY_LEVEL_LIMIT);
 		getCategoriesCall.setViewAllNodes(true);
 
+		CategoryType[] ebayCategories = getCategoriesCall.getCategories();
+
 		String version = getCategoriesCall.getReturnedCategoryVersion();
 
 		if (!version.equals(
 			_releaseDAOImpl.getReleaseVersion(_CATEGORY_RELEASE_NAME))) {
 
 			_categoryDAOImpl.deleteCategories();
-
-			CategoryType[] ebayCategories = getCategoriesCall.getCategories();
 
 			for (CategoryType categoryType : ebayCategories) {
 				_categoryDAOImpl.addCategory(
