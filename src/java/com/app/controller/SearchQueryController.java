@@ -89,7 +89,8 @@ public class SearchQueryController {
 		}
 		else {
 			_searchQueryDAOImpl.addSearchQuery(
-				searchQueryModel.getSearchQuery());
+				searchQueryModel.getSearchQuery(),
+				searchQueryModel.getCategoryId());
 
 			List<SearchQueryModel> searchQueryModels =
 				_searchQueryDAOImpl.getSearchQueries();
