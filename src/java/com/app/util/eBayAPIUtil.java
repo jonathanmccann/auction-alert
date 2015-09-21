@@ -14,17 +14,34 @@
 
 package com.app.util;
 
+import com.ebay.sdk.ApiContext;
+import com.ebay.sdk.ApiCredential;
 import com.ebay.services.client.ClientConfig;
 import com.ebay.services.client.FindingServiceClientFactory;
 import com.ebay.services.finding.FindingServicePortType;
+import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 /**
  * @author Jonathan McCann
  */
 public class eBayAPIUtil {
 
+	public static ApiContext getApiContext() {
+		return _apiContext;
+	}
+
 	public static FindingServicePortType getServiceClient() {
 		return _serviceClient;
+	}
+
+	public static void loadApiContext() {
+		ApiCredential apiCredential = new ApiCredential();
+		apiCredential.seteBayToken(PropertiesValues.EBAY_TOKEN);
+
+		_apiContext = new ApiContext();
+		_apiContext.setApiCredential(apiCredential);
+		_apiContext.setApiServerUrl("https://api.ebay.com/wsapi");
+		_apiContext.setSite(SiteCodeType.US);
 	}
 
 	public static void loadeBayServiceClient() {
@@ -43,6 +60,7 @@ public class eBayAPIUtil {
 		_serviceClient = FindingServiceClientFactory.getServiceClient(config);
 	}
 
+	private static ApiContext _apiContext;
 	private static FindingServicePortType _serviceClient;
 
 }

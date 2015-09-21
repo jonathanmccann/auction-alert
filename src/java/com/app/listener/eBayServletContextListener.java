@@ -50,6 +50,10 @@ public class eBayServletContextListener implements ServletContextListener {
 
 			eBayAPIUtil.loadeBayServiceClient();
 
+			_log.info("Initializing eBay API context");
+
+			eBayAPIUtil.loadApiContext();
+
 			_log.info("Loading database properties");
 
 			DatabaseUtil.loadDatabaseProperties();
