@@ -155,5 +155,5 @@ public class CategoryDAOImpl implements CategoryDAO {
 		"SELECT * FROM Category";
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		SearchQueryDAOImpl.class);
+		CategoryDAOImpl.class);
 }
