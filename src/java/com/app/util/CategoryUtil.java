@@ -16,11 +16,15 @@ package com.app.util;
 
 import com.app.dao.impl.CategoryDAOImpl;
 import com.app.dao.impl.ReleaseDAOImpl;
+
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.call.GetCategoriesCall;
 import com.ebay.soap.eBLBaseComponents.CategoryType;
 import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jonathan McCann
@@ -45,7 +49,12 @@ public class CategoryUtil {
 		String version = getCategoriesCall.getReturnedCategoryVersion();
 
 		if (!version.equals(
-			_releaseDAOImpl.getReleaseVersion(_CATEGORY_RELEASE_NAME))) {
+				_releaseDAOImpl.getReleaseVersion(_CATEGORY_RELEASE_NAME))) {
+
+			_log.info(
+				"Remove previous categories and inserting categories from " +
+					"version: {}",
+				version);
 
 			_categoryDAOImpl.deleteCategories();
 
@@ -59,12 +68,15 @@ public class CategoryUtil {
 		}
 	}
 
-	private static final CategoryDAOImpl _categoryDAOImpl =
-		new CategoryDAOImpl();
-	private static final ReleaseDAOImpl _releaseDAOImpl = new ReleaseDAOImpl();
+	private static final String _CATEGORY_RELEASE_NAME = "category";
 
 	private static final int _ROOT_CATEGORY_LEVEL_LIMIT = 1;
 
-	private static final String _CATEGORY_RELEASE_NAME = "category";
+	private static final Logger _log = LoggerFactory.getLogger(
+		CategoryUtil.class);
+
+	private static final CategoryDAOImpl _categoryDAOImpl =
+		new CategoryDAOImpl();
+	private static final ReleaseDAOImpl _releaseDAOImpl = new ReleaseDAOImpl();
 
 }

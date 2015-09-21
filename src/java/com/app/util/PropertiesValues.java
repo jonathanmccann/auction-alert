@@ -51,8 +51,9 @@ public class PropertiesValues {
 			PropertiesKeys.MAIL_SMTP_STARTTLS_ENABLE);
 
 	public static final int NUMBER_OF_SEARCH_RESULTS =
-		Integer.parseInt(PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.NUMBER_OF_SEARCH_RESULTS));
+		Integer.parseInt(
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesKeys.NUMBER_OF_SEARCH_RESULTS));
 
 	public static final String OUTBOUND_EMAIL_ADDRESS =
 		PropertiesUtil.getConfigurationProperty(
@@ -79,15 +80,18 @@ public class PropertiesValues {
 			PropertiesKeys.RECIPIENT_PHONE_NUMBERS);
 
 	public static final boolean SEND_NOTIFICATIONS_BASED_ON_TIME =
-		Boolean.valueOf(PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.SEND_NOTIFICATIONS_BASED_ON_TIME));
+		Boolean.valueOf(
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesKeys.SEND_NOTIFICATIONS_BASED_ON_TIME));
 
 	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
-		Integer.parseInt(PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS));
+		Integer.parseInt(
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesKeys.TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS));
 
 	public static final int TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
-		Integer.parseInt(PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED));
+		Integer.parseInt(
+			PropertiesUtil.getConfigurationProperty(
+				PropertiesKeys.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED));
 
 }

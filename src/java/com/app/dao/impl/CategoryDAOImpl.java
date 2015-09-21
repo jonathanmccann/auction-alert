@@ -18,15 +18,17 @@ import com.app.dao.CategoryDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.CategoryModel;
 import com.app.util.DatabaseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jonathan McCann
@@ -53,6 +55,20 @@ public class CategoryDAOImpl implements CategoryDAO {
 	}
 
 	@Override
+	public void deleteCategories()
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deleting all categories");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_CATEGORIES_SQL)) {
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@Override
 	public void deleteCategory(String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -69,16 +85,24 @@ public class CategoryDAOImpl implements CategoryDAO {
 	}
 
 	@Override
-	public void deleteCategories()
+	public List<CategoryModel> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Deleting all categories");
+		_log.debug("Getting all categories");
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_CATEGORIES_SQL)) {
+				_GET_CATEGORIES_SQL)) {
 
-			preparedStatement.executeUpdate();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				List<CategoryModel> categoryModels = new ArrayList<>();
+
+				while (resultSet.next()) {
+					categoryModels.add(createCategoryFromResultSet(resultSet));
+				}
+
+				return categoryModels;
+			}
 		}
 	}
 
@@ -105,28 +129,6 @@ public class CategoryDAOImpl implements CategoryDAO {
 		}
 	}
 
-	@Override
-	public List<CategoryModel> getCategories()
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug("Getting all categories");
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_CATEGORIES_SQL)) {
-
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<CategoryModel> categoryModels = new ArrayList<>();
-
-				while (resultSet.next()) {
-					categoryModels.add(createCategoryFromResultSet(resultSet));
-				}
-
-				return categoryModels;
-			}
-		}
-	}
-
 	private static CategoryModel createCategoryFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
@@ -142,18 +144,18 @@ public class CategoryDAOImpl implements CategoryDAO {
 	private static final String _ADD_CATEGORY_SQL =
 		"INSERT INTO Category(categoryId, categoryName) VALUES(?, ?)";
 
+	private static final String _DELETE_CATEGORIES_SQL =
+		"TRUNCATE TABLE Category";
+
 	private static final String _DELETE_CATEGORY_SQL =
 		"DELETE FROM Category WHERE categoryId = ?";
 
-	private static final String _DELETE_CATEGORIES_SQL =
-		"TRUNCATE TABLE Category";
+	private static final String _GET_CATEGORIES_SQL = "SELECT * FROM Category";
 
 	private static final String _GET_CATEGORY_SQL =
 		"SELECT * FROM Category WHERE categoryId = ?";
 
-	private static final String _GET_CATEGORIES_SQL =
-		"SELECT * FROM Category";
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryDAOImpl.class);
+
 }

@@ -62,10 +62,9 @@ public class eBaySearchResultUtil {
 			searchResults = result.getSearchResult();
 		}
 		else {
-			FindItemsAdvancedRequest request =
-				setUpAdvancedRequest(
-					searchQueryModel.getSearchQuery(),
-					searchQueryModel.getCategoryId());
+			FindItemsAdvancedRequest request = setUpAdvancedRequest(
+				searchQueryModel.getSearchQuery(),
+				searchQueryModel.getCategoryId());
 
 			FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
 				request);
@@ -77,25 +76,6 @@ public class eBaySearchResultUtil {
 
 		return createSearchResults(
 			searchItems, searchQueryModel.getSearchQueryId());
-	}
-
-	private static List<SearchResultModel> createSearchResults(
-		List<SearchItem> searchItems, int searchQueryId) {
-
-		List<SearchResultModel> searchResultModels = new ArrayList<>();
-
-		Collections.reverse(searchItems);
-
-		for (SearchItem searchItem : searchItems) {
-			SearchResultModel searchResultModel =
-				createSearchResult(searchItem);
-
-			searchResultModel.setSearchQueryId(searchQueryId);
-
-			searchResultModels.add(searchResultModel);
-		}
-
-		return searchResultModels;
 	}
 
 	private static SearchResultModel createSearchResult(SearchItem item) {
@@ -122,6 +102,25 @@ public class eBaySearchResultUtil {
 			typeOfAuction);
 
 		return searchResultModel;
+	}
+
+	private static List<SearchResultModel> createSearchResults(
+		List<SearchItem> searchItems, int searchQueryId) {
+
+		List<SearchResultModel> searchResultModels = new ArrayList<>();
+
+		Collections.reverse(searchItems);
+
+		for (SearchItem searchItem : searchItems) {
+			SearchResultModel searchResultModel = createSearchResult(
+				searchItem);
+
+			searchResultModel.setSearchQueryId(searchQueryId);
+
+			searchResultModels.add(searchResultModel);
+		}
+
+		return searchResultModels;
 	}
 
 	private static void setPrice(
@@ -152,10 +151,15 @@ public class eBaySearchResultUtil {
 		}
 	}
 
-	private static FindItemsByKeywordsRequest setUpRequest(String searchQuery) {
-		FindItemsByKeywordsRequest request = new FindItemsByKeywordsRequest();
+	private static FindItemsAdvancedRequest setUpAdvancedRequest(
+		String searchQuery, String categoryId) {
+
+		_log.info("Setting up advanced request with category");
+
+		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
 
 		request.setKeywords(searchQuery);
+		request.getCategoryId().add(categoryId);
 
 		PaginationInput paginationInput = new PaginationInput();
 		paginationInput.setEntriesPerPage(
@@ -167,13 +171,12 @@ public class eBaySearchResultUtil {
 		return request;
 	}
 
-	private static FindItemsAdvancedRequest setUpAdvancedRequest(
-		String searchQuery, String categoryId) {
+	private static FindItemsByKeywordsRequest setUpRequest(String searchQuery) {
+		_log.info("Setting up request without category");
 
-		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
+		FindItemsByKeywordsRequest request = new FindItemsByKeywordsRequest();
 
 		request.setKeywords(searchQuery);
-		request.getCategoryId().add(categoryId);
 
 		PaginationInput paginationInput = new PaginationInput();
 		paginationInput.setEntriesPerPage(

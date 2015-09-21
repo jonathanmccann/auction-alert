@@ -64,7 +64,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_QUERY_RESULTS)) {
+				_DELETE_SEARCH_QUERY_RESULTS_SQL)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -205,7 +205,7 @@ public class SearchResultDAOImpl implements SearchResultDAO {
 			"typeOfAuction, itemURL, galleryURL, endingTime, auctionPrice, " +
 				" fixedPrice) VALUES(?, ?, ? , ?, ?, ?, ?, ?, ?)";
 
-	private static final String _DELETE_SEARCH_QUERY_RESULTS =
+	private static final String _DELETE_SEARCH_QUERY_RESULTS_SQL =
 		"DELETE FROM SearchResult WHERE searchQueryId = ?";
 
 	private static final String _DELETE_SEARCH_RESULT_SQL =

@@ -29,15 +29,8 @@ import org.junit.Test;
  */
 public class ReleaseDAOTest extends BaseDatabaseTestCase {
 
-	@Override
-	public void doSetUp() throws DatabaseConnectionException {
-		_releaseDAOImpl = new ReleaseDAOImpl();
-	}
-
 	@After
-	public void after()
-		throws DatabaseConnectionException, SQLException {
-
+	public void tearDown() throws DatabaseConnectionException, SQLException {
 		String firstVersion = _releaseDAOImpl.getReleaseVersion(
 			"First Release");
 		String secondVersion = _releaseDAOImpl.getReleaseVersion(
@@ -50,6 +43,11 @@ public class ReleaseDAOTest extends BaseDatabaseTestCase {
 		if (!secondVersion.equals("")) {
 			_releaseDAOImpl.deleteRelease("Second Release");
 		}
+	}
+
+	@Override
+	public void doSetUp() throws DatabaseConnectionException {
+		_releaseDAOImpl = new ReleaseDAOImpl();
 	}
 
 	@Test
@@ -76,10 +74,8 @@ public class ReleaseDAOTest extends BaseDatabaseTestCase {
 		_releaseDAOImpl.deleteRelease("First Release");
 		_releaseDAOImpl.deleteRelease("Second Release");
 
-		firstVersion = _releaseDAOImpl.getReleaseVersion(
-			"First Release");
-		secondVersion = _releaseDAOImpl.getReleaseVersion(
-			"Second Release");
+		firstVersion = _releaseDAOImpl.getReleaseVersion("First Release");
+		secondVersion = _releaseDAOImpl.getReleaseVersion("Second Release");
 
 		Assert.assertEquals("", firstVersion);
 		Assert.assertEquals("", secondVersion);

@@ -19,8 +19,7 @@ package com.app.dao;
  */
 public interface ReleaseDAO {
 
-	public void addRelease(String releaseName, String version)
-		throws Exception;
+	public void addRelease(String releaseName, String version) throws Exception;
 
 	public void deleteRelease(String releaseName) throws Exception;
 

@@ -122,7 +122,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_QUERY)) {
+				_GET_SEARCH_QUERY_SQL)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -167,7 +167,7 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_UPDATE_SEARCH_QUERY)) {
+				_UPDATE_SEARCH_QUERY_SQL)) {
 
 			preparedStatement.setString(1, searchQuery);
 			preparedStatement.setInt(2, searchQueryId);
@@ -209,13 +209,13 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	private static final String _GET_SEARCH_QUERIES_SQL =
 		"SELECT * FROM SearchQuery";
 
-	private static final String _GET_SEARCH_QUERY =
-		"SELECT searchQuery FROM SearchQuery WHERE searchQueryId = ?";
-
 	private static final String _GET_SEARCH_QUERY_COUNT_SQL =
 		"SELECT COUNT(*) FROM SearchQuery";
 
-	private static final String _UPDATE_SEARCH_QUERY =
+	private static final String _GET_SEARCH_QUERY_SQL =
+		"SELECT searchQuery FROM SearchQuery WHERE searchQueryId = ?";
+
+	private static final String _UPDATE_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET searchQuery = ? WHERE searchQueryId = ?";
 
 	private static final String _UPDATE_SEARCH_QUERY_WITH_CATEGORY_SQL =

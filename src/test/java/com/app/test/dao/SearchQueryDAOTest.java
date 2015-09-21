@@ -103,7 +103,7 @@ public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 		_searchQueryDAOImpl.updateSearchQuery(
 			3, "Updated test search query with category ID", "300");
 
-		searchQueryModels =	_searchQueryDAOImpl.getSearchQueries();
+		searchQueryModels = _searchQueryDAOImpl.getSearchQueries();
 
 		firstSearchQueryModel = searchQueryModels.get(0);
 		thirdSearchQueryModel = searchQueryModels.get(2);

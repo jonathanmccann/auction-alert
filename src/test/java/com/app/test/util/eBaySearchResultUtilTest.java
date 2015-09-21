@@ -16,10 +16,10 @@ package com.app.test.util;
 
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
-import com.app.util.eBaySearchResultUtil;
 import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
+import com.app.util.eBaySearchResultUtil;
 
 import java.io.IOException;
 

@@ -42,7 +42,8 @@ public class SearchQueryPreviousResultDAOImpl
 
 		_log.debug(
 			"Adding {} as a new previous search query result for search " +
-				"query ID: {}", searchResultItemId, searchQueryId);
+				"query ID: {}",
+			searchResultItemId, searchQueryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -61,11 +62,12 @@ public class SearchQueryPreviousResultDAOImpl
 
 		_log.debug(
 			"Deleting the oldest previous search query results for search " +
-				"query ID: {}", searchQueryId);
+				"query ID: {}",
+			searchQueryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_QUERY_PREVIOUS_RESULT)) {
+				_DELETE_SEARCH_QUERY_PREVIOUS_RESULT_SQL)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -83,7 +85,7 @@ public class SearchQueryPreviousResultDAOImpl
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_SEARCH_QUERY_PREVIOUS_RESULTS)) {
+				_DELETE_SEARCH_QUERY_PREVIOUS_RESULTS_SQL)) {
 
 			preparedStatement.setInt(1, searchQueryId);
 
@@ -146,10 +148,10 @@ public class SearchQueryPreviousResultDAOImpl
 		"INSERT INTO SearchQueryPreviousResult(searchQueryId, " +
 			"searchResultItemId) VALUES(?, ?)";
 
-	private static final String _DELETE_SEARCH_QUERY_PREVIOUS_RESULT =
+	private static final String _DELETE_SEARCH_QUERY_PREVIOUS_RESULT_SQL =
 		"DELETE FROM SearchQueryPreviousResult WHERE searchQueryId = ? LIMIT 1";
 
-	private static final String _DELETE_SEARCH_QUERY_PREVIOUS_RESULTS =
+	private static final String _DELETE_SEARCH_QUERY_PREVIOUS_RESULTS_SQL =
 		"DELETE FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
 
 	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_COUNT_SQL =

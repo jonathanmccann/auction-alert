@@ -17,13 +17,14 @@ package com.app.dao.impl;
 import com.app.dao.ReleaseDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.util.DatabaseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jonathan McCann
@@ -35,7 +36,7 @@ public class ReleaseDAOImpl implements ReleaseDAO {
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Adding new release with name {} and version {}", releaseName,
+			"Adding new release with name: {} and version: {}", releaseName,
 			version);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
@@ -69,7 +70,7 @@ public class ReleaseDAOImpl implements ReleaseDAO {
 	public String getReleaseVersion(String releaseName)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Getting release version with name : {}", releaseName);
+		_log.debug("Getting release version with name: {}", releaseName);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -99,4 +100,5 @@ public class ReleaseDAOImpl implements ReleaseDAO {
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		ReleaseDAOImpl.class);
+
 }

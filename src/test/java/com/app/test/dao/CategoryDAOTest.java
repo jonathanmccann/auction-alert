@@ -15,10 +15,8 @@
 package com.app.test.dao;
 
 import com.app.dao.impl.CategoryDAOImpl;
-import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.CategoryModel;
-import com.app.model.SearchQueryModel;
 import com.app.test.BaseDatabaseTestCase;
 
 import java.sql.SQLException;

@@ -26,12 +26,12 @@ public interface CategoryDAO {
 	public void addCategory(String categoryId, String categoryName)
 		throws Exception;
 
-	public void deleteCategory(String categoryId) throws Exception;
-
 	public void deleteCategories() throws Exception;
 
-	public CategoryModel getCategory(String categoryId) throws Exception;
+	public void deleteCategory(String categoryId) throws Exception;
 
 	public List<CategoryModel> getCategories() throws Exception;
+
+	public CategoryModel getCategory(String categoryId) throws Exception;
 
 }
