@@ -13,7 +13,7 @@ Running Tests
 
 In order to run the tests, the application ID and JDBC connection configuration properties need to be specified. The format to run all of the tests is the following, inserting valid information for each property:
 
-mvn clean test -Dapplication.id="${application.id}" -Djdbc.default.password="${jdbc.default.password}" -Djdbc.default.url="${jdbc.default.url}" -Djdbc.default.username="${jdbc.default.username}"
+gradle test -Dapplication.id="${application.id}" -Djdbc.default.password="${jdbc.default.password}" -Djdbc.default.url="${jdbc.default.url}" -Djdbc.default.username="${jdbc.default.username}"
 
 License
 ========
