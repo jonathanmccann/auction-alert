@@ -37,7 +37,7 @@
 					<td><form:input path="searchQuery" /></td>
 					<td>
 						<form:select path="categoryId">
-							<option value="Select" label="Select a category" />
+							<form:option value=""></form:option>
 							<form:options items="${searchQueryCategories}" />
 						</form:select>
 					</td>

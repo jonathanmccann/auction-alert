@@ -88,9 +88,17 @@ public class SearchQueryController {
 			return "redirect:add_search_query";
 		}
 		else {
-			_searchQueryDAOImpl.addSearchQuery(
-				searchQueryModel.getSearchQuery(),
-				searchQueryModel.getCategoryId());
+			String categoryId = searchQueryModel.getCategoryId();
+
+			if (categoryId.equals("")) {
+				_searchQueryDAOImpl.addSearchQuery(
+					searchQueryModel.getSearchQuery());
+			}
+			else {
+				_searchQueryDAOImpl.addSearchQuery(
+					searchQueryModel.getSearchQuery(),
+					searchQueryModel.getCategoryId());
+			}
 
 			List<SearchQueryModel> searchQueryModels =
 				_searchQueryDAOImpl.getSearchQueries();
