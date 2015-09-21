@@ -41,6 +41,7 @@ public class PropertiesUtilTest {
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 
 		Assert.assertEquals("Application ID", PropertiesValues.APPLICATION_ID);
+		Assert.assertEquals("eBay Token", PropertiesValues.EBAY_TOKEN);
 		Assert.assertEquals(
 			"JDBC Default Password", PropertiesValues.JDBC_DEFAULT_PASSWORD);
 		Assert.assertEquals(
