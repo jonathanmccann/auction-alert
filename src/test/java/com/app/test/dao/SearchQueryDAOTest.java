@@ -44,6 +44,10 @@ public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 
 		_searchQueryDAOImpl.addSearchQuery("First test search query");
 		_searchQueryDAOImpl.addSearchQuery("Second test search query");
+		_searchQueryDAOImpl.addSearchQuery(
+			"Third test search query with category ID", "100");
+		_searchQueryDAOImpl.addSearchQuery(
+			"Fourth test search query with category ID", "200");
 
 		// Test get
 
@@ -56,10 +60,13 @@ public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 		List<SearchQueryModel> searchQueryModels =
 			_searchQueryDAOImpl.getSearchQueries();
 
+		Assert.assertEquals(4, searchQueryModels.size());
+
+		// Test search queries without categories
+
 		SearchQueryModel firstSearchQueryModel = searchQueryModels.get(0);
 		SearchQueryModel secondSearchQueryModel = searchQueryModels.get(1);
 
-		Assert.assertEquals(2, searchQueryModels.size());
 		Assert.assertEquals(1, firstSearchQueryModel.getSearchQueryId());
 		Assert.assertEquals(2, secondSearchQueryModel.getSearchQueryId());
 		Assert.assertEquals(
@@ -68,24 +75,55 @@ public class SearchQueryDAOTest extends BaseDatabaseTestCase {
 			"Second test search query",
 			secondSearchQueryModel.getSearchQuery());
 
+		// Test search queries with categories
+
+		SearchQueryModel thirdSearchQueryModel = searchQueryModels.get(2);
+		SearchQueryModel fourthSearchQueryModel = searchQueryModels.get(3);
+
+		Assert.assertEquals(3, thirdSearchQueryModel.getSearchQueryId());
+		Assert.assertEquals(4, fourthSearchQueryModel.getSearchQueryId());
+		Assert.assertEquals(
+			"Third test search query with category ID",
+			thirdSearchQueryModel.getSearchQuery());
+		Assert.assertEquals(
+			"Fourth test search query with category ID",
+			fourthSearchQueryModel.getSearchQuery());
+		Assert.assertEquals("100", thirdSearchQueryModel.getCategoryId());
+		Assert.assertEquals("200", fourthSearchQueryModel.getCategoryId());
+
 		// Test count
 
 		int searchQueryCount = _searchQueryDAOImpl.getSearchQueryCount();
 
-		Assert.assertEquals(2, searchQueryCount);
+		Assert.assertEquals(4, searchQueryCount);
 
 		// Test update
 
 		_searchQueryDAOImpl.updateSearchQuery(1, "Updated test search query");
+		_searchQueryDAOImpl.updateSearchQuery(
+			3, "Updated test search query with category ID", "300");
 
-		String updatedSearchQuery = _searchQueryDAOImpl.getSearchQuery(1);
+		searchQueryModels =	_searchQueryDAOImpl.getSearchQueries();
 
-		Assert.assertEquals("Updated test search query", updatedSearchQuery);
+		firstSearchQueryModel = searchQueryModels.get(0);
+		thirdSearchQueryModel = searchQueryModels.get(2);
+
+		Assert.assertEquals(
+			"Updated test search query",
+			firstSearchQueryModel.getSearchQuery());
+		Assert.assertEquals(null, firstSearchQueryModel.getCategoryId());
+
+		Assert.assertEquals(
+			"Updated test search query with category ID",
+			thirdSearchQueryModel.getSearchQuery());
+		Assert.assertEquals("300", thirdSearchQueryModel.getCategoryId());
 
 		// Test delete multiple
 
 		_searchQueryDAOImpl.deleteSearchQuery(1);
 		_searchQueryDAOImpl.deleteSearchQuery(2);
+		_searchQueryDAOImpl.deleteSearchQuery(3);
+		_searchQueryDAOImpl.deleteSearchQuery(4);
 
 		searchQueryModels = _searchQueryDAOImpl.getSearchQueries();
 

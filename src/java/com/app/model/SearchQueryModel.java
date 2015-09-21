@@ -27,12 +27,28 @@ public class SearchQueryModel {
 		_searchQuery = searchQuery;
 	}
 
+	public SearchQueryModel(
+		int searchQueryId, String searchQuery, String categoryId) {
+
+		_searchQueryId = searchQueryId;
+		_searchQuery = searchQuery;
+		_categoryId = categoryId;
+	}
+
+	public String getCategoryId() {
+		return _categoryId;
+	}
+
 	public String getSearchQuery() {
 		return _searchQuery;
 	}
 
 	public int getSearchQueryId() {
 		return _searchQueryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		_categoryId = categoryId;
 	}
 
 	public void setSearchQuery(String searchQuery) {
@@ -43,6 +59,7 @@ public class SearchQueryModel {
 		_searchQueryId = searchQueryId;
 	}
 
+	private String _categoryId;
 	private String _searchQuery;
 	private int _searchQueryId;
 

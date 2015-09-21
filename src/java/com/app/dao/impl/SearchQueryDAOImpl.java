@@ -52,6 +52,25 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 	}
 
 	@Override
+	public void addSearchQuery(String searchQuery, String categoryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Adding new searchQuery: {} with category ID: {}", searchQuery,
+			categoryId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_ADD_SEARCH_QUERY_WITH_CATEGORY_SQL)) {
+
+			preparedStatement.setString(1, searchQuery);
+			preparedStatement.setString(2, categoryId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@Override
 	public void deleteSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -82,11 +101,11 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 			while (resultSet.next()) {
 				int searchQueryId = resultSet.getInt("searchQueryId");
-
 				String searchQuery = resultSet.getString("searchQuery");
+				String categoryId = resultSet.getString("categoryId");
 
 				SearchQueryModel searchQueryModel = new SearchQueryModel(
-					searchQueryId, searchQuery);
+					searchQueryId, searchQuery, categoryId);
 
 				searchQueryModels.add(searchQueryModel);
 			}
@@ -157,8 +176,32 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 		}
 	}
 
+	@Override
+	public void updateSearchQuery(
+			int searchQueryId, String searchQuery, String categoryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Updating search query ID: {} to: {} with category ID: {}",
+			searchQueryId, searchQuery, categoryId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_UPDATE_SEARCH_QUERY_WITH_CATEGORY_SQL)) {
+
+			preparedStatement.setString(1, searchQuery);
+			preparedStatement.setString(2, categoryId);
+			preparedStatement.setInt(3, searchQueryId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	private static final String _ADD_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(searchQuery) VALUES(?)";
+
+	private static final String _ADD_SEARCH_QUERY_WITH_CATEGORY_SQL =
+		"INSERT INTO SearchQuery(searchQuery, categoryId) VALUES(?, ?)";
 
 	private static final String _DELETE_SEARCH_QUERY_SQL =
 		"DELETE FROM SearchQuery WHERE searchQueryId = ?";
@@ -174,6 +217,10 @@ public class SearchQueryDAOImpl implements SearchQueryDAO {
 
 	private static final String _UPDATE_SEARCH_QUERY =
 		"UPDATE SearchQuery SET searchQuery = ? WHERE searchQueryId = ?";
+
+	private static final String _UPDATE_SEARCH_QUERY_WITH_CATEGORY_SQL =
+		"UPDATE SearchQuery SET searchQuery = ?, categoryId = ? WHERE " +
+			"searchQueryId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryDAOImpl.class);
