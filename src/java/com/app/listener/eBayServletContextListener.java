@@ -14,12 +14,10 @@
 
 package com.app.listener;
 
-import com.app.exception.DatabaseConnectionException;
+import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.eBayAPIUtil;
-
-import java.io.IOException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -59,9 +57,13 @@ public class eBayServletContextListener implements ServletContextListener {
 			_log.info("Initializing database");
 
 			DatabaseUtil.initializeDatabase();
+
+			_log.info("Initializing categories");
+
+			CategoryUtil.initializeCategories();
 		}
-		catch (DatabaseConnectionException | IOException exception) {
-			throw new RuntimeException(exception);
+		catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
