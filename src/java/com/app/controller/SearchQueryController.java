@@ -90,7 +90,7 @@ public class SearchQueryController {
 		else {
 			String categoryId = searchQueryModel.getCategoryId();
 
-			if (categoryId.equals("")) {
+			if ((categoryId == null) || (categoryId.equals(""))) {
 				_searchQueryDAOImpl.addSearchQuery(
 					searchQueryModel.getSearchQuery());
 			}
