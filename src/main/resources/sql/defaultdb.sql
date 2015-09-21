@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	searchQuery VARCHAR(100) null
+	searchQuery VARCHAR(100) null,
+	categoryId VARCHAR(10) null
 );
 
 CREATE TABLE IF NOT EXISTS SearchResult(
