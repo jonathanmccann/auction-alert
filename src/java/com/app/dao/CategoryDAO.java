@@ -28,6 +28,8 @@ public interface CategoryDAO {
 
 	public void deleteCategory(String categoryId) throws Exception;
 
+	public void deleteCategories() throws Exception;
+
 	public CategoryModel getCategory(String categoryId) throws Exception;
 
 	public List<CategoryModel> getCategories() throws Exception;

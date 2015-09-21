@@ -78,6 +78,20 @@ public class CategoryDAOTest extends BaseDatabaseTestCase {
 		Assert.assertEquals(0, categoryModels.size());
 	}
 
+	@Test
+	public void testDeleteAllCategories()
+		throws DatabaseConnectionException, SQLException {
+
+		_categoryDAOImpl.addCategory("1", "First Category");
+		_categoryDAOImpl.addCategory("2", "Second Category");
+
+		_categoryDAOImpl.deleteCategories();
+
+		List<CategoryModel> categoryModels = _categoryDAOImpl.getCategories();
+
+		Assert.assertEquals(0, categoryModels.size());
+	}
+
 	private static CategoryDAOImpl _categoryDAOImpl;
 
 }

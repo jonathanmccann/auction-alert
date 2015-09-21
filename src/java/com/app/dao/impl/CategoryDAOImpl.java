@@ -69,6 +69,20 @@ public class CategoryDAOImpl implements CategoryDAO {
 	}
 
 	@Override
+	public void deleteCategories()
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deleting all categories");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_CATEGORIES_SQL)) {
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@Override
 	public CategoryModel getCategory(String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -130,6 +144,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 
 	private static final String _DELETE_CATEGORY_SQL =
 		"DELETE FROM Category WHERE categoryId = ?";
+
+	private static final String _DELETE_CATEGORIES_SQL =
+		"TRUNCATE TABLE Category";
 
 	private static final String _GET_CATEGORY_SQL =
 		"SELECT * FROM Category WHERE categoryId = ?";
