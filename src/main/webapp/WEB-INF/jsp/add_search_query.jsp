@@ -35,6 +35,12 @@
 				<tr>
 					<td>Search Query:</td>
 					<td><form:input path="searchQuery" /></td>
+					<td>
+						<form:select path="categoryId">
+							<option value="Select" label="Select a category" />
+							<form:options items="${searchQueryCategories}" />
+						</form:select>
+					</td>
 				</tr>
 				<tr>
 					<td align="center" colspan="2">

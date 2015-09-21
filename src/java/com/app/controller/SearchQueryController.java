@@ -14,15 +14,18 @@
 
 package com.app.controller;
 
+import com.app.dao.impl.CategoryDAOImpl;
 import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
+import com.app.model.CategoryModel;
 import com.app.model.SearchQueryModel;
 import com.app.util.SearchQueryUtil;
 
 import java.sql.SQLException;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +61,15 @@ public class SearchQueryController {
 
 			model.put("disabled", true);
 		}
+
+		Map<String, String> categories = new LinkedHashMap<>();
+
+		for (CategoryModel category : _categoryDAOImpl.getCategories()) {
+			categories.put(
+				category.getCategoryId(), category.getCategoryName());
+		}
+
+		model.put("searchQueryCategories", categories);
 
 		return "add_search_query";
 	}
@@ -137,6 +149,8 @@ public class SearchQueryController {
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
 
+	private static final CategoryDAOImpl _categoryDAOImpl =
+		new CategoryDAOImpl();
 	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
 		new SearchQueryDAOImpl();
 	private static final SearchQueryPreviousResultDAOImpl
