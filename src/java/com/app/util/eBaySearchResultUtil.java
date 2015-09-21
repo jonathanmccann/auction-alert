@@ -46,8 +46,6 @@ public class eBaySearchResultUtil {
 
 		_log.debug("Searching for: {}", searchQueryModel.getSearchQuery());
 
-		List<SearchResultModel> searchResultModels = new ArrayList<>();
-
 		FindItemsByKeywordsRequest request = setUpRequest(
 			searchQueryModel.getSearchQuery());
 
@@ -58,15 +56,24 @@ public class eBaySearchResultUtil {
 
 		SearchResult searchResults = result.getSearchResult();
 
-		List<SearchItem> items = searchResults.getItem();
+		List<SearchItem> searchItems = searchResults.getItem();
 
-		Collections.reverse(items);
+		return createSearchResults(
+			searchItems, searchQueryModel.getSearchQueryId());
+	}
 
-		for (SearchItem item : items) {
-			SearchResultModel searchResultModel = createSearchResult(item);
+	private static List<SearchResultModel> createSearchResults(
+		List<SearchItem> searchItems, int searchQueryId) {
 
-			searchResultModel.setSearchQueryId(
-				searchQueryModel.getSearchQueryId());
+		List<SearchResultModel> searchResultModels = new ArrayList<>();
+
+		Collections.reverse(searchItems);
+
+		for (SearchItem searchItem : searchItems) {
+			SearchResultModel searchResultModel =
+				createSearchResult(searchItem);
+
+			searchResultModel.setSearchQueryId(searchQueryId);
 
 			searchResultModels.add(searchResultModel);
 		}
