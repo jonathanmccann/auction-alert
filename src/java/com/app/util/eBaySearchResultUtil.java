@@ -18,6 +18,8 @@ import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
 
 import com.ebay.services.finding.Amount;
+import com.ebay.services.finding.FindItemsAdvancedRequest;
+import com.ebay.services.finding.FindItemsAdvancedResponse;
 import com.ebay.services.finding.FindItemsByKeywordsRequest;
 import com.ebay.services.finding.FindItemsByKeywordsResponse;
 import com.ebay.services.finding.FindingServicePortType;
@@ -46,15 +48,30 @@ public class eBaySearchResultUtil {
 
 		_log.debug("Searching for: {}", searchQueryModel.getSearchQuery());
 
-		FindItemsByKeywordsRequest request = setUpRequest(
-			searchQueryModel.getSearchQuery());
-
 		FindingServicePortType serviceClient = eBayAPIUtil.getServiceClient();
 
-		FindItemsByKeywordsResponse result = serviceClient.findItemsByKeywords(
-			request);
+		SearchResult searchResults = null;
 
-		SearchResult searchResults = result.getSearchResult();
+		if (searchQueryModel.getCategoryId() == null) {
+			FindItemsByKeywordsRequest request = setUpRequest(
+				searchQueryModel.getSearchQuery());
+
+			FindItemsByKeywordsResponse result =
+				serviceClient.findItemsByKeywords(request);
+
+			searchResults = result.getSearchResult();
+		}
+		else {
+			FindItemsAdvancedRequest request =
+				setUpAdvancedRequest(
+					searchQueryModel.getSearchQuery(),
+					searchQueryModel.getCategoryId());
+
+			FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
+				request);
+
+			searchResults = result.getSearchResult();
+		}
 
 		List<SearchItem> searchItems = searchResults.getItem();
 
@@ -139,6 +156,24 @@ public class eBaySearchResultUtil {
 		FindItemsByKeywordsRequest request = new FindItemsByKeywordsRequest();
 
 		request.setKeywords(searchQuery);
+
+		PaginationInput paginationInput = new PaginationInput();
+		paginationInput.setEntriesPerPage(
+			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
+
+		request.setPaginationInput(paginationInput);
+		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
+
+		return request;
+	}
+
+	private static FindItemsAdvancedRequest setUpAdvancedRequest(
+		String searchQuery, String categoryId) {
+
+		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
+
+		request.setKeywords(searchQuery);
+		request.getCategoryId().add(categoryId);
 
 		PaginationInput paginationInput = new PaginationInput();
 		paginationInput.setEntriesPerPage(
