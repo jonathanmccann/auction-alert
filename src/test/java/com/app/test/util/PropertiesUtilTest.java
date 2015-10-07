@@ -66,7 +66,7 @@ public class PropertiesUtilTest {
 		Assert.assertEquals(
 			false, PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME);
 		Assert.assertEquals(
-			15, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
+			1, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}
 
 	@Test(expected = IOException.class)
