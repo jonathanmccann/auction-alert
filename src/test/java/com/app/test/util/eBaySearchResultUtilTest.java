@@ -27,6 +27,7 @@ import com.ebay.services.finding.FindItemsAdvancedRequest;
 import com.ebay.services.finding.FindItemsByKeywordsRequest;
 import com.ebay.services.finding.ListingInfo;
 import com.ebay.services.finding.PaginationInput;
+import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
 
@@ -34,6 +35,8 @@ import java.lang.reflect.Method;
 
 import java.net.URL;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.Assert;
@@ -60,6 +63,16 @@ public class eBaySearchResultUtilTest {
 
 		_classInstance = clazz.newInstance();
 
+		_createSearchResultMethod = clazz.getDeclaredMethod(
+			"createSearchResult", SearchItem.class);
+
+		_createSearchResultMethod.setAccessible(true);
+
+		_createSearchResultsMethod = clazz.getDeclaredMethod(
+			"createSearchResults", List.class, int.class);
+
+		_createSearchResultsMethod.setAccessible(true);
+
 		_setPriceMethod = clazz.getDeclaredMethod(
 			"setPrice", SearchResultModel.class, ListingInfo.class,
 			SellingStatus.class, String.class);
@@ -75,6 +88,47 @@ public class eBaySearchResultUtilTest {
 			"setUpRequest", String.class);
 
 		_setUpRequestMethod.setAccessible(true);
+	}
+
+	@Test
+	public void testCreateSearchResult() throws Exception {
+		SearchItem searchItem = createSearchItem();
+
+		SearchResultModel searchResultModel =
+			(SearchResultModel)_createSearchResultMethod.invoke(
+				_classInstance, searchItem);
+
+		Assert.assertEquals(_ITEM_ID, searchResultModel.getItemId());
+		Assert.assertEquals(_ITEM_TITLE, searchResultModel.getItemTitle());
+		Assert.assertEquals(
+			_EBAY_URL_PREFIX + searchResultModel.getItemId(),
+			searchResultModel.getItemURL());
+		Assert.assertEquals(_GALLERY_URL, searchResultModel.getGalleryURL());
+		Assert.assertEquals(
+			_CALENDAR.getTime(), searchResultModel.getEndingTime());
+		Assert.assertEquals(_AUCTION, searchResultModel.getTypeOfAuction());
+		Assert.assertEquals(5.00, searchResultModel.getAuctionPrice(), 0);
+		Assert.assertEquals(0.00, searchResultModel.getFixedPrice(), 0);
+	}
+
+	@Test
+	public void testCreateSearchResults() throws Exception {
+		List<SearchItem> searchItems = new ArrayList<>();
+
+		searchItems.add(createSearchItem("firstItem"));
+		searchItems.add(createSearchItem("secondItem"));
+
+		List<SearchResultModel> searchResultModels =
+			(List<SearchResultModel>)_createSearchResultsMethod.invoke(
+				_classInstance, searchItems, 1);
+
+		Assert.assertEquals(2, searchResultModels.size());
+
+		SearchResultModel firstSearchResultModel = searchResultModels.get(0);
+		SearchResultModel secondSearchResultModel = searchResultModels.get(1);
+
+		Assert.assertEquals("secondItem", firstSearchResultModel.getItemId());
+		Assert.assertEquals("firstItem", secondSearchResultModel.getItemId());
 	}
 
 	@Test
@@ -209,6 +263,31 @@ public class eBaySearchResultUtilTest {
 		return listingInfo;
 	}
 
+	private static SearchItem createSearchItem(String itemId) {
+		SearchItem searchItem = new SearchItem();
+
+		if ((itemId == null) || (itemId.equals(""))) {
+			itemId = _ITEM_ID;
+		}
+
+		ListingInfo listingInfo = createListingInfo();
+
+		listingInfo.setEndTime(_CALENDAR);
+		listingInfo.setListingType(_AUCTION);
+
+		searchItem.setGalleryURL(_GALLERY_URL);
+		searchItem.setItemId(itemId);
+		searchItem.setListingInfo(listingInfo);
+		searchItem.setTitle(_ITEM_TITLE);
+		searchItem.setSellingStatus(createSellingStatus());
+
+		return searchItem;
+	}
+
+	private static SearchItem createSearchItem() {
+		return createSearchItem(null);
+	}
+
 	private static SellingStatus createSellingStatus() {
 		Amount currentPrice = new Amount();
 		currentPrice.setValue(5.00);
@@ -219,6 +298,10 @@ public class eBaySearchResultUtilTest {
 		return sellingStatus;
 	}
 
+	private static final Calendar _CALENDAR = Calendar.getInstance();
+
+	private static Method _createSearchResultMethod;
+	private static Method _createSearchResultsMethod;
 	private static Method _setPriceMethod;
 	private static Method _setUpAdvanceRequestMethod;
 	private static Method _setUpRequestMethod;
@@ -227,7 +310,11 @@ public class eBaySearchResultUtilTest {
 
 	private static final String _AUCTION = "Auction";
 	private static final String _AUCTION_WITH_BIN = "AuctionWithBIN";
+	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 	private static final String _FIXED_PRICE = "FixedPrice";
+	private static final String _GALLERY_URL = "http://www.test.com";
+	private static final String _ITEM_ID = "itemId";
+	private static final String _ITEM_TITLE = "Item Title";
 	private static final String _STORE_INVENTORY = "StoreInventory";
 	private static final String _UNKNOWN = "Unknown";
 
