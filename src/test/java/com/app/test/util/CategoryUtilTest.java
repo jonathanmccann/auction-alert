@@ -12,12 +12,12 @@
  * details.
  */
 
-package com.app.test.dao;
+package com.app.test.util;
 
-import com.app.dao.impl.CategoryDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.CategoryModel;
 import com.app.test.BaseDatabaseTestCase;
+import com.app.util.CategoryUtil;
 
 import java.sql.SQLException;
 
@@ -25,35 +25,40 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author Jonathan McCann
  */
-public class CategoryDAOTest extends BaseDatabaseTestCase {
+@ContextConfiguration("/test-dispatcher-servlet.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+public class CategoryUtilTest extends BaseDatabaseTestCase {
 
 	@Override
 	public void doSetUp() throws DatabaseConnectionException {
-		_categoryDAOImpl = new CategoryDAOImpl();
 	}
 
 	@Test
-	public void testCategoryDAO()
+	public void testCategoryUtil()
 		throws DatabaseConnectionException, SQLException {
 
 		// Test add
 
-		_categoryDAOImpl.addCategory("1", "First Category");
-		_categoryDAOImpl.addCategory("2", "Second Category");
+		CategoryUtil.addCategory("1", "First Category");
+		CategoryUtil.addCategory("2", "Second Category");
 
 		// Test get
 
-		CategoryModel category = _categoryDAOImpl.getCategory("1");
+		CategoryModel category = CategoryUtil.getCategory("1");
 
 		Assert.assertEquals("First Category", category.getCategoryName());
 
 		// Test get multiple
 
-		List<CategoryModel> categoryModels = _categoryDAOImpl.getCategories();
+		List<CategoryModel> categoryModels = CategoryUtil.getCategories();
 
 		CategoryModel firstCategoryModel = categoryModels.get(0);
 		CategoryModel secondCategoryModel = categoryModels.get(1);
@@ -68,10 +73,10 @@ public class CategoryDAOTest extends BaseDatabaseTestCase {
 
 		// Test delete multiple
 
-		_categoryDAOImpl.deleteCategory("1");
-		_categoryDAOImpl.deleteCategory("2");
+		CategoryUtil.deleteCategory("1");
+		CategoryUtil.deleteCategory("2");
 
-		categoryModels = _categoryDAOImpl.getCategories();
+		categoryModels = CategoryUtil.getCategories();
 
 		Assert.assertEquals(0, categoryModels.size());
 	}
@@ -80,16 +85,14 @@ public class CategoryDAOTest extends BaseDatabaseTestCase {
 	public void testDeleteAllCategories()
 		throws DatabaseConnectionException, SQLException {
 
-		_categoryDAOImpl.addCategory("1", "First Category");
-		_categoryDAOImpl.addCategory("2", "Second Category");
+		CategoryUtil.addCategory("1", "First Category");
+		CategoryUtil.addCategory("2", "Second Category");
 
-		_categoryDAOImpl.deleteCategories();
+		CategoryUtil.deleteCategories();
 
-		List<CategoryModel> categoryModels = _categoryDAOImpl.getCategories();
+		List<CategoryModel> categoryModels = CategoryUtil.getCategories();
 
 		Assert.assertEquals(0, categoryModels.size());
 	}
-
-	private static CategoryDAOImpl _categoryDAOImpl;
 
 }

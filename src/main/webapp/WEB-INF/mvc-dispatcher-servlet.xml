@@ -16,14 +16,14 @@
 	<task:annotation-driven />
 	<bean id="scheduledTasks" class="com.app.eBaySearch" />
 
-	<context:component-scan	base-package="com.app.controller" />
+	<context:component-scan	base-package="com.app" />
 
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 
-	<bean id="categoryDAOImpl" class="com.app.dao.impl.CategoryDAOImpl" />
+	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
 	<bean id="releaseDaoImpl" class="com.app.dao.impl.ReleaseDAOImpl" />
 	<bean id="searchQueryDAOImpl" class="com.app.dao.impl.SearchQueryDAOImpl" />
 	<bean id="searchQueryPreviousResultDAOImpl" class="com.app.dao.impl.SearchQueryPreviousResultDAOImpl" />

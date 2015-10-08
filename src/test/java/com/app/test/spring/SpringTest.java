@@ -14,7 +14,7 @@
 
 package com.app.test.spring;
 
-import com.app.dao.impl.CategoryDAOImpl;
+import com.app.dao.CategoryDAO;
 import com.app.dao.impl.ReleaseDAOImpl;
 import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
@@ -35,7 +35,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SpringTest {
 
 	@Autowired
-	CategoryDAOImpl categoryDAOImpl;
+	CategoryDAO categoryDAO;
 
 	@Autowired
 	ReleaseDAOImpl releaseDAOImpl;
@@ -50,8 +50,8 @@ public class SpringTest {
 	SearchResultDAOImpl searchResultDAOImpl;
 
 	@Test
-	public void testCategoryDAOImpl() {
-		Assert.assertNotNull(categoryDAOImpl);
+	public void testCategoryDAO() {
+		Assert.assertNotNull(categoryDAO);
 	}
 
 	@Test
