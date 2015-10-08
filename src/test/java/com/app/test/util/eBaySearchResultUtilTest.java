@@ -16,10 +16,8 @@ package com.app.test.util;
 
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
-import com.app.util.PropertiesKeys;
-import com.app.util.PropertiesUtil;
+import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
-import com.app.util.eBayAPIUtil;
 import com.app.util.eBaySearchResultUtil;
 
 import com.ebay.services.finding.Amount;
@@ -33,8 +31,6 @@ import com.ebay.services.finding.SortOrderType;
 
 import java.lang.reflect.Method;
 
-import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,24 +38,21 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author Jonathan McCann
  */
-public class eBaySearchResultUtilTest {
+@ContextConfiguration("/test-dispatcher-servlet.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+public class eBaySearchResultUtilTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		Class<?> clazz = getClass();
-
-		URL resource = clazz.getResource("/test-config.properties");
-
-		PropertiesUtil.loadConfigurationProperties(resource.getPath());
-
-		eBayAPIUtil.loadeBayServiceClient(
-			System.getProperty(PropertiesKeys.APPLICATION_ID));
-
-		clazz = Class.forName(eBaySearchResultUtil.class.getName());
+		Class<?> clazz = Class.forName(eBaySearchResultUtil.class.getName());
 
 		_classInstance = clazz.newInstance();
 

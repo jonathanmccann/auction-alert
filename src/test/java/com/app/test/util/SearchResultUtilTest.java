@@ -16,7 +16,7 @@ package com.app.test.util;
 
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResultModel;
-import com.app.test.BaseDatabaseTestCase;
+import com.app.test.BaseTestCase;
 import com.app.util.SearchResultUtil;
 
 import java.sql.SQLException;
@@ -37,7 +37,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchResultUtilTest extends BaseDatabaseTestCase {
+public class SearchResultUtilTest extends BaseTestCase {
 
 	@After
 	public void tearDown() throws Exception {

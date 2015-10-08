@@ -16,6 +16,7 @@ package com.app.test.util;
 
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
+import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
@@ -46,16 +47,10 @@ import org.junit.Test;
 /**
  * @author Jonathan McCann
  */
-public class MailUtilTest {
+public class MailUtilTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		Class<?> clazz = getClass();
-
-		URL resource = clazz.getResource("/test-config.properties");
-
-		PropertiesUtil.loadConfigurationProperties(resource.getPath());
-
 		_properties = PropertiesUtil.getConfigurationProperties();
 
 		_clazz = Class.forName(MailUtil.class.getName());

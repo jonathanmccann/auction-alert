@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.test.BaseDatabaseTestCase;
+import com.app.test.BaseTestCase;
 import com.app.util.PropertiesUtil;
 import com.app.util.SearchQueryUtil;
 
@@ -45,17 +45,11 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class SearchQueryControllerTest extends BaseDatabaseTestCase {
+public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Override
 	public void doSetUp() throws DatabaseConnectionException, IOException {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-
-		Class<?> clazz = getClass();
-
-		URL resource = clazz.getResource("/test-config.properties");
-
-		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 	}
 
 	@After

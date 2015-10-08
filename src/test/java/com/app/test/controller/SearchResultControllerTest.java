@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.test.BaseDatabaseTestCase;
+import com.app.test.BaseTestCase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class SearchResultControllerTest extends BaseDatabaseTestCase {
+public class SearchResultControllerTest extends BaseTestCase {
 
 	@Override
 	public void doSetUp() throws DatabaseConnectionException {

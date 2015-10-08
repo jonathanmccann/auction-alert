@@ -17,16 +17,32 @@ package com.app.test;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 
+import com.app.util.PropertiesUtil;
+import com.app.util.eBayAPIUtil;
 import org.junit.Before;
+
+import java.net.URL;
 
 /**
  * @author Jonathan McCann
  */
-public abstract class BaseDatabaseTestCase {
+public abstract class BaseTestCase {
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUpeBayTestCase() throws Exception {
 		if (!_isInitialized) {
+			Class<?> clazz = getClass();
+
+			URL resource = clazz.getResource("/test-config.properties");
+
+			PropertiesUtil.loadConfigurationProperties(resource.getPath());
+
+			eBayAPIUtil.loadeBayServiceClient(
+				System.getProperty(PropertiesKeys.APPLICATION_ID));
+
+			eBayAPIUtil.loadApiContext(
+				System.getProperty(PropertiesKeys.EBAY_TOKEN));
+
 			String databasePassword = System.getProperty(
 				PropertiesKeys.JDBC_DEFAULT_PASSWORD);
 			String databaseURL = System.getProperty(

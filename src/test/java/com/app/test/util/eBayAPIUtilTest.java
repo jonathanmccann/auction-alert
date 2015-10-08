@@ -14,37 +14,21 @@
 
 package com.app.test.util;
 
-import com.app.util.PropertiesUtil;
-import com.app.util.PropertiesValues;
+import com.app.test.BaseTestCase;
+import com.app.util.PropertiesKeys;
 import com.app.util.eBayAPIUtil;
 
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.ApiCredential;
-import com.ebay.services.finding.FindingServicePortType;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.net.URL;
 
 /**
  * @author Jonathan McCann
  */
-public class eBayAPIUtilTest {
-
-	@Before
-	public void setUp() throws Exception {
-		Class<?> clazz = getClass();
-
-		URL resource = clazz.getResource("/test-config.properties");
-
-		PropertiesUtil.loadConfigurationProperties(resource.getPath());
-
-		eBayAPIUtil.loadApiContext();
-		eBayAPIUtil.loadeBayServiceClient();
-	}
+public class eBayAPIUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetApiContext() {
@@ -53,7 +37,8 @@ public class eBayAPIUtilTest {
 		ApiCredential apiCredential = apiContext.getApiCredential();
 
 		Assert.assertEquals(
-			PropertiesValues.EBAY_TOKEN, apiCredential.geteBayToken());
+			System.getProperty(PropertiesKeys.EBAY_TOKEN),
+			apiCredential.geteBayToken());
 		Assert.assertEquals(_API_SERVER_URL, apiContext.getApiServerUrl());
 		Assert.assertEquals(SiteCodeType.US, apiContext.getSite());
 	}

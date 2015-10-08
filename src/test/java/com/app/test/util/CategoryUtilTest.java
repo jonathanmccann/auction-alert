@@ -15,14 +15,9 @@
 package com.app.test.util;
 
 import com.app.model.CategoryModel;
-import com.app.test.BaseDatabaseTestCase;
+import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
-import com.app.util.PropertiesKeys;
-import com.app.util.PropertiesUtil;
 import com.app.util.ReleaseUtil;
-import com.app.util.eBayAPIUtil;
-
-import java.net.URL;
 
 import java.util.List;
 
@@ -41,19 +36,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CategoryUtilTest extends BaseDatabaseTestCase {
-
-	@Override
-	public void doSetUp() throws Exception {
-		Class<?> clazz = getClass();
-
-		URL resource = clazz.getResource("/test-config.properties");
-
-		PropertiesUtil.loadConfigurationProperties(resource.getPath());
-
-		eBayAPIUtil.loadApiContext(
-			System.getProperty(PropertiesKeys.EBAY_TOKEN));
-	}
+public class CategoryUtilTest extends BaseTestCase {
 
 	@After
 	public void tearDown() throws Exception {
