@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.app.test.dao;
+package com.app.test.util;
 
-import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.test.BaseDatabaseTestCase;
+import com.app.util.SearchQueryPreviousResultUtil;
 
 import java.sql.SQLException;
 
@@ -29,31 +29,29 @@ import org.junit.Test;
 /**
  * @author Jonathan McCann
  */
-public class SearchQueryPreviousResultDAOTest extends BaseDatabaseTestCase {
+public class SearchQueryPreviousResultUtilTest extends BaseDatabaseTestCase {
 
 	@Override
 	public void doSetUp() throws DatabaseConnectionException {
-		_searchQueryPreviousResultDAOImpl =
-			new SearchQueryPreviousResultDAOImpl();
 	}
 
 	@Test
-	public void testSearchQueryDAO()
+	public void testSearchQueryPreviousResultUtil()
 		throws DatabaseConnectionException, SQLException {
 
 		// Test add
 
-		_searchQueryPreviousResultDAOImpl.addSearchQueryPreviousResult(
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			1, "1234");
-		_searchQueryPreviousResultDAOImpl.addSearchQueryPreviousResult(
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			1, "2345");
-		_searchQueryPreviousResultDAOImpl.addSearchQueryPreviousResult(
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			1, "3456");
 
 		// Test get
 
 		List<String> searchQueryPreviousResults =
-			_searchQueryPreviousResultDAOImpl.getSearchQueryPreviousResults(1);
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
 
 		List<String> expectedSearchQueryPreviousResults = new ArrayList<>();
 
@@ -67,17 +65,17 @@ public class SearchQueryPreviousResultDAOTest extends BaseDatabaseTestCase {
 		// Test get count
 
 		int searchQueryPreviousResultsCount =
-			_searchQueryPreviousResultDAOImpl.
+			SearchQueryPreviousResultUtil.
 				getSearchQueryPreviousResultsCount(1);
 
 		Assert.assertEquals(3, searchQueryPreviousResultsCount);
 
 		// Test delete oldest entry
 
-		_searchQueryPreviousResultDAOImpl.deleteSearchQueryPreviousResult(1);
+		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResult(1);
 
 		searchQueryPreviousResults =
-			_searchQueryPreviousResultDAOImpl.getSearchQueryPreviousResults(1);
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
 
 		Assert.assertEquals(2, searchQueryPreviousResults.size());
 
@@ -88,15 +86,12 @@ public class SearchQueryPreviousResultDAOTest extends BaseDatabaseTestCase {
 
 		// Test delete all entries
 
-		_searchQueryPreviousResultDAOImpl.deleteSearchQueryPreviousResults(1);
+		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(1);
 
 		searchQueryPreviousResults =
-			_searchQueryPreviousResultDAOImpl.getSearchQueryPreviousResults(1);
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
 
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
 	}
-
-	private static SearchQueryPreviousResultDAOImpl
-		_searchQueryPreviousResultDAOImpl;
 
 }

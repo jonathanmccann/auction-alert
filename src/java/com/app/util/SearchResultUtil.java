@@ -14,7 +14,6 @@
 
 package com.app.util;
 
-import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
@@ -77,7 +76,7 @@ public class SearchResultUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		List<String> searchQueryPreviousResults =
-			_searchQueryPreviousResultDAOImpl.getSearchQueryPreviousResults(
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
 				searchQueryModel.getSearchQueryId());
 
 		Iterator iterator = newSearchResultModels.iterator();
@@ -132,7 +131,7 @@ public class SearchResultUtil {
 			_searchResultDAOImpl.addSearchResult(searchResultModel);
 
 			int searchQueryPreviousResultsCount =
-				_searchQueryPreviousResultDAOImpl.
+				SearchQueryPreviousResultUtil.
 					getSearchQueryPreviousResultsCount(
 						searchResultModel.getSearchQueryId());
 
@@ -140,12 +139,12 @@ public class SearchResultUtil {
 					PropertiesValues.
 						TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS) {
 
-				_searchQueryPreviousResultDAOImpl.
+				SearchQueryPreviousResultUtil.
 					deleteSearchQueryPreviousResult(
 						searchResultModel.getSearchQueryId());
 			}
 
-			_searchQueryPreviousResultDAOImpl.addSearchQueryPreviousResult(
+			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 				searchResultModel.getSearchQueryId(),
 				searchResultModel.getItemId());
 		}
@@ -154,9 +153,6 @@ public class SearchResultUtil {
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultUtil.class);
 
-	private static final
-		SearchQueryPreviousResultDAOImpl _searchQueryPreviousResultDAOImpl =
-			new SearchQueryPreviousResultDAOImpl();
 	private static final SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
 

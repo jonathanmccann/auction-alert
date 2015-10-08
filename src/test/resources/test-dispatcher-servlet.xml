@@ -17,6 +17,6 @@
 	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
 	<bean id="releaseDao" class="com.app.dao.ReleaseDAO" />
 	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
-	<bean id="searchQueryPreviousResultDAOImpl" class="com.app.dao.impl.SearchQueryPreviousResultDAOImpl" />
+	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
 	<bean id="searchResultDAOImpl" class="com.app.dao.impl.SearchResultDAOImpl" />
 </beans>

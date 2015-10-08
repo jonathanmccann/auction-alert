@@ -14,12 +14,12 @@
 
 package com.app.controller;
 
-import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.CategoryModel;
 import com.app.model.SearchQueryModel;
 import com.app.util.CategoryUtil;
+import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 
 import java.sql.SQLException;
@@ -121,8 +121,8 @@ public class SearchQueryController {
 				_searchResultDAOImpl.deleteSearchQueryResults(
 					searchQueryIdInteger);
 
-				_searchQueryPreviousResultDAOImpl.
-					deleteSearchQueryPreviousResults(searchQueryIdInteger);
+				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
+					searchQueryIdInteger);
 			}
 		}
 
@@ -157,9 +157,6 @@ public class SearchQueryController {
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
 
-	private static final SearchQueryPreviousResultDAOImpl
-		_searchQueryPreviousResultDAOImpl =
-			new SearchQueryPreviousResultDAOImpl();
 	private static final SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
 
