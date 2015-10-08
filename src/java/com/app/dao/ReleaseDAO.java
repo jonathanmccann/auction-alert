@@ -63,6 +63,19 @@ public class ReleaseDAO {
 		}
 	}
 
+	public void deleteReleases()
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deleting all releases");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_RELEASES_SQL)) {
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	public String getReleaseVersion(String releaseName)
 		throws DatabaseConnectionException, SQLException {
 
@@ -90,6 +103,9 @@ public class ReleaseDAO {
 
 	private static final String _DELETE_RELEASE_SQL =
 		"DELETE FROM Release_ WHERE releaseName = ?";
+
+	private static final String _DELETE_RELEASES_SQL =
+		"TRUNCATE TABLE Release_";
 
 	private static final String _GET_RELEASE_VERSION_SQL =
 		"SELECT version FROM Release_ WHERE releaseName = ?";

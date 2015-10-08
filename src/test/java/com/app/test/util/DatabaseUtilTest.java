@@ -21,6 +21,7 @@ import com.app.util.PropertiesKeys;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,6 +29,19 @@ import org.junit.Test;
  * @author Jonathan McCann
  */
 public class DatabaseUtilTest {
+
+	@AfterClass
+	public static void tearDown() {
+		String databasePassword = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+		String databaseURL = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_URL);
+		String databaseUsername = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+
+		DatabaseUtil.setDatabaseProperties(
+			databaseURL, databaseUsername, databasePassword);
+	}
 
 	@Test
 	public void testGetDatabaseConnection()

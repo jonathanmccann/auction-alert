@@ -26,17 +26,21 @@ public abstract class BaseDatabaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		String databasePassword = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
-		String databaseURL = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+		if (!_isInitialized) {
+			String databasePassword = System.getProperty(
+				PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+			String databaseURL = System.getProperty(
+				PropertiesKeys.JDBC_DEFAULT_URL);
+			String databaseUsername = System.getProperty(
+				PropertiesKeys.JDBC_DEFAULT_USERNAME);
 
-		DatabaseUtil.setDatabaseProperties(
-			databaseURL, databaseUsername, databasePassword);
+			DatabaseUtil.setDatabaseProperties(
+				databaseURL, databaseUsername, databasePassword);
 
-		DatabaseUtil.initializeDatabase(_TEST_DATABASE_PATH);
+			DatabaseUtil.initializeDatabase(_TEST_DATABASE_PATH);
+
+			_isInitialized = true;
+		}
 
 		doSetUp();
 	}
@@ -46,4 +50,5 @@ public abstract class BaseDatabaseTestCase {
 
 	private static final String _TEST_DATABASE_PATH = "/sql/testdb.sql";
 
+	private static boolean _isInitialized;
 }

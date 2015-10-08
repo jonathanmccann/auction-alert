@@ -21,11 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.app.exception.DatabaseConnectionException;
 import com.app.test.BaseDatabaseTestCase;
 import com.app.util.PropertiesUtil;
+import com.app.util.SearchQueryUtil;
 
 import java.io.IOException;
 
 import java.net.URL;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -54,6 +56,11 @@ public class SearchQueryControllerTest extends BaseDatabaseTestCase {
 		URL resource = clazz.getResource("/test-config.properties");
 
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		SearchQueryUtil.deleteSearchQueries();
 	}
 
 	@Test

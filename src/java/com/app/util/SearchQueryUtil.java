@@ -41,6 +41,12 @@ public class SearchQueryUtil {
 		_searchQueryDAO.addSearchQuery(searchQuery, categoryId);
 	}
 
+	public static void deleteSearchQueries()
+		throws DatabaseConnectionException, SQLException {
+
+		_searchQueryDAO.deleteSearchQueries();
+	}
+
 	public static void deleteSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 

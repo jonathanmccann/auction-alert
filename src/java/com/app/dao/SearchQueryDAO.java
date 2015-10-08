@@ -67,6 +67,19 @@ public class SearchQueryDAO {
 		}
 	}
 
+	public void deleteSearchQueries()
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deleting all search query");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_SEARCH_QUERIES_SQL)) {
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	public void deleteSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -193,6 +206,9 @@ public class SearchQueryDAO {
 
 	private static final String _ADD_SEARCH_QUERY_WITH_CATEGORY_SQL =
 		"INSERT INTO SearchQuery(searchQuery, categoryId) VALUES(?, ?)";
+
+	private static final String _DELETE_SEARCH_QUERIES_SQL =
+		"TRUNCATE TABLE SearchQuery";
 
 	private static final String _DELETE_SEARCH_QUERY_SQL =
 		"DELETE FROM SearchQuery WHERE searchQueryId = ?";

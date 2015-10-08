@@ -24,13 +24,26 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author Jonathan McCann
  */
+@ContextConfiguration("/test-dispatcher-servlet.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchResultUtilTest extends BaseDatabaseTestCase {
+
+	@After
+	public void tearDown() throws Exception {
+		SearchResultUtil.deleteSearchQueryResults(1);
+		SearchResultUtil.deleteSearchQueryResults(2);
+	}
 
 	@Test
 	public void testSearchResultUtil()

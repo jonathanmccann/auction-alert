@@ -19,6 +19,7 @@ import com.app.test.BaseDatabaseTestCase;
 import com.app.util.CategoryUtil;
 import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
+import com.app.util.ReleaseUtil;
 import com.app.util.eBayAPIUtil;
 
 import java.net.URL;
@@ -27,8 +28,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,8 +43,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CategoryUtilTest extends BaseDatabaseTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@Override
+	public void doSetUp() throws Exception {
 		Class<?> clazz = getClass();
 
 		URL resource = clazz.getResource("/test-config.properties");
@@ -52,8 +53,13 @@ public class CategoryUtilTest extends BaseDatabaseTestCase {
 
 		eBayAPIUtil.loadApiContext(
 			System.getProperty(PropertiesKeys.EBAY_TOKEN));
+	}
 
+	@After
+	public void tearDown() throws Exception {
 		CategoryUtil.deleteCategories();
+
+		ReleaseUtil.deleteRelease(_RELEASE_CATEGORY_NAME);
 	}
 
 	@Test
@@ -72,8 +78,12 @@ public class CategoryUtilTest extends BaseDatabaseTestCase {
 
 	@Test
 	public void testDeleteCategories() throws Exception {
-		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
-		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
+		addCategory(
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5));
+		addCategory(
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5));
 
 		CategoryUtil.deleteCategories();
 
@@ -95,8 +105,12 @@ public class CategoryUtilTest extends BaseDatabaseTestCase {
 
 	@Test
 	public void testGetCategories() throws Exception {
-		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
-		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
+		addCategory(
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5));
+		addCategory(
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5));
 
 		List<CategoryModel> categories = CategoryUtil.getCategories();
 
@@ -132,7 +146,8 @@ public class CategoryUtilTest extends BaseDatabaseTestCase {
 		CategoryUtil.addCategory(categoryId, categoryName);
 	}
 
-	public static final String _CATEGORY_ID = "categoryId";
-	public static final String _CATEGORY_NAME = "categoryName";
+	private static final String _CATEGORY_ID = "categoryId";
+	private static final String _CATEGORY_NAME = "categoryName";
+	private static final String _RELEASE_CATEGORY_NAME = "category";
 
 }
