@@ -14,7 +14,7 @@
 
 package com.app.util;
 
-import com.app.dao.impl.SearchResultDAOImpl;
+import com.app.dao.SearchResultDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
@@ -29,11 +29,50 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 /**
  * @author Jonathan McCann
  */
+@Service
 public class SearchResultUtil {
 
+	public static void addSearchResult(SearchResultModel searchResultModel)
+		throws DatabaseConnectionException, SQLException {
+
+		_searchResultDAO.addSearchResult(searchResultModel);
+	}
+
+	public static void deleteSearchQueryResults(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_searchResultDAO.deleteSearchQueryResults(searchQueryId);
+	}
+
+	public static void deleteSearchResult(int searchResultId)
+		throws DatabaseConnectionException, SQLException {
+
+		_searchResultDAO.deleteSearchResult(searchResultId);
+	}
+
+	public static List<SearchResultModel> getSearchQueryResults(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		return _searchResultDAO.getSearchQueryResults(searchQueryId);
+	}
+
+	public static SearchResultModel getSearchResult(int searchResultId)
+		throws DatabaseConnectionException, SQLException {
+
+		return _searchResultDAO.getSearchResult(searchResultId);
+	}
+
+	public static List<SearchResultModel> getSearchResults()
+		throws DatabaseConnectionException, SQLException {
+
+		return _searchResultDAO.getSearchResults();
+	}
 	public static void performSearch()
 		throws DatabaseConnectionException, SQLException {
 
@@ -99,7 +138,7 @@ public class SearchResultUtil {
 				searchQueryModel.getSearchQuery());
 
 			List<SearchResultModel> existingSearchResultModels =
-				_searchResultDAOImpl.getSearchQueryResults(
+				getSearchQueryResults(
 					searchQueryModel.getSearchQueryId());
 
 			_saveNewResultsAndRemoveOldResults(
@@ -122,13 +161,13 @@ public class SearchResultUtil {
 				SearchResultModel searchResult = existingSearchResultModels.get(
 					i);
 
-				_searchResultDAOImpl.deleteSearchResult(
+				deleteSearchResult(
 					searchResult.getSearchResultId());
 			}
 		}
 
 		for (SearchResultModel searchResultModel : newSearchResultModels) {
-			_searchResultDAOImpl.addSearchResult(searchResultModel);
+			addSearchResult(searchResultModel);
 
 			int searchQueryPreviousResultsCount =
 				SearchQueryPreviousResultUtil.
@@ -150,10 +189,16 @@ public class SearchResultUtil {
 		}
 	}
 
+	@Autowired
+	public void setSearchQueryPreviousResultDAO(
+		SearchResultDAO searchResultDAO) {
+
+		_searchResultDAO = searchResultDAO;
+	}
+
+	private static SearchResultDAO _searchResultDAO;
+
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultUtil.class);
-
-	private static final SearchResultDAOImpl _searchResultDAOImpl =
-		new SearchResultDAOImpl();
 
 }

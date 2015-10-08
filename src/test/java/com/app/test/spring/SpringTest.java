@@ -18,7 +18,7 @@ import com.app.dao.CategoryDAO;
 import com.app.dao.ReleaseDAO;
 import com.app.dao.SearchQueryDAO;
 import com.app.dao.SearchQueryPreviousResultDAO;
-import com.app.dao.impl.SearchResultDAOImpl;
+import com.app.dao.SearchResultDAO;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class SpringTest {
 	SearchQueryPreviousResultDAO searchQueryPreviousResultDAO;
 
 	@Autowired
-	SearchResultDAOImpl searchResultDAOImpl;
+	SearchResultDAO searchResultDAO;
 
 	@Test
 	public void testCategoryDAO() {
@@ -71,7 +71,7 @@ public class SpringTest {
 	}
 
 	@Test
-	public void testSearchResultDAOImpl() {
-		Assert.assertNotNull(searchResultDAOImpl);
+	public void testSearchResultDAO() {
+		Assert.assertNotNull(searchResultDAO);
 	}
 }

@@ -27,7 +27,7 @@
 	<bean id="releaseDao" class="com.app.dao.ReleaseDAO" />
 	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
 	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
-	<bean id="searchResultDAOImpl" class="com.app.dao.impl.SearchResultDAOImpl" />
+	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
 
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 

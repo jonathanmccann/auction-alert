@@ -12,12 +12,12 @@
  * details.
  */
 
-package com.app.test.dao;
+package com.app.test.util;
 
-import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResultModel;
 import com.app.test.BaseDatabaseTestCase;
+import com.app.util.SearchResultUtil;
 
 import java.sql.SQLException;
 
@@ -30,15 +30,14 @@ import org.junit.Test;
 /**
  * @author Jonathan McCann
  */
-public class SearchResultDAOTest extends BaseDatabaseTestCase {
+public class SearchResultUtilTest extends BaseDatabaseTestCase {
 
 	@Override
 	public void doSetUp() throws DatabaseConnectionException {
-		_searchResultDAOImpl = new SearchResultDAOImpl();
 	}
 
 	@Test
-	public void testSearchResultDAO()
+	public void testSearchResultUtil()
 		throws DatabaseConnectionException, SQLException {
 
 		// Test add with constructor
@@ -50,18 +49,18 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
 			endingTime, "Auction");
 
-		_searchResultDAOImpl.addSearchResult(searchResultModel);
+		SearchResultUtil.addSearchResult(searchResultModel);
 
 		searchResultModel = new SearchResultModel(
 			2, "2345", "Second Item", 14.99, 14.99,
 			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
 			endingTime, "FixedPrice");
 
-		_searchResultDAOImpl.addSearchResult(searchResultModel);
+		SearchResultUtil.addSearchResult(searchResultModel);
 
 		// Test get
 
-		SearchResultModel searchResult = _searchResultDAOImpl.getSearchResult(
+		SearchResultModel searchResult = SearchResultUtil.getSearchResult(
 			1);
 
 		Assert.assertEquals(1, searchResult.getSearchResultId());
@@ -80,7 +79,7 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 		// Test get multiple
 
 		List<SearchResultModel> searchResultModels =
-			_searchResultDAOImpl.getSearchResults();
+			SearchResultUtil.getSearchResults();
 
 		Assert.assertEquals(2, searchResultModels.size());
 
@@ -102,26 +101,23 @@ public class SearchResultDAOTest extends BaseDatabaseTestCase {
 
 		// Test delete
 
-		_searchResultDAOImpl.deleteSearchResult(1);
+		SearchResultUtil.deleteSearchResult(1);
 
-		searchResultModels = _searchResultDAOImpl.getSearchResults();
+		searchResultModels = SearchResultUtil.getSearchResults();
 
 		Assert.assertEquals(1, searchResultModels.size());
 
 		// Test find by search query
 
-		searchResultModels = _searchResultDAOImpl.getSearchQueryResults(2);
+		searchResultModels = SearchResultUtil.getSearchQueryResults(2);
 
 		Assert.assertEquals(1, searchResultModels.size());
 
-		_searchResultDAOImpl.deleteSearchQueryResults(2);
+		SearchResultUtil.deleteSearchQueryResults(2);
 
-		searchResultModels = _searchResultDAOImpl.getSearchQueryResults(2);
+		searchResultModels = SearchResultUtil.getSearchQueryResults(2);
 
 		Assert.assertEquals(0, searchResultModels.size());
 	}
-
-	private static SearchResultDAOImpl _searchResultDAOImpl =
-		new SearchResultDAOImpl();
 
 }
