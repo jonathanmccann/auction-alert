@@ -23,6 +23,12 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 
+	<bean id="categoryDAOImpl" class="com.app.dao.impl.CategoryDAOImpl" />
+	<bean id="releaseDaoImpl" class="com.app.dao.impl.ReleaseDAOImpl" />
+	<bean id="searchQueryDAOImpl" class="com.app.dao.impl.SearchQueryDAOImpl" />
+	<bean id="searchQueryPreviousResultDAOImpl" class="com.app.dao.impl.SearchQueryPreviousResultDAOImpl" />
+	<bean id="searchResultDAOImpl" class="com.app.dao.impl.SearchResultDAOImpl" />
+
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 
 	<mvc:annotation-driven />
