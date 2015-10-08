@@ -35,8 +35,12 @@ public class eBayAPIUtil {
 	}
 
 	public static void loadApiContext() {
+		loadApiContext(PropertiesValues.EBAY_TOKEN);
+	}
+
+	public static void loadApiContext(String ebayToken) {
 		ApiCredential apiCredential = new ApiCredential();
-		apiCredential.seteBayToken(PropertiesValues.EBAY_TOKEN);
+		apiCredential.seteBayToken(ebayToken);
 
 		_apiContext = new ApiContext();
 		_apiContext.setApiCredential(apiCredential);
@@ -45,11 +49,7 @@ public class eBayAPIUtil {
 	}
 
 	public static void loadeBayServiceClient() {
-		ClientConfig config = new ClientConfig();
-
-		config.setApplicationId(PropertiesValues.APPLICATION_ID);
-
-		_serviceClient = FindingServiceClientFactory.getServiceClient(config);
+		loadeBayServiceClient(PropertiesValues.APPLICATION_ID);
 	}
 
 	public static void loadeBayServiceClient(String applicationId) {
