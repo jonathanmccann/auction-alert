@@ -18,6 +18,7 @@ dependencies {
 	compile group: 'joda-time', name: 'joda-time', version:'2.7'
 	compile group: 'jstl', name: 'jstl', version:'1.2'
 	compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.36'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.0'
 	compile group: 'org.freemarker', name: 'freemarker', version:'2.3.21'
 	compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
 	compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'

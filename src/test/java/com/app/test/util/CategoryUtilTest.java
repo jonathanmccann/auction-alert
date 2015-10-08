@@ -14,16 +14,21 @@
 
 package com.app.test.util;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.CategoryModel;
 import com.app.test.BaseDatabaseTestCase;
 import com.app.util.CategoryUtil;
+import com.app.util.PropertiesKeys;
+import com.app.util.PropertiesUtil;
+import com.app.util.eBayAPIUtil;
 
-import java.sql.SQLException;
+import java.net.URL;
 
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,58 +42,97 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CategoryUtilTest extends BaseDatabaseTestCase {
 
-	@Test
-	public void testCategoryUtil()
-		throws DatabaseConnectionException, SQLException {
+	@Before
+	public void setUp() throws Exception {
+		Class<?> clazz = getClass();
 
-		// Test add
+		URL resource = clazz.getResource("/test-config.properties");
 
-		CategoryUtil.addCategory("1", "First Category");
-		CategoryUtil.addCategory("2", "Second Category");
+		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 
-		// Test get
+		eBayAPIUtil.loadApiContext(
+			System.getProperty(PropertiesKeys.EBAY_TOKEN));
 
-		CategoryModel category = CategoryUtil.getCategory("1");
-
-		Assert.assertEquals("First Category", category.getCategoryName());
-
-		// Test get multiple
-
-		List<CategoryModel> categoryModels = CategoryUtil.getCategories();
-
-		CategoryModel firstCategoryModel = categoryModels.get(0);
-		CategoryModel secondCategoryModel = categoryModels.get(1);
-
-		Assert.assertEquals(2, categoryModels.size());
-		Assert.assertEquals("1", firstCategoryModel.getCategoryId());
-		Assert.assertEquals("2", secondCategoryModel.getCategoryId());
-		Assert.assertEquals(
-			"First Category", firstCategoryModel.getCategoryName());
-		Assert.assertEquals(
-			"Second Category", secondCategoryModel.getCategoryName());
-
-		// Test delete multiple
-
-		CategoryUtil.deleteCategory("1");
-		CategoryUtil.deleteCategory("2");
-
-		categoryModels = CategoryUtil.getCategories();
-
-		Assert.assertEquals(0, categoryModels.size());
+		CategoryUtil.deleteCategories();
 	}
 
 	@Test
-	public void testDeleteAllCategories()
-		throws DatabaseConnectionException, SQLException {
+	public void testAddCategory() throws Exception {
+		addCategory();
 
-		CategoryUtil.addCategory("1", "First Category");
-		CategoryUtil.addCategory("2", "Second Category");
+		List<CategoryModel> categories = CategoryUtil.getCategories();
+
+		Assert.assertEquals(1, categories.size());
+
+		CategoryModel category = categories.get(0);
+
+		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
+		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
+	}
+
+	@Test
+	public void testDeleteCategories() throws Exception {
+		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
+		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
 
 		CategoryUtil.deleteCategories();
 
-		List<CategoryModel> categoryModels = CategoryUtil.getCategories();
+		List<CategoryModel> categories = CategoryUtil.getCategories();
 
-		Assert.assertEquals(0, categoryModels.size());
+		Assert.assertEquals(0, categories.size());
 	}
+
+	@Test
+	public void testDeleteCategory() throws Exception {
+		addCategory();
+
+		CategoryUtil.deleteCategory(_CATEGORY_ID);
+
+		List<CategoryModel> categories = CategoryUtil.getCategories();
+
+		Assert.assertEquals(0, categories.size());
+	}
+
+	@Test
+	public void testGetCategories() throws Exception {
+		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
+		addCategory(RandomStringUtils.random(5), RandomStringUtils.random(5));
+
+		List<CategoryModel> categories = CategoryUtil.getCategories();
+
+		Assert.assertEquals(2, categories.size());
+	}
+
+	@Test
+	public void testGetCategory() throws Exception {
+		addCategory();
+
+		CategoryModel category = CategoryUtil.getCategory(_CATEGORY_ID);
+
+		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
+		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
+	}
+
+	@Test
+	public void testInitializeCategories() throws Exception {
+		CategoryUtil.initializeCategories();
+
+		List<CategoryModel> categories = CategoryUtil.getCategories();
+
+		Assert.assertFalse(categories.isEmpty());
+	}
+
+	private static void addCategory() throws Exception {
+		addCategory(_CATEGORY_ID, _CATEGORY_NAME);
+	}
+
+	private static void addCategory(String categoryId, String categoryName)
+		throws Exception {
+
+		CategoryUtil.addCategory(categoryId, categoryName);
+	}
+
+	public static final String _CATEGORY_ID = "categoryId";
+	public static final String _CATEGORY_NAME = "categoryName";
 
 }
