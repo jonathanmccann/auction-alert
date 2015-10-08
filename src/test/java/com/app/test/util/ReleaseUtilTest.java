@@ -45,10 +45,6 @@ public class ReleaseUtilTest extends BaseDatabaseTestCase {
 		}
 	}
 
-	@Override
-	public void doSetUp() throws DatabaseConnectionException {
-	}
-
 	@Test
 	public void testReleaseUtil()
 		throws DatabaseConnectionException, SQLException {

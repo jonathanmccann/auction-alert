@@ -32,10 +32,6 @@ import org.junit.Test;
  */
 public class SearchResultUtilTest extends BaseDatabaseTestCase {
 
-	@Override
-	public void doSetUp() throws DatabaseConnectionException {
-	}
-
 	@Test
 	public void testSearchResultUtil()
 		throws DatabaseConnectionException, SQLException {

@@ -31,10 +31,6 @@ import org.junit.Test;
  */
 public class SearchQueryPreviousResultUtilTest extends BaseDatabaseTestCase {
 
-	@Override
-	public void doSetUp() throws DatabaseConnectionException {
-	}
-
 	@Test
 	public void testSearchQueryPreviousResultUtil()
 		throws DatabaseConnectionException, SQLException {

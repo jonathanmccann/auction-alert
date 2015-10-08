@@ -41,7 +41,8 @@ public abstract class BaseDatabaseTestCase {
 		doSetUp();
 	}
 
-	protected abstract void doSetUp() throws Exception;
+	protected void doSetUp() throws Exception {
+	}
 
 	private static final String _TEST_DATABASE_PATH = "/sql/testdb.sql";
 

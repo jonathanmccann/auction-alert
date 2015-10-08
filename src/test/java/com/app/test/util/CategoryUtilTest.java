@@ -37,10 +37,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CategoryUtilTest extends BaseDatabaseTestCase {
 
-	@Override
-	public void doSetUp() throws DatabaseConnectionException {
-	}
-
 	@Test
 	public void testCategoryUtil()
 		throws DatabaseConnectionException, SQLException {
