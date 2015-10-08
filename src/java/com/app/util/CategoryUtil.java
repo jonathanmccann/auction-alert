@@ -15,7 +15,6 @@
 package com.app.util;
 
 import com.app.dao.CategoryDAO;
-import com.app.dao.impl.ReleaseDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.CategoryModel;
 
@@ -88,7 +87,7 @@ public class CategoryUtil {
 		String version = getCategoriesCall.getReturnedCategoryVersion();
 
 		if (!version.equals(
-				_releaseDAOImpl.getReleaseVersion(_CATEGORY_RELEASE_NAME))) {
+				ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME))) {
 
 			_log.info(
 				"Remove previous categories and inserting categories from " +
@@ -103,7 +102,7 @@ public class CategoryUtil {
 					categoryType.getCategoryName());
 			}
 
-			_releaseDAOImpl.addRelease(_CATEGORY_RELEASE_NAME, version);
+			ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, version);
 		}
 	}
 
@@ -121,5 +120,4 @@ public class CategoryUtil {
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryUtil.class);
 
-	private static final ReleaseDAOImpl _releaseDAOImpl = new ReleaseDAOImpl();
 }

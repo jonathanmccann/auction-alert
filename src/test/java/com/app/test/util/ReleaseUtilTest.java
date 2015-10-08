@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.app.test.dao;
+package com.app.test.util;
 
-import com.app.dao.impl.ReleaseDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.test.BaseDatabaseTestCase;
+import com.app.util.ReleaseUtil;
 
 import java.sql.SQLException;
 
@@ -27,43 +27,42 @@ import org.junit.Test;
 /**
  * @author Jonathan McCann
  */
-public class ReleaseDAOTest extends BaseDatabaseTestCase {
+public class ReleaseUtilTest extends BaseDatabaseTestCase {
 
 	@After
 	public void tearDown() throws DatabaseConnectionException, SQLException {
-		String firstVersion = _releaseDAOImpl.getReleaseVersion(
+		String firstVersion = ReleaseUtil.getReleaseVersion(
 			"First Release");
-		String secondVersion = _releaseDAOImpl.getReleaseVersion(
+		String secondVersion = ReleaseUtil.getReleaseVersion(
 			"Second Release");
 
 		if (!firstVersion.equals("")) {
-			_releaseDAOImpl.deleteRelease("First Release");
+			ReleaseUtil.deleteRelease("First Release");
 		}
 
 		if (!secondVersion.equals("")) {
-			_releaseDAOImpl.deleteRelease("Second Release");
+			ReleaseUtil.deleteRelease("Second Release");
 		}
 	}
 
 	@Override
 	public void doSetUp() throws DatabaseConnectionException {
-		_releaseDAOImpl = new ReleaseDAOImpl();
 	}
 
 	@Test
-	public void testCategoryDAO()
+	public void testReleaseUtil()
 		throws DatabaseConnectionException, SQLException {
 
 		// Test add
 
-		_releaseDAOImpl.addRelease("First Release", "100");
-		_releaseDAOImpl.addRelease("Second Release", "101");
+		ReleaseUtil.addRelease("First Release", "100");
+		ReleaseUtil.addRelease("Second Release", "101");
 
 		// Test get
 
-		String firstVersion = _releaseDAOImpl.getReleaseVersion(
+		String firstVersion = ReleaseUtil.getReleaseVersion(
 			"First Release");
-		String secondVersion = _releaseDAOImpl.getReleaseVersion(
+		String secondVersion = ReleaseUtil.getReleaseVersion(
 			"Second Release");
 
 		Assert.assertEquals("100", firstVersion);
@@ -71,11 +70,11 @@ public class ReleaseDAOTest extends BaseDatabaseTestCase {
 
 		// Test delete
 
-		_releaseDAOImpl.deleteRelease("First Release");
-		_releaseDAOImpl.deleteRelease("Second Release");
+		ReleaseUtil.deleteRelease("First Release");
+		ReleaseUtil.deleteRelease("Second Release");
 
-		firstVersion = _releaseDAOImpl.getReleaseVersion("First Release");
-		secondVersion = _releaseDAOImpl.getReleaseVersion("Second Release");
+		firstVersion = ReleaseUtil.getReleaseVersion("First Release");
+		secondVersion = ReleaseUtil.getReleaseVersion("Second Release");
 
 		Assert.assertEquals("", firstVersion);
 		Assert.assertEquals("", secondVersion);
@@ -85,10 +84,8 @@ public class ReleaseDAOTest extends BaseDatabaseTestCase {
 	public void testDuplicateReleaseName()
 		throws DatabaseConnectionException, SQLException {
 
-		_releaseDAOImpl.addRelease("First Release", "100");
-		_releaseDAOImpl.addRelease("First Release", "101");
+		ReleaseUtil.addRelease("First Release", "100");
+		ReleaseUtil.addRelease("First Release", "101");
 	}
-
-	private static ReleaseDAOImpl _releaseDAOImpl;
 
 }

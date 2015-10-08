@@ -14,15 +14,87 @@
 
 package com.app.dao;
 
+import com.app.exception.DatabaseConnectionException;
+import com.app.util.DatabaseUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Jonathan McCann
  */
-public interface ReleaseDAO {
+public class ReleaseDAO {
 
-	public void addRelease(String releaseName, String version) throws Exception;
+	public void addRelease(String releaseName, String version)
+		throws DatabaseConnectionException, SQLException {
 
-	public void deleteRelease(String releaseName) throws Exception;
+		_log.debug(
+			"Adding new release with name: {} and version: {}", releaseName,
+			version);
 
-	public String getReleaseVersion(String releaseName) throws Exception;
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_ADD_RELEASE_SQL)) {
+
+			preparedStatement.setString(1, releaseName);
+			preparedStatement.setString(2, version);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	public void deleteRelease(String releaseName)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deleting release with name: {}", releaseName);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_RELEASE_SQL)) {
+
+			preparedStatement.setString(1, releaseName);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	public String getReleaseVersion(String releaseName)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Getting release version with name: {}", releaseName);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_RELEASE_VERSION_SQL)) {
+
+			preparedStatement.setString(1, releaseName);
+
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return resultSet.getString("version");
+				}
+				else {
+					return "";
+				}
+			}
+		}
+	}
+
+	private static final String _ADD_RELEASE_SQL =
+		"INSERT INTO Release_(releaseName, version) VALUES(?, ?)";
+
+	private static final String _DELETE_RELEASE_SQL =
+		"DELETE FROM Release_ WHERE releaseName = ?";
+
+	private static final String _GET_RELEASE_VERSION_SQL =
+		"SELECT version FROM Release_ WHERE releaseName = ?";
+
+	private static final Logger _log = LoggerFactory.getLogger(
+		ReleaseDAO.class);
 
 }
