@@ -25,7 +25,7 @@
 
 	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
 	<bean id="releaseDao" class="com.app.dao.ReleaseDAO" />
-	<bean id="searchQueryDAOImpl" class="com.app.dao.impl.SearchQueryDAOImpl" />
+	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
 	<bean id="searchQueryPreviousResultDAOImpl" class="com.app.dao.impl.SearchQueryPreviousResultDAOImpl" />
 	<bean id="searchResultDAOImpl" class="com.app.dao.impl.SearchResultDAOImpl" />
 

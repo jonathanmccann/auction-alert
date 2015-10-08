@@ -14,7 +14,6 @@
 
 package com.app.util;
 
-import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
@@ -40,7 +39,7 @@ public class SearchResultUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		List<SearchQueryModel> searchQueryModels =
-			_searchQueryDAOImpl.getSearchQueries();
+			SearchQueryUtil.getSearchQueries();
 
 		if (searchQueryModels.size() == 0) {
 			_log.info("There are no search queries");
@@ -155,8 +154,6 @@ public class SearchResultUtil {
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultUtil.class);
 
-	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
-		new SearchQueryDAOImpl();
 	private static final
 		SearchQueryPreviousResultDAOImpl _searchQueryPreviousResultDAOImpl =
 			new SearchQueryPreviousResultDAOImpl();

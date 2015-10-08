@@ -14,11 +14,11 @@
 
 package com.app.controller;
 
-import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQueryModel;
 import com.app.model.SearchResultModel;
+import com.app.util.SearchQueryUtil;
 
 import java.sql.SQLException;
 
@@ -63,7 +63,7 @@ public class SearchResultController {
 			new HashMap<>();
 
 		List<SearchQueryModel> searchQueryModels =
-			_searchQueryDAOImpl.getSearchQueries();
+			SearchQueryUtil.getSearchQueries();
 
 		_log.debug("Found {} search query results", searchQueryModels.size());
 
@@ -88,8 +88,6 @@ public class SearchResultController {
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultController.class);
 
-	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
-		new SearchQueryDAOImpl();
 	private static final SearchResultDAOImpl _searchResultDAOImpl =
 		new SearchResultDAOImpl();
 

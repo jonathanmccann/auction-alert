@@ -14,7 +14,6 @@
 
 package com.app.controller;
 
-import com.app.dao.impl.SearchQueryDAOImpl;
 import com.app.dao.impl.SearchQueryPreviousResultDAOImpl;
 import com.app.dao.impl.SearchResultDAOImpl;
 import com.app.exception.DatabaseConnectionException;
@@ -91,17 +90,17 @@ public class SearchQueryController {
 			String categoryId = searchQueryModel.getCategoryId();
 
 			if ((categoryId == null) || categoryId.equals("")) {
-				_searchQueryDAOImpl.addSearchQuery(
+				SearchQueryUtil.addSearchQuery(
 					searchQueryModel.getSearchQuery());
 			}
 			else {
-				_searchQueryDAOImpl.addSearchQuery(
+				SearchQueryUtil.addSearchQuery(
 					searchQueryModel.getSearchQuery(),
 					searchQueryModel.getCategoryId());
 			}
 
 			List<SearchQueryModel> searchQueryModels =
-				_searchQueryDAOImpl.getSearchQueries();
+				SearchQueryUtil.getSearchQueries();
 
 			model.put("searchQueryModels", searchQueryModels);
 
@@ -117,7 +116,7 @@ public class SearchQueryController {
 			for (String searchQueryId : searchQueryIds) {
 				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
-				_searchQueryDAOImpl.deleteSearchQuery(searchQueryIdInteger);
+				SearchQueryUtil.deleteSearchQuery(searchQueryIdInteger);
 
 				_searchResultDAOImpl.deleteSearchQueryResults(
 					searchQueryIdInteger);
@@ -148,7 +147,7 @@ public class SearchQueryController {
 		throws DatabaseConnectionException, SQLException {
 
 		List<SearchQueryModel> searchQueryModels =
-			_searchQueryDAOImpl.getSearchQueries();
+			SearchQueryUtil.getSearchQueries();
 
 		model.put("searchQueryModels", searchQueryModels);
 
@@ -158,8 +157,6 @@ public class SearchQueryController {
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
 
-	private static final SearchQueryDAOImpl _searchQueryDAOImpl =
-		new SearchQueryDAOImpl();
 	private static final SearchQueryPreviousResultDAOImpl
 		_searchQueryPreviousResultDAOImpl =
 			new SearchQueryPreviousResultDAOImpl();
