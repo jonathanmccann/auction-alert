@@ -70,7 +70,12 @@ public class CategoryUtil {
 	}
 
 	public static void initializeCategories() throws Exception {
+		populateCategories(createGetCategoriesCall());
+	}
+
+	private static GetCategoriesCall createGetCategoriesCall() {
 		ApiContext apiContext = eBayAPIUtil.getApiContext();
+
 		GetCategoriesCall getCategoriesCall = new GetCategoriesCall(apiContext);
 
 		DetailLevelCodeType[] detailLevelCodeTypes = {
@@ -82,13 +87,29 @@ public class CategoryUtil {
 		getCategoriesCall.setLevelLimit(_ROOT_CATEGORY_LEVEL_LIMIT);
 		getCategoriesCall.setViewAllNodes(true);
 
-		CategoryType[] ebayCategories = getCategoriesCall.getCategories();
+		return getCategoriesCall;
+	}
 
-		String version = getCategoriesCall.getReturnedCategoryVersion();
+	private static boolean isNewerCategoryVersion(String version)
+		throws DatabaseConnectionException, SQLException {
 
 		if (!version.equals(
 				ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME))) {
 
+			return true;
+		}
+
+		return false;
+	}
+
+	private static void populateCategories(GetCategoriesCall getCategoriesCall)
+		throws Exception {
+
+		CategoryType[] ebayCategories = getCategoriesCall.getCategories();
+
+		String version = getCategoriesCall.getReturnedCategoryVersion();
+
+		if (isNewerCategoryVersion(version)) {
 			_log.info(
 				"Remove previous categories and inserting categories from " +
 					"version: {}",
