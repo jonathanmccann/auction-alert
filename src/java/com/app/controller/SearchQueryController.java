@@ -15,7 +15,7 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.CategoryModel;
+import com.app.model.Category;
 import com.app.model.SearchQueryModel;
 import com.app.util.CategoryUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
@@ -63,7 +63,7 @@ public class SearchQueryController {
 
 		Map<String, String> categories = new LinkedHashMap<>();
 
-		for (CategoryModel category : CategoryUtil.getCategories()) {
+		for (Category category : CategoryUtil.getCategories()) {
 			categories.put(
 				category.getCategoryId(), category.getCategoryName());
 		}

@@ -17,12 +17,12 @@ package com.app.model;
 /**
  * @author Jonathan McCann
  */
-public class CategoryModel {
+public class Category {
 
-	public CategoryModel() {
+	public Category() {
 	}
 
-	public CategoryModel(String categoryId, String categoryName) {
+	public Category(String categoryId, String categoryName) {
 		_categoryId = categoryId;
 		_categoryName = categoryName;
 	}

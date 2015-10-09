@@ -16,7 +16,7 @@ package com.app.util;
 
 import com.app.dao.CategoryDAO;
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.CategoryModel;
+import com.app.model.Category;
 
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.call.GetCategoriesCall;
@@ -57,13 +57,13 @@ public class CategoryUtil {
 		_categoryDAO.deleteCategory(categoryId);
 	}
 
-	public static List<CategoryModel> getCategories()
+	public static List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
  		return _categoryDAO.getCategories();
 	}
 
-	public static CategoryModel getCategory(String categoryId)
+	public static Category getCategory(String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
 		return _categoryDAO.getCategory(categoryId);

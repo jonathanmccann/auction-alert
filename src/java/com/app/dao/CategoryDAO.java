@@ -15,7 +15,7 @@
 package com.app.dao;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.CategoryModel;
+import com.app.model.Category;
 import com.app.util.DatabaseUtil;
 
 import java.sql.Connection;
@@ -80,7 +80,7 @@ public class CategoryDAO {
 		}
 	}
 
-	public List<CategoryModel> getCategories()
+	public List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting all categories");
@@ -90,18 +90,18 @@ public class CategoryDAO {
 				_GET_CATEGORIES_SQL)) {
 
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<CategoryModel> categoryModels = new ArrayList<>();
+				List<Category> categories = new ArrayList<>();
 
 				while (resultSet.next()) {
-					categoryModels.add(createCategoryFromResultSet(resultSet));
+					categories.add(createCategoryFromResultSet(resultSet));
 				}
 
-				return categoryModels;
+				return categories;
 			}
 		}
 	}
 
-	public CategoryModel getCategory(String categoryId)
+	public Category getCategory(String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting category ID: {}", categoryId);
@@ -117,22 +117,22 @@ public class CategoryDAO {
 					return createCategoryFromResultSet(resultSet);
 				}
 				else {
-					return new CategoryModel();
+					return new Category();
 				}
 			}
 		}
 	}
 
-	private static CategoryModel createCategoryFromResultSet(
+	private static Category createCategoryFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
 
-		CategoryModel categoryModel = new CategoryModel();
+		Category category = new Category();
 
-		categoryModel.setCategoryId(resultSet.getString("categoryId"));
-		categoryModel.setCategoryName(resultSet.getString("categoryName"));
+		category.setCategoryId(resultSet.getString("categoryId"));
+		category.setCategoryName(resultSet.getString("categoryName"));
 
-		return categoryModel;
+		return category;
 	}
 
 	private static final String _ADD_CATEGORY_SQL =

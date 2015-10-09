@@ -14,7 +14,7 @@
 
 package com.app.test.util;
 
-import com.app.model.CategoryModel;
+import com.app.model.Category;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
 import com.app.util.ReleaseUtil;
@@ -49,11 +49,11 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testAddCategory() throws Exception {
 		addCategory();
 
-		List<CategoryModel> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(1, categories.size());
 
-		CategoryModel category = categories.get(0);
+		Category category = categories.get(0);
 
 		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
 		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
@@ -70,7 +70,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		CategoryUtil.deleteCategories();
 
-		List<CategoryModel> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(0, categories.size());
 	}
@@ -81,7 +81,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		CategoryUtil.deleteCategory(_CATEGORY_ID);
 
-		List<CategoryModel> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(0, categories.size());
 	}
@@ -95,7 +95,7 @@ public class CategoryUtilTest extends BaseTestCase {
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 
-		List<CategoryModel> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(2, categories.size());
 	}
@@ -104,7 +104,7 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testGetCategory() throws Exception {
 		addCategory();
 
-		CategoryModel category = CategoryUtil.getCategory(_CATEGORY_ID);
+		Category category = CategoryUtil.getCategory(_CATEGORY_ID);
 
 		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
 		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
@@ -114,7 +114,7 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testInitializeCategories() throws Exception {
 		CategoryUtil.initializeCategories();
 
-		List<CategoryModel> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertFalse(categories.isEmpty());
 	}
