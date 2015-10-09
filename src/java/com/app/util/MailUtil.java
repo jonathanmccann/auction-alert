@@ -15,7 +15,7 @@
 package com.app.util;
 
 import com.app.model.SearchQuery;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -58,7 +58,7 @@ import org.springframework.core.io.Resource;
 public class MailUtil {
 
 	public static void sendSearchResultsToRecipients(
-		Map<SearchQuery, List<SearchResultModel>> searchQueryResultMap) {
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap) {
 
 		_log.info(
 			"Sending search results for {} queries",
@@ -74,7 +74,7 @@ public class MailUtil {
 			recipientEmailAddresses, recipientPhoneNumbers);
 
 		try {
-			for (Map.Entry<SearchQuery, List<SearchResultModel>> mapEntry :
+			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
 					searchQueryResultMap.entrySet()) {
 
 				if (_sendViaEmail) {
@@ -226,7 +226,7 @@ public class MailUtil {
 
 	private static Message populateEmailMessage(
 			SearchQuery searchQuery,
-			List<SearchResultModel> searchResultModels,
+			List<SearchResult> searchResults,
 			List<String> recipientEmailAddresses, String emailFrom,
 			Session session)
 		throws Exception {
@@ -247,21 +247,21 @@ public class MailUtil {
 			"New Search Results - " + dateFormat.format(new Date()));
 
 		populateMessage(
-			searchQuery, searchResultModels, message, getEmailTemplate());
+			searchQuery, searchResults, message, getEmailTemplate());
 
 		return message;
 	}
 
 	private static void populateMessage(
 			SearchQuery searchQuery,
-			List<SearchResultModel> searchResultModels, Message message,
+			List<SearchResult> searchResults, Message message,
 			Template template)
 		throws Exception {
 
 		Map<String, Object> rootMap = new HashMap<>();
 
 		rootMap.put("searchQuery", searchQuery);
-		rootMap.put("searchResultModels", searchResultModels);
+		rootMap.put("searchResults", searchResults);
 
 		StringWriter stringWriter = new StringWriter();
 
@@ -271,7 +271,7 @@ public class MailUtil {
 	}
 
 	private static Message populateTextMessage(
-			List<SearchResultModel> searchResultModels,
+			List<SearchResult> searchResults,
 			List<String> recipientPhoneNumbers, Session session)
 		throws Exception {
 
@@ -283,7 +283,7 @@ public class MailUtil {
 				new InternetAddress(recipientPhoneNumber));
 		}
 
-		populateMessage(null, searchResultModels, message, getTextTemplate());
+		populateMessage(null, searchResults, message, getTextTemplate());
 
 		return message;
 	}

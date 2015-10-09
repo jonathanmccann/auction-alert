@@ -19,12 +19,12 @@ import java.util.Date;
 /**
  * @author Jonathan McCann
  */
-public class SearchResultModel {
+public class SearchResult {
 
-	public SearchResultModel() {
+	public SearchResult() {
 	}
 
-	public SearchResultModel(
+	public SearchResult(
 		int searchQueryId, String itemId, String itemTitle, double auctionPrice,
 		double fixedPrice, String itemURL, String galleryURL, Date endingTime,
 		String typeOfAuction) {
@@ -41,11 +41,11 @@ public class SearchResultModel {
 	}
 
 	public boolean equals(Object obj) {
-		if ((obj == null) || !(obj instanceof SearchResultModel)) {
+		if ((obj == null) || !(obj instanceof SearchResult)) {
 			return false;
 		}
 
-		return (_itemId.equals(((SearchResultModel)obj).getItemId()));
+		return (_itemId.equals(((SearchResult)obj).getItemId()));
 	}
 
 	public double getAuctionPrice() {

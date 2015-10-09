@@ -15,7 +15,7 @@
 package com.app.test.util;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.SearchResultUtil;
 
@@ -53,23 +53,23 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Date endingTime = new Date();
 
-		SearchResultModel searchResultModel = new SearchResultModel(
+		SearchResult searchResult = new SearchResult(
 			1, "1234", "First Item", 14.99, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
 			endingTime, "Auction");
 
-		SearchResultUtil.addSearchResult(searchResultModel);
+		SearchResultUtil.addSearchResult(searchResult);
 
-		searchResultModel = new SearchResultModel(
+		searchResult = new SearchResult(
 			2, "2345", "Second Item", 14.99, 14.99,
 			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
 			endingTime, "FixedPrice");
 
-		SearchResultUtil.addSearchResult(searchResultModel);
+		SearchResultUtil.addSearchResult(searchResult);
 
 		// Test get
 
-		SearchResultModel searchResult = SearchResultUtil.getSearchResult(
+		searchResult = SearchResultUtil.getSearchResult(
 			1);
 
 		Assert.assertEquals(1, searchResult.getSearchResultId());
@@ -87,12 +87,12 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		// Test get multiple
 
-		List<SearchResultModel> searchResultModels =
+		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchResults();
 
-		Assert.assertEquals(2, searchResultModels.size());
+		Assert.assertEquals(2, searchResults.size());
 
-		SearchResultModel secondSearchResult = searchResultModels.get(1);
+		SearchResult secondSearchResult = searchResults.get(1);
 
 		Assert.assertEquals(2, secondSearchResult.getSearchResultId());
 		Assert.assertEquals(2, secondSearchResult.getSearchQueryId());
@@ -112,21 +112,21 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		SearchResultUtil.deleteSearchResult(1);
 
-		searchResultModels = SearchResultUtil.getSearchResults();
+		searchResults = SearchResultUtil.getSearchResults();
 
-		Assert.assertEquals(1, searchResultModels.size());
+		Assert.assertEquals(1, searchResults.size());
 
 		// Test find by search query
 
-		searchResultModels = SearchResultUtil.getSearchQueryResults(2);
+		searchResults = SearchResultUtil.getSearchQueryResults(2);
 
-		Assert.assertEquals(1, searchResultModels.size());
+		Assert.assertEquals(1, searchResults.size());
 
 		SearchResultUtil.deleteSearchQueryResults(2);
 
-		searchResultModels = SearchResultUtil.getSearchQueryResults(2);
+		searchResults = SearchResultUtil.getSearchQueryResults(2);
 
-		Assert.assertEquals(0, searchResultModels.size());
+		Assert.assertEquals(0, searchResults.size());
 	}
 
 }

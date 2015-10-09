@@ -15,7 +15,7 @@
 package com.app.test.util;
 
 import com.app.model.SearchQuery;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
 import com.app.util.eBaySearchResultUtil;
@@ -67,7 +67,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		_createSearchResultsMethod.setAccessible(true);
 
 		_setPriceMethod = clazz.getDeclaredMethod(
-			"setPrice", SearchResultModel.class, ListingInfo.class,
+			"setPrice", SearchResult.class, ListingInfo.class,
 			SellingStatus.class, String.class);
 
 		_setPriceMethod.setAccessible(true);
@@ -87,21 +87,21 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 	public void testCreateSearchResult() throws Exception {
 		SearchItem searchItem = createSearchItem();
 
-		SearchResultModel searchResultModel =
-			(SearchResultModel)_createSearchResultMethod.invoke(
+		SearchResult searchResult =
+			(SearchResult)_createSearchResultMethod.invoke(
 				_classInstance, searchItem);
 
-		Assert.assertEquals(_ITEM_ID, searchResultModel.getItemId());
-		Assert.assertEquals(_ITEM_TITLE, searchResultModel.getItemTitle());
+		Assert.assertEquals(_ITEM_ID, searchResult.getItemId());
+		Assert.assertEquals(_ITEM_TITLE, searchResult.getItemTitle());
 		Assert.assertEquals(
-			_EBAY_URL_PREFIX + searchResultModel.getItemId(),
-			searchResultModel.getItemURL());
-		Assert.assertEquals(_GALLERY_URL, searchResultModel.getGalleryURL());
+			_EBAY_URL_PREFIX + searchResult.getItemId(),
+			searchResult.getItemURL());
+		Assert.assertEquals(_GALLERY_URL, searchResult.getGalleryURL());
 		Assert.assertEquals(
-			_CALENDAR.getTime(), searchResultModel.getEndingTime());
-		Assert.assertEquals(_AUCTION, searchResultModel.getTypeOfAuction());
-		Assert.assertEquals(5.00, searchResultModel.getAuctionPrice(), 0);
-		Assert.assertEquals(0.00, searchResultModel.getFixedPrice(), 0);
+			_CALENDAR.getTime(), searchResult.getEndingTime());
+		Assert.assertEquals(_AUCTION, searchResult.getTypeOfAuction());
+		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
 	}
 
 	@Test
@@ -111,24 +111,24 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		searchItems.add(createSearchItem("firstItem"));
 		searchItems.add(createSearchItem("secondItem"));
 
-		List<SearchResultModel> searchResultModels =
-			(List<SearchResultModel>)_createSearchResultsMethod.invoke(
+		List<SearchResult> searchResults =
+			(List<SearchResult>)_createSearchResultsMethod.invoke(
 				_classInstance, searchItems, 1);
 
-		Assert.assertEquals(2, searchResultModels.size());
+		Assert.assertEquals(2, searchResults.size());
 
-		SearchResultModel firstSearchResultModel = searchResultModels.get(0);
-		SearchResultModel secondSearchResultModel = searchResultModels.get(1);
+		SearchResult firstSearchResult = searchResults.get(0);
+		SearchResult secondSearchResult = searchResults.get(1);
 
-		Assert.assertEquals("secondItem", firstSearchResultModel.getItemId());
-		Assert.assertEquals("firstItem", secondSearchResultModel.getItemId());
+		Assert.assertEquals("secondItem", firstSearchResult.getItemId());
+		Assert.assertEquals("firstItem", secondSearchResult.getItemId());
 	}
 
 	@Test
 	public void testGeteBaySearchResults() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(1, "eBay");
 
-		List<SearchResultModel> eBaySearchResults =
+		List<SearchResult> eBaySearchResults =
 			eBaySearchResultUtil.geteBaySearchResults(searchQuery);
 
 		Assert.assertEquals(5, eBaySearchResults.size());
@@ -136,62 +136,62 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testSetAuctionPrice() throws Exception {
-		SearchResultModel searchResultModel = new SearchResultModel();
+		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResultModel, createListingInfo(),
+			_classInstance, searchResult, createListingInfo(),
 			createSellingStatus(), _AUCTION);
 
-		Assert.assertEquals(5.00, searchResultModel.getAuctionPrice(), 0);
-		Assert.assertEquals(0.00, searchResultModel.getFixedPrice(), 0);
+		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
 	}
 
 	@Test
 	public void testSetAuctionWithBINPrice() throws Exception {
-		SearchResultModel searchResultModel = new SearchResultModel();
+		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResultModel, createListingInfo(),
+			_classInstance, searchResult, createListingInfo(),
 			createSellingStatus(), _AUCTION_WITH_BIN);
 
-		Assert.assertEquals(5.00, searchResultModel.getAuctionPrice(), 0);
-		Assert.assertEquals(10.00, searchResultModel.getFixedPrice(), 0);
+		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(10.00, searchResult.getFixedPrice(), 0);
 	}
 
 	@Test
 	public void testSetFixedPrice() throws Exception {
-		SearchResultModel searchResultModel = new SearchResultModel();
+		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResultModel, createListingInfo(),
+			_classInstance, searchResult, createListingInfo(),
 			createSellingStatus(), _FIXED_PRICE);
 
-		Assert.assertEquals(0.00, searchResultModel.getAuctionPrice(), 0);
-		Assert.assertEquals(5.00, searchResultModel.getFixedPrice(), 0);
+		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(5.00, searchResult.getFixedPrice(), 0);
 	}
 
 	@Test
 	public void testSetStoreInventoryPrice() throws Exception {
-		SearchResultModel searchResultModel = new SearchResultModel();
+		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResultModel, createListingInfo(),
+			_classInstance, searchResult, createListingInfo(),
 			createSellingStatus(), _STORE_INVENTORY);
 
-		Assert.assertEquals(0.00, searchResultModel.getAuctionPrice(), 0);
-		Assert.assertEquals(5.00, searchResultModel.getFixedPrice(), 0);
+		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(5.00, searchResult.getFixedPrice(), 0);
 	}
 
 	@Test
 	public void testSetUnknownTypeOfAuctionPrice() throws Exception {
-		SearchResultModel searchResultModel = new SearchResultModel();
+		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResultModel, createListingInfo(),
+			_classInstance, searchResult, createListingInfo(),
 			createSellingStatus(), _UNKNOWN);
 
-		Assert.assertEquals(0.00, searchResultModel.getAuctionPrice(), 0);
-		Assert.assertEquals(0.00, searchResultModel.getFixedPrice(), 0);
+		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
 	}
 
 	@Test

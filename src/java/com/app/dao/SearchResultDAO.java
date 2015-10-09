@@ -15,7 +15,7 @@
 package com.app.dao;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 import com.app.util.DatabaseUtil;
 
 import java.sql.Connection;
@@ -35,18 +35,18 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchResultDAO {
 
-	public void addSearchResult(SearchResultModel searchResultModel)
+	public void addSearchResult(SearchResult searchResult)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Adding new search result: {}", searchResultModel.getItemId());
+			"Adding new search result: {}", searchResult.getItemId());
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_SEARCH_RESULT_SQL)) {
 
 			populateAddSearchResultPreparedStatement(
-				preparedStatement, searchResultModel);
+				preparedStatement, searchResult);
 
 			preparedStatement.executeUpdate();
 		}
@@ -84,7 +84,7 @@ public class SearchResultDAO {
 		}
 	}
 
-	public List<SearchResultModel> getSearchQueryResults(int searchQueryId)
+	public List<SearchResult> getSearchQueryResults(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
@@ -98,7 +98,7 @@ public class SearchResultDAO {
 			preparedStatement.setInt(1, searchQueryId);
 
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<SearchResultModel> searchResults = new ArrayList<>();
+				List<SearchResult> searchResults = new ArrayList<>();
 
 				while (resultSet.next()) {
 					searchResults.add(
@@ -110,7 +110,7 @@ public class SearchResultDAO {
 		}
 	}
 
-	public SearchResultModel getSearchResult(int searchResultId)
+	public SearchResult getSearchResult(int searchResultId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting search result for ID: {}", searchResultId);
@@ -126,13 +126,13 @@ public class SearchResultDAO {
 					return createSearchResultFromResultSet(resultSet);
 				}
 				else {
-					return new SearchResultModel();
+					return new SearchResult();
 				}
 			}
 		}
 	}
 
-	public List<SearchResultModel> getSearchResults()
+	public List<SearchResult> getSearchResults()
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting all search results");
@@ -142,7 +142,7 @@ public class SearchResultDAO {
 				_GET_SEARCH_RESULTS_SQL)) {
 
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<SearchResultModel> searchResults = new ArrayList<>();
+				List<SearchResult> searchResults = new ArrayList<>();
 
 				while (resultSet.next()) {
 					searchResults.add(
@@ -154,11 +154,11 @@ public class SearchResultDAO {
 		}
 	}
 
-	private static SearchResultModel createSearchResultFromResultSet(
+	private static SearchResult createSearchResultFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
 
-		SearchResultModel searchResult = new SearchResultModel();
+		SearchResult searchResult = new SearchResult();
 
 		searchResult.setSearchResultId(resultSet.getInt("searchResultId"));
 		searchResult.setSearchQueryId(resultSet.getInt("searchQueryId"));
@@ -176,21 +176,21 @@ public class SearchResultDAO {
 
 	private static void populateAddSearchResultPreparedStatement(
 			PreparedStatement preparedStatement,
-			SearchResultModel searchResultModel)
+			SearchResult searchResult)
 		throws SQLException {
 
-		preparedStatement.setInt(1, searchResultModel.getSearchQueryId());
-		preparedStatement.setString(2, searchResultModel.getItemId());
-		preparedStatement.setString(3, searchResultModel.getItemTitle());
-		preparedStatement.setString(4, searchResultModel.getTypeOfAuction());
-		preparedStatement.setString(5, searchResultModel.getItemURL());
-		preparedStatement.setString(6, searchResultModel.getGalleryURL());
+		preparedStatement.setInt(1, searchResult.getSearchQueryId());
+		preparedStatement.setString(2, searchResult.getItemId());
+		preparedStatement.setString(3, searchResult.getItemTitle());
+		preparedStatement.setString(4, searchResult.getTypeOfAuction());
+		preparedStatement.setString(5, searchResult.getItemURL());
+		preparedStatement.setString(6, searchResult.getGalleryURL());
 
-		Date endingTime = searchResultModel.getEndingTime();
+		Date endingTime = searchResult.getEndingTime();
 
 		preparedStatement.setLong(7, endingTime.getTime());
-		preparedStatement.setDouble(8, searchResultModel.getAuctionPrice());
-		preparedStatement.setDouble(9, searchResultModel.getFixedPrice());
+		preparedStatement.setDouble(8, searchResult.getAuctionPrice());
+		preparedStatement.setDouble(9, searchResult.getFixedPrice());
 	}
 
 	private static final String _ADD_SEARCH_RESULT_SQL =

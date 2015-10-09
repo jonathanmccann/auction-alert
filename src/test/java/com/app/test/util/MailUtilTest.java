@@ -15,7 +15,7 @@
 package com.app.test.util;
 
 import com.app.model.SearchQuery;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
 import com.app.util.PropertiesUtil;
@@ -148,18 +148,18 @@ public class MailUtilTest extends BaseTestCase {
 
 		method.setAccessible(true);
 
-		List<SearchResultModel> searchResultModels = new ArrayList<>();
+		List<SearchResult> searchResults = new ArrayList<>();
 
 		Date endingTime = new Date();
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, "Test keywords");
 
-		SearchResultModel searchResultModel = new SearchResultModel(
+		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
 			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
 
-		searchResultModels.add(searchResultModel);
+		searchResults.add(searchResult);
 
 		List<String> emailAddresses = new ArrayList<>();
 
@@ -177,7 +177,7 @@ public class MailUtilTest extends BaseTestCase {
 			});
 
 		Message message = (Message)method.invoke(
-			_classInstance, searchQuery, searchResultModels,
+			_classInstance, searchQuery, searchResults,
 			emailAddresses, "test@test.com", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
@@ -205,15 +205,15 @@ public class MailUtilTest extends BaseTestCase {
 
 		method.setAccessible(true);
 
-		List<SearchResultModel> searchResultModels = new ArrayList<>();
+		List<SearchResult> searchResults = new ArrayList<>();
 
 		Date endingTime = new Date();
 
-		SearchResultModel searchResultModel = new SearchResultModel(
+		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
 			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
 
-		searchResultModels.add(searchResultModel);
+		searchResults.add(searchResult);
 
 		List<String> phoneNumberEmailAddresses = new ArrayList<>();
 
@@ -231,7 +231,7 @@ public class MailUtilTest extends BaseTestCase {
 			});
 
 		Message message = (Message)method.invoke(
-			_classInstance, searchResultModels, phoneNumberEmailAddresses,
+			_classInstance, searchResults, phoneNumberEmailAddresses,
 			session);
 
 		Assert.assertEquals(

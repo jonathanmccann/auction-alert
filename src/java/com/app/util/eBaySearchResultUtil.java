@@ -15,7 +15,7 @@
 package com.app.util;
 
 import com.app.model.SearchQuery;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
@@ -26,7 +26,6 @@ import com.ebay.services.finding.FindingServicePortType;
 import com.ebay.services.finding.ListingInfo;
 import com.ebay.services.finding.PaginationInput;
 import com.ebay.services.finding.SearchItem;
-import com.ebay.services.finding.SearchResult;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
 
@@ -43,14 +42,14 @@ import org.slf4j.LoggerFactory;
  */
 public class eBaySearchResultUtil {
 
-	public static List<SearchResultModel> geteBaySearchResults(
+	public static List<SearchResult> geteBaySearchResults(
 		SearchQuery searchQuery) {
 
 		_log.debug("Searching for: {}", searchQuery.getKeywords());
 
 		FindingServicePortType serviceClient = eBayAPIUtil.getServiceClient();
 
-		SearchResult searchResults = null;
+		com.ebay.services.finding.SearchResult searchResults = null;
 
 		if (searchQuery.getCategoryId() == null) {
 			FindItemsByKeywordsRequest request = setUpRequest(
@@ -78,73 +77,73 @@ public class eBaySearchResultUtil {
 			searchItems, searchQuery.getSearchQueryId());
 	}
 
-	private static SearchResultModel createSearchResult(SearchItem item) {
-		SearchResultModel searchResultModel = new SearchResultModel();
+	private static SearchResult createSearchResult(SearchItem item) {
+		SearchResult searchResult = new SearchResult();
 
 		ListingInfo listingInfo = item.getListingInfo();
 
-		searchResultModel.setItemId(item.getItemId());
-		searchResultModel.setItemTitle(item.getTitle());
-		searchResultModel.setItemURL(
-			_EBAY_URL_PREFIX + searchResultModel.getItemId());
-		searchResultModel.setGalleryURL(item.getGalleryURL());
+		searchResult.setItemId(item.getItemId());
+		searchResult.setItemTitle(item.getTitle());
+		searchResult.setItemURL(
+			_EBAY_URL_PREFIX + searchResult.getItemId());
+		searchResult.setGalleryURL(item.getGalleryURL());
 
 		Calendar endTimeCalendar = listingInfo.getEndTime();
 
-		searchResultModel.setEndingTime(endTimeCalendar.getTime());
+		searchResult.setEndingTime(endTimeCalendar.getTime());
 
 		String typeOfAuction = listingInfo.getListingType();
 
-		searchResultModel.setTypeOfAuction(typeOfAuction);
+		searchResult.setTypeOfAuction(typeOfAuction);
 
 		setPrice(
-			searchResultModel, listingInfo, item.getSellingStatus(),
+			searchResult, listingInfo, item.getSellingStatus(),
 			typeOfAuction);
 
-		return searchResultModel;
+		return searchResult;
 	}
 
-	private static List<SearchResultModel> createSearchResults(
+	private static List<SearchResult> createSearchResults(
 		List<SearchItem> searchItems, int searchQueryId) {
 
-		List<SearchResultModel> searchResultModels = new ArrayList<>();
+		List<SearchResult> searchResults = new ArrayList<>();
 
 		Collections.reverse(searchItems);
 
 		for (SearchItem searchItem : searchItems) {
-			SearchResultModel searchResultModel = createSearchResult(
+			SearchResult searchResult = createSearchResult(
 				searchItem);
 
-			searchResultModel.setSearchQueryId(searchQueryId);
+			searchResult.setSearchQueryId(searchQueryId);
 
-			searchResultModels.add(searchResultModel);
+			searchResults.add(searchResult);
 		}
 
-		return searchResultModels;
+		return searchResults;
 	}
 
 	private static void setPrice(
-		SearchResultModel searchResultModel, ListingInfo listingInfo,
+		SearchResult searchResult, ListingInfo listingInfo,
 		SellingStatus sellingStatus, String typeOfAuction) {
 
 		if ("Auction".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
-			searchResultModel.setAuctionPrice(currentPrice.getValue());
+			searchResult.setAuctionPrice(currentPrice.getValue());
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
 				 "StoreInventory".equals(typeOfAuction)) {
 
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
-			searchResultModel.setFixedPrice(currentPrice.getValue());
+			searchResult.setFixedPrice(currentPrice.getValue());
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 			Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
 
-			searchResultModel.setAuctionPrice(currentPrice.getValue());
-			searchResultModel.setFixedPrice(buyItNowPrice.getValue());
+			searchResult.setAuctionPrice(currentPrice.getValue());
+			searchResult.setFixedPrice(buyItNowPrice.getValue());
 		}
 		else {
 			_log.error("Unknown type of auction: {}", typeOfAuction);

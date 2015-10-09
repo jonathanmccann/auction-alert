@@ -16,7 +16,7 @@ package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
@@ -59,8 +59,7 @@ public class SearchResultController {
 	public String viewSearchResults(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		Map<String, List<SearchResultModel>> searchResultModelMap =
-			new HashMap<>();
+		Map<String, List<SearchResult>> searchResultMap = new HashMap<>();
 
 		List<SearchQuery> searchQueries =
 			SearchQueryUtil.getSearchQueries();
@@ -72,15 +71,15 @@ public class SearchResultController {
 
 			String keywords = searchQuery.getKeywords();
 
-			List<SearchResultModel> searchResultModels =
+			List<SearchResult> searchResults =
 				SearchResultUtil.getSearchQueryResults(searchQueryId);
 
-			if (!searchResultModels.isEmpty()) {
-				searchResultModelMap.put(keywords, searchResultModels);
+			if (!searchResults.isEmpty()) {
+				searchResultMap.put(keywords, searchResults);
 			}
 		}
 
-		model.put("searchResultModelMap", searchResultModelMap);
+		model.put("searchResultMap", searchResultMap);
 
 		return "view_search_query_results";
 	}

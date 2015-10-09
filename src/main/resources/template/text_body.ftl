@@ -1,4 +1,4 @@
-<#list searchResultModels as searchResultModel>
-${searchResultModel.getItemTitle()}
-m.ebay.com/itm/${searchResultModel.getItemId()}
+<#list searchResults as searchResult>
+${searchResult.getItemTitle()}
+m.ebay.com/itm/${searchResult.getItemId()}
 </#list>

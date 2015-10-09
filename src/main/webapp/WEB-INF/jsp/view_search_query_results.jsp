@@ -32,11 +32,11 @@
 	<div align="center">
 		<h2>Current Search Results</h2>
 			<c:choose>
-				<c:when test="${empty searchResultModelMap}">
+				<c:when test="${empty searchResultMap}">
 					<h4>There are currently no search query results</h4>
 				</c:when>
 				<c:otherwise>
-					<c:forEach items="${searchResultModelMap}" var="entry">
+					<c:forEach items="${searchResultMap}" var="entry">
 						<div class="container">
 							<div align="left" class="header">
 								<h4><c:out value="Keywords: \"${entry.key}\"" /></h4>

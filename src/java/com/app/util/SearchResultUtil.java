@@ -17,7 +17,7 @@ package com.app.util;
 import com.app.dao.SearchResultDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
-import com.app.model.SearchResultModel;
+import com.app.model.SearchResult;
 
 import java.sql.SQLException;
 
@@ -38,10 +38,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchResultUtil {
 
-	public static void addSearchResult(SearchResultModel searchResultModel)
+	public static void addSearchResult(SearchResult searchResult)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchResultDAO.addSearchResult(searchResultModel);
+		_searchResultDAO.addSearchResult(searchResult);
 	}
 
 	public static void deleteSearchQueryResults(int searchQueryId)
@@ -56,19 +56,19 @@ public class SearchResultUtil {
 		_searchResultDAO.deleteSearchResult(searchResultId);
 	}
 
-	public static List<SearchResultModel> getSearchQueryResults(int searchQueryId)
+	public static List<SearchResult> getSearchQueryResults(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
 		return _searchResultDAO.getSearchQueryResults(searchQueryId);
 	}
 
-	public static SearchResultModel getSearchResult(int searchResultId)
+	public static SearchResult getSearchResult(int searchResultId)
 		throws DatabaseConnectionException, SQLException {
 
 		return _searchResultDAO.getSearchResult(searchResultId);
 	}
 
-	public static List<SearchResultModel> getSearchResults()
+	public static List<SearchResult> getSearchResults()
 		throws DatabaseConnectionException, SQLException {
 
 		return _searchResultDAO.getSearchResults();
@@ -89,18 +89,18 @@ public class SearchResultUtil {
 			"Getting eBay search results for {} search queries",
 			searchQueries.size());
 
-		Map<SearchQuery, List<SearchResultModel>> searchQueryResultMap =
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
 			new HashMap<>();
 
 		for (SearchQuery searchQuery : searchQueries) {
-			List<SearchResultModel> searchResultModels =
+			List<SearchResult> searchResults =
 				eBaySearchResultUtil.geteBaySearchResults(searchQuery);
 
-			searchResultModels = _filterSearchResults(
-				searchQuery, searchResultModels);
+			searchResults = _filterSearchResults(
+				searchQuery, searchResults);
 
-			if (!searchResultModels.isEmpty()) {
-				searchQueryResultMap.put(searchQuery, searchResultModels);
+			if (!searchResults.isEmpty()) {
+				searchQueryResultMap.put(searchQuery, searchResults);
 			}
 		}
 
@@ -109,56 +109,56 @@ public class SearchResultUtil {
 		}
 	}
 
-	private static List<SearchResultModel> _filterSearchResults(
+	private static List<SearchResult> _filterSearchResults(
 			SearchQuery searchQuery,
-			List<SearchResultModel> newSearchResultModels)
+			List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
 
 		List<String> searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
 				searchQuery.getSearchQueryId());
 
-		Iterator iterator = newSearchResultModels.iterator();
+		Iterator iterator = newSearchResults.iterator();
 
 		while (iterator.hasNext()) {
-			SearchResultModel searchResultModel =
-				(SearchResultModel)iterator.next();
+			SearchResult searchResult =
+				(SearchResult)iterator.next();
 
 			if (searchQueryPreviousResults.contains(
-					searchResultModel.getItemId())) {
+					searchResult.getItemId())) {
 
 				iterator.remove();
 			}
 		}
 
-		if (!newSearchResultModels.isEmpty()) {
+		if (!newSearchResults.isEmpty()) {
 			_log.debug(
 				"Found {} new search results for keywords: {}",
-				newSearchResultModels.size(),
+				newSearchResults.size(),
 				searchQuery.getKeywords());
 
-			List<SearchResultModel> existingSearchResultModels =
+			List<SearchResult> existingSearchResults =
 				getSearchQueryResults(
 					searchQuery.getSearchQueryId());
 
 			_saveNewResultsAndRemoveOldResults(
-				existingSearchResultModels, newSearchResultModels);
+				existingSearchResults, newSearchResults);
 		}
 
-		return newSearchResultModels;
+		return newSearchResults;
 	}
 
 	private static void _saveNewResultsAndRemoveOldResults(
-			List<SearchResultModel> existingSearchResultModels,
-			List<SearchResultModel> newSearchResultModels)
+			List<SearchResult> existingSearchResults,
+			List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
 
 		int numberOfSearchResultsToRemove =
-			existingSearchResultModels.size() + newSearchResultModels.size() - 5;
+			existingSearchResults.size() + newSearchResults.size() - 5;
 
 		if (numberOfSearchResultsToRemove > 0) {
 			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
-				SearchResultModel searchResult = existingSearchResultModels.get(
+				SearchResult searchResult = existingSearchResults.get(
 					i);
 
 				deleteSearchResult(
@@ -166,13 +166,13 @@ public class SearchResultUtil {
 			}
 		}
 
-		for (SearchResultModel searchResultModel : newSearchResultModels) {
-			addSearchResult(searchResultModel);
+		for (SearchResult searchResult : newSearchResults) {
+			addSearchResult(searchResult);
 
 			int searchQueryPreviousResultsCount =
 				SearchQueryPreviousResultUtil.
 					getSearchQueryPreviousResultsCount(
-						searchResultModel.getSearchQueryId());
+						searchResult.getSearchQueryId());
 
 			if (searchQueryPreviousResultsCount ==
 					PropertiesValues.
@@ -180,12 +180,12 @@ public class SearchResultUtil {
 
 				SearchQueryPreviousResultUtil.
 					deleteSearchQueryPreviousResult(
-						searchResultModel.getSearchQueryId());
+						searchResult.getSearchQueryId());
 			}
 
 			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-				searchResultModel.getSearchQueryId(),
-				searchResultModel.getItemId());
+				searchResult.getSearchQueryId(),
+				searchResult.getItemId());
 		}
 	}
 
