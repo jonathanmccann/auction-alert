@@ -14,7 +14,7 @@
 
 package com.app.test.util;
 
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.model.SearchResultModel;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
@@ -143,7 +143,7 @@ public class MailUtilTest extends BaseTestCase {
 	@Test
 	public void testPopulateEmailMessage() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"populateEmailMessage", SearchQueryModel.class, List.class,
+			"populateEmailMessage", SearchQuery.class, List.class,
 			List.class, String.class, Session.class);
 
 		method.setAccessible(true);
@@ -152,8 +152,8 @@ public class MailUtilTest extends BaseTestCase {
 
 		Date endingTime = new Date();
 
-		SearchQueryModel searchQueryModel = new SearchQueryModel(
-			1, "Test search query");
+		SearchQuery searchQuery = new SearchQuery(
+			1, "Test keywords");
 
 		SearchResultModel searchResultModel = new SearchResultModel(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
@@ -177,14 +177,14 @@ public class MailUtilTest extends BaseTestCase {
 			});
 
 		Message message = (Message)method.invoke(
-			_classInstance, searchQueryModel, searchResultModels,
+			_classInstance, searchQuery, searchResultModels,
 			emailAddresses, "test@test.com", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertTrue(
 			message.getSubject().contains("New Search Results - "));
 		Assert.assertEquals(
-			"Search Query: Test search query\nItem: itemTitle\n" +
+			"Keywords: Test keywords\nItem: itemTitle\n" +
 				"Auction Price: $14.99\nFixed Price: $29.99\n" +
 					"URL: http://www.ebay.com/itm/1234\n",
 			message.getContent());

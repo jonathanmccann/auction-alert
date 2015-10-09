@@ -27,14 +27,14 @@
 </head>
 <body>
 	<div align="center">
-		<form:form action="add_search_query" commandName="searchQueryModel" method="post">
+		<form:form action="add_search_query" commandName="searchQuery" method="post">
 			<table border="0">
 				<tr>
 					<td align="center" colspan="2"><h2>Add Search Query</h2></td>
 				</tr>
 				<tr>
 					<td>Search Query:</td>
-					<td><form:input path="searchQuery" /></td>
+					<td><form:input path="keywords" /></td>
 					<td>
 						<form:select path="categoryId">
 							<form:option value=""></form:option>

@@ -14,7 +14,7 @@
 
 package com.app.test.util;
 
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.model.SearchResultModel;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
@@ -126,10 +126,10 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGeteBaySearchResults() throws Exception {
-		SearchQueryModel searchQueryModel = new SearchQueryModel(1, "eBay");
+		SearchQuery searchQuery = new SearchQuery(1, "eBay");
 
 		List<SearchResultModel> eBaySearchResults =
-			eBaySearchResultUtil.geteBaySearchResults(searchQueryModel);
+			eBaySearchResultUtil.geteBaySearchResults(searchQuery);
 
 		Assert.assertEquals(5, eBaySearchResults.size());
 	}
@@ -196,15 +196,15 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testSetUpAdvancedRequest() throws Exception {
-		String searchQuery = "Test search query";
+		String keywords = "Test keywords";
 		String categoryId = "1";
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, categoryId);
+				_classInstance, keywords, categoryId);
 
 		Assert.assertEquals(
-			searchQuery, findItemsAdvancedRequest.getKeywords());
+			keywords, findItemsAdvancedRequest.getKeywords());
 
 		List<String> categoryIds = findItemsAdvancedRequest.getCategoryId();
 
@@ -225,14 +225,14 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testSetUpRequest() throws Exception {
-		String searchQuery = "Test search query";
+		String keywords = "Test keywords";
 
 		FindItemsByKeywordsRequest findItemsAdvancedRequest =
 			(FindItemsByKeywordsRequest)_setUpRequestMethod.invoke(
-				_classInstance, searchQuery);
+				_classInstance, keywords);
 
 		Assert.assertEquals(
-			searchQuery, findItemsAdvancedRequest.getKeywords());
+			keywords, findItemsAdvancedRequest.getKeywords());
 
 		PaginationInput paginationInput =
 			findItemsAdvancedRequest.getPaginationInput();

@@ -16,7 +16,7 @@ package com.app.util;
 
 import com.app.dao.SearchQueryDAO;
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +29,16 @@ import java.util.List;
 @Service
 public class SearchQueryUtil {
 
-	public static void addSearchQuery(String searchQuery)
+	public static void addSearchQuery(String keywords)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.addSearchQuery(searchQuery);
+		_searchQueryDAO.addSearchQuery(keywords);
 	}
 
-	public static void addSearchQuery(String searchQuery, String categoryId)
+	public static void addSearchQuery(String keywords, String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.addSearchQuery(searchQuery, categoryId);
+		_searchQueryDAO.addSearchQuery(keywords, categoryId);
 	}
 
 	public static void deleteSearchQueries()
@@ -53,13 +53,13 @@ public class SearchQueryUtil {
 		_searchQueryDAO.deleteSearchQuery(searchQueryId);
 	}
 
-	public static List<SearchQueryModel> getSearchQueries()
+	public static List<SearchQuery> getSearchQueries()
 		throws DatabaseConnectionException, SQLException {
 
 		return _searchQueryDAO.getSearchQueries();
 	}
 
-	public static String getSearchQuery(int searchQueryId)
+	public static SearchQuery getSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
 		return _searchQueryDAO.getSearchQuery(searchQueryId);
@@ -85,18 +85,18 @@ public class SearchQueryUtil {
 		return false;
 	}
 
-	public static void updateSearchQuery(int searchQueryId, String searchQuery)
+	public static void updateSearchQuery(int searchQueryId, String keywords)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.updateSearchQuery(searchQueryId, searchQuery);
+		_searchQueryDAO.updateSearchQuery(searchQueryId, keywords);
 	}
 
 	public static void updateSearchQuery(
-			int searchQueryId, String searchQuery, String categoryId)
+			int searchQueryId, String keywords, String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_searchQueryDAO.updateSearchQuery(
-			searchQueryId, searchQuery, categoryId);
+			searchQueryId, keywords, categoryId);
 	}
 
 	@Autowired

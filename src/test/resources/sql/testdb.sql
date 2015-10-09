@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS SearchQuery, SearchResult, Category;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	searchQuery VARCHAR(100) null,
+	keywords VARCHAR(100) null,
 	categoryId VARCHAR(10) null
 );
 

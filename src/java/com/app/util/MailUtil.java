@@ -14,7 +14,7 @@
 
 package com.app.util;
 
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.model.SearchResultModel;
 
 import freemarker.template.Configuration;
@@ -58,7 +58,7 @@ import org.springframework.core.io.Resource;
 public class MailUtil {
 
 	public static void sendSearchResultsToRecipients(
-		Map<SearchQueryModel, List<SearchResultModel>> searchQueryResultMap) {
+		Map<SearchQuery, List<SearchResultModel>> searchQueryResultMap) {
 
 		_log.info(
 			"Sending search results for {} queries",
@@ -74,7 +74,7 @@ public class MailUtil {
 			recipientEmailAddresses, recipientPhoneNumbers);
 
 		try {
-			for (Map.Entry<SearchQueryModel, List<SearchResultModel>> mapEntry :
+			for (Map.Entry<SearchQuery, List<SearchResultModel>> mapEntry :
 					searchQueryResultMap.entrySet()) {
 
 				if (_sendViaEmail) {
@@ -225,7 +225,7 @@ public class MailUtil {
 	}
 
 	private static Message populateEmailMessage(
-			SearchQueryModel searchQueryModel,
+			SearchQuery searchQuery,
 			List<SearchResultModel> searchResultModels,
 			List<String> recipientEmailAddresses, String emailFrom,
 			Session session)
@@ -247,20 +247,20 @@ public class MailUtil {
 			"New Search Results - " + dateFormat.format(new Date()));
 
 		populateMessage(
-			searchQueryModel, searchResultModels, message, getEmailTemplate());
+			searchQuery, searchResultModels, message, getEmailTemplate());
 
 		return message;
 	}
 
 	private static void populateMessage(
-			SearchQueryModel searchQueryModel,
+			SearchQuery searchQuery,
 			List<SearchResultModel> searchResultModels, Message message,
 			Template template)
 		throws Exception {
 
 		Map<String, Object> rootMap = new HashMap<>();
 
-		rootMap.put("searchQueryModel", searchQueryModel);
+		rootMap.put("searchQuery", searchQuery);
 		rootMap.put("searchResultModels", searchResultModels);
 
 		StringWriter stringWriter = new StringWriter();

@@ -14,7 +14,7 @@
 
 package com.app.util;
 
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.model.SearchResultModel;
 
 import com.ebay.services.finding.Amount;
@@ -44,17 +44,17 @@ import org.slf4j.LoggerFactory;
 public class eBaySearchResultUtil {
 
 	public static List<SearchResultModel> geteBaySearchResults(
-		SearchQueryModel searchQueryModel) {
+		SearchQuery searchQuery) {
 
-		_log.debug("Searching for: {}", searchQueryModel.getSearchQuery());
+		_log.debug("Searching for: {}", searchQuery.getKeywords());
 
 		FindingServicePortType serviceClient = eBayAPIUtil.getServiceClient();
 
 		SearchResult searchResults = null;
 
-		if (searchQueryModel.getCategoryId() == null) {
+		if (searchQuery.getCategoryId() == null) {
 			FindItemsByKeywordsRequest request = setUpRequest(
-				searchQueryModel.getSearchQuery());
+				searchQuery.getKeywords());
 
 			FindItemsByKeywordsResponse result =
 				serviceClient.findItemsByKeywords(request);
@@ -63,8 +63,8 @@ public class eBaySearchResultUtil {
 		}
 		else {
 			FindItemsAdvancedRequest request = setUpAdvancedRequest(
-				searchQueryModel.getSearchQuery(),
-				searchQueryModel.getCategoryId());
+				searchQuery.getKeywords(),
+				searchQuery.getCategoryId());
 
 			FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
 				request);
@@ -75,7 +75,7 @@ public class eBaySearchResultUtil {
 		List<SearchItem> searchItems = searchResults.getItem();
 
 		return createSearchResults(
-			searchItems, searchQueryModel.getSearchQueryId());
+			searchItems, searchQuery.getSearchQueryId());
 	}
 
 	private static SearchResultModel createSearchResult(SearchItem item) {
@@ -152,13 +152,13 @@ public class eBaySearchResultUtil {
 	}
 
 	private static FindItemsAdvancedRequest setUpAdvancedRequest(
-		String searchQuery, String categoryId) {
+		String keywords, String categoryId) {
 
 		_log.info("Setting up advanced request with category");
 
 		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
 
-		request.setKeywords(searchQuery);
+		request.setKeywords(keywords);
 		request.getCategoryId().add(categoryId);
 
 		PaginationInput paginationInput = new PaginationInput();
@@ -171,12 +171,12 @@ public class eBaySearchResultUtil {
 		return request;
 	}
 
-	private static FindItemsByKeywordsRequest setUpRequest(String searchQuery) {
+	private static FindItemsByKeywordsRequest setUpRequest(String keywords) {
 		_log.info("Setting up request without category");
 
 		FindItemsByKeywordsRequest request = new FindItemsByKeywordsRequest();
 
-		request.setKeywords(searchQuery);
+		request.setKeywords(keywords);
 
 		PaginationInput paginationInput = new PaginationInput();
 		paginationInput.setEntriesPerPage(

@@ -15,12 +15,9 @@
 package com.app.test.util;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.test.BaseTestCase;
-import com.app.util.PropertiesUtil;
 import com.app.util.SearchQueryUtil;
-
-import java.net.URL;
 
 import java.sql.SQLException;
 
@@ -28,7 +25,6 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -54,8 +50,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertFalse(
 			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed());
 
-		SearchQueryUtil.addSearchQuery("First test search query");
-		SearchQueryUtil.addSearchQuery("Second test search query");
+		SearchQueryUtil.addSearchQuery("First test keywords");
+		SearchQueryUtil.addSearchQuery("Second test keywords");
 
 		Assert.assertTrue(
 			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed());
@@ -67,54 +63,55 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		// Test add
 
-		SearchQueryUtil.addSearchQuery("First test search query");
-		SearchQueryUtil.addSearchQuery("Second test search query");
+		SearchQueryUtil.addSearchQuery("First test keywords");
+		SearchQueryUtil.addSearchQuery("Second test keywords");
 		SearchQueryUtil.addSearchQuery(
-			"Third test search query with category ID", "100");
+			"Third test keywords with category ID", "100");
 		SearchQueryUtil.addSearchQuery(
-			"Fourth test search query with category ID", "200");
+			"Fourth test keywords with category ID", "200");
 
 		// Test get
 
-		String searchQuery = SearchQueryUtil.getSearchQuery(1);
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(1);
 
-		Assert.assertEquals("First test search query", searchQuery);
+		Assert.assertEquals(
+			"First test keywords", searchQuery.getKeywords());
 
 		// Test get multiple
 
-		List<SearchQueryModel> searchQueryModels =
+		List<SearchQuery> searchQueries =
 			SearchQueryUtil.getSearchQueries();
 
-		Assert.assertEquals(4, searchQueryModels.size());
+		Assert.assertEquals(4, searchQueries.size());
 
 		// Test search queries without categories
 
-		SearchQueryModel firstSearchQueryModel = searchQueryModels.get(0);
-		SearchQueryModel secondSearchQueryModel = searchQueryModels.get(1);
+		SearchQuery firstSearchQuery = searchQueries.get(0);
+		SearchQuery secondSearchQuery = searchQueries.get(1);
 
-		Assert.assertEquals(1, firstSearchQueryModel.getSearchQueryId());
-		Assert.assertEquals(2, secondSearchQueryModel.getSearchQueryId());
+		Assert.assertEquals(1, firstSearchQuery.getSearchQueryId());
+		Assert.assertEquals(2, secondSearchQuery.getSearchQueryId());
 		Assert.assertEquals(
-			"First test search query", firstSearchQueryModel.getSearchQuery());
+			"First test keywords", firstSearchQuery.getKeywords());
 		Assert.assertEquals(
-			"Second test search query",
-			secondSearchQueryModel.getSearchQuery());
+			"Second test keywords",
+			secondSearchQuery.getKeywords());
 
 		// Test search queries with categories
 
-		SearchQueryModel thirdSearchQueryModel = searchQueryModels.get(2);
-		SearchQueryModel fourthSearchQueryModel = searchQueryModels.get(3);
+		SearchQuery thirdSearchQuery = searchQueries.get(2);
+		SearchQuery fourthSearchQuery = searchQueries.get(3);
 
-		Assert.assertEquals(3, thirdSearchQueryModel.getSearchQueryId());
-		Assert.assertEquals(4, fourthSearchQueryModel.getSearchQueryId());
+		Assert.assertEquals(3, thirdSearchQuery.getSearchQueryId());
+		Assert.assertEquals(4, fourthSearchQuery.getSearchQueryId());
 		Assert.assertEquals(
-			"Third test search query with category ID",
-			thirdSearchQueryModel.getSearchQuery());
+			"Third test keywords with category ID",
+			thirdSearchQuery.getKeywords());
 		Assert.assertEquals(
-			"Fourth test search query with category ID",
-			fourthSearchQueryModel.getSearchQuery());
-		Assert.assertEquals("100", thirdSearchQueryModel.getCategoryId());
-		Assert.assertEquals("200", fourthSearchQueryModel.getCategoryId());
+			"Fourth test keywords with category ID",
+			fourthSearchQuery.getKeywords());
+		Assert.assertEquals("100", thirdSearchQuery.getCategoryId());
+		Assert.assertEquals("200", fourthSearchQuery.getCategoryId());
 
 		// Test count
 
@@ -124,24 +121,24 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		// Test update
 
-		SearchQueryUtil.updateSearchQuery(1, "Updated test search query");
+		SearchQueryUtil.updateSearchQuery(1, "Updated test keywords");
 		SearchQueryUtil.updateSearchQuery(
-			3, "Updated test search query with category ID", "300");
+			3, "Updated test keywords with category ID", "300");
 
-		searchQueryModels = SearchQueryUtil.getSearchQueries();
+		searchQueries = SearchQueryUtil.getSearchQueries();
 
-		firstSearchQueryModel = searchQueryModels.get(0);
-		thirdSearchQueryModel = searchQueryModels.get(2);
-
-		Assert.assertEquals(
-			"Updated test search query",
-			firstSearchQueryModel.getSearchQuery());
-		Assert.assertEquals(null, firstSearchQueryModel.getCategoryId());
+		firstSearchQuery = searchQueries.get(0);
+		thirdSearchQuery = searchQueries.get(2);
 
 		Assert.assertEquals(
-			"Updated test search query with category ID",
-			thirdSearchQueryModel.getSearchQuery());
-		Assert.assertEquals("300", thirdSearchQueryModel.getCategoryId());
+			"Updated test keywords",
+			firstSearchQuery.getKeywords());
+		Assert.assertEquals(null, firstSearchQuery.getCategoryId());
+
+		Assert.assertEquals(
+			"Updated test keywords with category ID",
+			thirdSearchQuery.getKeywords());
+		Assert.assertEquals("300", thirdSearchQuery.getCategoryId());
 
 		// Test delete multiple
 
@@ -150,9 +147,9 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		SearchQueryUtil.deleteSearchQuery(3);
 		SearchQueryUtil.deleteSearchQuery(4);
 
-		searchQueryModels = SearchQueryUtil.getSearchQueries();
+		searchQueries = SearchQueryUtil.getSearchQueries();
 
-		Assert.assertEquals(0, searchQueryModels.size());
+		Assert.assertEquals(0, searchQueries.size());
 
 		searchQueryCount = SearchQueryUtil.getSearchQueryCount();
 

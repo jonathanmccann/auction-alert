@@ -17,21 +17,21 @@ package com.app.model;
 /**
  * @author Jonathan McCann
  */
-public class SearchQueryModel {
+public class SearchQuery {
 
-	public SearchQueryModel() {
+	public SearchQuery() {
 	}
 
-	public SearchQueryModel(int searchQueryId, String searchQuery) {
+	public SearchQuery(int searchQueryId, String keywords) {
 		_searchQueryId = searchQueryId;
-		_searchQuery = searchQuery;
+		_keywords = keywords;
 	}
 
-	public SearchQueryModel(
-		int searchQueryId, String searchQuery, String categoryId) {
+	public SearchQuery(
+		int searchQueryId, String keywords, String categoryId) {
 
 		_searchQueryId = searchQueryId;
-		_searchQuery = searchQuery;
+		_keywords = keywords;
 		_categoryId = categoryId;
 	}
 
@@ -39,8 +39,8 @@ public class SearchQueryModel {
 		return _categoryId;
 	}
 
-	public String getSearchQuery() {
-		return _searchQuery;
+	public String getKeywords() {
+		return _keywords;
 	}
 
 	public int getSearchQueryId() {
@@ -51,8 +51,8 @@ public class SearchQueryModel {
 		_categoryId = categoryId;
 	}
 
-	public void setSearchQuery(String searchQuery) {
-		_searchQuery = searchQuery;
+	public void setKeywords(String keywords) {
+		_keywords = keywords;
 	}
 
 	public void setSearchQueryId(int searchQueryId) {
@@ -60,7 +60,7 @@ public class SearchQueryModel {
 	}
 
 	private String _categoryId;
-	private String _searchQuery;
+	private String _keywords;
 	private int _searchQueryId;
 
 }

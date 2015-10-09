@@ -16,7 +16,7 @@ package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.Category;
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
@@ -49,9 +49,9 @@ public class SearchQueryController {
 	public String addSearchQuery(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		SearchQueryModel searchQueryModel = new SearchQueryModel();
+		SearchQuery searchQuery = new SearchQuery();
 
-		model.put("searchQueryModel", searchQueryModel);
+		model.put("searchQuery", searchQuery);
 
 		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
 			_log.debug(
@@ -75,7 +75,7 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
 	public String addSearchQuery(
-			@ModelAttribute("searchQueryModel")SearchQueryModel searchQueryModel,
+			@ModelAttribute("searchQuery")SearchQuery searchQuery,
 			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
@@ -87,22 +87,22 @@ public class SearchQueryController {
 			return "redirect:add_search_query";
 		}
 		else {
-			String categoryId = searchQueryModel.getCategoryId();
+			String categoryId = searchQuery.getCategoryId();
 
 			if ((categoryId == null) || categoryId.equals("")) {
 				SearchQueryUtil.addSearchQuery(
-					searchQueryModel.getSearchQuery());
+					searchQuery.getKeywords());
 			}
 			else {
 				SearchQueryUtil.addSearchQuery(
-					searchQueryModel.getSearchQuery(),
-					searchQueryModel.getCategoryId());
+					searchQuery.getKeywords(),
+					searchQuery.getCategoryId());
 			}
 
-			List<SearchQueryModel> searchQueryModels =
+			List<SearchQuery> searchQueries =
 				SearchQueryUtil.getSearchQueries();
 
-			model.put("searchQueryModels", searchQueryModels);
+			model.put("searchQueries", searchQueries);
 
 			return "redirect:view_search_queries";
 		}
@@ -146,10 +146,10 @@ public class SearchQueryController {
 	public String viewSearchQueries(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		List<SearchQueryModel> searchQueryModels =
+		List<SearchQuery> searchQueries =
 			SearchQueryUtil.getSearchQueries();
 
-		model.put("searchQueryModels", searchQueryModels);
+		model.put("searchQueries", searchQueries);
 
 		return "view_search_queries";
 	}

@@ -33,13 +33,13 @@
 					<td align="center" colspan="2"><h2>Current Search Queries</h2></td>
 				</tr>
 				<c:choose>
-					<c:when test="${empty searchQueryModels}">
+					<c:when test="${empty searchQueries}">
 						<td>There are currently no search queries<td>
 					</c:when>
 					<c:otherwise>
-						<c:forEach items="${searchQueryModels}" var="searchQueryModel">
+						<c:forEach items="${searchQueries}" var="searchQuery">
 							<tr>
-								<td><input id="checkboxes" name="searchQueryIds" type="checkbox" value="${searchQueryModel.searchQueryId}" /><label>${searchQueryModel.searchQuery}</label></td>
+								<td><input id="checkboxes" name="searchQueryIds" type="checkbox" value="${searchQuery.searchQueryId}" /><label>${searchQuery.searchQuery}</label></td>
 							</tr>
 						</c:forEach>
 						<tr>

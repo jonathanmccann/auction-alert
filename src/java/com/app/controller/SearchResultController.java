@@ -15,7 +15,7 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.model.SearchResultModel;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
@@ -62,21 +62,21 @@ public class SearchResultController {
 		Map<String, List<SearchResultModel>> searchResultModelMap =
 			new HashMap<>();
 
-		List<SearchQueryModel> searchQueryModels =
+		List<SearchQuery> searchQueries =
 			SearchQueryUtil.getSearchQueries();
 
-		_log.debug("Found {} search query results", searchQueryModels.size());
+		_log.debug("Found {} search query results", searchQueries.size());
 
-		for (SearchQueryModel searchQueryModel : searchQueryModels) {
-			int searchQueryId = searchQueryModel.getSearchQueryId();
+		for (SearchQuery searchQuery : searchQueries) {
+			int searchQueryId = searchQuery.getSearchQueryId();
 
-			String searchQuery = searchQueryModel.getSearchQuery();
+			String keywords = searchQuery.getKeywords();
 
 			List<SearchResultModel> searchResultModels =
 				SearchResultUtil.getSearchQueryResults(searchQueryId);
 
 			if (!searchResultModels.isEmpty()) {
-				searchResultModelMap.put(searchQuery, searchResultModels);
+				searchResultModelMap.put(keywords, searchResultModels);
 			}
 		}
 

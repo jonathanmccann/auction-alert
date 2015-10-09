@@ -16,7 +16,7 @@ package com.app.util;
 
 import com.app.dao.SearchResultDAO;
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchQueryModel;
+import com.app.model.SearchQuery;
 import com.app.model.SearchResultModel;
 
 import java.sql.SQLException;
@@ -76,10 +76,10 @@ public class SearchResultUtil {
 	public static void performSearch()
 		throws DatabaseConnectionException, SQLException {
 
-		List<SearchQueryModel> searchQueryModels =
+		List<SearchQuery> searchQueries =
 			SearchQueryUtil.getSearchQueries();
 
-		if (searchQueryModels.size() == 0) {
+		if (searchQueries.size() == 0) {
 			_log.info("There are no search queries");
 
 			return;
@@ -87,20 +87,20 @@ public class SearchResultUtil {
 
 		_log.info(
 			"Getting eBay search results for {} search queries",
-			searchQueryModels.size());
+			searchQueries.size());
 
-		Map<SearchQueryModel, List<SearchResultModel>> searchQueryResultMap =
+		Map<SearchQuery, List<SearchResultModel>> searchQueryResultMap =
 			new HashMap<>();
 
-		for (SearchQueryModel searchQueryModel : searchQueryModels) {
+		for (SearchQuery searchQuery : searchQueries) {
 			List<SearchResultModel> searchResultModels =
-				eBaySearchResultUtil.geteBaySearchResults(searchQueryModel);
+				eBaySearchResultUtil.geteBaySearchResults(searchQuery);
 
 			searchResultModels = _filterSearchResults(
-				searchQueryModel, searchResultModels);
+				searchQuery, searchResultModels);
 
 			if (!searchResultModels.isEmpty()) {
-				searchQueryResultMap.put(searchQueryModel, searchResultModels);
+				searchQueryResultMap.put(searchQuery, searchResultModels);
 			}
 		}
 
@@ -110,13 +110,13 @@ public class SearchResultUtil {
 	}
 
 	private static List<SearchResultModel> _filterSearchResults(
-			SearchQueryModel searchQueryModel,
+			SearchQuery searchQuery,
 			List<SearchResultModel> newSearchResultModels)
 		throws DatabaseConnectionException, SQLException {
 
 		List<String> searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				searchQueryModel.getSearchQueryId());
+				searchQuery.getSearchQueryId());
 
 		Iterator iterator = newSearchResultModels.iterator();
 
@@ -133,13 +133,13 @@ public class SearchResultUtil {
 
 		if (!newSearchResultModels.isEmpty()) {
 			_log.debug(
-				"Found {} new search results for search query: {}",
+				"Found {} new search results for keywords: {}",
 				newSearchResultModels.size(),
-				searchQueryModel.getSearchQuery());
+				searchQuery.getKeywords());
 
 			List<SearchResultModel> existingSearchResultModels =
 				getSearchQueryResults(
-					searchQueryModel.getSearchQueryId());
+					searchQuery.getSearchQueryId());
 
 			_saveNewResultsAndRemoveOldResults(
 				existingSearchResultModels, newSearchResultModels);
