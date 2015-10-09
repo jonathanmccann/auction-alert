@@ -25,8 +25,6 @@ import freemarker.template.Template;
 
 import java.lang.reflect.Method;
 
-import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,8 +35,6 @@ import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
-
-import org.hamcrest.CoreMatchers;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -185,9 +181,8 @@ public class MailUtilTest extends BaseTestCase {
 			emailAddresses, "test@test.com", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
-		Assert.assertThat(
-			message.getSubject(),
-			CoreMatchers.containsString("New Search Results - "));
+		Assert.assertTrue(
+			message.getSubject().contains("New Search Results - "));
 		Assert.assertEquals(
 			"Search Query: Test search query\nItem: itemTitle\n" +
 				"Auction Price: $14.99\nFixed Price: $29.99\n" +
