@@ -1,3 +1,4 @@
+apply plugin: "jacoco"
 apply plugin: 'java'
 apply plugin: 'war'
 
@@ -51,6 +52,11 @@ sourceSets {
 
 test {
 	systemProperties System.getProperties()
+	jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }
 }
 
 war {
