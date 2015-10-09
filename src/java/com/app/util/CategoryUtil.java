@@ -25,6 +25,7 @@ import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -39,10 +40,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryUtil {
 
-	public static void addCategory(String categoryId, String categoryName)
+	public static void addCategories(List<Category> categories)
 		throws DatabaseConnectionException, SQLException {
 
-		_categoryDAO.addCategory(categoryId, categoryName);
+		_categoryDAO.addCategories(categories);
 	}
 
 	public static void deleteCategories()
@@ -117,11 +118,17 @@ public class CategoryUtil {
 
 			deleteCategories();
 
+			List<Category> categories = new ArrayList<>();
+
 			for (CategoryType categoryType : ebayCategories) {
-				addCategory(
+				Category category = new Category(
 					categoryType.getCategoryID(),
 					categoryType.getCategoryName());
+
+				categories.add(category);
 			}
+
+			addCategories(categories);
 
 			ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, version);
 		}

@@ -19,6 +19,7 @@ import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
 import com.app.util.ReleaseUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -126,7 +127,13 @@ public class CategoryUtilTest extends BaseTestCase {
 	private static void addCategory(String categoryId, String categoryName)
 		throws Exception {
 
-		CategoryUtil.addCategory(categoryId, categoryName);
+		List<Category> categories = new ArrayList<>();
+
+		Category category = new Category(categoryId, categoryName);
+
+		categories.add(category);
+
+		CategoryUtil.addCategories(categories);
 	}
 
 	private static final String _CATEGORY_ID = "categoryId";

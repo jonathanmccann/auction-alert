@@ -34,21 +34,28 @@ import org.slf4j.LoggerFactory;
  */
 public class CategoryDAO {
 
-	public void addCategory(String categoryId, String categoryName)
+	public void addCategories(List<Category> categories)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Adding new category with ID {} and name {}", categoryId,
-			categoryName);
+			"Adding {} categories", categories.size());
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_CATEGORY_SQL)) {
 
-			preparedStatement.setString(1, categoryId);
-			preparedStatement.setString(2, categoryName);
+			connection.setAutoCommit(false);
 
-			preparedStatement.executeUpdate();
+			for (Category category : categories) {
+				preparedStatement.setString(1, category.getCategoryId());
+				preparedStatement.setString(2, category.getCategoryName());
+
+				preparedStatement.addBatch();
+			}
+
+			preparedStatement.executeBatch();
+
+			connection.commit();
 		}
 	}
 
