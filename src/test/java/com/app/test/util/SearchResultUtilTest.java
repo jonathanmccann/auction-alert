@@ -14,6 +14,7 @@
 
 package com.app.test.util;
 
+import com.app.dao.SearchQueryPreviousResultDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
@@ -42,41 +43,25 @@ public class SearchResultUtilTest extends BaseTestCase {
 	@After
 	public void tearDown() throws Exception {
 		SearchResultUtil.deleteSearchQueryResults(1);
-		SearchResultUtil.deleteSearchQueryResults(2);
 	}
 
 	@Test
-	public void testSearchResultUtil()
-		throws DatabaseConnectionException, SQLException {
-
-		// Test add with constructor
-
+	public void testAddSearchResult() throws Exception {
 		Date endingTime = new Date();
 
 		SearchResult searchResult = new SearchResult(
-			1, "1234", "First Item", 14.99, 14.99,
+			1, "1234", "First Item", 10.00, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
 			endingTime, "Auction");
 
-		SearchResultUtil.addSearchResult(searchResult);
+		int searchResultId = SearchResultUtil.addSearchResult(searchResult);
 
-		searchResult = new SearchResult(
-			2, "2345", "Second Item", 14.99, 14.99,
-			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
-			endingTime, "FixedPrice");
+		searchResult = SearchResultUtil.getSearchResult(searchResultId);
 
-		SearchResultUtil.addSearchResult(searchResult);
-
-		// Test get
-
-		searchResult = SearchResultUtil.getSearchResult(
-			1);
-
-		Assert.assertEquals(1, searchResult.getSearchResultId());
 		Assert.assertEquals(1, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
-		Assert.assertEquals(14.99, searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals(10.00, searchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
@@ -84,49 +69,72 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
 		Assert.assertEquals(endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
+	}
 
-		// Test get multiple
+	@Test
+	public void testDeleteSearchQueryResults() throws Exception {
+		Date endingTime = new Date();
+
+		SearchResult searchResult = new SearchResult(
+			1, "1234", "First Item", 10.00, 14.99,
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
+			endingTime, "Auction");
+
+		SearchResultUtil.addSearchResult(searchResult);
+
+		searchResult = new SearchResult(
+			1, "2345", "Second Item", 14.99, 14.99,
+			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
+			endingTime, "FixedPrice");
+
+		SearchResultUtil.addSearchResult(searchResult);
 
 		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchResults();
+			SearchResultUtil.getSearchQueryResults(1);
 
 		Assert.assertEquals(2, searchResults.size());
 
-		SearchResult secondSearchResult = searchResults.get(1);
+		SearchResultUtil.deleteSearchQueryResults(1);
 
-		Assert.assertEquals(2, secondSearchResult.getSearchResultId());
-		Assert.assertEquals(2, secondSearchResult.getSearchQueryId());
-		Assert.assertEquals("2345", secondSearchResult.getItemId());
-		Assert.assertEquals("Second Item", secondSearchResult.getItemTitle());
-		Assert.assertEquals(14.99, secondSearchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(14.99, secondSearchResult.getFixedPrice(), 0);
-		Assert.assertEquals(
-			"http://www.ebay.com/itm/2345", secondSearchResult.getItemURL());
-		Assert.assertEquals(
-			"http://www.ebay.com/234.jpg", secondSearchResult.getGalleryURL());
-		Assert.assertEquals(endingTime, secondSearchResult.getEndingTime());
-		Assert.assertEquals(
-			"FixedPrice", secondSearchResult.getTypeOfAuction());
-
-		// Test delete
-
-		SearchResultUtil.deleteSearchResult(1);
-
-		searchResults = SearchResultUtil.getSearchResults();
-
-		Assert.assertEquals(1, searchResults.size());
-
-		// Test find by search query
-
-		searchResults = SearchResultUtil.getSearchQueryResults(2);
-
-		Assert.assertEquals(1, searchResults.size());
-
-		SearchResultUtil.deleteSearchQueryResults(2);
-
-		searchResults = SearchResultUtil.getSearchQueryResults(2);
+		searchResults = SearchResultUtil.getSearchQueryResults(1);
 
 		Assert.assertEquals(0, searchResults.size());
+	}
+
+	@Test
+	public void testDeleteSearchResult() throws Exception {
+		Date endingTime = new Date();
+
+		SearchResult searchResult = new SearchResult(
+			1, "1234", "First Item", 10.00, 14.99,
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
+			endingTime, "Auction");
+
+		int firstSearchResultId = SearchResultUtil.addSearchResult(
+			searchResult);
+
+		searchResult = new SearchResult(
+			1, "2345", "Second Item", 14.99, 14.99,
+			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
+			endingTime, "FixedPrice");
+
+		SearchResultUtil.addSearchResult(searchResult);
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(1);
+
+		Assert.assertEquals(2, searchResults.size());
+
+		SearchResultUtil.deleteSearchResult(firstSearchResultId);
+
+		searchResults = SearchResultUtil.getSearchQueryResults(1);
+
+		Assert.assertEquals(1, searchResults.size());
+	}
+
+	@Test(expected = SQLException.class)
+	public void testGetNonExistentSearchResult() throws Exception {
+		SearchResultUtil.getSearchResult(1);
 	}
 
 }

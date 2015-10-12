@@ -18,6 +18,8 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResult;
 import com.app.util.DatabaseUtil;
 
+import com.mysql.jdbc.Statement;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchResultDAO {
 
-	public void addSearchResult(SearchResult searchResult)
+	public int addSearchResult(SearchResult searchResult)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
@@ -43,12 +45,18 @@ public class SearchResultDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_RESULT_SQL)) {
+				_ADD_SEARCH_RESULT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
 			populateAddSearchResultPreparedStatement(
 				preparedStatement, searchResult);
 
 			preparedStatement.executeUpdate();
+
+			ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+			resultSet.next();
+
+			return resultSet.getInt(1);
 		}
 	}
 
@@ -126,30 +134,9 @@ public class SearchResultDAO {
 					return createSearchResultFromResultSet(resultSet);
 				}
 				else {
-					return new SearchResult();
+					throw new SQLException(
+						"No search result exists with ID: " + searchResultId);
 				}
-			}
-		}
-	}
-
-	public List<SearchResult> getSearchResults()
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug("Getting all search results");
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_RESULTS_SQL)) {
-
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<SearchResult> searchResults = new ArrayList<>();
-
-				while (resultSet.next()) {
-					searchResults.add(
-						createSearchResultFromResultSet(resultSet));
-				}
-
-				return searchResults;
 			}
 		}
 	}
@@ -209,9 +196,6 @@ public class SearchResultDAO {
 
 	private static final String _GET_SEARCH_RESULT_SQL =
 		"SELECT * FROM SearchResult WHERE searchResultId = ?";
-
-	private static final String _GET_SEARCH_RESULTS_SQL =
-		"SELECT * FROM SearchResult";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultDAO.class);
