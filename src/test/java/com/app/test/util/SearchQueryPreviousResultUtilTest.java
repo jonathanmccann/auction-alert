@@ -36,7 +36,7 @@ public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResult(1);
+		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(1);
 	}
 
 	@Test
