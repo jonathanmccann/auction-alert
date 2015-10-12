@@ -124,7 +124,8 @@ public class CategoryDAO {
 					return createCategoryFromResultSet(resultSet);
 				}
 				else {
-					return new Category();
+					throw new SQLException(
+						"No category exists with category ID: " + categoryId);
 				}
 			}
 		}
