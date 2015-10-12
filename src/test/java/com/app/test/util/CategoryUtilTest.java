@@ -19,6 +19,8 @@ import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
 import com.app.util.ReleaseUtil;
 
+import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,6 +111,11 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
 		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
+	}
+
+	@Test(expected = SQLException.class)
+	public void testGetNonExistantCategory() throws Exception {
+		CategoryUtil.getCategory(_CATEGORY_ID);
 	}
 
 	@Test
