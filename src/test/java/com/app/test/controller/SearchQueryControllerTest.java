@@ -87,16 +87,18 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void testDeleteSearchQuery() throws Exception {
 		String[] searchQueryIds = new String[] { "1" };
 
-		SearchQueryUtil.addSearchQuery("First test keywords");
+		int searchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords");
 
 		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 14.99,
+			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
 			new Date(), "Buy It Now");
 
 		SearchResultUtil.addSearchResult(searchResult);
 
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "100");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			searchQueryId, "100");
 
 		this.mockMvc.perform(post("/delete_search_query")
 			.param("searchQueryIds", searchQueryIds))
@@ -104,17 +106,18 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:view_search_queries"));
 
 		try {
-			SearchQueryUtil.getSearchQuery(1);
+			SearchQueryUtil.getSearchQuery(searchQueryId);
 		}
 		catch (SQLException sqle) {
 			Assert.assertEquals(SQLException.class, sqle.getClass());
 		}
 
 		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(1);
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
 
 		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
+				searchQueryId);
 
 		Assert.assertEquals(0, searchResults.size());
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
@@ -122,16 +125,18 @@ public class SearchQueryControllerTest extends BaseTestCase {
 //
 	@Test
 	public void testDeleteSearchQueryWithNullSearchQueryIds() throws Exception {
-		SearchQueryUtil.addSearchQuery("First test keywords");
+		int searchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords");
 
 		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 14.99,
+			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
 			new Date(), "Buy It Now");
 
 		SearchResultUtil.addSearchResult(searchResult);
 
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "100");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			searchQueryId, "100");
 
 		this.mockMvc.perform(post("/delete_search_query"))
 			.andExpect(status().isFound())
@@ -140,10 +145,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
 
 		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(1);
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
 
 		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
+				searchQueryId);
 
 		Assert.assertEquals(1, searchQueries.size());
 		Assert.assertEquals(1, searchResults.size());

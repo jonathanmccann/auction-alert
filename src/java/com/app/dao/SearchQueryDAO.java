@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,22 +35,28 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchQueryDAO {
 
-	public void addSearchQuery(String searchKeywords)
+	public int addSearchQuery(String searchKeywords)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Adding new searchQuery with keywords: {}", searchKeywords);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_QUERY_SQL)) {
+				_ADD_SEARCH_QUERY_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
 			preparedStatement.setString(1, searchKeywords);
 
 			preparedStatement.executeUpdate();
+
+			ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+			resultSet.next();
+
+			return resultSet.getInt(1);
 		}
 	}
 
-	public void addSearchQuery(String searchKeywords, String categoryId)
+	public int addSearchQuery(String searchKeywords, String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
@@ -57,13 +64,21 @@ public class SearchQueryDAO {
 			searchKeywords, categoryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_QUERY_WITH_CATEGORY_SQL)) {
+			PreparedStatement preparedStatement =
+				connection.prepareStatement(
+					_ADD_SEARCH_QUERY_WITH_CATEGORY_SQL,
+					Statement.RETURN_GENERATED_KEYS)) {
 
 			preparedStatement.setString(1, searchKeywords);
 			preparedStatement.setString(2, categoryId);
 
 			preparedStatement.executeUpdate();
+
+			ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+			resultSet.next();
+
+			return resultSet.getInt(1);
 		}
 	}
 

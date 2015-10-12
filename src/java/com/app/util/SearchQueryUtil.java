@@ -29,16 +29,16 @@ import java.util.List;
 @Service
 public class SearchQueryUtil {
 
-	public static void addSearchQuery(String keywords)
+	public static int addSearchQuery(String keywords)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.addSearchQuery(keywords);
+		return _searchQueryDAO.addSearchQuery(keywords);
 	}
 
-	public static void addSearchQuery(String keywords, String categoryId)
+	public static int addSearchQuery(String keywords, String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.addSearchQuery(keywords, categoryId);
+		return _searchQueryDAO.addSearchQuery(keywords, categoryId);
 	}
 
 	public static void deleteSearchQueries()

@@ -63,16 +63,19 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		// Test add
 
-		SearchQueryUtil.addSearchQuery("First test keywords");
-		SearchQueryUtil.addSearchQuery("Second test keywords");
-		SearchQueryUtil.addSearchQuery(
+		int firstSearchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords");
+		int secondSearchQueryId = SearchQueryUtil.addSearchQuery(
+			"Second test keywords");
+		int thirdSearchQueryId = SearchQueryUtil.addSearchQuery(
 			"Third test keywords with category ID", "100");
-		SearchQueryUtil.addSearchQuery(
+		int fourthSearchQueryId = SearchQueryUtil.addSearchQuery(
 			"Fourth test keywords with category ID", "200");
 
 		// Test get
 
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(1);
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
+			firstSearchQueryId);
 
 		Assert.assertEquals(
 			"First test keywords", searchQuery.getKeywords());
@@ -89,8 +92,10 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		SearchQuery firstSearchQuery = searchQueries.get(0);
 		SearchQuery secondSearchQuery = searchQueries.get(1);
 
-		Assert.assertEquals(1, firstSearchQuery.getSearchQueryId());
-		Assert.assertEquals(2, secondSearchQuery.getSearchQueryId());
+		Assert.assertEquals(
+			firstSearchQueryId, firstSearchQuery.getSearchQueryId());
+		Assert.assertEquals(
+			secondSearchQueryId, secondSearchQuery.getSearchQueryId());
 		Assert.assertEquals(
 			"First test keywords", firstSearchQuery.getKeywords());
 		Assert.assertEquals(
@@ -102,8 +107,10 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		SearchQuery thirdSearchQuery = searchQueries.get(2);
 		SearchQuery fourthSearchQuery = searchQueries.get(3);
 
-		Assert.assertEquals(3, thirdSearchQuery.getSearchQueryId());
-		Assert.assertEquals(4, fourthSearchQuery.getSearchQueryId());
+		Assert.assertEquals(
+			thirdSearchQueryId, thirdSearchQuery.getSearchQueryId());
+		Assert.assertEquals(
+			fourthSearchQueryId, fourthSearchQuery.getSearchQueryId());
 		Assert.assertEquals(
 			"Third test keywords with category ID",
 			thirdSearchQuery.getKeywords());
@@ -121,9 +128,11 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		// Test update
 
-		SearchQueryUtil.updateSearchQuery(1, "Updated test keywords");
 		SearchQueryUtil.updateSearchQuery(
-			3, "Updated test keywords with category ID", "300");
+			firstSearchQueryId, "Updated test keywords");
+		SearchQueryUtil.updateSearchQuery(
+			thirdSearchQueryId,
+			"Updated test keywords with category ID", "300");
 
 		searchQueries = SearchQueryUtil.getSearchQueries();
 
@@ -142,10 +151,10 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		// Test delete multiple
 
-		SearchQueryUtil.deleteSearchQuery(1);
-		SearchQueryUtil.deleteSearchQuery(2);
-		SearchQueryUtil.deleteSearchQuery(3);
-		SearchQueryUtil.deleteSearchQuery(4);
+		SearchQueryUtil.deleteSearchQuery(firstSearchQueryId);
+		SearchQueryUtil.deleteSearchQuery(secondSearchQueryId);
+		SearchQueryUtil.deleteSearchQuery(thirdSearchQueryId);
+		SearchQueryUtil.deleteSearchQuery(fourthSearchQueryId);
 
 		searchQueries = SearchQueryUtil.getSearchQueries();
 
