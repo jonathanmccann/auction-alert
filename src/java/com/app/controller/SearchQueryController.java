@@ -84,19 +84,22 @@ public class SearchQueryController {
 				"Unable to add more search queries since it would exceed the " +
 					"total number of search queries allowed");
 
+			model.put("disabled", true);
+
 			return "redirect:add_search_query";
 		}
-		else {
+
+		String keywords = searchQuery.getKeywords();
+
+		if ((keywords == null) || keywords.equals("")) {
 			String categoryId = searchQuery.getCategoryId();
 
 			if ((categoryId == null) || categoryId.equals("")) {
-				SearchQueryUtil.addSearchQuery(
-					searchQuery.getKeywords());
+				SearchQueryUtil.addSearchQuery(searchQuery.getKeywords());
 			}
 			else {
 				SearchQueryUtil.addSearchQuery(
-					searchQuery.getKeywords(),
-					searchQuery.getCategoryId());
+					searchQuery.getKeywords(), categoryId);
 			}
 
 			List<SearchQuery> searchQueries =
@@ -105,6 +108,9 @@ public class SearchQueryController {
 			model.put("searchQueries", searchQueries);
 
 			return "redirect:view_search_queries";
+		}
+		else {
+			return "redirect:error.jsp";
 		}
 	}
 
