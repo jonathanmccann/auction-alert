@@ -14,7 +14,6 @@
 
 package com.app.test.util;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.test.BaseTestCase;
 import com.app.util.SearchQueryUtil;
@@ -44,6 +43,77 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testAddSearchQueryWithKeywords() throws Exception {
+		int searchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords");
+
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertNull(searchQuery.getCategoryId());
+	}
+
+	@Test
+	public void testAddSearchQueryWithKeywordsAndCategory() throws Exception {
+		int searchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords", "100");
+
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+	}
+
+	@Test
+	public void testDeleteSearchQueries() throws Exception {
+		SearchQueryUtil.addSearchQuery("First test keywords");
+		SearchQueryUtil.addSearchQuery("Second test keywords");
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+
+		Assert.assertEquals(2, searchQueries.size());
+
+		SearchQueryUtil.deleteSearchQueries();
+
+		searchQueries = SearchQueryUtil.getSearchQueries();
+
+		Assert.assertEquals(0, searchQueries.size());
+	}
+
+	@Test
+	public void testDeleteSearchQuery() throws Exception {
+		int firstSearchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords");
+
+		SearchQueryUtil.addSearchQuery("Second test keywords");
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+
+		Assert.assertEquals(2, searchQueries.size());
+
+		SearchQueryUtil.deleteSearchQuery(firstSearchQueryId);
+
+		searchQueries = SearchQueryUtil.getSearchQueries();
+
+		Assert.assertEquals(1, searchQueries.size());
+	}
+
+	@Test(expected = SQLException.class)
+	public void testGetNonExistantSearchQuery() throws Exception {
+		SearchQueryUtil.getSearchQuery(1);
+	}
+
+	@Test
+	public void testGetSearchQueryCount() throws Exception {
+		SearchQueryUtil.addSearchQuery("First test keywords");
+		SearchQueryUtil.addSearchQuery("Second test keywords");
+
+		int numberOfSearchQueries = SearchQueryUtil.getSearchQueryCount();
+
+		Assert.assertEquals(2, numberOfSearchQueries);
+	}
+
+	@Test
 	public void testIsExceedsTotalNumberOfSearchQueriesAllowed()
 		throws Exception {
 
@@ -58,111 +128,42 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testSearchQueryUtil()
-		throws DatabaseConnectionException, SQLException {
-
-		// Test add
-
-		int firstSearchQueryId = SearchQueryUtil.addSearchQuery(
+	public void testUpdateSearchQueryWithKeywords() throws Exception {
+		int searchQueryId = SearchQueryUtil.addSearchQuery(
 			"First test keywords");
-		int secondSearchQueryId = SearchQueryUtil.addSearchQuery(
-			"Second test keywords");
-		int thirdSearchQueryId = SearchQueryUtil.addSearchQuery(
-			"Third test keywords with category ID", "100");
-		int fourthSearchQueryId = SearchQueryUtil.addSearchQuery(
-			"Fourth test keywords with category ID", "200");
 
-		// Test get
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
-			firstSearchQueryId);
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertNull(searchQuery.getCategoryId());
 
-		Assert.assertEquals(
-			"First test keywords", searchQuery.getKeywords());
+		SearchQueryUtil.updateSearchQuery(searchQueryId, "New test keywords");
 
-		// Test get multiple
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries();
+		Assert.assertEquals("New test keywords", searchQuery.getKeywords());
+		Assert.assertNull(searchQuery.getCategoryId());
+	}
 
-		Assert.assertEquals(4, searchQueries.size());
+	@Test
+	public void testUpdateSearchQueryWithKeywordsAndCategory()
+		throws Exception {
 
-		// Test search queries without categories
+		int searchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords", "100");
 
-		SearchQuery firstSearchQuery = searchQueries.get(0);
-		SearchQuery secondSearchQuery = searchQueries.get(1);
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		Assert.assertEquals(
-			firstSearchQueryId, firstSearchQuery.getSearchQueryId());
-		Assert.assertEquals(
-			secondSearchQueryId, secondSearchQuery.getSearchQueryId());
-		Assert.assertEquals(
-			"First test keywords", firstSearchQuery.getKeywords());
-		Assert.assertEquals(
-			"Second test keywords",
-			secondSearchQuery.getKeywords());
-
-		// Test search queries with categories
-
-		SearchQuery thirdSearchQuery = searchQueries.get(2);
-		SearchQuery fourthSearchQuery = searchQueries.get(3);
-
-		Assert.assertEquals(
-			thirdSearchQueryId, thirdSearchQuery.getSearchQueryId());
-		Assert.assertEquals(
-			fourthSearchQueryId, fourthSearchQuery.getSearchQueryId());
-		Assert.assertEquals(
-			"Third test keywords with category ID",
-			thirdSearchQuery.getKeywords());
-		Assert.assertEquals(
-			"Fourth test keywords with category ID",
-			fourthSearchQuery.getKeywords());
-		Assert.assertEquals("100", thirdSearchQuery.getCategoryId());
-		Assert.assertEquals("200", fourthSearchQuery.getCategoryId());
-
-		// Test count
-
-		int searchQueryCount = SearchQueryUtil.getSearchQueryCount();
-
-		Assert.assertEquals(4, searchQueryCount);
-
-		// Test update
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
 
 		SearchQueryUtil.updateSearchQuery(
-			firstSearchQueryId, "Updated test keywords");
-		SearchQueryUtil.updateSearchQuery(
-			thirdSearchQueryId,
-			"Updated test keywords with category ID", "300");
+			searchQueryId, "New test keywords", "200");
 
-		searchQueries = SearchQueryUtil.getSearchQueries();
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		firstSearchQuery = searchQueries.get(0);
-		thirdSearchQuery = searchQueries.get(2);
-
-		Assert.assertEquals(
-			"Updated test keywords",
-			firstSearchQuery.getKeywords());
-		Assert.assertEquals(null, firstSearchQuery.getCategoryId());
-
-		Assert.assertEquals(
-			"Updated test keywords with category ID",
-			thirdSearchQuery.getKeywords());
-		Assert.assertEquals("300", thirdSearchQuery.getCategoryId());
-
-		// Test delete multiple
-
-		SearchQueryUtil.deleteSearchQuery(firstSearchQueryId);
-		SearchQueryUtil.deleteSearchQuery(secondSearchQueryId);
-		SearchQueryUtil.deleteSearchQuery(thirdSearchQueryId);
-		SearchQueryUtil.deleteSearchQuery(fourthSearchQueryId);
-
-		searchQueries = SearchQueryUtil.getSearchQueries();
-
-		Assert.assertEquals(0, searchQueries.size());
-
-		searchQueryCount = SearchQueryUtil.getSearchQueryCount();
-
-		Assert.assertEquals(0, searchQueryCount);
+		Assert.assertEquals("New test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("200", searchQuery.getCategoryId());
 	}
 
 }
