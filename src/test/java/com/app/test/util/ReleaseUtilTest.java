@@ -17,6 +17,7 @@ package com.app.test.util;
 import com.app.exception.DatabaseConnectionException;
 import com.app.test.BaseTestCase;
 import com.app.util.ReleaseUtil;
+import com.app.util.ValidatorUtil;
 
 import java.sql.SQLException;
 
@@ -41,34 +42,45 @@ public class ReleaseUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testReleaseUtil()
-		throws DatabaseConnectionException, SQLException {
+	public void testAddRelease() throws Exception {
+		ReleaseUtil.addRelease("Test Release", "1.0");
 
-		// Test add
+		Assert.assertEquals(
+			"1.0", ReleaseUtil.getReleaseVersion("Test Release"));
+	}
 
-		ReleaseUtil.addRelease("First Release", "100");
-		ReleaseUtil.addRelease("Second Release", "101");
+	@Test
+	public void testDeleteRelease() throws Exception {
+		ReleaseUtil.addRelease("Test Release", "1.0");
 
-		// Test get
+		Assert.assertEquals(
+			"1.0", ReleaseUtil.getReleaseVersion("Test Release"));
 
-		String firstVersion = ReleaseUtil.getReleaseVersion(
-			"First Release");
-		String secondVersion = ReleaseUtil.getReleaseVersion(
-			"Second Release");
+		ReleaseUtil.deleteRelease("Test Release");
 
-		Assert.assertEquals("100", firstVersion);
-		Assert.assertEquals("101", secondVersion);
+		Assert.assertTrue(
+			ValidatorUtil.isNull(
+				ReleaseUtil.getReleaseVersion("Test Release")));
+	}
 
-		// Test delete
+	@Test
+	public void testDeleteReleases() throws Exception {
+		ReleaseUtil.addRelease("First Test Release", "1.0");
+		ReleaseUtil.addRelease("Second Test Release", "2.0");
 
-		ReleaseUtil.deleteRelease("First Release");
-		ReleaseUtil.deleteRelease("Second Release");
+		Assert.assertEquals(
+			"1.0", ReleaseUtil.getReleaseVersion("First Test Release"));
+		Assert.assertEquals(
+			"2.0", ReleaseUtil.getReleaseVersion("Second Test Release"));
 
-		firstVersion = ReleaseUtil.getReleaseVersion("First Release");
-		secondVersion = ReleaseUtil.getReleaseVersion("Second Release");
+		ReleaseUtil.deleteReleases();
 
-		Assert.assertEquals("", firstVersion);
-		Assert.assertEquals("", secondVersion);
+		Assert.assertTrue(
+			ValidatorUtil.isNull(
+				ReleaseUtil.getReleaseVersion("First Test Release")));
+		Assert.assertTrue(
+			ValidatorUtil.isNull(
+				ReleaseUtil.getReleaseVersion("Second Test Release")));
 	}
 
 	@Test(expected = SQLException.class)
