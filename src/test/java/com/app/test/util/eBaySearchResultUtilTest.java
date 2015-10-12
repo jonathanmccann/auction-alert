@@ -18,6 +18,7 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
+import com.app.util.ValidatorUtil;
 import com.app.util.eBaySearchResultUtil;
 
 import com.ebay.services.finding.Amount;
@@ -259,7 +260,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 	private static SearchItem createSearchItem(String itemId) {
 		SearchItem searchItem = new SearchItem();
 
-		if ((itemId == null) || (itemId.equals(""))) {
+		if (ValidatorUtil.isNull(itemId)) {
 			itemId = _ITEM_ID;
 		}
 

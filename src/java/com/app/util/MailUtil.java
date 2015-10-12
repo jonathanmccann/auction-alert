@@ -149,9 +149,7 @@ public class MailUtil {
 		String recipientEmailAddresses =
 			PropertiesValues.RECIPIENT_EMAIL_ADDRESSES;
 
-		if ((recipientEmailAddresses != null) &&
-			!recipientEmailAddresses.equals("")) {
-
+		if (ValidatorUtil.isNotNull(recipientEmailAddresses)) {
 			List<String> recipientEmailAddressesList = Arrays.asList(
 				recipientEmailAddresses.split(","));
 
@@ -177,9 +175,7 @@ public class MailUtil {
 
 		String recipientPhoneNumbers = PropertiesValues.RECIPIENT_PHONE_NUMBERS;
 
-		if ((recipientPhoneNumbers != null) &&
-			!recipientPhoneNumbers.equals("")) {
-
+		if (ValidatorUtil.isNotNull(recipientPhoneNumbers)) {
 			List<String> recipientPhoneNumbersList = Arrays.asList(
 				recipientPhoneNumbers.split(","));
 

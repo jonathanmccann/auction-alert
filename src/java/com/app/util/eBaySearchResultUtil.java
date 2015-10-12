@@ -51,7 +51,7 @@ public class eBaySearchResultUtil {
 
 		com.ebay.services.finding.SearchResult searchResults = null;
 
-		if (searchQuery.getCategoryId() == null) {
+		if (ValidatorUtil.isNull(searchQuery.getCategoryId())) {
 			FindItemsByKeywordsRequest request = setUpRequest(
 				searchQuery.getKeywords());
 

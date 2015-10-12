@@ -30,6 +30,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.app.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,10 +92,10 @@ public class SearchQueryController {
 
 		String keywords = searchQuery.getKeywords();
 
-		if ((keywords == null) || keywords.equals("")) {
+		if (ValidatorUtil.isNotNull(keywords)) {
 			String categoryId = searchQuery.getCategoryId();
 
-			if ((categoryId == null) || categoryId.equals("")) {
+			if (ValidatorUtil.isNull(categoryId)) {
 				SearchQueryUtil.addSearchQuery(searchQuery.getKeywords());
 			}
 			else {
@@ -118,7 +119,7 @@ public class SearchQueryController {
 	public String deleteSearchQuery(String[] searchQueryIds)
 		throws DatabaseConnectionException, SQLException {
 
-		if ((searchQueryIds != null) && (searchQueryIds.length > 0)) {
+		if (ValidatorUtil.isNotNull(searchQueryIds)) {
 			for (String searchQueryId : searchQueryIds) {
 				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
