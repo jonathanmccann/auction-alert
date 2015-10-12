@@ -14,13 +14,9 @@
 
 package com.app.test.util;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.test.BaseTestCase;
 import com.app.util.SearchQueryPreviousResultUtil;
 
-import java.sql.SQLException;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -44,11 +40,18 @@ public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testSearchQueryPreviousResultUtil()
-		throws DatabaseConnectionException, SQLException {
+	public void testAddSearchQueryPreviousResult() throws Exception {
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			1, "1234");
 
-		// Test add
+		List<String> searchQueryPreviousResults =
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
 
+		Assert.assertEquals(1, searchQueryPreviousResults.size());
+	}
+
+	@Test
+	public void testDeleteSearchQueryPreviousResult() throws Exception {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			1, "1234");
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
@@ -56,50 +59,53 @@ public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			1, "3456");
 
-		// Test get
+		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResult(1);
 
 		List<String> searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
 
-		List<String> expectedSearchQueryPreviousResults = new ArrayList<>();
-
-		expectedSearchQueryPreviousResults.add("1234");
-		expectedSearchQueryPreviousResults.add("2345");
-		expectedSearchQueryPreviousResults.add("3456");
-
-		Assert.assertEquals(
-			expectedSearchQueryPreviousResults, searchQueryPreviousResults);
-
-		// Test get count
-
-		int searchQueryPreviousResultsCount =
-			SearchQueryPreviousResultUtil.
-				getSearchQueryPreviousResultsCount(1);
-
-		Assert.assertEquals(3, searchQueryPreviousResultsCount);
-
-		// Test delete oldest entry
-
-		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResult(1);
-
-		searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
-
 		Assert.assertEquals(2, searchQueryPreviousResults.size());
 
-		expectedSearchQueryPreviousResults.remove(0);
+		String firstSearchQueryPreviousResult = searchQueryPreviousResults.get(
+			0);
 
-		Assert.assertEquals(
-			expectedSearchQueryPreviousResults, searchQueryPreviousResults);
+		String secondSearchQueryPreviousResult = searchQueryPreviousResults.get(
+			1);
 
-		// Test delete all entries
+		Assert.assertEquals("2345", firstSearchQueryPreviousResult);
+		Assert.assertEquals("3456", secondSearchQueryPreviousResult);
+	}
+
+	@Test
+	public void testDeleteSearchQueryPreviousResults() throws Exception {
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			1, "1234");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			1, "2345");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			1, "3456");
 
 		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(1);
 
-		searchQueryPreviousResults =
+		List<String> searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
 
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
+	}
+
+	@Test
+	public void testGetSearchQueryPreviousResultsCount() throws Exception {
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			1, "1234");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			1, "2345");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			1, "3456");
+
+		int numberOfSearchQueryPreviousResults =
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(1);
+
+		Assert.assertEquals(3, numberOfSearchQueryPreviousResults);
 	}
 
 }
