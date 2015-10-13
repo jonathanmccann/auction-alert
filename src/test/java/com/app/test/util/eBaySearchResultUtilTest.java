@@ -136,6 +136,16 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGeteBaySearchResultsWithCategory() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(1, "eBay", "267");
+
+		List<SearchResult> eBaySearchResults =
+			eBaySearchResultUtil.geteBaySearchResults(searchQuery);
+
+		Assert.assertEquals(5, eBaySearchResults.size());
+	}
+
+	@Test
 	public void testSetAuctionPrice() throws Exception {
 		SearchResult searchResult = new SearchResult();
 
