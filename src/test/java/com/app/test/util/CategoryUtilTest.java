@@ -19,15 +19,23 @@ import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
 import com.app.util.ReleaseUtil;
 
+import com.ebay.sdk.ApiContext;
+import com.ebay.sdk.call.GetCategoriesCall;
+
+import java.lang.reflect.Method;
+
 import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
+import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,11 +49,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CategoryUtilTest extends BaseTestCase {
 
+	@Before
+	public void setUp() throws Exception {
+		_clazz = Class.forName(CategoryUtil.class.getName());
+
+		_classInstance = _clazz.newInstance();
+	}
+
 	@After
 	public void tearDown() throws Exception {
 		CategoryUtil.deleteCategories();
 
-		ReleaseUtil.deleteRelease(_RELEASE_CATEGORY_NAME);
+		ReleaseUtil.deleteRelease(_CATEGORY_RELEASE_NAME);
 	}
 
 	@Test
@@ -60,6 +75,46 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
 		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
+	}
+
+	@Test
+	public void testCreateGetCategoriesCall() throws Exception {
+		Method method = _clazz.getDeclaredMethod("createGetCategoriesCall");
+
+		method.setAccessible(true);
+
+		GetCategoriesCall getCategoriesCall = (GetCategoriesCall)method.invoke(
+			_classInstance);
+
+		ApiContext apiContext = getCategoriesCall.getApiContext();
+
+		DetailLevelCodeType[] detailLevelCodeTypes = {
+			DetailLevelCodeType.RETURN_ALL
+		};
+
+		Assert.assertNotNull(apiContext);
+		Assert.assertEquals(
+			SiteCodeType.US, getCategoriesCall.getCategorySiteID());
+		Assert.assertArrayEquals(
+			detailLevelCodeTypes, getCategoriesCall.getDetailLevel());
+		Assert.assertEquals(
+			_ROOT_CATEGORY_LEVEL_LIMIT, getCategoriesCall.getLevelLimit());
+		Assert.assertTrue(getCategoriesCall.getViewAllNodes());
+	}
+
+	@Test
+	public void testIsNewerCategoryVersion() throws Exception {
+		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
+
+		Method method = _clazz.getDeclaredMethod(
+			"isNewerCategoryVersion", String.class);
+
+		method.setAccessible(true);
+
+		Assert.assertFalse((boolean) method.invoke(_classInstance, ""));
+		Assert.assertFalse((boolean)method.invoke(_classInstance, "1"));
+		Assert.assertFalse((boolean)method.invoke(_classInstance, "100"));
+		Assert.assertTrue((boolean) method.invoke(_classInstance, "200"));
 	}
 
 	@Test
@@ -114,7 +169,7 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	@Test(expected = SQLException.class)
-	public void testGetNonExistantCategory() throws Exception {
+	public void testGetNonExistentCategory() throws Exception {
 		CategoryUtil.getCategory(_CATEGORY_ID);
 	}
 
@@ -143,8 +198,13 @@ public class CategoryUtilTest extends BaseTestCase {
 		CategoryUtil.addCategories(categories);
 	}
 
+	private static Object _classInstance;
+	private static Class _clazz;
+
+	private static final int _ROOT_CATEGORY_LEVEL_LIMIT = 1;
+
 	private static final String _CATEGORY_ID = "categoryId";
 	private static final String _CATEGORY_NAME = "categoryName";
-	private static final String _RELEASE_CATEGORY_NAME = "category";
+	private static final String _CATEGORY_RELEASE_NAME = "category";
 
 }

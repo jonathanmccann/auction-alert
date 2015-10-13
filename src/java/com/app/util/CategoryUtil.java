@@ -94,9 +94,21 @@ public class CategoryUtil {
 	private static boolean isNewerCategoryVersion(String version)
 		throws DatabaseConnectionException, SQLException {
 
-		if (!version.equals(
-				ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME))) {
+		String releaseVersion = ReleaseUtil.getReleaseVersion(
+			_CATEGORY_RELEASE_NAME);
 
+		if (ValidatorUtil.isNull(releaseVersion)) {
+			return true;
+		}
+		else if (ValidatorUtil.isNull(version)) {
+			return false;
+		}
+
+		int latestVersion = Integer.valueOf(version);
+
+		int currentVersion = Integer.valueOf(releaseVersion);
+
+		if (latestVersion > currentVersion) {
 			return true;
 		}
 
