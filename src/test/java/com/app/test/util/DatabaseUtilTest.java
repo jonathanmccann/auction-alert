@@ -18,11 +18,13 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -30,36 +32,40 @@ import org.junit.Test;
  */
 public class DatabaseUtilTest {
 
-	@AfterClass
-	public static void tearDown() {
-		String databasePassword = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
-		String databaseURL = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+	@Before
+	public void setUp() throws Exception {
+		_clazz = Class.forName(DatabaseUtil.class.getName());
 
-		DatabaseUtil.setDatabaseProperties(
-			databaseURL, databaseUsername, databasePassword);
+		_classInstance = _clazz.newInstance();
+	}
+
+	@After
+	public void tearDown() {
+		setDatabaseProperties();
 	}
 
 	@Test
 	public void testGetDatabaseConnection()
 		throws DatabaseConnectionException, SQLException {
 
-		String databasePassword = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
-		String databaseURL = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+		setDatabaseProperties();
 
-		DatabaseUtil.setDatabaseProperties(
-			databaseURL, databaseUsername, databasePassword);
+		Connection connection = DatabaseUtil.getDatabaseConnection();
 
-		try (Connection connection = DatabaseUtil.getDatabaseConnection()) {
-			Assert.assertNotNull(connection);
-		}
+		Assert.assertNotNull(connection);
+	}
+
+	@Test(expected = DatabaseConnectionException.class)
+	public void testGetDatabaseConnectionWithoutPropertiesSet()
+		throws Exception {
+
+		Field field = _clazz.getDeclaredField("_isPropertiesSet");
+
+		field.setAccessible(true);
+
+		field.set(_clazz, false);
+
+		DatabaseUtil.getDatabaseConnection();
 	}
 
 	@Test(expected = DatabaseConnectionException.class)
@@ -70,5 +76,20 @@ public class DatabaseUtilTest {
 
 		DatabaseUtil.getDatabaseConnection();
 	}
+
+	private static void setDatabaseProperties() {
+		String databasePassword = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+		String databaseURL = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_URL);
+		String databaseUsername = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+
+		DatabaseUtil.setDatabaseProperties(
+			databaseURL, databaseUsername, databasePassword);
+	}
+
+	private static Object _classInstance;
+	private static Class _clazz;
 
 }
