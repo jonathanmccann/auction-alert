@@ -109,22 +109,8 @@ public class SearchResultUtil {
 			List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
 
-		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				searchQuery.getSearchQueryId());
-
-		Iterator iterator = newSearchResults.iterator();
-
-		while (iterator.hasNext()) {
-			SearchResult searchResult =
-				(SearchResult)iterator.next();
-
-			if (searchQueryPreviousResults.contains(
-					searchResult.getItemId())) {
-
-				iterator.remove();
-			}
-		}
+		_removePreviouslyNotifiedResults(
+			searchQuery.getSearchQueryId(), newSearchResults);
 
 		if (!newSearchResults.isEmpty()) {
 			_log.debug(
@@ -136,30 +122,16 @@ public class SearchResultUtil {
 				getSearchQueryResults(
 					searchQuery.getSearchQueryId());
 
-			_saveNewResultsAndRemoveOldResults(
-				existingSearchResults, newSearchResults);
+			_deleteOldResults(existingSearchResults, newSearchResults.size());
+
+			_addNewResults(newSearchResults);
 		}
 
 		return newSearchResults;
 	}
 
-	private static void _saveNewResultsAndRemoveOldResults(
-			List<SearchResult> existingSearchResults,
-			List<SearchResult> newSearchResults)
+	private static void _addNewResults(List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
-
-		int numberOfSearchResultsToRemove =
-			existingSearchResults.size() + newSearchResults.size() - 5;
-
-		if (numberOfSearchResultsToRemove > 0) {
-			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
-				SearchResult searchResult = existingSearchResults.get(
-					i);
-
-				deleteSearchResult(
-					searchResult.getSearchResultId());
-			}
-		}
 
 		for (SearchResult searchResult : newSearchResults) {
 			addSearchResult(searchResult);
@@ -181,6 +153,48 @@ public class SearchResultUtil {
 			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 				searchResult.getSearchQueryId(),
 				searchResult.getItemId());
+		}
+	}
+
+	private static void _deleteOldResults(
+			List<SearchResult> existingSearchResults, int newSearchResultsSize)
+		throws DatabaseConnectionException, SQLException {
+
+		int numberOfSearchResultsToRemove =
+			existingSearchResults.size() + newSearchResultsSize - 5;
+
+		if (numberOfSearchResultsToRemove > 0) {
+			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
+				SearchResult searchResult = existingSearchResults.get(
+					i);
+
+				deleteSearchResult(
+					searchResult.getSearchResultId());
+			}
+		}
+	}
+
+	private static void _removePreviouslyNotifiedResults(
+			int searchQueryId, List<SearchResult> newSearchResults)
+		throws DatabaseConnectionException, SQLException {
+
+		List<String> searchQueryPreviousResults =
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
+				searchQueryId);
+
+		if (searchQueryPreviousResults.size() > 0) {
+			Iterator iterator = newSearchResults.iterator();
+
+			while (iterator.hasNext()) {
+				SearchResult searchResult =
+					(SearchResult) iterator.next();
+
+				if (searchQueryPreviousResults.contains(
+					searchResult.getItemId())) {
+
+					iterator.remove();
+				}
+			}
 		}
 	}
 
