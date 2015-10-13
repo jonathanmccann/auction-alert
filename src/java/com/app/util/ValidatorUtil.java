@@ -32,6 +32,12 @@ public class ValidatorUtil {
 			return true;
 		}
 
+		for (Object o : array) {
+			if (o == null) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
