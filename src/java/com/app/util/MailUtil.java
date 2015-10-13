@@ -297,23 +297,11 @@ public class MailUtil {
 		List<String> recipientPhoneNumbers, DateTime dateTime) {
 
 		if (PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME) {
-			int hourOfDay = dateTime.getHourOfDay();
-			int dayOfWeek = dateTime.getDayOfWeek();
-
-			if ((dayOfWeek == _SATURDAY) || (dayOfWeek == _SUNDAY)) {
-				_sendViaEmail = false;
-				_sendViaText = true;
-			}
-			else if ((hourOfDay < _START_OF_DAY) ||
-					 (hourOfDay >= _END_OF_DAY)) {
-
-				_sendViaEmail = false;
-				_sendViaText = true;
-			}
-			else {
-				_sendViaEmail = true;
-				_sendViaText = false;
-			}
+			setNotificationDeliveryMethodsBasedOnTime(dateTime);
+		}
+		else {
+			setNotificationDeliveryMethodsBasedOnTime(
+				recipientEmailAddresses, recipientPhoneNumbers);
 		}
 
 		if (recipientEmailAddresses.size() == 0) {
@@ -326,6 +314,41 @@ public class MailUtil {
 
 		_log.debug("Sending via email: {}", _sendViaEmail);
 		_log.debug("Sending via text: {}", _sendViaText);
+	}
+
+	private static void setNotificationDeliveryMethodsBasedOnTime(
+		DateTime dateTime) {
+
+		int hourOfDay = dateTime.getHourOfDay();
+		int dayOfWeek = dateTime.getDayOfWeek();
+
+		if ((dayOfWeek == _SATURDAY) || (dayOfWeek == _SUNDAY)) {
+			_sendViaEmail = false;
+			_sendViaText = true;
+		}
+		else if ((hourOfDay < _START_OF_DAY) ||
+				 (hourOfDay >= _END_OF_DAY)) {
+
+			_sendViaEmail = false;
+			_sendViaText = true;
+		}
+		else {
+			_sendViaEmail = true;
+			_sendViaText = false;
+		}
+	}
+
+	private static void setNotificationDeliveryMethodsBasedOnTime(
+		List<String> recipientEmailAddresses,
+		List<String> recipientPhoneNumbers) {
+
+		if (recipientEmailAddresses.size() > 0) {
+			_sendViaEmail = true;
+		}
+
+		if (recipientPhoneNumbers.size() > 0) {
+			_sendViaText = true;
+		}
 	}
 
 	private static void validateEmailAddresses(
@@ -399,8 +422,8 @@ public class MailUtil {
 		"[0-9]{10,10}");
 	private static List<String> _recipientEmailAddresses = new ArrayList<>();
 	private static List<String> _recipientPhoneNumbers = new ArrayList<>();
-	private static boolean _sendViaEmail = false;
-	private static boolean _sendViaText = false;
+	private static boolean _sendViaEmail = true;
+	private static boolean _sendViaText = true;
 	private static Template _textTemplate;
 
 	static {

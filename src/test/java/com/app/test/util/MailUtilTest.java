@@ -19,10 +19,12 @@ import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
 
+import com.app.util.PropertiesValues;
 import freemarker.template.Template;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -340,6 +342,58 @@ public class MailUtilTest extends BaseTestCase {
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertFalse(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsNotBasedOnTime()
+		throws Exception {
+
+		Class clazz = Class.forName(PropertiesValues.class.getName());
+
+		Field sendNotificationsBasedOnTimeField = clazz.getDeclaredField(
+			"SEND_NOTIFICATIONS_BASED_ON_TIME");
+
+		sendNotificationsBasedOnTimeField.setAccessible(true);
+
+		Field modifiersField = Field.class.getDeclaredField("modifiers");
+
+		modifiersField.setAccessible(true);
+
+		modifiersField.setInt(
+			sendNotificationsBasedOnTimeField,
+			sendNotificationsBasedOnTimeField.getModifiers() & ~Modifier.FINAL);
+
+		sendNotificationsBasedOnTimeField.set(clazz, false);
+
+		boolean[] notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithoutRecipients(
+				new DateTime());
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddress(
+				new DateTime());
+
+		Assert.assertTrue(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithPhoneNumber(
+				new DateTime());
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
+				new DateTime());
+
+		Assert.assertTrue(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+
+		sendNotificationsBasedOnTimeField.set(clazz, true);
 	}
 
 	@Test
