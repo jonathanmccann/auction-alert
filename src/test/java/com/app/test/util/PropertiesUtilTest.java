@@ -64,7 +64,7 @@ public class PropertiesUtilTest {
 			"1234567890,2345678901", PropertiesValues.RECIPIENT_PHONE_NUMBERS);
 		Assert.assertEquals("AT&T", PropertiesValues.RECIPIENT_PHONE_CARRIER);
 		Assert.assertEquals(
-			false, PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME);
+			true, PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME);
 		Assert.assertEquals(
 			1, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}

@@ -18,23 +18,21 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
-import com.app.util.PropertiesUtil;
-import com.app.util.PropertiesValues;
 
 import freemarker.template.Template;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+
+import org.joda.time.DateTime;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,8 +45,6 @@ public class MailUtilTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		_properties = PropertiesUtil.getConfigurationProperties();
-
 		_clazz = Class.forName(MailUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();
@@ -142,11 +138,11 @@ public class MailUtilTest extends BaseTestCase {
 
 	@Test
 	public void testPopulateEmailMessage() throws Exception {
-		Method method = _clazz.getDeclaredMethod(
+		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
 			"populateEmailMessage", SearchQuery.class, List.class,
 			List.class, String.class, Session.class);
 
-		method.setAccessible(true);
+		populateEmailMessageMethod.setAccessible(true);
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -166,17 +162,16 @@ public class MailUtilTest extends BaseTestCase {
 		emailAddresses.add("test@test.com");
 		emailAddresses.add("test2@test2.com");
 
-		Session session = Session.getInstance(
-			_properties,
-			new Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(
-						PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
-						PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
-				}
-			});
+		Method authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
 
-		Message message = (Message)method.invoke(
+		authenticateOutboundEmailAddressMethod.setAccessible(true);
+
+		Session session =
+			(Session)authenticateOutboundEmailAddressMethod.invoke(
+				_classInstance);
+
+		Message message = (Message)populateEmailMessageMethod.invoke(
 			_classInstance, searchQuery, searchResults,
 			emailAddresses, "test@test.com", session);
 
@@ -200,10 +195,10 @@ public class MailUtilTest extends BaseTestCase {
 
 	@Test
 	public void testPopulateTextMessage() throws Exception {
-		Method method = _clazz.getDeclaredMethod(
+		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
 			"populateTextMessage", List.class, List.class, Session.class);
 
-		method.setAccessible(true);
+		populateTextMessageMethod.setAccessible(true);
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -220,17 +215,16 @@ public class MailUtilTest extends BaseTestCase {
 		phoneNumberEmailAddresses.add("1234567890@txt.att.net");
 		phoneNumberEmailAddresses.add("2345678901@txt.att.net");
 
-		Session session = Session.getInstance(
-			_properties,
-			new Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(
-						PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
-						PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
-				}
-			});
+		Method authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
 
-		Message message = (Message)method.invoke(
+		authenticateOutboundEmailAddressMethod.setAccessible(true);
+
+		Session session =
+			(Session)authenticateOutboundEmailAddressMethod.invoke(
+				_classInstance);
+
+		Message message = (Message)populateTextMessageMethod.invoke(
 			_classInstance, searchResults, phoneNumberEmailAddresses,
 			session);
 
@@ -244,6 +238,172 @@ public class MailUtilTest extends BaseTestCase {
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsAfterEndOfDay()
+		throws Exception {
+
+		DateTime dateTime =
+			new DateTime().withDayOfWeek(1).withHourOfDay(_END_OF_DAY + 1);
+
+		boolean[] notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithoutRecipients(
+				dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
+				dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsBeforeStartOfDay()
+		throws Exception {
+
+		DateTime dateTime =
+			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY - 1);
+
+		boolean[] notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithoutRecipients(
+				dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
+				dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsDuringDay()
+		throws Exception {
+
+		DateTime dateTime =
+			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY + 1);
+
+		boolean[] notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithoutRecipients(
+				dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
+
+		Assert.assertTrue(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
+				dateTime);
+
+		Assert.assertTrue(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsOnSaturday()
+		throws Exception {
+
+		DateTime dateTime = new DateTime().withDayOfWeek(_SATURDAY);
+
+		boolean[] notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithoutRecipients(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
+				dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsOnSunday()
+		throws Exception {
+
+		DateTime dateTime = new DateTime().withDayOfWeek(_SUNDAY);
+
+		boolean[] notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithoutRecipients(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertFalse(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+
+		notificationDeliverMethods =
+			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
+				dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
 	}
 
 	@Test
@@ -288,8 +448,84 @@ public class MailUtilTest extends BaseTestCase {
 		Assert.assertEquals("2345678901", recipientPhoneNumbers.get(1));
 	}
 
+	private static boolean[] setNotificationDeliveryMethodsWithoutRecipients(
+			DateTime dateTime)
+		throws Exception {
+
+		return setNotificationDeliveryMethods(
+			new ArrayList<String>(), new ArrayList<String>(), dateTime);
+	}
+
+	private static boolean[] setNotificationDeliveryMethodsWithEmailAddress(
+			DateTime dateTime)
+		throws Exception {
+
+		List<String> recipientEmailAddresses = new ArrayList<>();
+
+		recipientEmailAddresses.add("test@test.com");
+
+		return setNotificationDeliveryMethods(
+			recipientEmailAddresses, new ArrayList<String>(), dateTime);
+	}
+
+	private static boolean[] setNotificationDeliveryMethodsWithPhoneNumber(
+			DateTime dateTime)
+		throws Exception {
+
+		List<String> recipientPhoneNumbers = new ArrayList<>();
+
+		recipientPhoneNumbers.add("1234567890");
+
+		return setNotificationDeliveryMethods(
+			new ArrayList<String>(), recipientPhoneNumbers, dateTime);
+	}
+
+	private static boolean[] setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
+			DateTime dateTime)
+		throws Exception {
+
+		List<String> recipientEmailAddresses = new ArrayList<>();
+		List<String> recipientPhoneNumbers = new ArrayList<>();
+
+		recipientEmailAddresses.add("test@test.com");
+		recipientPhoneNumbers.add("1234567890");
+
+		return setNotificationDeliveryMethods(
+			recipientEmailAddresses, recipientPhoneNumbers, dateTime);
+	}
+
+	private static boolean[] setNotificationDeliveryMethods(
+			List<String> recipientEmailAddresses,
+			List<String> recipientPhoneNumbers, DateTime dateTime)
+		throws Exception {
+
+		Method method = _clazz.getDeclaredMethod(
+			"setNotificationDeliveryMethods", List.class, List.class,
+			DateTime.class);
+
+		method.setAccessible(true);
+
+		method.invoke(
+			_classInstance, recipientEmailAddresses, recipientPhoneNumbers,
+			dateTime);
+
+		Field sendViaEmailField = _clazz.getDeclaredField("_sendViaEmail");
+		Field sendViaTextField = _clazz.getDeclaredField("_sendViaText");
+
+		sendViaEmailField.setAccessible(true);
+		sendViaTextField.setAccessible(true);
+
+		return new boolean[] {
+			(boolean)sendViaEmailField.get(_clazz),
+			(boolean)sendViaTextField.get(_clazz)
+		};
+	}
+
 	private static Object _classInstance;
 	private static Class _clazz;
-	private static Properties _properties;
 
+	private static final int _END_OF_DAY = 17;
+	private static final int _SATURDAY = 6;
+	private static final int _START_OF_DAY = 7;
+	private static final int _SUNDAY = 7;
 }

@@ -288,9 +288,15 @@ public class MailUtil {
 		List<String> recipientEmailAddresses,
 		List<String> recipientPhoneNumbers) {
 
-		if (PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME) {
-			DateTime dateTime = new DateTime();
+		setNotificationDeliveryMethods(
+			recipientEmailAddresses, recipientPhoneNumbers, new DateTime());
+	}
 
+	private static void setNotificationDeliveryMethods(
+		List<String> recipientEmailAddresses,
+		List<String> recipientPhoneNumbers, DateTime dateTime) {
+
+		if (PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME) {
 			int hourOfDay = dateTime.getHourOfDay();
 			int dayOfWeek = dateTime.getDayOfWeek();
 
