@@ -33,7 +33,7 @@ public class SearchResultTest {
 	}
 
 	@Test
-	public void testConstructor() throws Exception {
+	public void testConstructor() {
 		Date endingTime = new Date();
 
 		SearchResult searchResult = new SearchResult(
@@ -55,29 +55,52 @@ public class SearchResultTest {
 	}
 
 	@Test
-	public void testSetAndGetAuctionPrice() throws Exception {
+	public void testEqualsWithEqualObject() {
+		_searchResult.setItemId("1234");
+
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setItemId("1234");
+
+		Assert.assertTrue(_searchResult.equals(searchResult));
+	}
+
+	@Test
+	public void testEqualsWithInequalObject() {
+		Assert.assertFalse(_searchResult.equals(new Object()));
+	}
+
+	@Test
+	public void testEqualsWithInequalItemId() {
+		_searchResult.setItemId("1234");
+
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setItemId("2345");
+
+		Assert.assertFalse(_searchResult.equals(searchResult));
+	}
+
+	@Test
+	public void testEqualsWithNullObject() {
+		Assert.assertFalse(_searchResult.equals(null));
+	}
+
+	@Test
+	public void testSetAndGetAuctionPrice() {
 		_searchResult.setAuctionPrice(14.99);
 
 		Assert.assertEquals(14.99, _searchResult.getAuctionPrice(), 0);
 	}
 
 	@Test
-	public void testSetAndGetFixedPrice() throws Exception {
-		_searchResult.setFixedPrice(14.99);
+	public void testHashCode() {
+		_searchResult.setItemId("1234");
 
-		Assert.assertEquals(14.99, _searchResult.getFixedPrice(), 0);
+		Assert.assertEquals(1234, _searchResult.hashCode());
 	}
-
 	@Test
-	public void testSetAndGetGalleryURL() throws Exception {
-		_searchResult.setGalleryURL("http://www.ebay.com/123.jpg");
-
-		Assert.assertEquals(
-			"http://www.ebay.com/123.jpg", _searchResult.getGalleryURL());
-	}
-
-	@Test
-	public void testSetAndGetItemEndingTime() throws Exception {
+	public void testSetAndGetEndingTime() {
 		Date endingTime = new Date();
 
 		_searchResult.setEndingTime(endingTime);
@@ -86,21 +109,36 @@ public class SearchResultTest {
 	}
 
 	@Test
-	public void testSetAndGetItemId() throws Exception {
+	public void testSetAndGetFixedPrice() {
+		_searchResult.setFixedPrice(14.99);
+
+		Assert.assertEquals(14.99, _searchResult.getFixedPrice(), 0);
+	}
+
+	@Test
+	public void testSetAndGetGalleryURL() {
+		_searchResult.setGalleryURL("http://www.ebay.com/123.jpg");
+
+		Assert.assertEquals(
+			"http://www.ebay.com/123.jpg", _searchResult.getGalleryURL());
+	}
+
+	@Test
+	public void testSetAndGetItemId() {
 		_searchResult.setItemId("1234");
 
 		Assert.assertEquals("1234", _searchResult.getItemId());
 	}
 
 	@Test
-	public void testSetAndGetItemTitle() throws Exception {
+	public void testSetAndGetItemTitle() {
 		_searchResult.setItemTitle("itemTitle");
 
 		Assert.assertEquals("itemTitle", _searchResult.getItemTitle());
 	}
 
 	@Test
-	public void testSetAndGetItemURL() throws Exception {
+	public void testSetAndGetItemURL() {
 		_searchResult.setItemURL("http://www.ebay.com/itm/1234");
 
 		Assert.assertEquals(
@@ -108,7 +146,21 @@ public class SearchResultTest {
 	}
 
 	@Test
-	public void testSetAndGetTypeOfAuction() throws Exception {
+	public void testSetAndGetSearchQueryId() {
+		_searchResult.setSearchQueryId(1);
+
+		Assert.assertEquals(1, _searchResult.getSearchQueryId());
+	}
+
+	@Test
+	public void testSetAndGetSearchResultId() {
+		_searchResult.setSearchResultId(1);
+
+		Assert.assertEquals(1, _searchResult.getSearchResultId());
+	}
+
+	@Test
+	public void testSetAndGetTypeOfAuction() {
 		_searchResult.setTypeOfAuction("Buy It Now");
 
 		Assert.assertEquals(
