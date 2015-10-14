@@ -30,7 +30,7 @@
 		<form:form action="add_search_query" commandName="searchQuery" method="post">
 			<table border="0">
 				<tr>
-					<td align="center" colspan="2"><h2>Add Search Query</h2></td>
+					<td align="center" colspan="3"><h2>Add Search Query</h2></td>
 				</tr>
 				<tr>
 					<td>Search Query:</td>
@@ -43,7 +43,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td align="center" colspan="2">
+					<td align="center" colspan="3">
 						<c:choose>
 							<c:when test="${disabled}">
 								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled title="" type="submit" value="Add Search Query" />
