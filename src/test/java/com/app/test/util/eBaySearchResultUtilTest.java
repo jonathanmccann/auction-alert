@@ -238,15 +238,15 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpRequest() throws Exception {
 		String keywords = "Test keywords";
 
-		FindItemsByKeywordsRequest findItemsAdvancedRequest =
+		FindItemsByKeywordsRequest findItemsByKeywordsRequest =
 			(FindItemsByKeywordsRequest)_setUpRequestMethod.invoke(
 				_classInstance, keywords);
 
 		Assert.assertEquals(
-			keywords, findItemsAdvancedRequest.getKeywords());
+			keywords, findItemsByKeywordsRequest.getKeywords());
 
 		PaginationInput paginationInput =
-			findItemsAdvancedRequest.getPaginationInput();
+			findItemsByKeywordsRequest.getPaginationInput();
 
 		Assert.assertEquals(
 			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
@@ -254,7 +254,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			SortOrderType.START_TIME_NEWEST,
-			findItemsAdvancedRequest.getSortOrder());
+			findItemsByKeywordsRequest.getSortOrder());
 	}
 
 	private static ListingInfo createListingInfo() {
