@@ -74,7 +74,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		_setPriceMethod.setAccessible(true);
 
 		_setUpAdvanceRequestMethod = clazz.getDeclaredMethod(
-			"setUpAdvancedRequest", String.class, String.class);
+			"setUpAdvancedRequest", String.class, String.class, Boolean.class);
 
 		_setUpAdvanceRequestMethod.setAccessible(true);
 
@@ -212,7 +212,9 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, keywords, categoryId);
+				_classInstance, keywords, categoryId, true);
+
+		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
 
 		Assert.assertEquals(
 			keywords, findItemsAdvancedRequest.getKeywords());
@@ -221,6 +223,35 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(categoryId, categoryIds.get(0));
 		Assert.assertEquals(1, categoryIds.size());
+
+		PaginationInput paginationInput =
+			findItemsAdvancedRequest.getPaginationInput();
+
+		Assert.assertEquals(
+			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
+			(int) paginationInput.getEntriesPerPage());
+
+		Assert.assertEquals(
+			SortOrderType.START_TIME_NEWEST,
+			findItemsAdvancedRequest.getSortOrder());
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithoutCategoryId() throws Exception {
+		String keywords = "Test keywords";
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, keywords, "", true);
+
+		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
+
+		Assert.assertEquals(
+			keywords, findItemsAdvancedRequest.getKeywords());
+
+		List<String> categoryIds = findItemsAdvancedRequest.getCategoryId();
+
+		Assert.assertEquals(0, categoryIds.size());
 
 		PaginationInput paginationInput =
 			findItemsAdvancedRequest.getPaginationInput();
