@@ -11,9 +11,9 @@ A "config.properties" file is required in the Catalina base directory. Please se
 Running Tests
 ========
 
-In order to run the tests, the application ID and JDBC connection configuration properties need to be specified. The format to run all of the tests is the following, inserting valid information for each property:
+In order to run the tests, the application ID, eBay token, and JDBC connection configuration properties need to be specified. The format to run all of the tests is the following, inserting valid information for each property:
 
-gradle test -Dapplication.id="${application.id}" -Djdbc.default.password="${jdbc.default.password}" -Djdbc.default.url="${jdbc.default.url}" -Djdbc.default.username="${jdbc.default.username}"
+gradle test jacocoTestReport -Dapplication.id="${application.id}" -Debay.token="${ebay.token}" -Djdbc.default.password="${jdbc.default.password}" -Djdbc.default.url="${jdbc.default.url}" -Djdbc.default.username="${jdbc.default.username}"
 
 License
 ========
