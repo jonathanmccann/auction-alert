@@ -6,6 +6,10 @@
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<listener>
 		<listener-class>com.app.listener.eBayServletContextListener</listener-class>
 	</listener>
 

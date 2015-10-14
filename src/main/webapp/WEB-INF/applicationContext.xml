@@ -14,17 +14,14 @@
 	http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<task:annotation-driven />
-	<bean id="scheduledTasks" class="com.app.eBaySearch" />
 
-	<context:component-scan	base-package="com.app.controller" />
+	<context:component-scan	base-package="com.app" />
 
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/jsp/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
-
-	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
+	<bean id="releaseDAO" class="com.app.dao.ReleaseDAO" />
+	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
+	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
+	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
 
 	<mvc:annotation-driven />
-
 </beans>
