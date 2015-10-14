@@ -50,6 +50,15 @@ public class ReleaseUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testAddDuplicateRelease() throws Exception {
+		ReleaseUtil.addRelease("Test Release", "1.0");
+		ReleaseUtil.addRelease("Test Release", "2.0");
+
+		Assert.assertEquals(
+			"2.0", ReleaseUtil.getReleaseVersion("Test Release"));
+	}
+
+	@Test
 	public void testDeleteRelease() throws Exception {
 		ReleaseUtil.addRelease("Test Release", "1.0");
 
@@ -81,14 +90,6 @@ public class ReleaseUtilTest extends BaseTestCase {
 		Assert.assertTrue(
 			ValidatorUtil.isNull(
 				ReleaseUtil.getReleaseVersion("Second Test Release")));
-	}
-
-	@Test(expected = SQLException.class)
-	public void testDuplicateReleaseName()
-		throws DatabaseConnectionException, SQLException {
-
-		ReleaseUtil.addRelease("First Release", "100");
-		ReleaseUtil.addRelease("First Release", "101");
 	}
 
 }

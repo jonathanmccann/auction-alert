@@ -99,7 +99,9 @@ public class ReleaseDAO {
 	}
 
 	private static final String _ADD_RELEASE_SQL =
-		"INSERT INTO Release_(releaseName, version) VALUES(?, ?)";
+		"INSERT INTO Release_(releaseName, version) VALUES(?, ?) ON " +
+			"DUPLICATE KEY UPDATE releaseName=VALUES(releaseName), " +
+				"version=VALUES(version)";
 
 	private static final String _DELETE_RELEASE_SQL =
 		"DELETE FROM Release_ WHERE releaseName = ?";
