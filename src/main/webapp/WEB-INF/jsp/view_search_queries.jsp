@@ -39,7 +39,7 @@
 					<c:otherwise>
 						<c:forEach items="${searchQueries}" var="searchQuery">
 							<tr>
-								<td><input id="checkboxes" name="searchQueryIds" type="checkbox" value="${searchQuery.searchQueryId}" /><label>${searchQuery.searchQuery}</label></td>
+								<td><input id="checkboxes" name="searchQueryIds" type="checkbox" value="${searchQuery.searchQueryId}" /><label>${searchQuery.keywords}</label></td>
 							</tr>
 						</c:forEach>
 						<tr>
