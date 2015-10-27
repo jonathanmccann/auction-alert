@@ -18,12 +18,11 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResult;
 import com.app.util.DatabaseUtil;
 
-import com.mysql.jdbc.Statement;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -17,13 +17,19 @@ package com.app.listener;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
+import com.app.util.PropertiesValues;
 import com.app.util.eBayAPIUtil;
+
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Driver;
+import java.sql.DriverManager;
 
 /**
  * @author Jonathan McCann
@@ -33,12 +39,22 @@ public class eBayServletContextListener implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		_log.info("Destroying servlet context");
+
+		try {
+			AbandonedConnectionCleanupThread.shutdown();
+
+			Driver driver = DriverManager.getDriver(
+				PropertiesValues.JDBC_DEFAULT_URL);
+
+			DriverManager.deregisterDriver(driver);
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent servletContextEvent)
-		throws RuntimeException {
-
+	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		_log.info("Initializing servlet context");
 
 		try {
@@ -55,6 +71,8 @@ public class eBayServletContextListener implements ServletContextListener {
 			eBayAPIUtil.loadApiContext();
 
 			_log.info("Loading database properties");
+
+			Class.forName("com.mysql.jdbc.Driver");
 
 			DatabaseUtil.loadDatabaseProperties();
 

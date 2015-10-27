@@ -42,12 +42,10 @@ public class DatabaseUtil {
 		}
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-
 			return DriverManager.getConnection(
 				_databaseURL, _databaseUsername, _databasePassword);
 		}
-		catch (ClassNotFoundException | SQLException exception) {
+		catch (SQLException exception) {
 			_log.error(
 				"Could not get a database connection. Please check your " +
 					"database settings in 'config.properties'");
