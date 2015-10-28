@@ -244,7 +244,6 @@ public class SearchQueryDAO {
 		SearchQuery searchQuery = new SearchQuery();
 
 		searchQuery.setSearchQueryId(resultSet.getInt("searchQueryId"));
-		searchQuery.setAdvanced(resultSet.getBoolean("advanced"));
 		searchQuery.setKeywords(resultSet.getString("keywords"));
 		searchQuery.setCategoryId(resultSet.getString("categoryId"));
 		searchQuery.setSearchDescription(
@@ -269,26 +268,25 @@ public class SearchQueryDAO {
 			SearchQuery searchQuery)
 		throws SQLException {
 
-		preparedStatement.setBoolean(1, searchQuery.isAdvanced());
-		preparedStatement.setString(2, searchQuery.getKeywords());
-		preparedStatement.setString(3, searchQuery.getCategoryId());
-		preparedStatement.setBoolean(4, searchQuery.isSearchDescription());
-		preparedStatement.setBoolean(5, searchQuery.isFreeShippingOnly());
-		preparedStatement.setBoolean(6, searchQuery.isNewCondition());
-		preparedStatement.setBoolean(7, searchQuery.isUsedCondition());
-		preparedStatement.setBoolean(8, searchQuery.isUnspecifiedCondition());
-		preparedStatement.setBoolean(9, searchQuery.isAuctionListing());
-		preparedStatement.setBoolean(10, searchQuery.isFixedPriceListing());
-		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
-		preparedStatement.setDouble(12, searchQuery.getMinPrice());
+		preparedStatement.setString(1, searchQuery.getKeywords());
+		preparedStatement.setString(2, searchQuery.getCategoryId());
+		preparedStatement.setBoolean(3, searchQuery.isSearchDescription());
+		preparedStatement.setBoolean(4, searchQuery.isFreeShippingOnly());
+		preparedStatement.setBoolean(5, searchQuery.isNewCondition());
+		preparedStatement.setBoolean(6, searchQuery.isUsedCondition());
+		preparedStatement.setBoolean(7, searchQuery.isUnspecifiedCondition());
+		preparedStatement.setBoolean(8, searchQuery.isAuctionListing());
+		preparedStatement.setBoolean(9, searchQuery.isFixedPriceListing());
+		preparedStatement.setDouble(10, searchQuery.getMaxPrice());
+		preparedStatement.setDouble(11, searchQuery.getMinPrice());
 	}
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
-		"INSERT INTO SearchQuery(advanced, keywords, categoryId, " +
+		"INSERT INTO SearchQuery(keywords, categoryId, " +
 			"searchDescription, freeShippingOnly, newCondition, " +
 				"usedCondition, unspecifiedCondition, auctionListing, " +
 					"fixedPriceListing, maxPrice, minPrice) VALUES(?, " +
-						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _ADD_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(keywords) VALUES(?)";

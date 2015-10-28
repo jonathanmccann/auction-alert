@@ -34,13 +34,12 @@ public class SearchQuery {
 	}
 
 	public SearchQuery(
-		int searchQueryId, boolean advanced, String keywords, String categoryId,
+		int searchQueryId, String keywords, String categoryId,
 		boolean searchDescription, boolean freeShippingOnly,
 		boolean newCondition, boolean usedCondition,
 		boolean unspecifiedCondition, boolean auctionListing,
 		boolean fixedPriceListing, double maxPrice, double minPrice) {
 
-		_advanced = advanced;
 		_auctionListing = auctionListing;
 		_categoryId = categoryId;
 		_fixedPriceListing = fixedPriceListing;
@@ -75,10 +74,6 @@ public class SearchQuery {
 		return _searchQueryId;
 	}
 
-	public boolean isAdvanced() {
-		return _advanced;
-	}
-
 	public boolean isAuctionListing() {
 		return _auctionListing;
 	}
@@ -105,10 +100,6 @@ public class SearchQuery {
 
 	public boolean isUsedCondition() {
 		return _usedCondition;
-	}
-
-	public void setAdvanced(boolean advanced) {
-		this._advanced = advanced;
 	}
 
 	public void setAuctionListing(boolean auctionListing) {
@@ -159,7 +150,6 @@ public class SearchQuery {
 		this._usedCondition = usedCondition;
 	}
 
-	private boolean _advanced;
 	private boolean _auctionListing;
 	private String _categoryId;
 	private boolean _fixedPriceListing;

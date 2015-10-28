@@ -23,7 +23,6 @@ import com.app.util.eBaySearchResultUtil;
 
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
-import com.ebay.services.finding.FindItemsByKeywordsRequest;
 import com.ebay.services.finding.ListingInfo;
 import com.ebay.services.finding.PaginationInput;
 import com.ebay.services.finding.SearchItem;
@@ -77,11 +76,6 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 			"setUpAdvancedRequest", String.class, String.class, Boolean.class);
 
 		_setUpAdvanceRequestMethod.setAccessible(true);
-
-		_setUpRequestMethod = clazz.getDeclaredMethod(
-			"setUpRequest", String.class);
-
-		_setUpRequestMethod.setAccessible(true);
 	}
 
 	@Test
@@ -265,29 +259,6 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 			findItemsAdvancedRequest.getSortOrder());
 	}
 
-	@Test
-	public void testSetUpRequest() throws Exception {
-		String keywords = "Test keywords";
-
-		FindItemsByKeywordsRequest findItemsByKeywordsRequest =
-			(FindItemsByKeywordsRequest)_setUpRequestMethod.invoke(
-				_classInstance, keywords);
-
-		Assert.assertEquals(
-			keywords, findItemsByKeywordsRequest.getKeywords());
-
-		PaginationInput paginationInput =
-			findItemsByKeywordsRequest.getPaginationInput();
-
-		Assert.assertEquals(
-			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
-			(int)paginationInput.getEntriesPerPage());
-
-		Assert.assertEquals(
-			SortOrderType.START_TIME_NEWEST,
-			findItemsByKeywordsRequest.getSortOrder());
-	}
-
 	private static ListingInfo createListingInfo() {
 		Amount buyItNowPrice = new Amount();
 		buyItNowPrice.setValue(10.00);
@@ -339,7 +310,6 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 	private static Method _createSearchResultsMethod;
 	private static Method _setPriceMethod;
 	private static Method _setUpAdvanceRequestMethod;
-	private static Method _setUpRequestMethod;
 
 	private static Object _classInstance;
 

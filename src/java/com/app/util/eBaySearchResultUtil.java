@@ -20,8 +20,6 @@ import com.app.model.SearchResult;
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
 import com.ebay.services.finding.FindItemsAdvancedResponse;
-import com.ebay.services.finding.FindItemsByKeywordsRequest;
-import com.ebay.services.finding.FindItemsByKeywordsResponse;
 import com.ebay.services.finding.FindingServicePortType;
 import com.ebay.services.finding.ListingInfo;
 import com.ebay.services.finding.PaginationInput;
@@ -51,25 +49,14 @@ public class eBaySearchResultUtil {
 
 		com.ebay.services.finding.SearchResult searchResults = null;
 
-		if (ValidatorUtil.isNull(searchQuery.getCategoryId())) {
-			FindItemsByKeywordsRequest request = setUpRequest(
-				searchQuery.getKeywords());
+		FindItemsAdvancedRequest request = setUpAdvancedRequest(
+			searchQuery.getKeywords(),
+			searchQuery.getCategoryId());
 
-			FindItemsByKeywordsResponse result =
-				serviceClient.findItemsByKeywords(request);
+		FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
+			request);
 
-			searchResults = result.getSearchResult();
-		}
-		else {
-			FindItemsAdvancedRequest request = setUpAdvancedRequest(
-				searchQuery.getKeywords(),
-				searchQuery.getCategoryId());
-
-			FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
-				request);
-
-			searchResults = result.getSearchResult();
-		}
+		searchResults = result.getSearchResult();
 
 		List<SearchItem> searchItems = searchResults.getItem();
 
@@ -153,29 +140,12 @@ public class eBaySearchResultUtil {
 	private static FindItemsAdvancedRequest setUpAdvancedRequest(
 		String keywords, String categoryId) {
 
-		_log.info("Setting up advanced request with category");
+		_log.info("Setting up advanced request");
 
 		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
 
 		request.setKeywords(keywords);
 		request.getCategoryId().add(categoryId);
-
-		PaginationInput paginationInput = new PaginationInput();
-		paginationInput.setEntriesPerPage(
-			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
-
-		request.setPaginationInput(paginationInput);
-		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
-
-		return request;
-	}
-
-	private static FindItemsByKeywordsRequest setUpRequest(String keywords) {
-		_log.info("Setting up request without category");
-
-		FindItemsByKeywordsRequest request = new FindItemsByKeywordsRequest();
-
-		request.setKeywords(keywords);
 
 		PaginationInput paginationInput = new PaginationInput();
 		paginationInput.setEntriesPerPage(

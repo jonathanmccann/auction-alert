@@ -34,11 +34,10 @@ public class SearchQueryTest {
 	@Test
 	public void testAdvancedConstructor() {
 		SearchQuery searchQuery = new SearchQuery(
-			1, true, "Test keywords", "100", true, true, true, true, true, true,
+			1, "Test keywords", "100", true, true, true, true, true, true,
 			true, 10.00, 5.00);
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
-		Assert.assertTrue(searchQuery.isAdvanced());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
@@ -74,13 +73,6 @@ public class SearchQueryTest {
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
-	}
-
-	@Test
-	public void testIsAdvanced() {
-		_searchQuery.setAdvanced(true);
-
-		Assert.assertTrue(_searchQuery.isAdvanced());
 	}
 
 	@Test

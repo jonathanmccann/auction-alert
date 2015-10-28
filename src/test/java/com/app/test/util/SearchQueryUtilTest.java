@@ -45,7 +45,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@Test
 	public void testAddSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, true, "Test keywords", "100", true, true, true, true, true, true,
+			1, "Test keywords", "100", true, true, true, true, true, true,
 			true, 10.00, 5.00);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
@@ -53,7 +53,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
-		Assert.assertTrue(searchQuery.isAdvanced());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
@@ -92,7 +91,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@Test
 	public void testAddSearchQueryWithNormalizedValues() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, true, "Test keywords", "100", true, true, false, false, false,
+			1, "Test keywords", "100", true, true, false, false, false,
 			false, false, 10.00, 5.00);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
@@ -100,7 +99,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
-		Assert.assertTrue(searchQuery.isAdvanced());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
