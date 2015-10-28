@@ -90,18 +90,8 @@ public class SearchQueryController {
 			return "redirect:add_search_query";
 		}
 
-		String keywords = searchQuery.getKeywords();
-
-		if (ValidatorUtil.isNotNull(keywords)) {
-			String categoryId = searchQuery.getCategoryId();
-
-			if (ValidatorUtil.isNull(categoryId)) {
-				SearchQueryUtil.addSearchQuery(searchQuery.getKeywords());
-			}
-			else {
-				SearchQueryUtil.addSearchQuery(
-					searchQuery.getKeywords(), categoryId);
-			}
+		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
+			SearchQueryUtil.addSearchQuery(searchQuery);
 
 			List<SearchQuery> searchQueries =
 				SearchQueryUtil.getSearchQueries();
