@@ -32,6 +32,27 @@ public class SearchQueryTest {
 	}
 
 	@Test
+	public void testAdvancedConstructor() {
+		SearchQuery searchQuery = new SearchQuery(
+			1, true, "Test keywords", "100", true, true, true, true, true, true,
+			true, 10.00, 5.00);
+
+		Assert.assertEquals(1, searchQuery.getSearchQueryId());
+		Assert.assertTrue(searchQuery.isAdvanced());
+		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertTrue(searchQuery.isSearchDescription());
+		Assert.assertTrue(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+	}
+
+	@Test
 	public void testConstructor() {
 		Assert.assertEquals(0, _searchQuery.getSearchQueryId());
 		Assert.assertTrue(ValidatorUtil.isNull(_searchQuery.getKeywords()));
@@ -56,6 +77,62 @@ public class SearchQueryTest {
 	}
 
 	@Test
+	public void testIsAdvanced() {
+		_searchQuery.setAdvanced(true);
+
+		Assert.assertTrue(_searchQuery.isAdvanced());
+	}
+
+	@Test
+	public void testIsAuctionListing() {
+		_searchQuery.setAuctionListing(true);
+
+		Assert.assertTrue(_searchQuery.isAuctionListing());
+	}
+
+	@Test
+	public void testIsFixedPriceListing() {
+		_searchQuery.setFixedPriceListing(true);
+
+		Assert.assertTrue(_searchQuery.isFixedPriceListing());
+	}
+
+	@Test
+	public void testIsFreeShippingOnly() {
+		_searchQuery.setFreeShippingOnly(true);
+
+		Assert.assertTrue(_searchQuery.isFreeShippingOnly());
+	}
+
+	@Test
+	public void testIsNewCondition() {
+		_searchQuery.setNewCondition(true);
+
+		Assert.assertTrue(_searchQuery.isNewCondition());
+	}
+
+	@Test
+	public void testIsSearchDescription() {
+		_searchQuery.setSearchDescription(true);
+
+		Assert.assertTrue(_searchQuery.isSearchDescription());
+	}
+
+	@Test
+	public void testIsUnspecifiedCondition() {
+		_searchQuery.setUnspecifiedCondition(true);
+
+		Assert.assertTrue(_searchQuery.isUnspecifiedCondition());
+	}
+
+	@Test
+	public void testIsUsedCondition() {
+		_searchQuery.setUsedCondition(true);
+
+		Assert.assertTrue(_searchQuery.isUsedCondition());
+	}
+
+	@Test
 	public void testSetAndGetCategoryId() {
 		_searchQuery.setCategoryId("100");
 
@@ -67,6 +144,20 @@ public class SearchQueryTest {
 		_searchQuery.setKeywords("Test keywords");
 
 		Assert.assertEquals("Test keywords", _searchQuery.getKeywords());
+	}
+
+	@Test
+	public void testSetAndGetMaxPrice() {
+		_searchQuery.setMaxPrice(10.00);
+
+		Assert.assertEquals(10.00, _searchQuery.getMaxPrice(), 0);
+	}
+
+	@Test
+	public void testSetAndGetMinPrice() {
+		_searchQuery.setMinPrice(5.00);
+
+		Assert.assertEquals(5.00, _searchQuery.getMinPrice(), 0);
 	}
 
 	@Test
