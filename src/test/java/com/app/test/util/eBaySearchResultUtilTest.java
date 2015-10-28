@@ -73,7 +73,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		_setPriceMethod.setAccessible(true);
 
 		_setUpAdvanceRequestMethod = clazz.getDeclaredMethod(
-			"setUpAdvancedRequest", String.class, String.class, Boolean.class);
+			"setUpAdvancedRequest", String.class, String.class);
 
 		_setUpAdvanceRequestMethod.setAccessible(true);
 	}
@@ -206,9 +206,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, keywords, categoryId, true);
-
-		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
+				_classInstance, keywords, categoryId);
 
 		Assert.assertEquals(
 			keywords, findItemsAdvancedRequest.getKeywords());
@@ -236,9 +234,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, keywords, "", true);
-
-		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
+				_classInstance, keywords, "");
 
 		Assert.assertEquals(
 			keywords, findItemsAdvancedRequest.getKeywords());

@@ -145,7 +145,10 @@ public class eBaySearchResultUtil {
 		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
 
 		request.setKeywords(keywords);
-		request.getCategoryId().add(categoryId);
+
+		if (ValidatorUtil.isNotNull(categoryId)) {
+			request.getCategoryId().add(categoryId);
+		}
 
 		PaginationInput paginationInput = new PaginationInput();
 		paginationInput.setEntriesPerPage(
