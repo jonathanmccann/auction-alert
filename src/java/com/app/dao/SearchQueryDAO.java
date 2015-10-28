@@ -27,6 +27,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,32 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan McCann
  */
 public class SearchQueryDAO {
+
+	public int addSearchQuery(SearchQuery searchQuery)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Adding new searchQuery with keywords: {}",
+			searchQuery.getKeywords());
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement =
+				connection.prepareStatement(
+					_ADD_ADVANCED_SEARCH_QUERY_SQL,
+					Statement.RETURN_GENERATED_KEYS)) {
+
+			populateAddSearchQueryPreparedStatement(
+				preparedStatement, searchQuery);
+
+			preparedStatement.executeUpdate();
+
+			ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+			resultSet.next();
+
+			return resultSet.getInt(1);
+		}
+	}
 
 	public int addSearchQuery(String searchKeywords)
 		throws DatabaseConnectionException, SQLException {
@@ -217,11 +244,51 @@ public class SearchQueryDAO {
 		SearchQuery searchQuery = new SearchQuery();
 
 		searchQuery.setSearchQueryId(resultSet.getInt("searchQueryId"));
+		searchQuery.setAdvanced(resultSet.getBoolean("advanced"));
 		searchQuery.setKeywords(resultSet.getString("keywords"));
 		searchQuery.setCategoryId(resultSet.getString("categoryId"));
+		searchQuery.setSearchDescription(
+			resultSet.getBoolean("searchDescription"));
+		searchQuery.setFreeShippingOnly(
+			resultSet.getBoolean("freeShippingOnly"));
+		searchQuery.setNewCondition(resultSet.getBoolean("newCondition"));
+		searchQuery.setUsedCondition(resultSet.getBoolean("usedCondition"));
+		searchQuery.setUnspecifiedCondition(
+			resultSet.getBoolean("unspecifiedCondition"));
+		searchQuery.setAuctionListing(resultSet.getBoolean("auctionListing"));
+		searchQuery.setFixedPriceListing(
+			resultSet.getBoolean("fixedPriceListing"));
+		searchQuery.setMaxPrice(resultSet.getDouble("maxPrice"));
+		searchQuery.setMinPrice(resultSet.getDouble("minPrice"));
 
 		return searchQuery;
 	}
+
+	private static void populateAddSearchQueryPreparedStatement(
+			PreparedStatement preparedStatement,
+			SearchQuery searchQuery)
+		throws SQLException {
+
+		preparedStatement.setBoolean(1, searchQuery.isAdvanced());
+		preparedStatement.setString(2, searchQuery.getKeywords());
+		preparedStatement.setString(3, searchQuery.getCategoryId());
+		preparedStatement.setBoolean(4, searchQuery.isSearchDescription());
+		preparedStatement.setBoolean(5, searchQuery.isFreeShippingOnly());
+		preparedStatement.setBoolean(6, searchQuery.isNewCondition());
+		preparedStatement.setBoolean(7, searchQuery.isUsedCondition());
+		preparedStatement.setBoolean(8, searchQuery.isUnspecifiedCondition());
+		preparedStatement.setBoolean(9, searchQuery.isAuctionListing());
+		preparedStatement.setBoolean(10, searchQuery.isFixedPriceListing());
+		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
+		preparedStatement.setDouble(12, searchQuery.getMinPrice());
+	}
+
+	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
+		"INSERT INTO SearchQuery(advanced, keywords, categoryId, " +
+			"searchDescription, freeShippingOnly, newCondition, " +
+				"usedCondition, unspecifiedCondition, auctionListing, " +
+					"fixedPriceListing, maxPrice, minPrice) VALUES(?, " +
+						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _ADD_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(keywords) VALUES(?)";

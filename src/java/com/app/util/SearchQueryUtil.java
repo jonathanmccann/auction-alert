@@ -41,6 +41,14 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.addSearchQuery(keywords, categoryId);
 	}
 
+	public static int addSearchQuery(SearchQuery searchQuery)
+		throws DatabaseConnectionException, SQLException {
+
+		normalizeSearchQuery(searchQuery);
+
+		return _searchQueryDAO.addSearchQuery(searchQuery);
+	}
+
 	public static void deleteSearchQueries()
 		throws DatabaseConnectionException, SQLException {
 
@@ -102,6 +110,23 @@ public class SearchQueryUtil {
 	@Autowired
 	public void setSearchQueryDAO(SearchQueryDAO searchQueryDAO) {
 		_searchQueryDAO = searchQueryDAO;
+	}
+
+	private static void normalizeSearchQuery(SearchQuery searchQuery) {
+		if (!searchQuery.isNewCondition() && !searchQuery.isUsedCondition() &&
+			!searchQuery.isUnspecifiedCondition()) {
+
+			searchQuery.setNewCondition(true);
+			searchQuery.setUsedCondition(true);
+			searchQuery.setUnspecifiedCondition(true);
+		}
+
+		if (!searchQuery.isAuctionListing() &&
+			!searchQuery.isFixedPriceListing()) {
+
+			searchQuery.setAuctionListing(true);
+			searchQuery.setFixedPriceListing(true);
+		}
 	}
 
 	private static SearchQueryDAO _searchQueryDAO;
