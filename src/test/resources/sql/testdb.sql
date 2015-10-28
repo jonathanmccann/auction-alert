@@ -2,8 +2,18 @@ DROP TABLE IF EXISTS SearchQuery, SearchResult, Category;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	advanced BOOLEAN,
 	keywords VARCHAR(100) null,
-	categoryId VARCHAR(10) null
+	categoryId VARCHAR(10) null,
+	searchDescription BOOLEAN,
+	freeShippingOnly BOOLEAN,
+	newCondition BOOLEAN,
+	usedCondition BOOLEAN,
+	unspecifiedCondition BOOLEAN,
+	auctionListing BOOLEAN,
+	fixedPriceListing BOOLEAN,
+	maxPrice DOUBLE,
+	minPrice DOUBLE
 );
 
 CREATE TABLE IF NOT EXISTS SearchResult(
