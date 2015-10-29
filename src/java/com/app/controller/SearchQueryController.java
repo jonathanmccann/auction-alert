@@ -91,6 +91,12 @@ public class SearchQueryController {
 		}
 
 		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
+			String categoryId = searchQuery.getCategoryId();
+
+			if (categoryId.equalsIgnoreCase("All Categories")) {
+				searchQuery.setCategoryId("");
+			}
+
 			SearchQueryUtil.addSearchQuery(searchQuery);
 
 			List<SearchQuery> searchQueries =

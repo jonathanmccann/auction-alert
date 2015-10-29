@@ -39,7 +39,7 @@
 					<div>
 						<b>Keywords:</b> <form:input path="keywords" />
 						<form:select path="categoryId">
-							<form:option value=""></form:option>
+							<form:option value="All Categories"></form:option>
 							<form:options items="${searchQueryCategories}" />
 						</form:select>
 					</div>

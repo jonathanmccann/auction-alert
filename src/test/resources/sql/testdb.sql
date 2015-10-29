@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS SearchQuery, SearchResult, Category;
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	keywords VARCHAR(100) null,
-	categoryId VARCHAR(10) null,
+	categoryId VARCHAR(15) null,
 	searchDescription BOOLEAN,
 	freeShippingOnly BOOLEAN,
 	newCondition BOOLEAN,
