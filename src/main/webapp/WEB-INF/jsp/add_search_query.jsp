@@ -43,6 +43,9 @@
 							<form:options items="${searchQueryCategories}" />
 						</form:select>
 					</div>
+					<div>
+						<form:checkbox path="searchDescription" label="Search Description"/>
+					</div>
 					<hr>
 					<div>
 						<b>Shipping Options:</b>
