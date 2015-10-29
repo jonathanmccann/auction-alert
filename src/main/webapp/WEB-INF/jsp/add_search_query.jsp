@@ -25,11 +25,15 @@
 	<head>
 		<title>Add Search Query</title>
 		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
+		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
 	</head>
 	<body>
 		<div>
-			<!-- Validation http://www.w3schools.com/js/tryit.asp?filename=tryjs_validation_js -->
-			<form:form action="add_search_query" commandName="searchQuery" method="post">
+			<form:form action="add_search_query" commandName="searchQuery" id="addSearchQueryForm" method="post">
 				<div>
 					<h2>Add Search Query</h2>
 					<div>
@@ -71,16 +75,16 @@
 						<b>Price:</b>
 
 						<div>
-							Show items prices from <form:input path="minPrice" type="number" /> to <form:input path="maxPrice" type="number" />
+							Show items priced from <form:input path="minPrice" value="0" /> to <form:input path="maxPrice" value="0" />
 						</div>
 					</div>
 					<div>
 						<c:choose>
 							<c:when test="${disabled}">
-								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled title="" type="submit" value="Add Search Query" />
+								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled id="submit" title="" type="submit" value="Add Search Query" />
 							</c:when>
 							<c:otherwise>
-								<input type="submit" value="Add Search Query" />
+								<input id="submit" type="submit" value="Add Search Query" />
 							</c:otherwise>
 						</c:choose>
 					</div>
