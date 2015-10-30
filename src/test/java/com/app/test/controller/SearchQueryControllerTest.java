@@ -263,6 +263,46 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPostAddSearchQueryWithParameters()
+		throws Exception {
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/add_search_query");
+
+		request.param("keywords", "First test keywords");
+		request.param("categoryId", "100");
+		request.param("searchDescription", "true");
+		request.param("freeShippingOnly", "true");
+		request.param("newCondition", "true");
+		request.param("auctionListing", "true");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isFound());
+		resultActions.andExpect(view().name("redirect:view_search_queries"));
+		resultActions.andExpect(model().attributeExists("searchQueries"));
+		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		SearchQuery searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertTrue(searchQuery.isSearchDescription());
+		Assert.assertTrue(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertFalse(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+	}
+
+	@Test
 	public void testPostAddSearchQueryWithSearchQueryAndCategory()
 		throws Exception {
 
@@ -287,6 +327,15 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertFalse(searchQuery.isSearchDescription());
+		Assert.assertFalse(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
 	}
 
 	@Test
