@@ -33,7 +33,9 @@
 					<h2>Current Search Queries</h2>
 					<c:choose>
 						<c:when test="${empty searchQueries}">
-							<div>There are currently no search queries<div>
+							<div>
+								There are currently no search queries.
+							</div>
 						</c:when>
 						<c:otherwise>
 							<c:forEach items="${searchQueries}" var="searchQuery">
