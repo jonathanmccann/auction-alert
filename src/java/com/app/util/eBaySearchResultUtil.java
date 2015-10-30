@@ -21,11 +21,15 @@ import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
 import com.ebay.services.finding.FindItemsAdvancedResponse;
 import com.ebay.services.finding.FindingServicePortType;
+import com.ebay.services.finding.ItemFilter;
+import com.ebay.services.finding.ItemFilterType;
 import com.ebay.services.finding.ListingInfo;
 import com.ebay.services.finding.PaginationInput;
 import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
+
+import java.text.DecimalFormat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,9 +53,7 @@ public class eBaySearchResultUtil {
 
 		com.ebay.services.finding.SearchResult searchResults = null;
 
-		FindItemsAdvancedRequest request = setUpAdvancedRequest(
-			searchQuery.getKeywords(),
-			searchQuery.getCategoryId());
+		FindItemsAdvancedRequest request = setUpAdvancedRequest(searchQuery);
 
 		FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
 			request);
@@ -138,16 +140,87 @@ public class eBaySearchResultUtil {
 	}
 
 	private static FindItemsAdvancedRequest setUpAdvancedRequest(
-		String keywords, String categoryId) {
+		SearchQuery searchQuery) {
 
 		_log.info("Setting up advanced request");
 
 		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
 
-		request.setKeywords(keywords);
+		request.setKeywords(searchQuery.getKeywords());
 
-		if (ValidatorUtil.isNotNull(categoryId)) {
-			request.getCategoryId().add(categoryId);
+		if (ValidatorUtil.isNotNull(searchQuery.getCategoryId())) {
+			request.getCategoryId().add(searchQuery.getCategoryId());
+		}
+
+		if (searchQuery.isSearchDescription()) {
+			request.setDescriptionSearch(true);
+		}
+
+		if (searchQuery.isFreeShippingOnly()) {
+			ItemFilter freeShipping = new ItemFilter();
+
+			freeShipping.setName(ItemFilterType.FREE_SHIPPING_ONLY);
+			freeShipping.getValue().add("true");
+
+			request.getItemFilter().add(freeShipping);
+		}
+
+		if (!searchQuery.isNewCondition() || !searchQuery.isUsedCondition() ||
+			!searchQuery.isUnspecifiedCondition()) {
+
+			if (searchQuery.isNewCondition()) {
+				ItemFilter newCondition = new ItemFilter();
+				newCondition.setName(ItemFilterType.CONDITION);
+				newCondition.getValue().add("New");
+				request.getItemFilter().add(newCondition);
+			}
+
+			if (searchQuery.isUsedCondition()) {
+				ItemFilter usedCondition = new ItemFilter();
+				usedCondition.setName(ItemFilterType.CONDITION);
+				usedCondition.getValue().add("Used");
+				request.getItemFilter().add(usedCondition);
+			}
+
+			if (searchQuery.isUnspecifiedCondition()) {
+				ItemFilter unspecifiedCondition = new ItemFilter();
+				unspecifiedCondition.setName(ItemFilterType.CONDITION);
+				unspecifiedCondition.getValue().add("Unspecified");
+				request.getItemFilter().add(unspecifiedCondition);
+			}
+		}
+
+		if (!searchQuery.isAuctionListing() ||
+			!searchQuery.isFixedPriceListing()) {
+
+			ItemFilter listingType = new ItemFilter();
+			listingType.setName(ItemFilterType.LISTING_TYPE);
+			listingType.getValue().add("AuctionWithBIN");
+
+			if (searchQuery.isAuctionListing()) {
+				listingType.getValue().add("Auction");
+			}
+			else {
+				listingType.getValue().add("FixedPrice");
+			}
+
+			request.getItemFilter().add(listingType);
+		}
+
+		if (searchQuery.getMinPrice() > 0) {
+			ItemFilter minPrice = new ItemFilter();
+			minPrice.setName(ItemFilterType.MIN_PRICE);
+			minPrice.getValue().add(
+				_DECIMAL_FORMAT.format(searchQuery.getMinPrice()));
+			request.getItemFilter().add(minPrice);
+		}
+
+		if (searchQuery.getMaxPrice() > 0) {
+			ItemFilter maxPrice = new ItemFilter();
+			maxPrice.setName(ItemFilterType.MAX_PRICE);
+			maxPrice.getValue().add(
+				_DECIMAL_FORMAT.format(searchQuery.getMaxPrice()));
+			request.getItemFilter().add(maxPrice);
 		}
 
 		PaginationInput paginationInput = new PaginationInput();
@@ -159,6 +232,9 @@ public class eBaySearchResultUtil {
 
 		return request;
 	}
+
+	private static final DecimalFormat _DECIMAL_FORMAT = new DecimalFormat(
+		"0.00");
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
