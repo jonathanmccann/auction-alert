@@ -23,7 +23,14 @@
 
 <html>
 	<head>
-		<title>Add Search Query</title>
+		<c:choose>
+			<c:when test="${isAdd}">
+				<title>Add Search Query</title>
+			</c:when>
+			<c:otherwise>
+				<title>Update Search Query</title>
+			</c:otherwise>
+		</c:choose>
 		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
 		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
@@ -37,7 +44,14 @@
 				<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
 
 				<div>
-					<h2>Add Search Query</h2>
+					<c:choose>
+						<c:when test="${isAdd}">
+							<h2>Add Search Query</h2>
+						</c:when>
+						<c:otherwise>
+							<h2>Update Search Query</h2>
+						</c:otherwise>
+					</c:choose>
 					<div>
 						<b>Keywords:</b> <form:input path="keywords" value="${searchQuery.keywords}" />
 						<form:select path="categoryId">
