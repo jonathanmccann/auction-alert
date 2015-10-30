@@ -177,7 +177,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
-			.andExpect(model().attributeDoesNotExist("disabled"));
+			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeExists("isAdd"));
 	}
 
 	@Test
@@ -194,7 +195,29 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
-			.andExpect(model().attribute("disabled", true));
+			.andExpect(model().attribute("disabled", true))
+			.andExpect(model().attributeExists("isAdd"));
+	}
+
+	@Test
+	public void testGetUpdateSearchQuery() throws Exception {
+		int searchQueryId = SearchQueryUtil.addSearchQuery(
+			"First test keywords");
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(
+			"/update_search_query");
+
+		request.param("searchQueryId", String.valueOf(searchQueryId));
+
+		this.mockMvc.perform(request)
+			.andExpect(status().isOk())
+			.andExpect(view().name("add_search_query"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"))
+			.andExpect(model().attribute(
+				"searchQuery", hasProperty("searchQueryId", is(searchQueryId))))
+			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
 	@Test
@@ -228,7 +251,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:add_search_query"))
 			.andExpect(model().attributeDoesNotExist("searchQueries"))
 			.andExpect(model().attributeDoesNotExist("searchQueryCategories"))
-			.andExpect(model().attribute("disabled", true));
+			.andExpect(model().attribute("disabled", true))
+			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
 	@Test
@@ -237,7 +261,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:error.jsp"))
 			.andExpect(model().attributeDoesNotExist("searchQueries"))
-			.andExpect(model().attributeDoesNotExist("disabled"));
+			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
 	@Test
@@ -251,7 +276,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"))
 			.andExpect(model().attributeExists("searchQueries"))
-			.andExpect(model().attributeDoesNotExist("disabled"));
+			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
 
@@ -275,6 +301,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("freeShippingOnly", "true");
 		request.param("newCondition", "true");
 		request.param("auctionListing", "true");
+		request.param("minPrice", "5.00");
+		request.param("maxPrice", "10.00");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -282,6 +310,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeExists("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
 
@@ -298,8 +327,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
 		Assert.assertTrue(searchQuery.isAuctionListing());
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
-		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 	}
 
 	@Test
@@ -318,6 +347,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeExists("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
 
@@ -339,12 +369,81 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPostUpdateSearchQueryWithParameters()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, "Test keywords", "100", false, false, false, false, false, false,
+			false, 0.00, 0.00);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertFalse(searchQuery.isSearchDescription());
+		Assert.assertFalse(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/update_search_query");
+
+		request.param("searchQueryId", String.valueOf(searchQueryId));
+		request.param("keywords", "First test keywords");
+		request.param("categoryId", "101");
+		request.param("searchDescription", "true");
+		request.param("freeShippingOnly", "true");
+		request.param("newCondition", "true");
+		request.param("auctionListing", "true");
+		request.param("minPrice", "5.00");
+		request.param("maxPrice", "10.00");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isFound());
+		resultActions.andExpect(view().name("redirect:view_search_queries"));
+		resultActions.andExpect(model().attributeExists("searchQueries"));
+		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+
+		searchQueries = SearchQueryUtil.getSearchQueries();
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("101", searchQuery.getCategoryId());
+		Assert.assertTrue(searchQuery.isSearchDescription());
+		Assert.assertTrue(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertFalse(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+	}
+
+	@Test
 	public void testViewSearchQueries() throws Exception {
 		this.mockMvc.perform(get("/query"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("view_search_queries"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/view_search_queries.jsp"))
-			.andExpect(model().attributeExists("searchQueries"));
+			.andExpect(model().attributeExists("searchQueries"))
+			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
 	private MockMvc mockMvc;
