@@ -22,35 +22,38 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-<head>
-<title>View Search Queries</title>
-</head>
-<body>
-	<div align="center">
-		<form:form action="delete_search_query" commandName="searchQueryCheckboxes" method="post">
-			<table border="0">
-				<tr>
-					<td align="center" colspan="2"><h2>Current Search Queries</h2></td>
-				</tr>
-				<c:choose>
-					<c:when test="${empty searchQueries}">
-						<td>There are currently no search queries<td>
-					</c:when>
-					<c:otherwise>
-						<c:forEach items="${searchQueries}" var="searchQuery">
-							<tr>
-								<td><input id="checkboxes" name="searchQueryIds" type="checkbox" value="${searchQuery.searchQueryId}" /><label>${searchQuery.keywords}</label></td>
-							</tr>
-						</c:forEach>
-						<tr>
-							<td align="center" colspan="2"><input type="submit" value="Delete Search Query" /></td>
-						</tr>
-					</c:otherwise>
-				</c:choose>
-			</table>
-		</form:form>
-		</br>
-		<a href="add_search_query">Add a Search Query</a> | View Search Queries | <a href="view_search_query_results">View Search Query Results</a>
-	</div>
-</body>
+	<head>
+		<title>View Search Queries</title>
+		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+	</head>
+	<body>
+		<div>
+			<form:form action="delete_search_query" commandName="searchQueryCheckboxes" method="post">
+				<div>
+					<h2>Current Search Queries</h2>
+					<c:choose>
+						<c:when test="${empty searchQueries}">
+							<div>There are currently no search queries<div>
+						</c:when>
+						<c:otherwise>
+							<c:forEach items="${searchQueries}" var="searchQuery">
+								<div>
+									<input id="checkboxes" name="searchQueryIds" type="checkbox" value="${searchQuery.searchQueryId}" /><label>${searchQuery.keywords}</label>
+								</div>
+							</c:forEach>
+							<div>
+								<div>
+									<input type="submit" value="Delete Search Query" />
+								</div>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</form:form>
+			</br>
+			<div align="center">
+				<a href="add_search_query">Add a Search Query</a> | View Search Queries | <a href="view_search_query_results">View Search Query Results</a>
+			</div>
+		</div>
+	</body>
 </html>

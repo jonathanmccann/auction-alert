@@ -29,42 +29,46 @@
 <script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
 </head>
 <body>
-	<div align="center">
+	<div>
 		<h2>Current Search Results</h2>
-			<c:choose>
-				<c:when test="${empty searchResultMap}">
-					<h4>There are currently no search query results</h4>
-				</c:when>
-				<c:otherwise>
-					<c:forEach items="${searchResultMap}" var="entry">
-						<div class="container">
-							<div align="left" class="header">
-								<h4><c:out value="Keywords: \"${entry.key}\"" /></h4>
-							</div>
-							<div class="content">
-								<table border="0">
-									<c:forEach items="${entry.value}" var="item">
-										<tr>
-											<td><img alt="${item.galleryURL}" src="${item.galleryURL}"></td>
-											<td>
-												<a href="${item.itemURL}" target="_blank">${item.itemTitle}</a></br>
-												<c:if test="${item.auctionPrice gt 0.00}">
-													Auction Price: <fmt:formatNumber value="${item.auctionPrice}" type="currency" /></br>
-												</c:if>
-												<c:if test="${item.fixedPrice gt 0.00}">
-													Fixed Price: <fmt:formatNumber value="${item.fixedPrice}" type="currency" />
-												</c:if>
-											</td>
-										</tr>
-									</c:forEach>
-								</table>
-							</div>
+		<c:choose>
+			<c:when test="${empty searchResultMap}">
+				<h4>There are currently no search query results</h4>
+			</c:when>
+			<c:otherwise>
+				<c:forEach items="${searchResultMap}" var="entry">
+					<div class="container">
+						<div align="left" class="header">
+							<h4><c:out value="Keywords: \"${entry.key}\"" /></h4>
 						</div>
-					</c:forEach>
-				</c:otherwise>
-			</c:choose>
+						<div class="content">
+							<c:forEach items="${entry.value}" var="item">
+								<div class="flex">
+									<div class="gallery">
+										<img alt="${item.galleryURL}" src="${item.galleryURL}">
+									</div>
+
+									<div class="flexGrow">
+										<a href="${item.itemURL}" target="_blank">${item.itemTitle}</a></br>
+
+										<c:if test="${item.auctionPrice gt 0.00}">
+											Auction Price: <fmt:formatNumber value="${item.auctionPrice}" type="currency" /></br>
+										</c:if>
+										<c:if test="${item.fixedPrice gt 0.00}">
+											Fixed Price: <fmt:formatNumber value="${item.fixedPrice}" type="currency" />
+										</c:if>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+					</div>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
 		</br>
-		<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | View Search Query Results
+		<div align="center">
+			<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | View Search Query Results
+		</div>
 	</div>
 </body>
 </html>
