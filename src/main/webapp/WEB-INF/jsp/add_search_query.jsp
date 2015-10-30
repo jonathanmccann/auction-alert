@@ -17,6 +17,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -42,6 +43,9 @@
 		<div>
 			<form:form commandName="searchQuery" id="addSearchQueryForm">
 				<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
+
+				<fmt:formatNumber value="${searchQuery.minPrice}" pattern="0.00" var="minPrice" />
+				<fmt:formatNumber value="${searchQuery.maxPrice}" pattern="0.00" var="maxPrice" />
 
 				<div>
 					<c:choose>
@@ -94,7 +98,7 @@
 						<b>Price:</b>
 
 						<div>
-							Show items priced from <form:input path="minPrice" value="${searchQuery.minPrice == 0.0 ? '0.00' : searchQuery.minPrice}" /> to <form:input path="maxPrice" value="${searchQuery.maxPrice == 0.0 ? '0.00' : searchQuery.maxPrice}" />
+							Show items priced from <form:input path="minPrice" value="${minPrice}" /> to <form:input path="maxPrice" value="${maxPrice}" />
 						</div>
 					</div>
 					<div>
