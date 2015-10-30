@@ -114,7 +114,14 @@
 			</form:form>
 			</br>
 			<div align="center">
-				Add Search Query | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
+				<c:choose>
+					<c:when test="${isAdd}">
+						Add Search Query | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
+					</c:when>
+					<c:otherwise>
+						<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 	</body>
