@@ -46,7 +46,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testAddSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, "Test keywords", "100", true, true, true, true, true, true,
-			true, 10.00, 5.00);
+			true, 5.00, 10.00);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -62,8 +62,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
 		Assert.assertTrue(searchQuery.isAuctionListing());
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
-		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testAddSearchQueryWithNormalizedValues() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, "Test keywords", "100", true, true, false, false, false,
-			false, false, 10.00, 5.00);
+			false, false, 5.00, 10.00);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -108,8 +108,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
 		Assert.assertTrue(searchQuery.isAuctionListing());
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
-		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 	}
 
 	@Test
@@ -173,6 +173,49 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		Assert.assertTrue(
 			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed());
+	}
+
+	@Test
+	public void testUpdateSearchQuery() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, "Test keywords", "100", false, false, false, false, false, false,
+			false, 0.00, 0.00);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertFalse(searchQuery.isSearchDescription());
+		Assert.assertFalse(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+
+		searchQuery = new SearchQuery(
+			1, "New test keywords", "101", true, true, true, false, false, true,
+			false, 5.00, 10.00);
+
+		SearchQueryUtil.updateSearchQuery(searchQuery);
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertEquals("New test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("101", searchQuery.getCategoryId());
+		Assert.assertTrue(searchQuery.isSearchDescription());
+		Assert.assertTrue(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertFalse(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 	}
 
 	@Test

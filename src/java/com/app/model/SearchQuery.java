@@ -38,7 +38,7 @@ public class SearchQuery {
 		boolean searchDescription, boolean freeShippingOnly,
 		boolean newCondition, boolean usedCondition,
 		boolean unspecifiedCondition, boolean auctionListing,
-		boolean fixedPriceListing, double maxPrice, double minPrice) {
+		boolean fixedPriceListing, double minPrice, double maxPrice) {
 
 		_auctionListing = auctionListing;
 		_categoryId = categoryId;

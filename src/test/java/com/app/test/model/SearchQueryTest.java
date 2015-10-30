@@ -35,7 +35,7 @@ public class SearchQueryTest {
 	public void testAdvancedConstructor() {
 		SearchQuery searchQuery = new SearchQuery(
 			1, "Test keywords", "100", true, true, true, true, true, true,
-			true, 10.00, 5.00);
+			true, 5.00, 10.00);
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
@@ -47,8 +47,8 @@ public class SearchQueryTest {
 		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
 		Assert.assertTrue(searchQuery.isAuctionListing());
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
-		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 	}
 
 	@Test
