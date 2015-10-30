@@ -199,6 +199,25 @@ public class SearchQueryDAO {
 		}
 	}
 
+	public void updateSearchQuery(SearchQuery searchQuery)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Updating search query ID: {} ", searchQuery.getSearchQueryId());
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_UPDATE_ADVANCED_SEARCH_QUERY_SQL)) {
+
+			populateAddSearchQueryPreparedStatement(
+				preparedStatement, searchQuery);
+
+			preparedStatement.setInt(12, searchQuery.getSearchQueryId());
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	public void updateSearchQuery(int searchQueryId, String keywords)
 		throws DatabaseConnectionException, SQLException {
 
@@ -308,6 +327,13 @@ public class SearchQueryDAO {
 
 	private static final String _GET_SEARCH_QUERY_SQL =
 		"SELECT * FROM SearchQuery WHERE searchQueryId = ?";
+
+	private static final String _UPDATE_ADVANCED_SEARCH_QUERY_SQL =
+		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, " +
+			"searchDescription = ?, freeShippingOnly = ?, newCondition = ?, " +
+				"usedCondition = ?, unspecifiedCondition = ?, " +
+					"auctionListing = ?, fixedPriceListing = ?, maxPrice = ?, " +
+						"minPrice = ? WHERE searchQueryId = ?";
 
 	private static final String _UPDATE_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ? WHERE searchQueryId = ?";

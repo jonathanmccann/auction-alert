@@ -33,25 +33,27 @@
 	</head>
 	<body>
 		<div>
-			<form:form action="add_search_query" commandName="searchQuery" id="addSearchQueryForm" method="post">
+			<form:form commandName="searchQuery" id="addSearchQueryForm">
+				<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
+
 				<div>
 					<h2>Add Search Query</h2>
 					<div>
-						<b>Keywords:</b> <form:input path="keywords" />
+						<b>Keywords:</b> <form:input path="keywords" value="${searchQuery.keywords}" />
 						<form:select path="categoryId">
 							<form:option value="All Categories"></form:option>
 							<form:options items="${searchQueryCategories}" />
 						</form:select>
 					</div>
 					<div>
-						<form:checkbox path="searchDescription" label="Search Description"/>
+						<form:checkbox path="searchDescription" label="Search Description" value="${searchQuery.searchDescription}"/>
 					</div>
 					<hr>
 					<div>
 						<b>Shipping Options:</b>
 
 						<div>
-							<form:checkbox path="freeShippingOnly" label="Free Shipping"/>
+							<form:checkbox path="freeShippingOnly" label="Free Shipping" value="${searchQuery.freeShippingOnly}"/>
 						</div>
 					</div>
 					<hr>
@@ -59,8 +61,8 @@
 						<b>Listing Type:</b>
 
 						<div>
-							<form:checkbox path="auctionListing" label="Auction"/> <br>
-							<form:checkbox path="fixedPriceListing" label="BIN"/>
+							<form:checkbox path="auctionListing" label="Auction" value="${searchQuery.auctionListing}"/> <br>
+							<form:checkbox path="fixedPriceListing" label="BIN" value="${searchQuery.fixedPriceListing}"/>
 						</div>
 					</div>
 					<hr>
@@ -68,9 +70,9 @@
 						<b>Condition:</b>
 
 						<div>
-							<form:checkbox path="newCondition" label="New"/> <br>
-							<form:checkbox path="usedCondition" label="Used"/> <br>
-							<form:checkbox path="unspecifiedCondition" label="Unspecified"/>
+							<form:checkbox path="newCondition" label="New" value="${searchQuery.newCondition}"/> <br>
+							<form:checkbox path="usedCondition" label="Used" value="${searchQuery.usedCondition}"/> <br>
+							<form:checkbox path="unspecifiedCondition" label="Unspecified" value="${searchQuery.unspecifiedCondition}"/>
 						</div>
 					</div>
 					<hr>
@@ -78,7 +80,7 @@
 						<b>Price:</b>
 
 						<div>
-							Show items priced from <form:input path="minPrice" value="0" /> to <form:input path="maxPrice" value="0" />
+							Show items priced from <form:input path="minPrice" value="${searchQuery.minPrice == 0.0 ? '0.00' : searchQuery.minPrice}" /> to <form:input path="maxPrice" value="${searchQuery.maxPrice == 0.0 ? '0.00' : searchQuery.maxPrice}" />
 						</div>
 					</div>
 					<div>
@@ -86,8 +88,11 @@
 							<c:when test="${disabled}">
 								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled id="submit" title="" type="submit" value="Add Search Query" />
 							</c:when>
+							<c:when test="${isAdd}">
+								<input id="submit" type="submit" value="Add Search Query" formmethod="post" formaction="add_search_query" />
+							</c:when>
 							<c:otherwise>
-								<input id="submit" type="submit" value="Add Search Query" />
+								<input id="submit" type="submit" value="Update Search Query" formmethod="post" formaction="update_search_query" />
 							</c:otherwise>
 						</c:choose>
 					</div>

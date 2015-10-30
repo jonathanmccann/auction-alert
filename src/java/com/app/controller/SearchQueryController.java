@@ -71,6 +71,8 @@ public class SearchQueryController {
 
 		model.put("searchQueryCategories", categories);
 
+		model.put("isAdd", true);
+
 		return "add_search_query";
 	}
 
@@ -134,11 +136,64 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
+	@RequestMapping(value = "/edit_search_query", method = RequestMethod.GET)
+	public String editSearchQuery(
+			HttpServletRequest request, Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		int searchQueryId = Integer.valueOf(
+			request.getParameter("searchQueryId"));
+
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		model.put("searchQuery", searchQuery);
+
+		Map<String, String> categories = new LinkedHashMap<>();
+
+		for (Category category : CategoryUtil.getCategories()) {
+			categories.put(
+				category.getCategoryId(), category.getCategoryName());
+		}
+
+		model.put("searchQueryCategories", categories);
+
+		return "add_search_query";
+	}
+
 	@ExceptionHandler(Exception.class)
 	public String handleError(HttpServletRequest request, Exception exception) {
 		_log.error("Request: {}", request.getRequestURL(), exception);
 
 		return "redirect:error.jsp";
+	}
+
+	@RequestMapping(value = "/update_search_query", method = RequestMethod.POST)
+	public String updateSearchQuery(
+			@ModelAttribute("searchQuery")SearchQuery searchQuery,
+			Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
+			String categoryId = searchQuery.getCategoryId();
+
+			if (ValidatorUtil.isNull(categoryId) ||
+				categoryId.equalsIgnoreCase("All Categories")) {
+
+				searchQuery.setCategoryId("");
+			}
+
+			SearchQueryUtil.updateSearchQuery(searchQuery);
+
+			List<SearchQuery> searchQueries =
+				SearchQueryUtil.getSearchQueries();
+
+			model.put("searchQueries", searchQueries);
+
+			return "redirect:view_search_queries";
+		}
+		else {
+			return "redirect:error.jsp";
+		}
 	}
 
 	@RequestMapping(

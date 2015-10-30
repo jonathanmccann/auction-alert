@@ -93,6 +93,12 @@ public class SearchQueryUtil {
 		return false;
 	}
 
+	public static void updateSearchQuery(SearchQuery searchQuery)
+		throws DatabaseConnectionException, SQLException {
+
+		_searchQueryDAO.updateSearchQuery(searchQuery);
+	}
+
 	public static void updateSearchQuery(int searchQueryId, String keywords)
 		throws DatabaseConnectionException, SQLException {
 
