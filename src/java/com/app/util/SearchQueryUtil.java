@@ -96,6 +96,8 @@ public class SearchQueryUtil {
 	public static void updateSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
+		normalizeSearchQuery(searchQuery);
+
 		_searchQueryDAO.updateSearchQuery(searchQuery);
 	}
 
