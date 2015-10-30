@@ -136,8 +136,8 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
-	@RequestMapping(value = "/edit_search_query", method = RequestMethod.GET)
-	public String editSearchQuery(
+	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
+	public String updateSearchQuery(
 			HttpServletRequest request, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
