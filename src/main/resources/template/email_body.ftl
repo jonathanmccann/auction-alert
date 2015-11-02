@@ -1,5 +1,6 @@
 <#ftl strip_whitespace = true>
 Keywords: ${searchQuery.getKeywords()}
+
 <#list searchResults as searchResult>
 Item: ${searchResult.getItemTitle()}
 <#if (searchResult.getAuctionPrice() > 0)>
@@ -9,4 +10,5 @@ Auction Price: ${searchResult.getAuctionPrice()?string.currency}
 Fixed Price: ${searchResult.getFixedPrice()?string.currency}
 </#if>
 URL: ${searchResult.getItemURL()}
+
 </#list>
