@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UserDAO {
 
-	public static void addUser(String emailAddress, String password, String salt)
+	public void addUser(String emailAddress, String password, String salt)
 		throws Exception {
 
 		_log.debug("Adding user with emailAddress: {}", emailAddress);
@@ -48,7 +48,7 @@ public class UserDAO {
 		}
 	}
 
-	public static User getUserByEmailAddress(String emailAddress)
+	public User getUserByEmailAddress(String emailAddress)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting user with emailAddress: {}", emailAddress);

@@ -22,17 +22,21 @@ import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha512Hash;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.sql.SQLException;
 
 /**
  * @author Jonathan McCann
  */
+@Service
 public class UserUtil {
 
 	public static User getUserByEmailAddress(String emailAddress)
 		throws DatabaseConnectionException, SQLException {
 
-		return UserDAO.getUserByEmailAddress(emailAddress);
+		return _userDAO.getUserByEmailAddress(emailAddress);
 	}
 
 	public static void register(String email, String plainTextPassword)
@@ -44,7 +48,7 @@ public class UserUtil {
 
 		generatePassword(user, plainTextPassword);
 
-		UserDAO.addUser(email, user.getPassword(), user.getSalt());
+		_userDAO.addUser(email, user.getPassword(), user.getSalt());
 	}
 
 	private static void generatePassword(User user, String plainTextPassword) {
@@ -58,5 +62,12 @@ public class UserUtil {
 		user.setPassword(hashedPasswordBase64);
 		user.setSalt(salt.toString());
 	}
+
+	@Autowired
+	public void setUserDAO(UserDAO userDAO) {
+		_userDAO = userDAO;
+	}
+
+	private static UserDAO _userDAO;
 
 }
