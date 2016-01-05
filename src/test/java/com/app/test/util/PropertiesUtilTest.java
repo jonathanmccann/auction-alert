@@ -43,6 +43,9 @@ public class PropertiesUtilTest {
 		Assert.assertEquals("Application ID", PropertiesValues.APPLICATION_ID);
 		Assert.assertEquals("eBay Token", PropertiesValues.EBAY_TOKEN);
 		Assert.assertEquals(
+			"JDBC Default Driver Class Name",
+			PropertiesValues.JDBC_DEFAULT_DRIVER_CLASS_NAME);
+		Assert.assertEquals(
 			"JDBC Default Password", PropertiesValues.JDBC_DEFAULT_PASSWORD);
 		Assert.assertEquals(
 			"JDBC Default URL", PropertiesValues.JDBC_DEFAULT_URL);

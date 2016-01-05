@@ -23,6 +23,9 @@ public class PropertiesKeys {
 
 	public static final String EBAY_TOKEN = "ebay.token";
 
+	public static final String JDBC_DEFAULT_DRIVER_CLASS_NAME =
+		"jdbc.default.driverClassName";
+
 	public static final String JDBC_DEFAULT_PASSWORD = "jdbc.default.password";
 
 	public static final String JDBC_DEFAULT_URL = "jdbc.default.url";

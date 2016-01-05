@@ -17,11 +17,60 @@
 
 	<context:component-scan	base-package="com.app" />
 
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>file:${catalina.base}/config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.default.driverClassName}" />
+		<property name="url" value="${jdbc.default.url}" />
+		<property name="username" value="${jdbc.default.username}" />
+		<property name="password" value="${jdbc.default.password}" />
+	</bean>
+
 	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
 	<bean id="releaseDAO" class="com.app.dao.ReleaseDAO" />
 	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
 	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
 	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
+
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<bean id="sha512Matcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+		<property name="hashAlgorithmName" value="SHA-512" />
+		<property name="storedCredentialsHexEncoded" value="false" />
+		<property name="hashIterations" value="1024" />
+	</bean>
+
+	<bean id="eBayRealm" class="com.app.shiro.SaltedJdbcRealm">
+		<property name="dataSource" ref="dataSource" />
+		<property name="authenticationQuery" value="SELECT password, salt FROM user WHERE username = ?" />
+		<property name="userRolesQuery" value="SELECT roleName FROM UserRole WHERE email = ?" />
+		<property name="permissionsQuery" value="SELECT permission FROM RolesPermission WHERE roleName = ?" />
+		<property name="permissionsLookupEnabled" value="true" />
+		<property name="credentialsMatcher" ref="sha512Matcher" />
+	</bean>
+
+	<bean id="builtInCacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="cacheManager" ref="builtInCacheManager" />
+		<property name="realm" ref="eBayRealm" />
+	</bean>
+
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"/>
+	</bean>
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"/>
+	</bean>
 
 	<mvc:annotation-driven />
 </beans>

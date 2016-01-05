@@ -25,6 +25,10 @@ public class PropertiesValues {
 	public static final String EBAY_TOKEN =
 		PropertiesUtil.getConfigurationProperty(PropertiesKeys.EBAY_TOKEN);
 
+	public static final String JDBC_DEFAULT_DRIVER_CLASS_NAME =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.JDBC_DEFAULT_DRIVER_CLASS_NAME);
+
 	public static final String JDBC_DEFAULT_PASSWORD =
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
