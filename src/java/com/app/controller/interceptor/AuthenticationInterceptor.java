@@ -16,8 +16,8 @@ package com.app.controller.interceptor;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,13 +35,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 			Object handler)
 		throws Exception {
 
-		String requestMapping = (String)request.getAttribute(
-			HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-
-		if (requestMapping.equalsIgnoreCase(_LOG_IN_REQUEST_MAPPING)) {
-			return true;
-		}
-
 		Subject currentUser = SecurityUtils.getSubject();
 
 		if (!currentUser.isAuthenticated()) {
@@ -53,5 +46,4 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 		return true;
 	}
 
-	private static final String _LOG_IN_REQUEST_MAPPING = "/log_in";
 }

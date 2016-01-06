@@ -196,13 +196,7 @@ public class SearchQueryController {
 		}
 	}
 
-	@RequestMapping(
-		value = {
-			"/query", "/search_query", "/view_search_query",
-			"/view_search_queries"
-		},
-		method = RequestMethod.GET
-	)
+	@RequestMapping(value = "/view_search_queries", method = RequestMethod.GET)
 	public String viewSearchQueries(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
