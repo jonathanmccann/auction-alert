@@ -18,6 +18,10 @@
 
 	<context:component-scan	base-package="com.app.controller" />
 
+	<mvc:interceptors>
+		<bean class="com.app.controller.interceptor.AuthenticationInterceptor" />
+	</mvc:interceptors>
+
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
