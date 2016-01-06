@@ -31,14 +31,13 @@
 		<div>
 			<h1>eBay Searcher</h1>
 			<shiro:guest>
-				<h3>Please log in</h3>
 				<c:if test="${not empty authenticationError}">
 					<h4><c:out value="Error: \"${authenticationError}\"" /></h4>
 				</c:if>
 				<form:form action="log_in" commandName="logIn" method="post">
 					<div>
-						<input id="emailAddress" name="emailAddress" />
-						<input id="password" name="password" type="password" />
+						<b>Email Address: </b><input id="emailAddress" name="emailAddress" /></br>
+						<b>Password: </b><input id="password" name="password" type="password" />
 					</div>
 					<div>
 						<input type="submit" value="Log In" />
