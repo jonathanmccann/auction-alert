@@ -17,6 +17,9 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
@@ -27,7 +30,21 @@
 	<body>
 		<div>
 			<h1>eBay Searcher</h1>
-			<h3>View and update search queries and results</h3>
+			<shiro:guest>
+				<h3>Please log in</h3>
+				<form:form action="log_in" commandName="logIn" method="post">
+					<div>
+						<input id="emailAddress" name="emailAddress" />
+						<input id="password" name="password" type="password" />
+					</div>
+					<div>
+						<input type="submit" value="Log In" />
+					</div>
+				</form:form>
+			</shiro:guest>
+			<shiro:user>
+				<h3>View and update search queries and results</h3>
+			</shiro:user>
 			<div align="center">
 				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
 			</div>
