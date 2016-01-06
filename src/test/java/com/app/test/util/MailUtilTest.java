@@ -181,9 +181,9 @@ public class MailUtilTest extends BaseTestCase {
 		Assert.assertTrue(
 			message.getSubject().contains("New Search Results - "));
 		Assert.assertEquals(
-			"Keywords: Test keywords\nItem: itemTitle\n" +
+			"Keywords: Test keywords\n\nItem: itemTitle\n" +
 				"Auction Price: $14.99\nFixed Price: $29.99\n" +
-					"URL: http://www.ebay.com/itm/1234\n",
+					"URL: http://www.ebay.com/itm/1234\n\n",
 			message.getContent());
 
 		InternetAddress[] internetAddresses = new InternetAddress[2];
