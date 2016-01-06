@@ -33,22 +33,47 @@ import java.sql.SQLException;
 @Service
 public class UserUtil {
 
+	public static int addUser(String emailAddress, String plainTextPassword)
+		throws Exception {
+
+		User user = new User();
+
+		user.setEmailAddress(emailAddress);
+
+		generatePassword(user, plainTextPassword);
+
+		return _userDAO.addUser(
+			emailAddress, user.getPassword(), user.getSalt());
+	}
+
+	public static void deleteUserByEmailAddress(String emailAddress)
+		throws DatabaseConnectionException, SQLException {
+
+		_userDAO.deleteUserByEmailAddress(emailAddress);
+	}
+
+	public static void deleteUserByUserId(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		_userDAO.deleteUserByUserId(userId);
+	}
+
 	public static User getUserByEmailAddress(String emailAddress)
 		throws DatabaseConnectionException, SQLException {
 
 		return _userDAO.getUserByEmailAddress(emailAddress);
 	}
 
-	public static void register(String email, String plainTextPassword)
-		throws Exception {
+	public static User getUserByUserId(int userId)
+		throws DatabaseConnectionException, SQLException {
 
-		User user = new User();
+		return _userDAO.getUserByUserId(userId);
+	}
 
-		user.setEmailAddress(email);
+	public static void updateUser(int userId, String emailAddress)
+		throws DatabaseConnectionException, SQLException {
 
-		generatePassword(user, plainTextPassword);
-
-		_userDAO.addUser(email, user.getPassword(), user.getSalt());
+		_userDAO.updateUser(userId, emailAddress);
 	}
 
 	private static void generatePassword(User user, String plainTextPassword) {

@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS SearchQuery, SearchResult, Category;
+DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, Release_;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

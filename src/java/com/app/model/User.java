@@ -19,11 +19,11 @@ package com.app.model;
  */
 public class User {
 
-	public long getUserId() {
+	public int getUserId() {
 		return _userId;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(int userId) {
 		_userId = userId;
 	}
 
@@ -59,7 +59,7 @@ public class User {
 		_salt = salt;
 	}
 
-	private long _userId;
+	private int _userId;
 	private String _emailAddress;
 	private String _phoneNumber;
 	private String _password;

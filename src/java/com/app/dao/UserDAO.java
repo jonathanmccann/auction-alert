@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +32,54 @@ import org.slf4j.LoggerFactory;
  */
 public class UserDAO {
 
-	public void addUser(String emailAddress, String password, String salt)
+	public int addUser(String emailAddress, String password, String salt)
 		throws Exception {
 
 		_log.debug("Adding user with emailAddress: {}", emailAddress);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_USER_SQL)) {
+				_ADD_USER_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
 			preparedStatement.setString(1, emailAddress);
 			preparedStatement.setString(2, password);
 			preparedStatement.setString(3, salt);
+
+			preparedStatement.executeUpdate();
+
+			ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+			resultSet.next();
+
+			return resultSet.getInt(1);
+		}
+	}
+
+	public void deleteUserByEmailAddress(String emailAddress)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deleting user with email address: {}", emailAddress);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_USER_BY_EMAIL_ADDRESS_SQL)) {
+
+			preparedStatement.setString(1, emailAddress);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	public void deleteUserByUserId(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deleting user ID: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DELETE_USER_BY_USER_ID_SQL)) {
+
+			preparedStatement.setInt(1, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -61,15 +98,7 @@ public class UserDAO {
 
 			try (ResultSet resultSet = preparedStatement.executeQuery()) {
 				if (resultSet.next()) {
-					User user = new User();
-
-					user.setEmailAddress(emailAddress);
-					user.setUserId(resultSet.getLong("userId"));
-					user.setPhoneNumber(resultSet.getString("phoneNumber"));
-					user.setPassword(resultSet.getString("password"));
-					user.setSalt(resultSet.getString("salt"));
-
-					return user;
+					return createUserFromResultSet(resultSet);
 				}
 				else {
 					throw new SQLException();
@@ -78,11 +107,77 @@ public class UserDAO {
 		}
 	}
 
+	public User getUserByUserId(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Getting user with user ID: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_USER_BY_USER_ID_SQL)) {
+
+			preparedStatement.setInt(1, userId);
+
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return createUserFromResultSet(resultSet);
+				}
+				else {
+					throw new SQLException();
+				}
+			}
+		}
+	}
+
+	public void updateUser(int userId, String emailAddress)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Updating user ID: {} to email address: {}", userId,
+			emailAddress);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_UPDATE_USER_SQL)) {
+
+			preparedStatement.setString(1, emailAddress);
+			preparedStatement.setInt(2, userId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	private static User createUserFromResultSet(ResultSet resultSet)
+		throws SQLException{
+
+		User user = new User();
+
+		user.setEmailAddress(resultSet.getString("emailAddress"));
+		user.setUserId(resultSet.getInt("userId"));
+		user.setPhoneNumber(resultSet.getString("phoneNumber"));
+		user.setPassword(resultSet.getString("password"));
+		user.setSalt(resultSet.getString("salt"));
+
+		return user;
+	}
+
 	private static final String _ADD_USER_SQL =
 		"INSERT INTO User_(emailAddress, password, salt) VALUES(?, ?, ?)";
 
+	private static final String _DELETE_USER_BY_EMAIL_ADDRESS_SQL =
+		"DELETE FROM User_ WHERE emailAddress = ?";
+
+	private static final String _DELETE_USER_BY_USER_ID_SQL =
+		"DELETE FROM User_ WHERE userId = ?";
+
 	private static final String _GET_USER_BY_EMAIL_ADDRESS_SQL =
 		"SELECT * FROM User_ WHERE emailAddress = ?";
+
+	private static final String _GET_USER_BY_USER_ID_SQL =
+		"SELECT * FROM User_ WHERE userId = ?";
+
+	private static final String _UPDATE_USER_SQL =
+		"UPDATE User_ SET emailAddress = ? WHERE userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		UserDAO.class);
