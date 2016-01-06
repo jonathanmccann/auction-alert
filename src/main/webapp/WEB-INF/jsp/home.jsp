@@ -32,6 +32,9 @@
 			<h1>eBay Searcher</h1>
 			<shiro:guest>
 				<h3>Please log in</h3>
+				<c:if test="${not empty authenticationError}">
+					<h4><c:out value="Error: \"${authenticationError}\"" /></h4>
+				</c:if>
 				<form:form action="log_in" commandName="logIn" method="post">
 					<div>
 						<input id="emailAddress" name="emailAddress" />

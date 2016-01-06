@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * @author Jonathan McCann
@@ -41,7 +42,8 @@ import java.sql.SQLException;
 public class UserController {
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
-	public String logIn(String emailAddress, String password)
+	public String logIn(
+			String emailAddress, String password, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
 		Subject currentUser = SecurityUtils.getSubject();
@@ -62,24 +64,30 @@ public class UserController {
 				currentUser.getSession().setAttribute(
 					"userId", user.getUserId());
 			}
-			catch (UnknownAccountException uae) {
-				_log.error(
-					"There is no user with emailAddress {}",
-					token.getPrincipal());
-			}
-			catch (IncorrectCredentialsException ice) {
-				_log.error(
-					"Password for emailAddress {} is incorrect",
-					token.getPrincipal());
-			}
-			catch (LockedAccountException lae) {
-				_log.error(
-					"There account associated with emailAddress {} is locked",
-					token.getPrincipal());
+			catch (Exception e) {
+				model.put(
+					"authenticationError",
+					"Authentication failed. Please try again.");
+
+				if (e instanceof UnknownAccountException) {
+					_log.error(
+						"There is no user with emailAddress {}",
+						token.getPrincipal());
+				}
+				else if (e instanceof IncorrectCredentialsException) {
+					_log.error(
+						"Password for emailAddress {} is incorrect",
+						token.getPrincipal());
+				}
+				else if (e instanceof LockedAccountException) {
+					_log.error(
+						"The account associated with emailAddress {} is locked",
+						token.getPrincipal());
+				}
 			}
 		}
 
-		return "redirect:/";
+		return "home";
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
