@@ -39,25 +39,26 @@ public class SaltedJdbcRealm extends JdbcRealm {
 
 		UsernamePasswordToken userPassToken = (UsernamePasswordToken)token;
 
-		final String username = userPassToken.getUsername();
+		final String emailAddress = userPassToken.getUsername();
 
-		if (ValidatorUtil.isNull(username)) {
-			_log.error("Username is null");
+		if (ValidatorUtil.isNull(emailAddress)) {
+			_log.error("Email address is null");
 
 			return null;
 		}
 
 		try {
-			User user = UserUtil.getUserByEmailAddress(username);
+			User user = UserUtil.getUserByEmailAddress(emailAddress);
 
 			if (user == null) {
-				_log.error("No account found for username: {}", username);
+				_log.error(
+					"No account found for emailAddress {}", emailAddress);
 
 				return null;
 			}
 
 			return new eBaySaltedAuthenticationInfo(
-				username, user.getPassword(), user.getSalt());
+				emailAddress, user.getPassword(), user.getSalt());
 		}
 		catch (Exception e) {
 			throw new AuthenticationException(e);

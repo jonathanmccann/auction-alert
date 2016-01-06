@@ -101,7 +101,7 @@ public class UserDAO {
 					return createUserFromResultSet(resultSet);
 				}
 				else {
-					throw new SQLException();
+					return null;
 				}
 			}
 		}
@@ -123,7 +123,7 @@ public class UserDAO {
 					return createUserFromResultSet(resultSet);
 				}
 				else {
-					throw new SQLException();
+					return null;
 				}
 			}
 		}

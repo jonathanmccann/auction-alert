@@ -50,12 +50,14 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 	}
 
-	@Test(expected=SQLException.class)
+	@Test
 	public void testGetUserByInvalidEmailAddress() throws Exception {
-		UserUtil.getUserByEmailAddress("test@test.com");
+		User user = UserUtil.getUserByEmailAddress("test@test.com");
+
+		Assert.assertNull(user);
 	}
 
-	@Test(expected=SQLException.class)
+	@Test
 	public void testDeleteUser() throws Exception {
 		UserUtil.addUser("test@test.com", "password");
 
@@ -67,6 +69,8 @@ public class UserUtilTest extends BaseTestCase {
 		UserUtil.deleteUserByUserId(user.getUserId());
 
 		user = UserUtil.getUserByEmailAddress("test@test.com");
+
+		Assert.assertNull(user);
 	}
 
 	@Test
