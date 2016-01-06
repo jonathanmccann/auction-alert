@@ -16,6 +16,7 @@ package com.app.util;
 
 import com.app.dao.UserDAO;
 import com.app.exception.DatabaseConnectionException;
+import com.app.exception.DuplicateEmailAddressException;
 import com.app.model.User;
 
 import org.apache.shiro.crypto.RandomNumberGenerator;
@@ -35,6 +36,8 @@ public class UserUtil {
 
 	public static int addUser(String emailAddress, String plainTextPassword)
 		throws Exception {
+
+		validateEmailAddress(0, emailAddress);
 
 		User user = new User();
 
@@ -71,7 +74,9 @@ public class UserUtil {
 	}
 
 	public static void updateUser(int userId, String emailAddress)
-		throws DatabaseConnectionException, SQLException {
+		throws Exception {
+
+		validateEmailAddress(userId, emailAddress);
 
 		_userDAO.updateUser(userId, emailAddress);
 	}
@@ -91,6 +96,16 @@ public class UserUtil {
 	@Autowired
 	public void setUserDAO(UserDAO userDAO) {
 		_userDAO = userDAO;
+	}
+
+	private static void validateEmailAddress(int userId, String emailAddress)
+		throws Exception {
+
+		User user = _userDAO.getUserByEmailAddress(emailAddress);
+
+		if ((user != null) && (userId != user.getUserId())) {
+			throw new DuplicateEmailAddressException();
+		}
 	}
 
 	private static UserDAO _userDAO;

@@ -14,6 +14,7 @@
 
 package com.app.test.util;
 
+import com.app.exception.DuplicateEmailAddressException;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
@@ -48,6 +49,12 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
+	}
+
+	@Test(expected=DuplicateEmailAddressException.class)
+	public void testAddUserWithDuplicateEmailAddress() throws Exception {
+		UserUtil.addUser("test@test.com", "password");
+		UserUtil.addUser("test@test.com", "updatedPassword");
 	}
 
 	@Test
