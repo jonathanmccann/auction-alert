@@ -17,6 +17,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
@@ -28,9 +30,11 @@
 		<div>
 			<h2>An error has occurred</h2>
 			</br>
-			<div align="center">
-				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
-			</div>
+			<shiro:user>
+				<div align="center">
+					<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
+				</div>
+			</shiro:user>
 		</div>
 	</body>
 </html>
