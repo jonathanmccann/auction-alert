@@ -90,6 +90,15 @@ public class UserController {
 		return "home";
 	}
 
+	@RequestMapping(value = "/log_out", method = RequestMethod.POST)
+	public String logOut() {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		currentUser.logout();
+
+		return "home";
+	}
+
 	private static final Logger _log = LoggerFactory.getLogger(
 		UserController.class);
 

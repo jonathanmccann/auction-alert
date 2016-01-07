@@ -47,6 +47,12 @@
 			<shiro:user>
 				<h3>View and update search queries and results</h3>
 
+				<form:form action="log_out" commandName="logOut" method="post">
+					<div>
+						<input type="submit" value="Log Out" />
+					</div>
+				</form:form>
+
 				<div align="center">
 					<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
 				</div>
