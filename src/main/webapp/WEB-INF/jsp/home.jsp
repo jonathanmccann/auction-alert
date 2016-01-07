@@ -32,7 +32,7 @@
 			<h1>eBay Searcher</h1>
 			<shiro:guest>
 				<c:if test="${not empty authenticationError}">
-					<h4><c:out value="Error: \"${authenticationError}\"" /></h4>
+					${authenticationError}</br>
 				</c:if>
 				<form:form action="log_in" commandName="logIn" method="post">
 					<div>
