@@ -122,7 +122,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(0, searchResults.size());
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
 	}
-//
+
 	@Test
 	public void testDeleteSearchQueryWithNullSearchQueryIds() throws Exception {
 		int searchQueryId = SearchQueryUtil.addSearchQuery(
