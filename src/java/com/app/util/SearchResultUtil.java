@@ -72,7 +72,7 @@ public class SearchResultUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries();
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
 
 		if (searchQueries.size() == 0) {
 			_log.info("There are no search queries");

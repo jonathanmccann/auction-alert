@@ -22,19 +22,23 @@ public class SearchQuery {
 	public SearchQuery() {
 	}
 
-	public SearchQuery(int searchQueryId, String keywords) {
+	public SearchQuery(int searchQueryId, int userId, String keywords) {
 		_searchQueryId = searchQueryId;
+		_userId = userId;
 		_keywords = keywords;
 	}
 
-	public SearchQuery(int searchQueryId, String keywords, String categoryId) {
+	public SearchQuery(
+		int searchQueryId, int userId, String keywords, String categoryId) {
+
 		_searchQueryId = searchQueryId;
+		_userId = userId;
 		_keywords = keywords;
 		_categoryId = categoryId;
 	}
 
 	public SearchQuery(
-		int searchQueryId, String keywords, String categoryId,
+		int searchQueryId, int userId, String keywords, String categoryId,
 		boolean searchDescription, boolean freeShippingOnly,
 		boolean newCondition, boolean usedCondition,
 		boolean unspecifiedCondition, boolean auctionListing,
@@ -52,6 +56,7 @@ public class SearchQuery {
 		_searchQueryId = searchQueryId;
 		_unspecifiedCondition = unspecifiedCondition;
 		_usedCondition = usedCondition;
+		_userId = userId;
 	}
 
 	public String getCategoryId() {
@@ -72,6 +77,10 @@ public class SearchQuery {
 
 	public int getSearchQueryId() {
 		return _searchQueryId;
+	}
+
+	public int getUserId() {
+		return _userId;
 	}
 
 	public boolean isAuctionListing() {
@@ -150,6 +159,10 @@ public class SearchQuery {
 		this._usedCondition = usedCondition;
 	}
 
+	public void setUserId(int userId) {
+		_userId = userId;
+	}
+
 	private boolean _auctionListing;
 	private String _categoryId;
 	private boolean _fixedPriceListing;
@@ -162,5 +175,6 @@ public class SearchQuery {
 	private int _searchQueryId;
 	private boolean _unspecifiedCondition;
 	private boolean _usedCondition;
+	private int _userId;
 
 }

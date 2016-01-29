@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Categ
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	userId INT NOT NULL,
 	keywords VARCHAR(100) null,
 	categoryId VARCHAR(15) null,
 	searchDescription BOOLEAN,

@@ -19,10 +19,13 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.model.User;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha512Hash;
 
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +74,14 @@ public class UserUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		return _userDAO.getUserByUserId(userId);
+	}
+
+	public static int getCurrentUserId() {
+		Subject subject = SecurityUtils.getSubject();
+
+		Session session = subject.getSession();
+
+		return (int)session.getAttribute("userId");
 	}
 
 	public static void updateUser(int userId, String emailAddress)

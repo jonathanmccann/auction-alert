@@ -29,16 +29,17 @@ import java.util.List;
 @Service
 public class SearchQueryUtil {
 
-	public static int addSearchQuery(String keywords)
+	public static int addSearchQuery(int userId, String keywords)
 		throws DatabaseConnectionException, SQLException {
 
-		return _searchQueryDAO.addSearchQuery(keywords);
+		return _searchQueryDAO.addSearchQuery(userId, keywords);
 	}
 
-	public static int addSearchQuery(String keywords, String categoryId)
+	public static int addSearchQuery(
+			int userId, String keywords, String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
-		return _searchQueryDAO.addSearchQuery(keywords, categoryId);
+		return _searchQueryDAO.addSearchQuery(userId, keywords, categoryId);
 	}
 
 	public static int addSearchQuery(SearchQuery searchQuery)
@@ -49,10 +50,10 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.addSearchQuery(searchQuery);
 	}
 
-	public static void deleteSearchQueries()
+	public static void deleteSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.deleteSearchQueries();
+		_searchQueryDAO.deleteSearchQueries(userId);
 	}
 
 	public static void deleteSearchQuery(int searchQueryId)
@@ -61,10 +62,10 @@ public class SearchQueryUtil {
 		_searchQueryDAO.deleteSearchQuery(searchQueryId);
 	}
 
-	public static List<SearchQuery> getSearchQueries()
+	public static List<SearchQuery> getSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		return _searchQueryDAO.getSearchQueries();
+		return _searchQueryDAO.getSearchQueries(userId);
 	}
 
 	public static SearchQuery getSearchQuery(int searchQueryId)
@@ -73,16 +74,16 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.getSearchQuery(searchQueryId);
 	}
 
-	public static int getSearchQueryCount()
+	public static int getSearchQueryCount(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		return _searchQueryDAO.getSearchQueryCount();
+		return _searchQueryDAO.getSearchQueryCount(userId);
 	}
 
-	public static boolean isExceedsTotalNumberOfSearchQueriesAllowed()
+	public static boolean isExceedsTotalNumberOfSearchQueriesAllowed(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		int searchQueryCount = _searchQueryDAO.getSearchQueryCount();
+		int searchQueryCount = _searchQueryDAO.getSearchQueryCount(userId);
 
 		if ((searchQueryCount + 1) >
 				PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED) {

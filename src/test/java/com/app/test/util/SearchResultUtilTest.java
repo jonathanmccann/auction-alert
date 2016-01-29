@@ -123,7 +123,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testFilterSearchResultsWithPartialPreviousResults()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(1, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
 
 		Method method = _clazz.getDeclaredMethod(
 			"_filterSearchResults", SearchQuery.class, List.class);
@@ -384,5 +384,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	private static Object _classInstance;
 	private static Class _clazz;
+	private static final int _USER_ID = 1;
 
 }

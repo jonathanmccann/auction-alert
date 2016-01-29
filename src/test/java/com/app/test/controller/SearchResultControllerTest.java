@@ -60,7 +60,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		SearchQueryUtil.deleteSearchQueries();
+		SearchQueryUtil.deleteSearchQueries(_USER_ID);
 
 		SearchResultUtil.deleteSearchResult(1);
 	}
@@ -96,7 +96,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewSearchResultsWithSearchQuery() throws Exception {
-		SearchQueryUtil.addSearchQuery("First test keywords");
+		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
 
 		this.mockMvc.perform(get("/result"))
 			.andExpect(status().isOk())
@@ -111,7 +111,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 		throws Exception {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			"First test keywords");
+			_USER_ID, "First test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
@@ -132,5 +132,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 	@Autowired
 	private WebApplicationContext wac;
+
+	protected static final int _USER_ID = 1;
 
 }

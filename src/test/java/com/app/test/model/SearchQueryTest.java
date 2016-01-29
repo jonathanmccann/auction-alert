@@ -34,10 +34,11 @@ public class SearchQueryTest {
 	@Test
 	public void testAdvancedConstructor() {
 		SearchQuery searchQuery = new SearchQuery(
-			1, "Test keywords", "100", true, true, true, true, true, true,
-			true, 5.00, 10.00);
+			1, _USER_ID, "Test keywords", "100", true, true, true, true, true,
+			true, true, 5.00, 10.00);
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
@@ -60,17 +61,20 @@ public class SearchQueryTest {
 
 	@Test
 	public void testConstructorWithKeywords() {
-		SearchQuery searchQuery = new SearchQuery(1, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 	}
 
 	@Test
 	public void testConstructorWithKeywordsAndCategoryId() {
-		SearchQuery searchQuery = new SearchQuery(1, "Test keywords", "100");
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100");
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 	}
@@ -159,7 +163,14 @@ public class SearchQueryTest {
 		Assert.assertEquals(1, _searchQuery.getSearchQueryId());
 	}
 
+	@Test
+	public void testSetAndGetUserId() {
+		_searchQuery.setUserId(_USER_ID);
 
+		Assert.assertEquals(_USER_ID, _searchQuery.getUserId());
+	}
+
+	private static final int _USER_ID = 1;
 
 	SearchQuery _searchQuery;
 }

@@ -76,7 +76,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void tearDown() throws Exception {
 		CategoryUtil.deleteCategories();
 
-		SearchQueryUtil.deleteSearchQueries();
+		SearchQueryUtil.deleteSearchQueries(_USER_ID);
 
 		SearchResultUtil.deleteSearchResult(1);
 
@@ -88,7 +88,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		String[] searchQueryIds = new String[] { "1" };
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			"First test keywords");
+			_USER_ID, "First test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
@@ -126,7 +126,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	@Test
 	public void testDeleteSearchQueryWithNullSearchQueryIds() throws Exception {
 		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			"First test keywords");
+			_USER_ID, "First test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
@@ -142,7 +142,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID);
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(searchQueryId);
@@ -185,8 +186,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void testGetAddSearchQueryExceedingTotalNumberOfQueriesAllows()
 		throws Exception {
 
-		SearchQueryUtil.addSearchQuery("First test keywords");
-		SearchQueryUtil.addSearchQuery("Second test keywords");
+		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
+		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
 
 		this.mockMvc.perform(get("/add_search_query"))
 			.andExpect(status().isOk())
@@ -202,7 +203,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	@Test
 	public void testGetUpdateSearchQuery() throws Exception {
 		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			"First test keywords");
+			_USER_ID, "First test keywords");
 
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(
 			"/update_search_query");
@@ -243,8 +244,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void testPostAddSearchQueryExceedingTotalNumberOfQueriesAllows()
 		throws Exception {
 
-		SearchQueryUtil.addSearchQuery("First test keywords");
-		SearchQueryUtil.addSearchQuery("Second test keywords");
+		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
+		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
 
 		this.mockMvc.perform(post("/add_search_query"))
 			.andExpect(status().isFound())
@@ -279,12 +280,14 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID);
 
 		Assert.assertEquals(1, searchQueries.size());
 
 		SearchQuery searchQuery = searchQueries.get(0);
 
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 	}
 
@@ -312,12 +315,14 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID);
 
 		Assert.assertEquals(1, searchQueries.size());
 
 		SearchQuery searchQuery = searchQueries.get(0);
 
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
@@ -349,12 +354,14 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID);
 
 		Assert.assertEquals(1, searchQueries.size());
 
 		SearchQuery searchQuery = searchQueries.get(0);
 
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
@@ -373,17 +380,19 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		throws Exception {
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, "Test keywords", "100", false, false, false, false, false, false,
-			false, 0.00, 0.00);
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries();
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID);
 
 		Assert.assertEquals(1, searchQueries.size());
 
 		searchQuery = searchQueries.get(0);
 
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
@@ -417,12 +426,13 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
-		searchQueries = SearchQueryUtil.getSearchQueries();
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID);
 
 		Assert.assertEquals(1, searchQueries.size());
 
 		searchQuery = searchQueries.get(0);
 
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("101", searchQuery.getCategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
@@ -450,5 +460,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Autowired
 	private WebApplicationContext wac;
+
+	private static final int _USER_ID = 1;
 
 }

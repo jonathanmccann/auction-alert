@@ -151,7 +151,7 @@ public class MailUtilTest extends BaseTestCase {
 		Date endingTime = new Date();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, "Test keywords");
+			1, _USER_ID, "Test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
@@ -582,4 +582,6 @@ public class MailUtilTest extends BaseTestCase {
 	private static final int _SATURDAY = 6;
 	private static final int _START_OF_DAY = 7;
 	private static final int _SUNDAY = 7;
+	private static final int _USER_ID = 1;
+
 }

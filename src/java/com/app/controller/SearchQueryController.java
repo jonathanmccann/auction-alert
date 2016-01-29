@@ -30,6 +30,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,9 @@ public class SearchQueryController {
 
 		model.put("searchQuery", searchQuery);
 
-		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
+		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
+				UserUtil.getCurrentUserId())) {
+
 			_log.debug(
 				"Unable to add more search queries since it would exceed the " +
 					"total number of search queries allowed");
@@ -82,7 +85,9 @@ public class SearchQueryController {
 			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed()) {
+		int userId = UserUtil.getCurrentUserId();
+
+		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(userId)) {
 			_log.debug(
 				"Unable to add more search queries since it would exceed the " +
 					"total number of search queries allowed");
@@ -104,7 +109,7 @@ public class SearchQueryController {
 			SearchQueryUtil.addSearchQuery(searchQuery);
 
 			List<SearchQuery> searchQueries =
-				SearchQueryUtil.getSearchQueries();
+				SearchQueryUtil.getSearchQueries(userId);
 
 			model.put("searchQueries", searchQueries);
 
@@ -185,7 +190,7 @@ public class SearchQueryController {
 			SearchQueryUtil.updateSearchQuery(searchQuery);
 
 			List<SearchQuery> searchQueries =
-				SearchQueryUtil.getSearchQueries();
+				SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
 
 			model.put("searchQueries", searchQueries);
 
@@ -201,7 +206,7 @@ public class SearchQueryController {
 		throws DatabaseConnectionException, SQLException {
 
 		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries();
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
 
 		model.put("searchQueries", searchQueries);
 

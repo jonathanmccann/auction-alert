@@ -28,6 +28,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.app.util.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,7 @@ public class SearchResultController {
 		Map<String, List<SearchResult>> searchResultMap = new HashMap<>();
 
 		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries();
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
 
 		_log.debug("Found {} search query results", searchQueries.size());
 

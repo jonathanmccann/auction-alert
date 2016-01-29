@@ -62,16 +62,19 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public int addSearchQuery(String searchKeywords)
+	public int addSearchQuery(int userId, String searchKeywords)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Adding new searchQuery with keywords: {}", searchKeywords);
+		_log.debug(
+			"Adding new searchQuery for userId: {} with keywords: {}", userId,
+			searchKeywords);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_SEARCH_QUERY_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
-			preparedStatement.setString(1, searchKeywords);
+			preparedStatement.setInt(1, userId);
+			preparedStatement.setString(2, searchKeywords);
 
 			preparedStatement.executeUpdate();
 
@@ -83,12 +86,14 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public int addSearchQuery(String searchKeywords, String categoryId)
+	public int addSearchQuery(
+			int userId, String searchKeywords, String categoryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Adding new searchQuery with keywords: {} and category ID: {}",
-			searchKeywords, categoryId);
+			"Adding new searchQuery for userId: {} with keywords: {} and " +
+				"category ID: {}",
+			userId, searchKeywords, categoryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement =
@@ -96,8 +101,9 @@ public class SearchQueryDAO {
 					_ADD_SEARCH_QUERY_WITH_CATEGORY_SQL,
 					Statement.RETURN_GENERATED_KEYS)) {
 
-			preparedStatement.setString(1, searchKeywords);
-			preparedStatement.setString(2, categoryId);
+			preparedStatement.setInt(1, userId);
+			preparedStatement.setString(2, searchKeywords);
+			preparedStatement.setString(3, categoryId);
 
 			preparedStatement.executeUpdate();
 
@@ -109,14 +115,16 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public void deleteSearchQueries()
+	public void deleteSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Deleting all search queries");
+		_log.debug("Deleting all search queries for userId: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_QUERIES_SQL)) {
+
+			preparedStatement.setInt(1, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -137,15 +145,17 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public List<SearchQuery> getSearchQueries()
+	public List<SearchQuery> getSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Getting all search queries");
+		_log.debug("Getting all search queries for userId: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERIES_SQL);
 			ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			preparedStatement.setInt(1, userId);
 
 			List<SearchQuery> searchQueries = new ArrayList<>();
 
@@ -179,15 +189,17 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public int getSearchQueryCount()
+	public int getSearchQueryCount(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Getting search query count");
+		_log.debug("Getting search query count for userId: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_SEARCH_QUERY_COUNT_SQL);
 			ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			preparedStatement.setInt(1, userId);
 
 			int searchQueryCount = 0;
 
@@ -263,6 +275,7 @@ public class SearchQueryDAO {
 		SearchQuery searchQuery = new SearchQuery();
 
 		searchQuery.setSearchQueryId(resultSet.getInt("searchQueryId"));
+		searchQuery.setUserId(resultSet.getInt("userId"));
 		searchQuery.setKeywords(resultSet.getString("keywords"));
 		searchQuery.setCategoryId(resultSet.getString("categoryId"));
 		searchQuery.setSearchDescription(
@@ -287,43 +300,44 @@ public class SearchQueryDAO {
 			SearchQuery searchQuery)
 		throws SQLException {
 
-		preparedStatement.setString(1, searchQuery.getKeywords());
-		preparedStatement.setString(2, searchQuery.getCategoryId());
-		preparedStatement.setBoolean(3, searchQuery.isSearchDescription());
-		preparedStatement.setBoolean(4, searchQuery.isFreeShippingOnly());
-		preparedStatement.setBoolean(5, searchQuery.isNewCondition());
-		preparedStatement.setBoolean(6, searchQuery.isUsedCondition());
-		preparedStatement.setBoolean(7, searchQuery.isUnspecifiedCondition());
-		preparedStatement.setBoolean(8, searchQuery.isAuctionListing());
-		preparedStatement.setBoolean(9, searchQuery.isFixedPriceListing());
-		preparedStatement.setDouble(10, searchQuery.getMaxPrice());
-		preparedStatement.setDouble(11, searchQuery.getMinPrice());
+		preparedStatement.setInt(1, searchQuery.getUserId());
+		preparedStatement.setString(2, searchQuery.getKeywords());
+		preparedStatement.setString(3, searchQuery.getCategoryId());
+		preparedStatement.setBoolean(4, searchQuery.isSearchDescription());
+		preparedStatement.setBoolean(5, searchQuery.isFreeShippingOnly());
+		preparedStatement.setBoolean(6, searchQuery.isNewCondition());
+		preparedStatement.setBoolean(7, searchQuery.isUsedCondition());
+		preparedStatement.setBoolean(8, searchQuery.isUnspecifiedCondition());
+		preparedStatement.setBoolean(9, searchQuery.isAuctionListing());
+		preparedStatement.setBoolean(10, searchQuery.isFixedPriceListing());
+		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
+		preparedStatement.setDouble(12, searchQuery.getMinPrice());
 	}
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
-		"INSERT INTO SearchQuery(keywords, categoryId, " +
+		"INSERT INTO SearchQuery(userId, keywords, categoryId, " +
 			"searchDescription, freeShippingOnly, newCondition, " +
 				"usedCondition, unspecifiedCondition, auctionListing, " +
 					"fixedPriceListing, maxPrice, minPrice) VALUES(?, " +
-						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _ADD_SEARCH_QUERY_SQL =
-		"INSERT INTO SearchQuery(keywords) VALUES(?)";
+		"INSERT INTO SearchQuery(userId, keywords) VALUES(?, ?)";
 
 	private static final String _ADD_SEARCH_QUERY_WITH_CATEGORY_SQL =
-		"INSERT INTO SearchQuery(keywords, categoryId) VALUES(?, ?)";
+		"INSERT INTO SearchQuery(userId, keywords, categoryId) VALUES(?, ?, ?)";
 
 	private static final String _DELETE_SEARCH_QUERIES_SQL =
-		"TRUNCATE TABLE SearchQuery";
+		"DELETE FROM SearchQuery WHERE userId = ?";
 
 	private static final String _DELETE_SEARCH_QUERY_SQL =
 		"DELETE FROM SearchQuery WHERE searchQueryId = ?";
 
 	private static final String _GET_SEARCH_QUERIES_SQL =
-		"SELECT * FROM SearchQuery";
+		"SELECT * FROM SearchQuery WHERE userId = ?";
 
 	private static final String _GET_SEARCH_QUERY_COUNT_SQL =
-		"SELECT COUNT(*) FROM SearchQuery";
+		"SELECT COUNT(*) FROM SearchQuery WHERE userId = ?";
 
 	private static final String _GET_SEARCH_QUERY_SQL =
 		"SELECT * FROM SearchQuery WHERE searchQueryId = ?";
