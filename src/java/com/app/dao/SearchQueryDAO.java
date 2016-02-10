@@ -152,10 +152,11 @@ public class SearchQueryDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_QUERIES_SQL);
-			ResultSet resultSet = preparedStatement.executeQuery()) {
+				_GET_SEARCH_QUERIES_SQL)) {
 
 			preparedStatement.setInt(1, userId);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			List<SearchQuery> searchQueries = new ArrayList<>();
 
@@ -196,10 +197,11 @@ public class SearchQueryDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_QUERY_COUNT_SQL);
-			ResultSet resultSet = preparedStatement.executeQuery()) {
+				_GET_SEARCH_QUERY_COUNT_SQL)) {
 
 			preparedStatement.setInt(1, userId);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			int searchQueryCount = 0;
 
@@ -221,7 +223,7 @@ public class SearchQueryDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_UPDATE_ADVANCED_SEARCH_QUERY_SQL)) {
 
-			populateAddSearchQueryPreparedStatement(
+			populateUpdateSearchQueryPreparedStatement(
 				preparedStatement, searchQuery);
 
 			preparedStatement.setInt(12, searchQuery.getSearchQueryId());
@@ -312,6 +314,23 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(10, searchQuery.isFixedPriceListing());
 		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(12, searchQuery.getMinPrice());
+	}
+
+	private static void populateUpdateSearchQueryPreparedStatement(
+			PreparedStatement preparedStatement, SearchQuery searchQuery)
+		throws SQLException {
+
+		preparedStatement.setString(1, searchQuery.getKeywords());
+		preparedStatement.setString(2, searchQuery.getCategoryId());
+		preparedStatement.setBoolean(3, searchQuery.isSearchDescription());
+		preparedStatement.setBoolean(4, searchQuery.isFreeShippingOnly());
+		preparedStatement.setBoolean(5, searchQuery.isNewCondition());
+		preparedStatement.setBoolean(6, searchQuery.isUsedCondition());
+		preparedStatement.setBoolean(7, searchQuery.isUnspecifiedCondition());
+		preparedStatement.setBoolean(8, searchQuery.isAuctionListing());
+		preparedStatement.setBoolean(9, searchQuery.isFixedPriceListing());
+		preparedStatement.setDouble(10, searchQuery.getMaxPrice());
+		preparedStatement.setDouble(11, searchQuery.getMinPrice());
 	}
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =

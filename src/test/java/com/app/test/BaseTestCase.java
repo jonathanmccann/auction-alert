@@ -18,14 +18,28 @@ import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 
 import com.app.util.PropertiesUtil;
+import com.app.util.UserUtil;
 import com.app.util.eBayAPIUtil;
+
 import org.junit.Before;
+import org.junit.runner.RunWith;
+
+import org.mockito.Mockito;
+
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.net.URL;
 
 /**
  * @author Jonathan McCann
  */
+@PrepareForTest(UserUtil.class)
+@RunWith(PowerMockRunner.class)
+@WebAppConfiguration
 public abstract class BaseTestCase {
 
 	@Before
@@ -58,11 +72,21 @@ public abstract class BaseTestCase {
 			_isInitialized = true;
 		}
 
+		PowerMockito.mockStatic(UserUtil.class);
+
+		Mockito.when(
+			UserUtil.getCurrentUserId()
+		).thenReturn(
+			_USER_ID
+		);
+
 		doSetUp();
 	}
 
 	protected void doSetUp() throws Exception {
 	}
+
+	protected static final int _USER_ID = 1;
 
 	private static final String _TEST_DATABASE_PATH = "/sql/testdb.sql";
 

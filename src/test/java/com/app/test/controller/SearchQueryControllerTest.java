@@ -24,6 +24,7 @@ import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
+import com.app.util.SearchResultUtil;
 
 import java.io.IOException;
 
@@ -32,11 +33,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.app.util.SearchResultUtil;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -67,6 +70,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class SearchQueryControllerTest extends BaseTestCase {
 
+	@Rule
+	public PowerMockRule rule = new PowerMockRule();
+
 	@Override
 	public void doSetUp() throws DatabaseConnectionException, IOException {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -85,10 +91,10 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchQuery() throws Exception {
-		String[] searchQueryIds = new String[] { "1" };
-
 		int searchQueryId = SearchQueryUtil.addSearchQuery(
 			_USER_ID, "First test keywords");
+
+		String[] searchQueryIds = new String[] { String.valueOf(searchQueryId) };
 
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
@@ -271,6 +277,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 
 		this.mockMvc.perform(request)
@@ -298,6 +305,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
 		request.param("searchDescription", "true");
@@ -343,6 +351,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
 
@@ -448,7 +457,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewSearchQueries() throws Exception {
-		this.mockMvc.perform(get("/query"))
+		this.mockMvc.perform(get("/view_search_queries"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("view_search_queries"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/view_search_queries.jsp"))
@@ -460,7 +469,5 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Autowired
 	private WebApplicationContext wac;
-
-	private static final int _USER_ID = 1;
 
 }
