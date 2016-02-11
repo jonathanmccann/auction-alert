@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,6 +34,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpDatabase();
+	}
 
 	@After
 	public void tearDown() throws Exception {

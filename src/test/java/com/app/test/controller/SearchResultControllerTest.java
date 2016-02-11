@@ -58,9 +58,10 @@ public class SearchResultControllerTest extends BaseTestCase {
 	public PowerMockRule rule = new PowerMockRule();
 
 	@Before
-	public void setUp() throws DatabaseConnectionException {
+	public void setUp() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
+		setUpDatabase();
 		setUpUserUtil();
 	}
 

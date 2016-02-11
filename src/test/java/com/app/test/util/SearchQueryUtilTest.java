@@ -40,6 +40,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpDatabase();
 		setUpProperties();
 	}
 

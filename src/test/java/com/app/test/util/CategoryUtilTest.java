@@ -58,6 +58,7 @@ public class CategoryUtilTest extends BaseTestCase {
 		_classInstance = _clazz.newInstance();
 
 		setUpApiContext();
+		setUpDatabase();
 	}
 
 	@After

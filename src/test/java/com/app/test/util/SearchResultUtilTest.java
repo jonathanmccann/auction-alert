@@ -51,6 +51,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		_classInstance = _clazz.newInstance();
 
+		setUpDatabase();
 		setUpProperties();
 	}
 

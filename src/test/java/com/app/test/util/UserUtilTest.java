@@ -21,6 +21,7 @@ import com.app.util.UserUtil;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,6 +34,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserUtilTest extends BaseTestCase {
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpDatabase();
+	}
 
 	@After
 	public void tearDown() throws Exception {
@@ -58,6 +64,13 @@ public class UserUtilTest extends BaseTestCase {
 	@Test
 	public void testGetUserByInvalidEmailAddress() throws Exception {
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
+
+		Assert.assertNull(user);
+	}
+
+	@Test
+	public void testGetUserByInvalidUserId() throws Exception {
+		User user = UserUtil.getUserByUserId(100);
 
 		Assert.assertNull(user);
 	}
