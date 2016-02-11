@@ -19,6 +19,8 @@ import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
 
+import com.app.util.PropertiesKeys;
+import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import freemarker.template.Template;
 
@@ -29,6 +31,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -83,6 +86,7 @@ public class MailUtilTest extends BaseTestCase {
 		Template template = (Template)method.invoke(_classInstance);
 
 		Assert.assertNotNull(template);
+		Assert.assertEquals("email_body.ftl", template.getName());
 	}
 
 	@Test
@@ -138,6 +142,7 @@ public class MailUtilTest extends BaseTestCase {
 		Template template = (Template)method.invoke(_classInstance);
 
 		Assert.assertNotNull(template);
+		Assert.assertEquals("text_body.ftl", template.getName());
 	}
 
 	@Test
