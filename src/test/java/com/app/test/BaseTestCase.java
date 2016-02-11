@@ -21,7 +21,6 @@ import com.app.util.PropertiesUtil;
 import com.app.util.UserUtil;
 import com.app.util.eBayAPIUtil;
 
-import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
@@ -42,40 +41,35 @@ import java.net.URL;
 @WebAppConfiguration
 public abstract class BaseTestCase {
 
-	@Before
-	public void setUpeBayTestCase() throws Exception {
-		if (!_isInitialized) {
-			Class<?> clazz = getClass();
-
-			URL resource = clazz.getResource("/test-config.properties");
-
-			PropertiesUtil.loadConfigurationProperties(resource.getPath());
-
-			eBayAPIUtil.loadeBayServiceClient(
-				System.getProperty(PropertiesKeys.APPLICATION_ID));
-
-			eBayAPIUtil.loadApiContext(
-				System.getProperty(PropertiesKeys.EBAY_TOKEN));
-
-			String databasePassword = System.getProperty(
-				PropertiesKeys.JDBC_DEFAULT_PASSWORD);
-			String databaseURL = System.getProperty(
-				PropertiesKeys.JDBC_DEFAULT_URL);
-			String databaseUsername = System.getProperty(
-				PropertiesKeys.JDBC_DEFAULT_USERNAME);
-
-			DatabaseUtil.setDatabaseProperties(
-				databaseURL, databaseUsername, databasePassword);
-
-			DatabaseUtil.initializeDatabase(_TEST_DATABASE_PATH);
-
-			_isInitialized = true;
-		}
-
-		doSetUp();
+	protected static void setUpApiContext() {
+		eBayAPIUtil.loadApiContext(
+			System.getProperty(PropertiesKeys.EBAY_TOKEN));
 	}
 
-	protected void doSetUp() throws Exception {
+	protected static void setUpDatabase() throws Exception {
+		String databasePassword = System.getProperty(
+				PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+		String databaseURL = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_URL);
+		String databaseUsername = System.getProperty(
+			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+
+		DatabaseUtil.setDatabaseProperties(
+			databaseURL, databaseUsername, databasePassword);
+
+		DatabaseUtil.initializeDatabase(_TEST_DATABASE_PATH);
+	}
+	protected static void setUpProperties() throws Exception {
+		Class<?> clazz = BaseTestCase.class;
+
+		URL resource = clazz.getResource("/test-config.properties");
+
+		PropertiesUtil.loadConfigurationProperties(resource.getPath());
+	}
+
+	protected static void setUpServiceClient() {
+		eBayAPIUtil.loadeBayServiceClient(
+			System.getProperty(PropertiesKeys.APPLICATION_ID));
 	}
 
 	protected static void setUpUserUtil() {
@@ -92,5 +86,4 @@ public abstract class BaseTestCase {
 
 	private static final String _TEST_DATABASE_PATH = "/sql/testdb.sql";
 
-	private static boolean _isInitialized;
 }

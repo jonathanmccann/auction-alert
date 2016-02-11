@@ -23,12 +23,18 @@ import com.ebay.sdk.ApiCredential;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * @author Jonathan McCann
  */
 public class eBayAPIUtilTest extends BaseTestCase {
+
+	@BeforeClass
+	public static void setUpClass () {
+		setUpApiContext();
+	}
 
 	@Test
 	public void testGetApiContext() {

@@ -17,8 +17,10 @@ package com.app.test.util;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
+import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesValues;
 import com.app.util.ValidatorUtil;
+import com.app.util.eBayAPIUtil;
 import com.app.util.eBaySearchResultUtil;
 
 import com.ebay.services.finding.Amount;
@@ -78,6 +80,9 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 			"setUpAdvancedRequest", SearchQuery.class);
 
 		_setUpAdvanceRequestMethod.setAccessible(true);
+
+		setUpProperties();
+		setUpServiceClient();
 	}
 
 	@Test

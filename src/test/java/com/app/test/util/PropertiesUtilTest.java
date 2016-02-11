@@ -14,6 +14,7 @@
 
 package com.app.test.util;
 
+import com.app.test.BaseTestCase;
 import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
@@ -25,12 +26,18 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * @author Jonathan McCann
  */
-public class PropertiesUtilTest {
+public class PropertiesUtilTest extends BaseTestCase {
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpProperties();
+	}
 
 	@Test
 	public void testLoadConfigurationProperties() throws IOException {

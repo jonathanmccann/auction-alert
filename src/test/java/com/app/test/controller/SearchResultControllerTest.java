@@ -23,6 +23,7 @@ import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,8 +57,8 @@ public class SearchResultControllerTest extends BaseTestCase {
 	@Rule
 	public PowerMockRule rule = new PowerMockRule();
 
-	@Override
-	public void doSetUp() throws DatabaseConnectionException {
+	@Before
+	public void setUp() throws DatabaseConnectionException {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
 		setUpUserUtil();

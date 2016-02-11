@@ -19,6 +19,7 @@ import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
 
+import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import freemarker.template.Template;
 
@@ -26,6 +27,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +52,8 @@ public class MailUtilTest extends BaseTestCase {
 		_clazz = Class.forName(MailUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();
+
+		setUpProperties();
 	}
 
 	@Test

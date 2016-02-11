@@ -17,8 +17,10 @@ package com.app.test.util;
 import com.app.model.Category;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
+import com.app.util.PropertiesKeys;
 import com.app.util.ReleaseUtil;
 
+import com.app.util.eBayAPIUtil;
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.call.GetCategoriesCall;
 
@@ -54,6 +56,8 @@ public class CategoryUtilTest extends BaseTestCase {
 		_clazz = Class.forName(CategoryUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();
+
+		setUpApiContext();
 	}
 
 	@After

@@ -50,6 +50,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		_clazz = Class.forName(SearchResultUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();
+
+		setUpProperties();
 	}
 
 	@After
