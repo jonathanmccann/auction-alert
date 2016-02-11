@@ -76,6 +76,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	@Override
 	public void doSetUp() throws DatabaseConnectionException, IOException {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+		setUpUserUtil();
 	}
 
 	@After

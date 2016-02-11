@@ -72,6 +72,13 @@ public abstract class BaseTestCase {
 			_isInitialized = true;
 		}
 
+		doSetUp();
+	}
+
+	protected void doSetUp() throws Exception {
+	}
+
+	protected static void setUpUserUtil() {
 		PowerMockito.mockStatic(UserUtil.class);
 
 		Mockito.when(
@@ -79,11 +86,6 @@ public abstract class BaseTestCase {
 		).thenReturn(
 			_USER_ID
 		);
-
-		doSetUp();
-	}
-
-	protected void doSetUp() throws Exception {
 	}
 
 	protected static final int _USER_ID = 1;

@@ -20,8 +20,8 @@ import com.app.test.BaseTestCase;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 import com.app.util.SearchQueryUtil;
-
 import com.app.util.SearchResultUtil;
+
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,6 +59,8 @@ public class SearchResultControllerTest extends BaseTestCase {
 	@Override
 	public void doSetUp() throws DatabaseConnectionException {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+		setUpUserUtil();
 	}
 
 	@After
