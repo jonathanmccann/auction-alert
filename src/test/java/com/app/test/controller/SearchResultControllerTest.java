@@ -23,21 +23,21 @@ import com.app.util.SearchQueryUtil;
 
 import com.app.util.SearchResultUtil;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
-
-import static org.hamcrest.Matchers.hasProperty;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
@@ -52,6 +52,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 public class SearchResultControllerTest extends BaseTestCase {
+
+	@Rule
+	public PowerMockRule rule = new PowerMockRule();
 
 	@Override
 	public void doSetUp() throws DatabaseConnectionException {
@@ -69,7 +72,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 	public void testHandleError() throws Exception {
 		DatabaseUtil.setDatabaseProperties("test", "test", "test");
 
-		this.mockMvc.perform(get("/result"))
+		this.mockMvc.perform(get("/view_search_query_results"))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:error.jsp"));
 
@@ -86,7 +89,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewSearchResults() throws Exception {
-		this.mockMvc.perform(get("/result"))
+		this.mockMvc.perform(get("/view_search_query_results"))
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("searchResultMap"))
 			.andExpect(view().name("view_search_query_results"))
@@ -98,7 +101,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 	public void testViewSearchResultsWithSearchQuery() throws Exception {
 		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
 
-		this.mockMvc.perform(get("/result"))
+		this.mockMvc.perform(get("/view_search_query_results"))
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("searchResultMap"))
 			.andExpect(view().name("view_search_query_results"))
@@ -120,7 +123,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		SearchResultUtil.addSearchResult(searchResult);
 
-		this.mockMvc.perform(get("/result"))
+		this.mockMvc.perform(get("/view_search_query_results"))
 			.andExpect(status().isOk())
 			.andExpect(model().attributeExists("searchResultMap"))
 			.andExpect(view().name("view_search_query_results"))
