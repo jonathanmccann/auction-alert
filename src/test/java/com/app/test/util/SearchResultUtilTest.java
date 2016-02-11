@@ -122,7 +122,36 @@ public class SearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testFilterSearchResultsWithPartialPreviousResults()
+	public void testFilterSearchResultsWithCompletePreviousResults()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+
+		Date endingTime = new Date();
+
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		SearchResult searchResult = SearchResultUtil.getSearchResult(
+			addSearchResult("1234", endingTime));
+
+		searchResults.add(searchResult);
+
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			searchResult.getSearchQueryId(), "1234");
+
+		Method method = _clazz.getDeclaredMethod(
+			"_filterSearchResults", SearchQuery.class, List.class);
+
+		method.setAccessible(true);
+
+		searchResults = (List<SearchResult>)method.invoke(
+			_classInstance, searchQuery, searchResults);
+
+		Assert.assertEquals(0, searchResults.size());
+	}
+
+	@Test
+	public void testFilterSearchResultsWithNullNewSearchResults()
 		throws Exception {
 
 		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
@@ -136,6 +165,39 @@ public class SearchResultUtilTest extends BaseTestCase {
 			_classInstance, searchQuery, new ArrayList<>());
 
 		Assert.assertEquals(0, searchResults.size());
+	}
+
+	@Test
+	public void testFilterSearchResultsWithPartialPreviousResults()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+
+		Date endingTime = new Date();
+
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		SearchResult firstSearchResult = SearchResultUtil.getSearchResult(
+			addSearchResult("1234", endingTime));
+
+		SearchResult secondSearchResult = SearchResultUtil.getSearchResult(
+			addSearchResult("2345", endingTime));
+
+		searchResults.add(firstSearchResult);
+		searchResults.add(secondSearchResult);
+
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			firstSearchResult.getSearchQueryId(), "1234");
+
+		Method method = _clazz.getDeclaredMethod(
+			"_filterSearchResults", SearchQuery.class, List.class);
+
+		method.setAccessible(true);
+
+		searchResults = (List<SearchResult>)method.invoke(
+			_classInstance, searchQuery, searchResults);
+
+		Assert.assertEquals(1, searchResults.size());
 	}
 
 	@Test
