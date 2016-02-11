@@ -38,7 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -52,8 +52,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class eBaySearchResultUtilTest extends BaseTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		Class<?> clazz = Class.forName(eBaySearchResultUtil.class.getName());
 
 		_classInstance = clazz.newInstance();

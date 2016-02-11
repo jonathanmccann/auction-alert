@@ -19,7 +19,6 @@ import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
 import com.app.util.SearchQueryPreviousResultUtil;
-import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
 import java.lang.reflect.Method;
@@ -32,7 +31,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -46,8 +45,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SearchResultUtilTest extends BaseTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		_clazz = Class.forName(SearchResultUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();

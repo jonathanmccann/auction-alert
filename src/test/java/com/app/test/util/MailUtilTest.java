@@ -37,7 +37,7 @@ import javax.mail.internet.InternetAddress;
 import org.joda.time.DateTime;
 
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -45,8 +45,8 @@ import org.junit.Test;
  */
 public class MailUtilTest extends BaseTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		_clazz = Class.forName(MailUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();

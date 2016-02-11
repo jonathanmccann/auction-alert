@@ -24,7 +24,7 @@ import java.sql.SQLException;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -32,8 +32,8 @@ import org.junit.Test;
  */
 public class DatabaseUtilTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		_clazz = Class.forName(DatabaseUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();
