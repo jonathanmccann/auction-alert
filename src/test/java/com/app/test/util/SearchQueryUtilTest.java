@@ -52,7 +52,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		Assert.assertEquals(1, searchQuery.getSearchQueryId());
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
@@ -99,7 +98,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		Assert.assertEquals(1, searchQuery.getSearchQueryId());
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
@@ -206,8 +204,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
 
 		searchQuery = new SearchQuery(
-			1, _USER_ID, "New test keywords", "101", true, true, true, false,
-			false, true, false, 5.00, 10.00);
+			searchQueryId, _USER_ID, "New test keywords", "101", true, true,
+			true, false, false, true, false, 5.00, 10.00);
 
 		SearchQueryUtil.updateSearchQuery(searchQuery);
 
