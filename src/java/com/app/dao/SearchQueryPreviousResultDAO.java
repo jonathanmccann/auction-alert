@@ -101,16 +101,16 @@ public class SearchQueryPreviousResultDAO {
 
 			preparedStatement.setInt(1, searchQueryId);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<String> searchQueryPreviousResults = new ArrayList<>();
+			ResultSet resultSet = preparedStatement.executeQuery();
 
-				while (resultSet.next()) {
-					searchQueryPreviousResults.add(
-						resultSet.getString("searchResultItemId"));
-				}
+			List<String> searchQueryPreviousResults = new ArrayList<>();
 
-				return searchQueryPreviousResults;
+			while (resultSet.next()) {
+				searchQueryPreviousResults.add(
+					resultSet.getString("searchResultItemId"));
 			}
+
+			return searchQueryPreviousResults;
 		}
 	}
 
@@ -125,15 +125,15 @@ public class SearchQueryPreviousResultDAO {
 
 			preparedStatement.setInt(1, searchQueryId);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				int searchQueryCount = 0;
+			ResultSet resultSet = preparedStatement.executeQuery();
 
-				while (resultSet.next()) {
-					searchQueryCount = resultSet.getInt(1);
-				}
+			int searchQueryCount = 0;
 
-				return searchQueryCount;
+			while (resultSet.next()) {
+				searchQueryCount = resultSet.getInt(1);
 			}
+
+			return searchQueryCount;
 		}
 	}
 

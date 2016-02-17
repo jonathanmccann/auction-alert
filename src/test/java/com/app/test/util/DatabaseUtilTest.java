@@ -35,8 +35,6 @@ public class DatabaseUtilTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		_clazz = Class.forName(DatabaseUtil.class.getName());
-
-		_classInstance = _clazz.newInstance();
 	}
 
 	@After
@@ -89,7 +87,6 @@ public class DatabaseUtilTest {
 			databaseURL, databaseUsername, databasePassword);
 	}
 
-	private static Object _classInstance;
 	private static Class _clazz;
 
 }

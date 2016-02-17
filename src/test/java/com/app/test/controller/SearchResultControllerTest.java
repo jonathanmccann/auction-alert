@@ -14,7 +14,6 @@
 
 package com.app.test.controller;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.DatabaseUtil;

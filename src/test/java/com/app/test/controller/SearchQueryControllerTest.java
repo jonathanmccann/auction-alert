@@ -14,7 +14,6 @@
 
 package com.app.test.controller;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
@@ -25,8 +24,6 @@ import com.app.util.PropertiesKeys;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
-
-import java.io.IOException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

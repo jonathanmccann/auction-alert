@@ -96,13 +96,13 @@ public class UserDAO {
 
 			preparedStatement.setString(1, emailAddress);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				if (resultSet.next()) {
-					return createUserFromResultSet(resultSet);
-				}
-				else {
-					return null;
-				}
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				return createUserFromResultSet(resultSet);
+			}
+			else {
+				return null;
 			}
 		}
 	}
@@ -118,13 +118,13 @@ public class UserDAO {
 
 			preparedStatement.setInt(1, userId);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				if (resultSet.next()) {
-					return createUserFromResultSet(resultSet);
-				}
-				else {
-					return null;
-				}
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				return createUserFromResultSet(resultSet);
+			}
+			else {
+				return null;
 			}
 		}
 	}

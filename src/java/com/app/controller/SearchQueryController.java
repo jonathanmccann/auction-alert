@@ -146,7 +146,7 @@ public class SearchQueryController {
 			HttpServletRequest request, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		int searchQueryId = Integer.valueOf(
+		int searchQueryId = Integer.parseInt(
 			request.getParameter("searchQueryId"));
 
 		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);

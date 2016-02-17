@@ -104,16 +104,16 @@ public class SearchResultDAO {
 
 			preparedStatement.setInt(1, searchQueryId);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<SearchResult> searchResults = new ArrayList<>();
+			ResultSet resultSet = preparedStatement.executeQuery();
 
-				while (resultSet.next()) {
-					searchResults.add(
-						createSearchResultFromResultSet(resultSet));
-				}
+			List<SearchResult> searchResults = new ArrayList<>();
 
-				return searchResults;
+			while (resultSet.next()) {
+				searchResults.add(
+					createSearchResultFromResultSet(resultSet));
 			}
+
+			return searchResults;
 		}
 	}
 
@@ -128,14 +128,14 @@ public class SearchResultDAO {
 
 			preparedStatement.setInt(1, searchResultId);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				if (resultSet.next()) {
-					return createSearchResultFromResultSet(resultSet);
-				}
-				else {
-					throw new SQLException(
-						"No search result exists with ID: " + searchResultId);
-				}
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				return createSearchResultFromResultSet(resultSet);
+			}
+			else {
+				throw new SQLException(
+					"No search result exists with ID: " + searchResultId);
 			}
 		}
 	}

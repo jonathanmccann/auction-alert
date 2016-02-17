@@ -14,8 +14,6 @@
 
 package com.app.controller;
 
-
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.User;
 import com.app.util.UserUtil;
 import org.apache.shiro.SecurityUtils;
@@ -32,7 +30,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -43,8 +40,7 @@ public class UserController {
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
 	public String logIn(
-			String emailAddress, String password, Map<String, Object> model)
-		throws DatabaseConnectionException, SQLException {
+		String emailAddress, String password, Map<String, Object> model) {
 
 		Subject currentUser = SecurityUtils.getSubject();
 

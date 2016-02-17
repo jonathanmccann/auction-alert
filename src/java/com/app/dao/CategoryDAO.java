@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present Jonathan McCann
+ * Copyright (c) 2014-present Jonathan McCann
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -96,15 +96,15 @@ public class CategoryDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_GET_CATEGORIES_SQL)) {
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				List<Category> categories = new ArrayList<>();
+			ResultSet resultSet = preparedStatement.executeQuery();
 
-				while (resultSet.next()) {
-					categories.add(createCategoryFromResultSet(resultSet));
-				}
+			List<Category> categories = new ArrayList<>();
 
-				return categories;
+			while (resultSet.next()) {
+				categories.add(createCategoryFromResultSet(resultSet));
 			}
+
+			return categories;
 		}
 	}
 
@@ -119,14 +119,14 @@ public class CategoryDAO {
 
 			preparedStatement.setString(1, categoryId);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				if (resultSet.next()) {
-					return createCategoryFromResultSet(resultSet);
-				}
-				else {
-					throw new SQLException(
-						"No category exists with category ID: " + categoryId);
-				}
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				return createCategoryFromResultSet(resultSet);
+			}
+			else {
+				throw new SQLException(
+					"No category exists with category ID: " + categoryId);
 			}
 		}
 	}

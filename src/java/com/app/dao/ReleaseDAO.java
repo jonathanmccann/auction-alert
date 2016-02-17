@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present Jonathan McCann
+ * Copyright (c) 2014-present Jonathan McCann
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -87,13 +87,13 @@ public class ReleaseDAO {
 
 			preparedStatement.setString(1, releaseName);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				if (resultSet.next()) {
-					return resultSet.getString("version");
-				}
-				else {
-					return "";
-				}
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				return resultSet.getString("version");
+			}
+			else {
+				return "";
 			}
 		}
 	}

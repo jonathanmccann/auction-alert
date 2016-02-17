@@ -48,7 +48,7 @@ public abstract class BaseTestCase {
 
 	protected static void setUpDatabase() throws Exception {
 		String databasePassword = System.getProperty(
-				PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
 		String databaseURL = System.getProperty(
 			PropertiesKeys.JDBC_DEFAULT_URL);
 		String databaseUsername = System.getProperty(
@@ -59,6 +59,7 @@ public abstract class BaseTestCase {
 
 		DatabaseUtil.initializeDatabase(_TEST_DATABASE_PATH);
 	}
+
 	protected static void setUpProperties() throws Exception {
 		Class<?> clazz = BaseTestCase.class;
 

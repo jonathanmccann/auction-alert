@@ -27,7 +27,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.app.util.ValidatorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -179,13 +178,14 @@ public class SearchQueryDAO {
 
 			preparedStatement.setInt(1, searchQueryId);
 
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				if (resultSet.next()) {
-					return createSearchQueryFromResultSet(resultSet);
-				}
-				else {
-					throw new SQLException();
-				}
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				return createSearchQueryFromResultSet(resultSet);
+			}
+			else {
+				throw new SQLException(
+					"There is no search query for ID: " + searchQueryId);
 			}
 		}
 	}
@@ -201,9 +201,9 @@ public class SearchQueryDAO {
 
 			preparedStatement.setInt(1, userId);
 
-			ResultSet resultSet = preparedStatement.executeQuery();
-
 			int searchQueryCount = 0;
+
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
 				searchQueryCount = resultSet.getInt(1);
