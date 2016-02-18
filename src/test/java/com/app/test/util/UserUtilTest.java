@@ -45,6 +45,7 @@ public class UserUtilTest extends BaseTestCase {
 	@After
 	public void tearDown() throws Exception {
 		UserUtil.deleteUserByEmailAddress("test@test.com");
+		UserUtil.deleteUserByEmailAddress("test2@test.com");
 	}
 
 	@Test
@@ -79,12 +80,14 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserIds() throws Exception {
-		Integer userId = UserUtil.addUser("test@test.com", "password");
+		Integer firstUserId = UserUtil.addUser("test@test.com", "password");
+		Integer secondUserId = UserUtil.addUser("test2@test.com", "password");
 
 		List<Integer> userIds = UserUtil.getUserIds();
 
-		Assert.assertEquals(1, userIds.size());
-		Assert.assertEquals(userId, userIds.get(0));
+		Assert.assertEquals(2, userIds.size());
+		Assert.assertEquals(firstUserId, userIds.get(0));
+		Assert.assertEquals(secondUserId, userIds.get(1));
 	}
 
 	@Test

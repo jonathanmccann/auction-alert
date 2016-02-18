@@ -199,7 +199,7 @@ public class UserDAO {
 		"SELECT * FROM User_ WHERE userId = ?";
 
 	private static final String _GET_USER_IDS =
-		"SELECT userId FROM User_";
+		"SELECT userId FROM User_ ORDER BY userId";
 
 	private static final String _UPDATE_USER_SQL =
 		"UPDATE User_ SET emailAddress = ? WHERE userId = ?";
