@@ -98,6 +98,8 @@ public class SearchQueryController {
 		}
 
 		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
+			searchQuery.setUserId(userId);
+
 			String categoryId = searchQuery.getCategoryId();
 
 			if (ValidatorUtil.isNull(categoryId) ||
