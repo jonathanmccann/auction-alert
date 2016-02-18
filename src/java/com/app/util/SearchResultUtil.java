@@ -71,36 +71,40 @@ public class SearchResultUtil {
 	public static void performSearch()
 		throws DatabaseConnectionException, SQLException {
 
-		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
+		List<Integer> userIds = UserUtil.getUserIds();
 
-		if (searchQueries.size() == 0) {
-			_log.info("There are no search queries");
+		for (int userId : userIds) {
+			List<SearchQuery> searchQueries =
+				SearchQueryUtil.getSearchQueries(userId);
 
-			return;
-		}
+			if (searchQueries.size() == 0) {
+				_log.info("There are no search queries");
 
-		_log.info(
-			"Getting eBay search results for {} search queries",
-			searchQueries.size());
-
-		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
-			new HashMap<>();
-
-		for (SearchQuery searchQuery : searchQueries) {
-			List<SearchResult> searchResults =
-				eBaySearchResultUtil.geteBaySearchResults(searchQuery);
-
-			searchResults = _filterSearchResults(
-				searchQuery, searchResults);
-
-			if (!searchResults.isEmpty()) {
-				searchQueryResultMap.put(searchQuery, searchResults);
+				return;
 			}
-		}
 
-		if (!searchQueryResultMap.isEmpty()) {
-			MailUtil.sendSearchResultsToRecipients(searchQueryResultMap);
+			_log.info(
+				"Getting eBay search results for {} search queries",
+				searchQueries.size());
+
+			Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+				new HashMap<>();
+
+			for (SearchQuery searchQuery : searchQueries) {
+				List<SearchResult> searchResults =
+					eBaySearchResultUtil.geteBaySearchResults(searchQuery);
+
+				searchResults = _filterSearchResults(
+					searchQuery, searchResults);
+
+				if (!searchResults.isEmpty()) {
+					searchQueryResultMap.put(searchQuery, searchResults);
+				}
+			}
+
+			if (!searchQueryResultMap.isEmpty()) {
+				MailUtil.sendSearchResultsToRecipients(searchQueryResultMap);
+			}
 		}
 	}
 

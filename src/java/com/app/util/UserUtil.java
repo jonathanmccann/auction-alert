@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author Jonathan McCann
@@ -74,6 +75,12 @@ public class UserUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		return _userDAO.getUserByUserId(userId);
+	}
+
+	public static List<Integer> getUserIds()
+		throws DatabaseConnectionException, SQLException {
+
+		return _userDAO.getUserIds();
 	}
 
 	public static int getCurrentUserId() {

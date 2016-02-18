@@ -23,6 +23,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +131,26 @@ public class UserDAO {
 		}
 	}
 
+	public List<Integer> getUserIds()
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Getting all of the user IDs");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_USER_IDS);
+			ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			List<Integer> userIds = new ArrayList<>();
+
+			while (resultSet.next()) {
+				userIds.add(resultSet.getInt("userId"));
+			}
+
+			return userIds;
+		}
+	}
+
 	public void updateUser(int userId, String emailAddress)
 		throws DatabaseConnectionException, SQLException {
 
@@ -175,6 +197,9 @@ public class UserDAO {
 
 	private static final String _GET_USER_BY_USER_ID_SQL =
 		"SELECT * FROM User_ WHERE userId = ?";
+
+	private static final String _GET_USER_IDS =
+		"SELECT userId FROM User_";
 
 	private static final String _UPDATE_USER_SQL =
 		"UPDATE User_ SET emailAddress = ? WHERE userId = ?";
