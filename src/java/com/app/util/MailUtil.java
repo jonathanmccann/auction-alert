@@ -57,7 +57,7 @@ import org.springframework.core.io.Resource;
  */
 public class MailUtil {
 
-	public static void sendSearchResultsToRecipients(
+	public static void sendSearchResultsToRecipient(
 		Map<SearchQuery, List<SearchResult>> searchQueryResultMap) {
 
 		_log.info(
