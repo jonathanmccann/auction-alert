@@ -281,7 +281,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
-		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "All Categories");
 
@@ -318,7 +317,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
-		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 
 		this.mockMvc.perform(request)
@@ -344,7 +342,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
-		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
 		request.param("searchDescription", "true");
@@ -390,7 +387,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
-		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
 
