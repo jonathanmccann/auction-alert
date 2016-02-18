@@ -28,6 +28,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 /**
  * @author Jonathan McCann
  */
@@ -73,6 +75,16 @@ public class UserUtilTest extends BaseTestCase {
 		User user = UserUtil.getUserByUserId(100);
 
 		Assert.assertNull(user);
+	}
+
+	@Test
+	public void testGetUserIds() throws Exception {
+		Integer userId = UserUtil.addUser("test@test.com", "password");
+
+		List<Integer> userIds = UserUtil.getUserIds();
+
+		Assert.assertEquals(1, userIds.size());
+		Assert.assertEquals(userId, userIds.get(0));
 	}
 
 	@Test
