@@ -19,6 +19,10 @@ import com.app.util.ValidatorUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Jonathan McCann
  */
@@ -69,4 +73,48 @@ public class ValidatorUtilTest {
 		Assert.assertFalse(ValidatorUtil.isNull(intArray));
 		Assert.assertTrue(ValidatorUtil.isNotNull(intArray));
 	}
+
+	@Test
+	public void testInvalidEmailAddress() {
+		Assert.assertFalse(
+			ValidatorUtil.isValidEmailAddress("invalidEmailAddress"));
+		Assert.assertFalse(
+			ValidatorUtil.isValidEmailAddress("invalidEmailAddress#test.com"));
+	}
+
+	@Test
+	public void testNullEmailAddress() {
+		Assert.assertFalse(ValidatorUtil.isValidEmailAddress(null));
+		Assert.assertFalse(ValidatorUtil.isValidEmailAddress(""));
+		Assert.assertFalse(ValidatorUtil.isValidEmailAddress(" "));
+	}
+
+	@Test
+	public void testValidEmailAddress() throws Exception {
+		Assert.assertTrue(
+			ValidatorUtil.isValidEmailAddress("test@test.com"));
+		Assert.assertTrue(
+			ValidatorUtil.isValidEmailAddress("test2@test2.com"));
+	}
+
+	@Test
+	public void testInvalidPhoneNumber() {
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("1234"));
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("123-456-7890"));
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("test"));
+	}
+
+	@Test
+	public void testNullPhoneNumber() {
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(null));
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(""));
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(" "));
+	}
+
+	@Test
+	public void testValiPhoneNumbers() throws Exception {
+		Assert.assertTrue(ValidatorUtil.isValidPhoneNumber("1234567890"));
+		Assert.assertTrue(ValidatorUtil.isValidPhoneNumber("2345678901"));
+	}
+
 }

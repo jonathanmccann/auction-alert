@@ -53,13 +53,21 @@ public class ValidatorUtil {
 	}
 
 	public static boolean isValidEmailAddress(String emailAddress) {
+		if (isNull(emailAddress)) {
+			return false;
+		}
+
 		Matcher matcher = _emailAddressPattern.matcher(emailAddress);
 
 		return matcher.matches();
 	}
 
-	public static boolean isValidPhoneNumber(String emailAddress) {
-		Matcher matcher = _phoneNumberPattern.matcher(emailAddress);
+	public static boolean isValidPhoneNumber(String phoneNumber) {
+		if (isNull(phoneNumber)) {
+			return false;
+		}
+
+		Matcher matcher = _phoneNumberPattern.matcher(phoneNumber);
 
 		return matcher.matches();
 	}

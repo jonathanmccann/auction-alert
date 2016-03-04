@@ -16,6 +16,7 @@ package com.app.test.util;
 
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
+import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
 import com.app.util.PropertiesValues;
@@ -55,23 +56,21 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testConvertPhoneNumbersToEmailAddresses() throws Exception {
+	public void testConvertPhoneNumberToEmailAddress() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"convertPhoneNumbersToEmailAddresses", List.class);
+			"convertPhoneNumberToEmailAddress", User.class);
 
 		method.setAccessible(true);
 
-		List<String> recipientPhoneNumbers = new ArrayList<>();
+		User user = new User();
 
-		recipientPhoneNumbers.add("1234567890");
-		recipientPhoneNumbers.add("2345678901");
+		user.setPhoneNumber("1234567890");
 
-		method.invoke(_classInstance, recipientPhoneNumbers);
+		String phoneNumberEmailAddress = (String)method.invoke(
+			_classInstance, user);
 
 		Assert.assertEquals(
-			"1234567890@txt.att.net", recipientPhoneNumbers.get(0));
-		Assert.assertEquals(
-			"2345678901@txt.att.net", recipientPhoneNumbers.get(1));
+			"1234567890@txt.att.net", phoneNumberEmailAddress);
 	}
 
 	@Test
@@ -84,50 +83,6 @@ public class MailUtilTest extends BaseTestCase {
 
 		Assert.assertNotNull(template);
 		Assert.assertEquals("email_body.ftl", template.getName());
-	}
-
-	@Test
-	public void testGetRecipientEmailAddresses() throws Exception {
-		Method method = _clazz.getDeclaredMethod("getRecipientEmailAddresses");
-
-		method.setAccessible(true);
-
-		List<String> recipientEmailAddresses = (List<String>)method.invoke(
-			_classInstance);
-
-		Assert.assertEquals("test@test.com", recipientEmailAddresses.get(0));
-		Assert.assertEquals("test2@test2.com", recipientEmailAddresses.get(1));
-
-		List<String> storedRecipientEmailAddresses =
-			(List<String>)method.invoke(_classInstance);
-
-		Assert.assertEquals(
-			"test@test.com", storedRecipientEmailAddresses.get(0));
-		Assert.assertEquals(
-			"test2@test2.com", storedRecipientEmailAddresses.get(1));
-	}
-
-	@Test
-	public void testGetRecipientPhoneNumbers() throws Exception {
-		Method method = _clazz.getDeclaredMethod("getRecipientPhoneNumbers");
-
-		method.setAccessible(true);
-
-		List<String> recipientEmailAddresses = (List<String>)method.invoke(
-			_classInstance);
-
-		Assert.assertEquals(
-			"1234567890@txt.att.net", recipientEmailAddresses.get(0));
-		Assert.assertEquals(
-			"2345678901@txt.att.net", recipientEmailAddresses.get(1));
-
-		List<String> storedRecipientEmailAddresses =
-			(List<String>)method.invoke(_classInstance);
-
-		Assert.assertEquals(
-			"1234567890@txt.att.net", storedRecipientEmailAddresses.get(0));
-		Assert.assertEquals(
-			"2345678901@txt.att.net", storedRecipientEmailAddresses.get(1));
 	}
 
 	@Test
@@ -146,7 +101,7 @@ public class MailUtilTest extends BaseTestCase {
 	public void testPopulateEmailMessage() throws Exception {
 		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
 			"populateEmailMessage", SearchQuery.class, List.class,
-			List.class, String.class, Session.class);
+			String.class, String.class, Session.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -163,11 +118,6 @@ public class MailUtilTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
-		List<String> emailAddresses = new ArrayList<>();
-
-		emailAddresses.add("test@test.com");
-		emailAddresses.add("test2@test2.com");
-
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
 
@@ -179,7 +129,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		Message message = (Message)populateEmailMessageMethod.invoke(
 			_classInstance, searchQuery, searchResults,
-			emailAddresses, "test@test.com", session);
+			"test@test.com", "test@test.com", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertTrue(
@@ -190,10 +140,9 @@ public class MailUtilTest extends BaseTestCase {
 					"URL: http://www.ebay.com/itm/1234\n\n",
 			message.getContent());
 
-		InternetAddress[] internetAddresses = new InternetAddress[2];
+		InternetAddress[] internetAddresses = new InternetAddress[1];
 
 		internetAddresses[0] = new InternetAddress("test@test.com");
-		internetAddresses[1] = new InternetAddress("test2@test2.com");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.CC));
@@ -202,7 +151,7 @@ public class MailUtilTest extends BaseTestCase {
 	@Test
 	public void testPopulateTextMessage() throws Exception {
 		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", List.class, List.class, Session.class);
+			"populateTextMessage", List.class, String.class, Session.class);
 
 		populateTextMessageMethod.setAccessible(true);
 
@@ -216,11 +165,6 @@ public class MailUtilTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
-		List<String> phoneNumberEmailAddresses = new ArrayList<>();
-
-		phoneNumberEmailAddresses.add("1234567890@txt.att.net");
-		phoneNumberEmailAddresses.add("2345678901@txt.att.net");
-
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
 
@@ -231,16 +175,15 @@ public class MailUtilTest extends BaseTestCase {
 				_classInstance);
 
 		Message message = (Message)populateTextMessageMethod.invoke(
-			_classInstance, searchResults, phoneNumberEmailAddresses,
+			_classInstance, searchResults, "1234567890@txt.att.net",
 			session);
 
 		Assert.assertEquals(
 			"itemTitle\nm.ebay.com/itm/1234\n", message.getContent());
 
-		InternetAddress[] internetAddresses = new InternetAddress[2];
+		InternetAddress[] internetAddresses = new InternetAddress[1];
 
 		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
-		internetAddresses[1] = new InternetAddress("2345678901@txt.att.net");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.CC));
@@ -253,28 +196,8 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_END_OF_DAY + 1);
 
-		boolean[] notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithoutRecipients(
-				dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
-				dateTime);
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			dateTime);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -287,28 +210,8 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY - 1);
 
-		boolean[] notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithoutRecipients(
-				dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
-				dateTime);
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			dateTime);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -321,28 +224,8 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY + 1);
 
-		boolean[] notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithoutRecipients(
-				dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
-
-		Assert.assertTrue(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
-				dateTime);
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			dateTime);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertFalse(notificationDeliverMethods[1]);
@@ -369,30 +252,10 @@ public class MailUtilTest extends BaseTestCase {
 
 		sendNotificationsBasedOnTimeField.set(clazz, false);
 
-		boolean[] notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithoutRecipients(
-				new DateTime());
+		DateTime dateTime = new DateTime();
 
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddress(
-				new DateTime());
-
-		Assert.assertTrue(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithPhoneNumber(
-				new DateTime());
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
-				new DateTime());
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			dateTime);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -406,27 +269,8 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTime dateTime = new DateTime().withDayOfWeek(_SATURDAY);
 
-		boolean[] notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithoutRecipients(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
-				dateTime);
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			dateTime);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -438,134 +282,22 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTime dateTime = new DateTime().withDayOfWeek(_SUNDAY);
 
-		boolean[] notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithoutRecipients(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddress(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertFalse(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithPhoneNumber(dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-
-		notificationDeliverMethods =
-			setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
-				dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-	}
-
-	@Test
-	public void testValidateEmailAddresses() throws Exception {
-		Method method = _clazz.getDeclaredMethod(
-			"validateEmailAddresses", List.class);
-
-		method.setAccessible(true);
-
-		List<String> recipientEmailAddresses = new ArrayList<>();
-
-		recipientEmailAddresses.add("test@test.com");
-		recipientEmailAddresses.add("invalidEmailAddress");
-		recipientEmailAddresses.add("anotherInvalidEmailAddress");
-		recipientEmailAddresses.add("test2@test2.com");
-
-		method.invoke(_classInstance, recipientEmailAddresses);
-
-		Assert.assertEquals(2, recipientEmailAddresses.size());
-		Assert.assertEquals("test@test.com", recipientEmailAddresses.get(0));
-		Assert.assertEquals("test2@test2.com", recipientEmailAddresses.get(1));
-	}
-
-	@Test
-	public void testValidatePhoneNumbers() throws Exception {
-		Method method = _clazz.getDeclaredMethod(
-			"validatePhoneNumbers", List.class);
-
-		method.setAccessible(true);
-
-		List<String> recipientPhoneNumbers = new ArrayList<>();
-
-		recipientPhoneNumbers.add("1234567890");
-		recipientPhoneNumbers.add("1234");
-		recipientPhoneNumbers.add("test");
-		recipientPhoneNumbers.add("2345678901");
-
-		method.invoke(_classInstance, recipientPhoneNumbers);
-
-		Assert.assertEquals(2, recipientPhoneNumbers.size());
-		Assert.assertEquals("1234567890", recipientPhoneNumbers.get(0));
-		Assert.assertEquals("2345678901", recipientPhoneNumbers.get(1));
-	}
-
-	private static boolean[] setNotificationDeliveryMethodsWithoutRecipients(
-			DateTime dateTime)
-		throws Exception {
-
-		return setNotificationDeliveryMethods(
-			new ArrayList<String>(), new ArrayList<String>(), dateTime);
-	}
-
-	private static boolean[] setNotificationDeliveryMethodsWithEmailAddress(
-			DateTime dateTime)
-		throws Exception {
-
-		List<String> recipientEmailAddresses = new ArrayList<>();
-
-		recipientEmailAddresses.add("test@test.com");
-
-		return setNotificationDeliveryMethods(
-			recipientEmailAddresses, new ArrayList<String>(), dateTime);
-	}
-
-	private static boolean[] setNotificationDeliveryMethodsWithPhoneNumber(
-			DateTime dateTime)
-		throws Exception {
-
-		List<String> recipientPhoneNumbers = new ArrayList<>();
-
-		recipientPhoneNumbers.add("1234567890");
-
-		return setNotificationDeliveryMethods(
-			new ArrayList<String>(), recipientPhoneNumbers, dateTime);
-	}
-
-	private static boolean[] setNotificationDeliveryMethodsWithEmailAddressAndPhoneNumber(
-			DateTime dateTime)
-		throws Exception {
-
-		List<String> recipientEmailAddresses = new ArrayList<>();
-		List<String> recipientPhoneNumbers = new ArrayList<>();
-
-		recipientEmailAddresses.add("test@test.com");
-		recipientPhoneNumbers.add("1234567890");
-
-		return setNotificationDeliveryMethods(
-			recipientEmailAddresses, recipientPhoneNumbers, dateTime);
-	}
-
-	private static boolean[] setNotificationDeliveryMethods(
-			List<String> recipientEmailAddresses,
-			List<String> recipientPhoneNumbers, DateTime dateTime)
-		throws Exception {
-
-		Method method = _clazz.getDeclaredMethod(
-			"setNotificationDeliveryMethods", List.class, List.class,
-			DateTime.class);
-
-		method.setAccessible(true);
-
-		method.invoke(
-			_classInstance, recipientEmailAddresses, recipientPhoneNumbers,
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
 			dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+	}
+
+	private static boolean[] setNotificationDeliveryMethods(DateTime dateTime)
+		throws Exception {
+
+		Method method = _clazz.getDeclaredMethod(
+			"setNotificationDeliveryMethod", DateTime.class);
+
+		method.setAccessible(true);
+
+		method.invoke(_classInstance, dateTime);
 
 		Field sendViaEmailField = _clazz.getDeclaredField("_sendViaEmail");
 		Field sendViaTextField = _clazz.getDeclaredField("_sendViaText");
