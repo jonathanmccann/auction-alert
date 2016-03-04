@@ -49,6 +49,23 @@ CREATE TABLE IF NOT EXISTS User_(
 	salt VARCHAR(128)
 );
 
+CREATE TABLE IF NOT EXISTS NotificationPreferences(
+	userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	emailNotification BOOLEAN,
+	textNotification BOOLEAN,
+	basedOnTime BOOLEAN,
+	startOfDay INT,
+	endOfDay INT,
+	weekdayDayEmailNotification BOOLEAN,
+	weekdayDayTextNotification BOOLEAN,
+	weekdayNightEmailNotification BOOLEAN,
+	weekdayNightTextNotification BOOLEAN,
+	weekendDayEmailNotification BOOLEAN,
+	weekendDayTextNotification BOOLEAN,
+	weekendNightEmailNotification BOOLEAN,
+	weekendNightTextNotification BOOLEAN
+);
+
 CREATE TABLE IF NOT EXISTS Release_(
 	uuid INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	releaseName VARCHAR(50) NOT NULL UNIQUE,
