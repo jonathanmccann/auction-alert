@@ -14,15 +14,18 @@
 
 package com.app.util;
 
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 
+import com.app.model.User;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -58,7 +61,9 @@ import org.springframework.core.io.Resource;
 public class MailUtil {
 
 	public static void sendSearchResultsToRecipient(
-		Map<SearchQuery, List<SearchResult>> searchQueryResultMap) {
+			int userId,
+			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
+		throws DatabaseConnectionException, SQLException {
 
 		_log.info(
 			"Sending search results for {} queries",
@@ -66,12 +71,9 @@ public class MailUtil {
 
 		Session session = authenticateOutboundEmailAddress();
 
-		List<String> recipientEmailAddresses = getRecipientEmailAddresses();
+		setNotificationDeliveryMethod(new DateTime());
 
-		List<String> recipientPhoneNumbers = getRecipientPhoneNumbers();
-
-		setNotificationDeliveryMethods(
-			recipientEmailAddresses, recipientPhoneNumbers);
+		User user = UserUtil.getUserByUserId(userId);
 
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
@@ -80,7 +82,7 @@ public class MailUtil {
 				if (_sendViaEmail) {
 					Message emailMessage = populateEmailMessage(
 						mapEntry.getKey(), mapEntry.getValue(),
-						recipientEmailAddresses,
+						user.getEmailAddress(),
 						session.getProperty(
 							PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
 						session);
@@ -90,7 +92,8 @@ public class MailUtil {
 
 				if (_sendViaText) {
 					Message textMessage = populateTextMessage(
-						mapEntry.getValue(), recipientPhoneNumbers, session);
+						mapEntry.getValue(),
+						convertPhoneNumberToEmailAddress(user), session);
 
 					Transport.send(textMessage);
 				}
@@ -113,16 +116,11 @@ public class MailUtil {
 			});
 	}
 
-	private static void convertPhoneNumbersToEmailAddresses(
-		List<String> recipientPhoneNumbers) {
-
+	private static String convertPhoneNumberToEmailAddress(User user) {
 		String phoneCarrierEmailSuffix = _carrierSuffixMap.get(
 			PropertiesValues.RECIPIENT_PHONE_CARRIER);
 
-		for (int i = 0; i < recipientPhoneNumbers.size(); i++) {
-			recipientPhoneNumbers.set(
-				i, recipientPhoneNumbers.get(i) + phoneCarrierEmailSuffix);
-		}
+		return user.getPhoneNumber() + phoneCarrierEmailSuffix;
 	}
 
 	private static Template getEmailTemplate() throws IOException {
@@ -137,61 +135,6 @@ public class MailUtil {
 		_emailTemplate = _configuration.getTemplate("/email_body.ftl");
 
 		return _emailTemplate;
-	}
-
-	private static List<String> getRecipientEmailAddresses() {
-		if (_initializedEmailAddresses) {
-			return _recipientEmailAddresses;
-		}
-
-		_initializedEmailAddresses = true;
-
-		String recipientEmailAddresses =
-			PropertiesValues.RECIPIENT_EMAIL_ADDRESSES;
-
-		if (ValidatorUtil.isNotNull(recipientEmailAddresses)) {
-			List<String> recipientEmailAddressesList = Arrays.asList(
-				recipientEmailAddresses.split(","));
-
-			validateEmailAddresses(recipientEmailAddressesList);
-
-			_recipientEmailAddresses = recipientEmailAddressesList;
-
-			return _recipientEmailAddresses;
-		}
-		else {
-			_recipientEmailAddresses = new ArrayList<>();
-
-			return _recipientEmailAddresses;
-		}
-	}
-
-	private static List<String> getRecipientPhoneNumbers() {
-		if (_initializedPhoneNumbers) {
-			return _recipientPhoneNumbers;
-		}
-
-		_initializedPhoneNumbers = true;
-
-		String recipientPhoneNumbers = PropertiesValues.RECIPIENT_PHONE_NUMBERS;
-
-		if (ValidatorUtil.isNotNull(recipientPhoneNumbers)) {
-			List<String> recipientPhoneNumbersList = Arrays.asList(
-				recipientPhoneNumbers.split(","));
-
-			validatePhoneNumbers(recipientPhoneNumbersList);
-
-			convertPhoneNumbersToEmailAddresses(recipientPhoneNumbersList);
-
-			_recipientPhoneNumbers = recipientPhoneNumbersList;
-
-			return _recipientPhoneNumbers;
-		}
-		else {
-			_recipientPhoneNumbers = new ArrayList<>();
-
-			return _recipientPhoneNumbers;
-		}
 	}
 
 	private static Template getTextTemplate() throws IOException {
@@ -221,9 +164,8 @@ public class MailUtil {
 	}
 
 	private static Message populateEmailMessage(
-			SearchQuery searchQuery,
-			List<SearchResult> searchResults,
-			List<String> recipientEmailAddresses, String emailFrom,
+			SearchQuery searchQuery, List<SearchResult> searchResults,
+			String recipientEmailAddress, String emailFrom,
 			Session session)
 		throws Exception {
 
@@ -231,11 +173,9 @@ public class MailUtil {
 
 		message.setFrom(new InternetAddress(emailFrom));
 
-		for (String recipientEmailAddress : recipientEmailAddresses) {
-			message.addRecipient(
-				Message.RecipientType.CC,
-				new InternetAddress(recipientEmailAddress));
-		}
+		message.addRecipient(
+			Message.RecipientType.CC,
+			new InternetAddress(recipientEmailAddress));
 
 		DateFormat dateFormat = _DATE_FORMAT.get();
 
@@ -249,9 +189,8 @@ public class MailUtil {
 	}
 
 	private static void populateMessage(
-			SearchQuery searchQuery,
-			List<SearchResult> searchResults, Message message,
-			Template template)
+			SearchQuery searchQuery, List<SearchResult> searchResults,
+			Message message, Template template)
 		throws Exception {
 
 		Map<String, Object> rootMap = new HashMap<>();
@@ -267,49 +206,27 @@ public class MailUtil {
 	}
 
 	private static Message populateTextMessage(
-			List<SearchResult> searchResults,
-			List<String> recipientPhoneNumbers, Session session)
+			List<SearchResult> searchResults, String recipientPhoneNumber,
+			Session session)
 		throws Exception {
 
 		Message message = new MimeMessage(session);
 
-		for (String recipientPhoneNumber : recipientPhoneNumbers) {
-			message.addRecipient(
-				Message.RecipientType.CC,
-				new InternetAddress(recipientPhoneNumber));
-		}
+		message.addRecipient(
+			Message.RecipientType.CC,
+			new InternetAddress(recipientPhoneNumber));
 
 		populateMessage(null, searchResults, message, getTextTemplate());
 
 		return message;
 	}
 
-	private static void setNotificationDeliveryMethods(
-		List<String> recipientEmailAddresses,
-		List<String> recipientPhoneNumbers) {
-
-		setNotificationDeliveryMethods(
-			recipientEmailAddresses, recipientPhoneNumbers, new DateTime());
-	}
-
-	private static void setNotificationDeliveryMethods(
-		List<String> recipientEmailAddresses,
-		List<String> recipientPhoneNumbers, DateTime dateTime) {
-
+	private static void setNotificationDeliveryMethod(DateTime dateTime) {
 		if (PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME) {
 			setNotificationDeliveryMethodsBasedOnTime(dateTime);
 		}
 		else {
-			setNotificationDeliveryMethodsBasedOnTime(
-				recipientEmailAddresses, recipientPhoneNumbers);
-		}
-
-		if (recipientEmailAddresses.size() == 0) {
-			_sendViaEmail = false;
-		}
-
-		if (recipientPhoneNumbers.size() == 0) {
-			_sendViaText = false;
+			setNotificationDeliveryMethodsNotBasedOnTime();
 		}
 
 		_log.debug("Sending via email: {}", _sendViaEmail);
@@ -338,57 +255,9 @@ public class MailUtil {
 		}
 	}
 
-	private static void setNotificationDeliveryMethodsBasedOnTime(
-		List<String> recipientEmailAddresses,
-		List<String> recipientPhoneNumbers) {
-
-		if (recipientEmailAddresses.size() > 0) {
-			_sendViaEmail = true;
-		}
-
-		if (recipientPhoneNumbers.size() > 0) {
-			_sendViaText = true;
-		}
-	}
-
-	private static void validateEmailAddresses(
-		List<String> recipientEmailAddressesArray) {
-
-		Iterator<String> iterator = recipientEmailAddressesArray.iterator();
-
-		while (iterator.hasNext()) {
-			String emailAddress = iterator.next();
-
-			Matcher matcher = _emailAddressPattern.matcher(emailAddress);
-
-			if (!matcher.matches()) {
-				_log.debug(
-					"{} is not a valid email address",
-					emailAddress);
-
-				iterator.remove();
-			}
-		}
-	}
-
-	private static void validatePhoneNumbers(
-		List<String> recipientPhoneNumbersArray) {
-
-		Iterator<String> iterator = recipientPhoneNumbersArray.iterator();
-
-		while (iterator.hasNext()) {
-			String phoneNumber = iterator.next();
-
-			Matcher matcher = _phoneNumberPattern.matcher(phoneNumber);
-
-			if (!matcher.matches()) {
-				_log.debug(
-					"{} is not a valid email address",
-					phoneNumber);
-
-				iterator.remove();
-			}
-		}
+	private static void setNotificationDeliveryMethodsNotBasedOnTime() {
+		_sendViaEmail = true;
+		_sendViaText = true;
 	}
 
 	private static final ThreadLocal<DateFormat> _DATE_FORMAT =
@@ -413,15 +282,7 @@ public class MailUtil {
 		new HashMap<>();
 	private static final Configuration _configuration = new Configuration(
 		Configuration.VERSION_2_3_21);
-	private static final Pattern _emailAddressPattern = Pattern.compile(
-		"[a-zA-Z0-9]*@[a-zA-Z0-9]*\\.[a-zA-Z]{1,6}");
 	private static Template _emailTemplate;
-	private static boolean _initializedEmailAddresses = false;
-	private static boolean _initializedPhoneNumbers = false;
-	private static final Pattern _phoneNumberPattern = Pattern.compile(
-		"[0-9]{10,10}");
-	private static List<String> _recipientEmailAddresses = new ArrayList<>();
-	private static List<String> _recipientPhoneNumbers = new ArrayList<>();
 	private static boolean _sendViaEmail = true;
 	private static boolean _sendViaText = true;
 	private static Template _textTemplate;

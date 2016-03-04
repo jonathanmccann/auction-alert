@@ -14,6 +14,9 @@
 
 package com.app.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author Jonathan McCann
  */
@@ -48,5 +51,22 @@ public class ValidatorUtil {
 
 		return false;
 	}
+
+	public static boolean isValidEmailAddress(String emailAddress) {
+		Matcher matcher = _emailAddressPattern.matcher(emailAddress);
+
+		return matcher.matches();
+	}
+
+	public static boolean isValidPhoneNumber(String emailAddress) {
+		Matcher matcher = _phoneNumberPattern.matcher(emailAddress);
+
+		return matcher.matches();
+	}
+
+	private static final Pattern _emailAddressPattern = Pattern.compile(
+		"[a-zA-Z0-9]*@[a-zA-Z0-9]*\\.[a-zA-Z]{1,6}");
+	private static final Pattern _phoneNumberPattern = Pattern.compile(
+		"[0-9]{10,10}");
 
 }

@@ -103,7 +103,8 @@ public class SearchResultUtil {
 			}
 
 			if (!searchQueryResultMap.isEmpty()) {
-				MailUtil.sendSearchResultsToRecipient(searchQueryResultMap);
+				MailUtil.sendSearchResultsToRecipient(
+					userId, searchQueryResultMap);
 			}
 		}
 	}
