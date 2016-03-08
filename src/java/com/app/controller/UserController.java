@@ -118,6 +118,8 @@ public class UserController {
 
 		model.put("userDetails", userDetails);
 
+		populateHourList(model);
+
 		return "my_account";
 	}
 
@@ -136,6 +138,12 @@ public class UserController {
 
 		model.put("userDetails", userDetails);
 
+		populateHourList(model);
+
+		return "my_account";
+	}
+
+	private void populateHourList(Map<String, Object> model) {
 		List<Integer> hourList = new ArrayList<>();
 
 		for (int i = 1; i <= 24; i++) {
@@ -143,8 +151,6 @@ public class UserController {
 		}
 
 		model.put("hourList", hourList);
-
-		return "my_account";
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
