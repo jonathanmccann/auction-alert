@@ -14,6 +14,7 @@
 
 package com.app.test;
 
+import com.app.model.User;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 
@@ -73,13 +74,23 @@ public abstract class BaseTestCase {
 			System.getProperty(PropertiesKeys.APPLICATION_ID));
 	}
 
-	protected static void setUpUserUtil() {
+	protected static void setUpUserUtil() throws Exception {
 		PowerMockito.mockStatic(UserUtil.class);
 
 		Mockito.when(
 			UserUtil.getCurrentUserId()
 		).thenReturn(
 			_USER_ID
+		);
+
+		User user = new User();
+
+		user.setUserId(_USER_ID);
+
+		Mockito.when(
+			UserUtil.getUserByUserId(_USER_ID)
+		).thenReturn(
+			user
 		);
 	}
 
