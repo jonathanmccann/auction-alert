@@ -85,7 +85,7 @@ public class NotificationPreferencesDAO {
 			}
 			else {
 				throw new SQLException(
-					"There are not notification preferences for user ID: " +
+					"There are no notification preferences for user ID: " +
 						userId);
 			}
 		}
