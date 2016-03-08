@@ -46,8 +46,9 @@ public class UserDAO {
 				_ADD_USER_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
 			preparedStatement.setString(1, emailAddress);
-			preparedStatement.setString(2, password);
-			preparedStatement.setString(3, salt);
+			preparedStatement.setString(2, phoneNumber);
+			preparedStatement.setString(3, password);
+			preparedStatement.setString(4, salt);
 
 			preparedStatement.executeUpdate();
 
@@ -188,7 +189,8 @@ public class UserDAO {
 	}
 
 	private static final String _ADD_USER_SQL =
-		"INSERT INTO User_(emailAddress, password, salt) VALUES(?, ?, ?)";
+		"INSERT INTO User_(emailAddress, phoneNumber, password, salt) " +
+			"VALUES(?, ?, ?, ?)";
 
 	private static final String _DELETE_USER_BY_EMAIL_ADDRESS_SQL =
 		"DELETE FROM User_ WHERE emailAddress = ?";
