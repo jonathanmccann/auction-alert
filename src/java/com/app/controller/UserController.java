@@ -15,6 +15,7 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.exception.DuplicateEmailAddressException;
 import com.app.model.NotificationPreferences;
 import com.app.model.User;
 import com.app.model.UserDetails;
@@ -106,7 +107,14 @@ public class UserController {
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
 			UserDetails userDetails, Map<String, Object> model)
-		throws DatabaseConnectionException, SQLException {
+		throws
+			DatabaseConnectionException, DuplicateEmailAddressException,
+				SQLException {
+
+		UserUtil.updateUser(userDetails.getUser());
+
+		NotificationPreferencesUtil.updateNotificationPreferences(
+			userDetails.getNotificationPreferences());
 
 		model.put("userDetails", userDetails);
 
