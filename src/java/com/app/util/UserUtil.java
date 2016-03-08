@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,19 +40,18 @@ import java.util.List;
 @Service
 public class UserUtil {
 
-	public static int addUser(String emailAddress, String plainTextPassword)
+	public static User addUser(
+			String emailAddress, String phoneNumber, String plainTextPassword)
 		throws Exception {
 
 		validateEmailAddress(0, emailAddress);
 
-		User user = new User();
-
-		user.setEmailAddress(emailAddress);
-
-		generatePassword(user, plainTextPassword);
+		List<String> passwordAndSalt = generatePasswordAndSalt(
+			plainTextPassword);
 
 		return _userDAO.addUser(
-			emailAddress, user.getPassword(), user.getSalt());
+			emailAddress, phoneNumber, passwordAndSalt.get(0),
+			passwordAndSalt.get(1));
 	}
 
 	public static void deleteUserByEmailAddress(String emailAddress)
@@ -111,7 +112,9 @@ public class UserUtil {
 		_userDAO.updateUser(userId, emailAddress, phoneNumber);
 	}
 
-	private static void generatePassword(User user, String plainTextPassword) {
+	private static List<String> generatePasswordAndSalt(
+		String plainTextPassword) {
+
 		RandomNumberGenerator rng = new SecureRandomNumberGenerator();
 
 		Object salt = rng.nextBytes();
@@ -119,8 +122,12 @@ public class UserUtil {
 		String hashedPasswordBase64 = new Sha512Hash(
 			plainTextPassword, salt, 1024).toBase64();
 
-		user.setPassword(hashedPasswordBase64);
-		user.setSalt(salt.toString());
+		List<String> passwordAndSalt = new ArrayList<>();
+
+		passwordAndSalt.add(hashedPasswordBase64);
+		passwordAndSalt.add(salt.toString());
+
+		return passwordAndSalt;
 	}
 
 	@Autowired

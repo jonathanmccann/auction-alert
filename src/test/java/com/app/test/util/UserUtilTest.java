@@ -50,18 +50,19 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddAndGetUserByEmailAddress() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
+		UserUtil.addUser("test@test.com", "1234567890", "password");
 
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
+		Assert.assertEquals("1234567890", user.getPhoneNumber());
 	}
 
 	@Test(expected=DuplicateEmailAddressException.class)
 	public void testAddUserWithDuplicateEmailAddress() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
-		UserUtil.addUser("test@test.com", "updatedPassword");
+		UserUtil.addUser("test@test.com", "1234567890", "password");
+		UserUtil.addUser("test@test.com", "2345678901", "updatedPassword");
 	}
 
 	@Test
@@ -80,19 +81,21 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserIds() throws Exception {
-		Integer firstUserId = UserUtil.addUser("test@test.com", "password");
-		Integer secondUserId = UserUtil.addUser("test2@test.com", "password");
+		User firstUser = UserUtil.addUser(
+			"test@test.com", "1234567890", "password");
+		User secondUser = UserUtil.addUser(
+			"test2@test.com", "2345678901", "password");
 
 		List<Integer> userIds = UserUtil.getUserIds();
 
 		Assert.assertEquals(2, userIds.size());
-		Assert.assertEquals(firstUserId, userIds.get(0));
-		Assert.assertEquals(secondUserId, userIds.get(1));
+		Assert.assertEquals(firstUser.getUserId(), (int)userIds.get(0));
+		Assert.assertEquals(secondUser.getUserId(), (int)userIds.get(1));
 	}
 
 	@Test
 	public void testDeleteUser() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
+		UserUtil.addUser("test@test.com", "1234567890", "password");
 
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
@@ -108,20 +111,19 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateUser() throws Exception {
-		int userId = UserUtil.addUser("update@test.com", "password");
-
-		User user = UserUtil.getUserByUserId(userId);
+		User user = UserUtil.addUser("update@test.com", "1234567890", "password");
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
+		Assert.assertEquals("1234567890", user.getPhoneNumber());
 
-		UserUtil.updateUser(user.getUserId(), "test@test.com", "1234567890");
+		UserUtil.updateUser(user.getUserId(), "test@test.com", "2345678901");
 
-		user = UserUtil.getUserByUserId(userId);
+		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
-		Assert.assertEquals("1234567890", user.getPhoneNumber());
+		Assert.assertEquals("2345678901", user.getPhoneNumber());
 	}
 
 }

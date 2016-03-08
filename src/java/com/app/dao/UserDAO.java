@@ -34,7 +34,9 @@ import org.slf4j.LoggerFactory;
  */
 public class UserDAO {
 
-	public int addUser(String emailAddress, String password, String salt)
+	public User addUser(
+			String emailAddress, String phoneNumber, String password,
+			String salt)
 		throws Exception {
 
 		_log.debug("Adding user with emailAddress: {}", emailAddress);
@@ -53,7 +55,8 @@ public class UserDAO {
 
 			resultSet.next();
 
-			return resultSet.getInt(1);
+			return new User(
+				resultSet.getInt(1), emailAddress, phoneNumber, password, salt);
 		}
 	}
 
