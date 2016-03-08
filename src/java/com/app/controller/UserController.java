@@ -131,10 +131,8 @@ public class UserController {
 			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
 				user.getUserId());
 
-		UserDetails userDetails = new UserDetails();
-
-		userDetails.setNotificationPreferences(notificationPreferences);
-		userDetails.setUser(user);
+		UserDetails userDetails = new UserDetails(
+			user, notificationPreferences);
 
 		model.put("userDetails", userDetails);
 
