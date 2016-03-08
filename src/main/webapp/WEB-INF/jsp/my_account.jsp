@@ -34,6 +34,9 @@
 	<body>
 		<div>
 			<form:form commandName="userDetails" id="updateUserForm" method="post">
+				<form:input path="user.userId" type="hidden" value="${user.userId}" />
+				<form:input path="notificationPreferences.userId" type="hidden" value="${user.userId}" />
+
 				<h2>My Account</h2>
 				<div>
 					<h3>My Details:</h3>
