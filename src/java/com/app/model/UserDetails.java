@@ -19,6 +19,16 @@ package com.app.model;
  */
 public class UserDetails {
 
+	public UserDetails() {
+	}
+
+	public UserDetails(
+		User user, NotificationPreferences notificationPreferences) {
+
+		_user = user;
+		_notificationPreferences = notificationPreferences;
+	}
+
 	public NotificationPreferences getNotificationPreferences() {
 		return _notificationPreferences;
 	}

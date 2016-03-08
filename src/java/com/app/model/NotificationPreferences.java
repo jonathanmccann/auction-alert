@@ -19,6 +19,13 @@ package com.app.model;
  */
 public class NotificationPreferences {
 
+	public NotificationPreferences() {
+	}
+
+	public NotificationPreferences(int userId) {
+		_userId = userId;
+	}
+
 	public int getEndOfDay() {
 		return _endOfDay;
 	}
