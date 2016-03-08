@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS User_(
 );
 
 CREATE TABLE IF NOT EXISTS NotificationPreferences(
-	userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	userId INT NOT NULL PRIMARY KEY,
 	emailNotification BOOLEAN,
 	textNotification BOOLEAN,
 	basedOnTime BOOLEAN,
