@@ -40,7 +40,12 @@
 				<h2>My Account</h2>
 				<div>
 					<h3>My Details:</h3>
-					Email Address <form:input path="user.emailAddress" value="${user.emailAddress}" />
+
+					<c:if test="${not empty duplicateEmailAddressException}">
+						${duplicateEmailAddressException}</br>
+					</c:if>
+
+					Email Address <form:input id="emailAddress" path="user.emailAddress" value="${user.emailAddress}" /> <br>
 					Phone Number <form:input path="user.phoneNumber" value="${user.phoneNumber}" />
 				</div>
 				<hr>

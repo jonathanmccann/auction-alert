@@ -108,17 +108,23 @@ public class UserController {
 	public String updateMyAccount(
 			UserDetails userDetails, Map<String, Object> model)
 		throws
-			DatabaseConnectionException, DuplicateEmailAddressException,
-				SQLException {
+			DatabaseConnectionException, SQLException {
 
-		UserUtil.updateUser(userDetails.getUser());
+		try {
+			UserUtil.updateUser(userDetails.getUser());
 
-		NotificationPreferencesUtil.updateNotificationPreferences(
-			userDetails.getNotificationPreferences());
+			NotificationPreferencesUtil.updateNotificationPreferences(
+				userDetails.getNotificationPreferences());
 
-		model.put("userDetails", userDetails);
+			model.put("userDetails", userDetails);
 
-		populateHourList(model);
+			populateHourList(model);
+		}
+		catch (DuplicateEmailAddressException deae) {
+			model.put(
+				"duplicateEmailAddressException",
+				"This email address already exists. Please try again.");
+		}
 
 		return "my_account";
 	}
