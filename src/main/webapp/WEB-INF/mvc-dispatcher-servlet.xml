@@ -22,6 +22,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/add_search_query" />
 			<mvc:mapping path="/delete_search_query" />
+			<mvc:mapping path="/my_account" />
 			<mvc:mapping path="/update_search_query" />
 			<mvc:mapping path="/view_search_queries" />
 			<mvc:mapping path="/view_search_query_results" />

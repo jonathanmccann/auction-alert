@@ -14,7 +14,11 @@
 
 package com.app.controller;
 
+import com.app.exception.DatabaseConnectionException;
+import com.app.model.NotificationPreferences;
 import com.app.model.User;
+import com.app.model.UserDetails;
+import com.app.util.NotificationPreferencesUtil;
 import com.app.util.UserUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -30,6 +34,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.sql.SQLException;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,6 +101,44 @@ public class UserController {
 		currentUser.logout();
 
 		return "home";
+	}
+
+	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
+	public String updateMyAccount(
+			UserDetails userDetails, Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		model.put("userDetails", userDetails);
+
+		return "my_account";
+	}
+
+	@RequestMapping(value = "/my_account", method = RequestMethod.GET)
+	public String viewMyAccount(Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		User user = UserUtil.getUserByUserId(UserUtil.getCurrentUserId());
+
+		NotificationPreferences notificationPreferences =
+			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
+				user.getUserId());
+
+		UserDetails userDetails = new UserDetails();
+
+		userDetails.setNotificationPreferences(notificationPreferences);
+		userDetails.setUser(user);
+
+		model.put("userDetails", userDetails);
+
+		List<Integer> hourList = new ArrayList<>();
+
+		for (int i = 1; i <= 24; i++) {
+			hourList.add(i);
+		}
+
+		model.put("hourList", hourList);
+
+		return "my_account";
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(

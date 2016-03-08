@@ -69,7 +69,27 @@ $(window).load(function() {
 		}
 	});
 
+	$('#basedOnTime').click(function() {
+		if( $(this).is(':checked')) {
+			$("#basedOnTimeOptions").show();
+		}
+		else {
+			$("#basedOnTimeOptions").hide();
+		}
+	});
+
 	$('#submit').click(function() {
 		$('#addSearchQueryForm').valid();
+	});
+
+	$(document).ready(function () {
+		var basedOnTime = $('#basedOnTime').is(':checked');
+
+		if (basedOnTime) {
+			$("#basedOnTimeOptions").show();
+		}
+		else {
+			$("#basedOnTimeOptions").hide();
+		}
 	});
 });
