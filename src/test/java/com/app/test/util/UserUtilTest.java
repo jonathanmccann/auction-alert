@@ -115,12 +115,13 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
 
-		UserUtil.updateUser(user.getUserId(), "test@test.com");
+		UserUtil.updateUser(user.getUserId(), "test@test.com", "1234567890");
 
 		user = UserUtil.getUserByUserId(userId);
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
+		Assert.assertEquals("1234567890", user.getPhoneNumber());
 	}
 
 }

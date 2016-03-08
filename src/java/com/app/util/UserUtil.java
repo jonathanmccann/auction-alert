@@ -91,12 +91,24 @@ public class UserUtil {
 		return (int)session.getAttribute("userId");
 	}
 
-	public static void updateUser(int userId, String emailAddress)
-		throws Exception {
+	public static void updateUser(User user)
+		throws
+			DatabaseConnectionException, DuplicateEmailAddressException,
+				SQLException {
+
+		updateUser(
+			user.getUserId(), user.getEmailAddress(), user.getPhoneNumber());
+	}
+
+	public static void updateUser(
+			int userId, String emailAddress, String phoneNumber)
+		throws
+			DatabaseConnectionException, DuplicateEmailAddressException,
+				SQLException {
 
 		validateEmailAddress(userId, emailAddress);
 
-		_userDAO.updateUser(userId, emailAddress);
+		_userDAO.updateUser(userId, emailAddress, phoneNumber);
 	}
 
 	private static void generatePassword(User user, String plainTextPassword) {
@@ -117,7 +129,9 @@ public class UserUtil {
 	}
 
 	private static void validateEmailAddress(int userId, String emailAddress)
-		throws Exception {
+		throws
+			DatabaseConnectionException, DuplicateEmailAddressException,
+				SQLException {
 
 		User user = _userDAO.getUserByEmailAddress(emailAddress);
 

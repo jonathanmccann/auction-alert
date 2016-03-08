@@ -151,19 +151,20 @@ public class UserDAO {
 		}
 	}
 
-	public void updateUser(int userId, String emailAddress)
+	public void updateUser(int userId, String emailAddress, String phoneNumber)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Updating user ID: {} to email address: {}", userId,
-			emailAddress);
+			"Updating user ID: {} to email address: {} and phone number: {}",
+			userId, emailAddress, phoneNumber);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_UPDATE_USER_SQL)) {
 
 			preparedStatement.setString(1, emailAddress);
-			preparedStatement.setInt(2, userId);
+			preparedStatement.setString(2, phoneNumber);
+			preparedStatement.setInt(3, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -202,7 +203,7 @@ public class UserDAO {
 		"SELECT userId FROM User_ ORDER BY userId";
 
 	private static final String _UPDATE_USER_SQL =
-		"UPDATE User_ SET emailAddress = ? WHERE userId = ?";
+		"UPDATE User_ SET emailAddress = ?, phoneNumber = ? WHERE userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		UserDAO.class);
