@@ -67,7 +67,7 @@
 		</c:choose>
 		</br>
 		<div align="center">
-			<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | View Search Query Results
+			<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | View Search Query Results | <a href="my_account">My Account</a>
 		</div>
 	</div>
 </body>

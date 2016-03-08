@@ -32,7 +32,7 @@
 			</br>
 			<shiro:user>
 				<div align="center">
-					<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a>
+					<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> | <a href="my_account">My Account</a>
 				</div>
 			</shiro:user>
 		</div>

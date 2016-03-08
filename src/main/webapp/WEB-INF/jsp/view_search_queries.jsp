@@ -54,7 +54,7 @@
 			</form:form>
 			</br>
 			<div align="center">
-				<a href="add_search_query">Add a Search Query</a> | View Search Queries | <a href="view_search_query_results">View Search Query Results</a>
+				<a href="add_search_query">Add a Search Query</a> | View Search Queries | <a href="view_search_query_results">View Search Query Results</a> | <a href="my_account">My Account</a>
 			</div>
 		</div>
 	</body>
