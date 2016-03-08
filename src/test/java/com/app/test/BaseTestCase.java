@@ -14,7 +14,6 @@
 
 package com.app.test;
 
-import com.app.model.User;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 
@@ -23,8 +22,6 @@ import com.app.util.UserUtil;
 import com.app.util.eBayAPIUtil;
 
 import org.junit.runner.RunWith;
-
-import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -75,22 +72,12 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpUserUtil() throws Exception {
-		PowerMockito.mockStatic(UserUtil.class);
+		PowerMockito.spy(UserUtil.class);
 
-		Mockito.when(
-			UserUtil.getCurrentUserId()
-		).thenReturn(
+		PowerMockito.doReturn(
 			_USER_ID
-		);
-
-		User user = new User();
-
-		user.setUserId(_USER_ID);
-
-		Mockito.when(
-			UserUtil.getUserByUserId(_USER_ID)
-		).thenReturn(
-			user
+		).when(
+			UserUtil.class, "getCurrentUserId"
 		);
 	}
 

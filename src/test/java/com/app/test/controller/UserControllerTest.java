@@ -15,17 +15,14 @@
 package com.app.test.controller;
 
 import com.app.model.NotificationPreferences;
+import com.app.model.User;
 import com.app.test.BaseTestCase;
-import com.app.util.CategoryUtil;
 import com.app.util.NotificationPreferencesUtil;
-import com.app.util.SearchQueryPreviousResultUtil;
-import com.app.util.SearchQueryUtil;
-import com.app.util.SearchResultUtil;
 
 import com.app.util.UserUtil;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,11 +40,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,13 +64,10 @@ public class UserControllerTest extends BaseTestCase {
 		setUpDatabase();
 		setUpUserUtil();
 
-		NotificationPreferences notificationPreferences =
-			new NotificationPreferences();
-
-		notificationPreferences.setUserId(_USER_ID);
+		_USER = UserUtil.addUser("test@test.com", "1234567890", "password");
 
 		NotificationPreferencesUtil.addNotificationPreferences(
-			notificationPreferences);
+			new NotificationPreferences(_USER.getUserId()));
 	}
 
 	@After
@@ -85,7 +75,82 @@ public class UserControllerTest extends BaseTestCase {
 		UserUtil.deleteUserByEmailAddress("test@test.com");
 
 		NotificationPreferencesUtil.deleteNotificationPreferencesByUserId(
-			_USER_ID);
+			_USER.getUserId());
+	}
+
+	@Test
+	public void testUpdateMyAccount() throws Exception {
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/my_account");
+
+		request.param("user.userId", String.valueOf(_USER.getUserId()));
+		request.param("user.emailAddress", "update@test.com");
+		request.param("user.phoneNumber", "2345678901");
+
+		request.param(
+			"notificationPreferences.userId",
+			String.valueOf(_USER.getUserId()));
+		request.param(
+			"notificationPreferences.emailNotification", "true");
+		request.param(
+			"notificationPreferences.textNotification", "true");
+		request.param(
+			"notificationPreferences.basedOnTime", "true");
+		request.param(
+			"notificationPreferences.startOfDay", "1");
+		request.param(
+			"notificationPreferences.endOfDay", "2");
+		request.param(
+			"notificationPreferences.weekdayDayEmailNotification", "true");
+		request.param(
+			"notificationPreferences.weekdayDayTextNotification", "true");
+		request.param(
+			"notificationPreferences.weekdayNightEmailNotification", "true");
+		request.param(
+			"notificationPreferences.weekdayNightTextNotification", "true");
+		request.param(
+			"notificationPreferences.weekendDayEmailNotification", "true");
+		request.param(
+			"notificationPreferences.weekendDayTextNotification", "true");
+		request.param(
+			"notificationPreferences.weekendNightEmailNotification", "true");
+		request.param(
+			"notificationPreferences.weekendNightTextNotification", "true");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(model().attributeExists("userDetails"));
+		resultActions.andExpect(model().attributeDoesNotExist("hourList"));
+
+		NotificationPreferences notificationPreferences =
+			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
+				_USER.getUserId());
+
+		Assert.assertEquals(
+			_USER.getUserId(), notificationPreferences.getUserId());
+		Assert.assertTrue(notificationPreferences.isEmailNotification());
+		Assert.assertTrue(notificationPreferences.isTextNotification());
+		Assert.assertTrue(notificationPreferences.isBasedOnTime());
+		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
+		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayDayEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayDayTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayNightEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayNightTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendDayEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendDayTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendNightEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendNightTextNotification());
 	}
 
 	@Test
@@ -102,5 +167,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Autowired
 	private WebApplicationContext wac;
+
+	private static User _USER;
 
 }
