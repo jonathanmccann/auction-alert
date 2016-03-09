@@ -112,19 +112,19 @@ public class UserController {
 
 		try {
 			UserUtil.updateUser(userDetails.getUser());
-
-			NotificationPreferencesUtil.updateNotificationPreferences(
-				userDetails.getNotificationPreferences());
-
-			model.put("userDetails", userDetails);
-
-			populateHourList(model);
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
 				"duplicateEmailAddressException",
 				"This email address already exists. Please try again.");
 		}
+
+		NotificationPreferencesUtil.updateNotificationPreferences(
+			userDetails.getNotificationPreferences());
+
+		model.put("userDetails", userDetails);
+
+		populateHourList(model);
 
 		return "my_account";
 	}

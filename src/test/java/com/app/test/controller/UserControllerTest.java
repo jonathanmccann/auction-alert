@@ -80,11 +80,79 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateMyAccount() throws Exception {
+		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(model().attributeExists("userDetails"));
+		resultActions.andExpect(model().attributeExists("hourList"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("duplicateEmailAddressException"));
+
+		NotificationPreferences notificationPreferences =
+			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
+				_USER.getUserId());
+
+		Assert.assertEquals(
+			_USER.getUserId(), notificationPreferences.getUserId());
+		Assert.assertTrue(notificationPreferences.isEmailNotification());
+		Assert.assertTrue(notificationPreferences.isTextNotification());
+		Assert.assertTrue(notificationPreferences.isBasedOnTime());
+		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
+		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayDayEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayDayTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayNightEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayNightTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendDayEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendDayTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendNightEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendNightTextNotification());
+	}
+
+	@Test
+	public void testUpdateMyAccountWithDuplicateEmailAddress()
+		throws Exception {
+
+		UserUtil.addUser("test2@test.com", "2345678901", "password");
+
+		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(model().attributeExists("userDetails"));
+		resultActions.andExpect(model().attributeExists("hourList"));
+		resultActions.andExpect(
+			model().attributeExists("duplicateEmailAddressException"));
+	}
+	@Test
+	public void testViewMyAccount() throws Exception {
+		this.mockMvc.perform(get("/my_account"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("my_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
+			.andExpect(model().attributeExists("userDetails"))
+			.andExpect(model().attributeExists("hourList"));
+	}
+
+	private MockHttpServletRequestBuilder buildUpdateMyAccountRequest() {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/my_account");
 
 		request.param("user.userId", String.valueOf(_USER.getUserId()));
-		request.param("user.emailAddress", "update@test.com");
+		request.param("user.emailAddress", "test2@test.com");
 		request.param("user.phoneNumber", "2345678901");
 
 		request.param(
@@ -117,50 +185,7 @@ public class UserControllerTest extends BaseTestCase {
 		request.param(
 			"notificationPreferences.weekendNightTextNotification", "true");
 
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("userDetails"));
-		resultActions.andExpect(model().attributeDoesNotExist("hourList"));
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				_USER.getUserId());
-
-		Assert.assertEquals(
-			_USER.getUserId(), notificationPreferences.getUserId());
-		Assert.assertTrue(notificationPreferences.isEmailNotification());
-		Assert.assertTrue(notificationPreferences.isTextNotification());
-		Assert.assertTrue(notificationPreferences.isBasedOnTime());
-		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
-		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayDayEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayDayTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayNightEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayNightTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendDayEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendDayTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendNightEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendNightTextNotification());
-	}
-
-	@Test
-	public void testViewMyAccount() throws Exception {
-		this.mockMvc.perform(get("/my_account"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("my_account"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
-			.andExpect(model().attributeExists("userDetails"))
-			.andExpect(model().attributeExists("hourList"));
+		return request;
 	}
 
 	private MockMvc mockMvc;
