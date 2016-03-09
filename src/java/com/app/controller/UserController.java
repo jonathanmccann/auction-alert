@@ -16,6 +16,8 @@ package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
+import com.app.exception.InvalidEmailAddressException;
+import com.app.exception.InvalidPhoneNumberException;
 import com.app.model.NotificationPreferences;
 import com.app.model.User;
 import com.app.model.UserDetails;
@@ -117,6 +119,16 @@ public class UserController {
 			model.put(
 				"duplicateEmailAddressException",
 				"This email address already exists. Please try again.");
+		}
+		catch (InvalidEmailAddressException e) {
+			model.put(
+				"invalidEmailAddressException",
+				"This email address is invalid. Please try again.");
+		}
+		catch (InvalidPhoneNumberException e) {
+			model.put(
+				"invalidPhoneNumberException",
+				"This phone number is invalid. Please try again.");
 		}
 
 		NotificationPreferencesUtil.updateNotificationPreferences(

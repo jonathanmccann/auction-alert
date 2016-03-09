@@ -17,6 +17,8 @@ package com.app.util;
 import com.app.dao.UserDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
+import com.app.exception.InvalidEmailAddressException;
+import com.app.exception.InvalidPhoneNumberException;
 import com.app.model.User;
 
 import org.apache.shiro.SecurityUtils;
@@ -44,7 +46,9 @@ public class UserUtil {
 			String emailAddress, String phoneNumber, String plainTextPassword)
 		throws Exception {
 
-		validateEmailAddress(0, emailAddress);
+		phoneNumber = sanitizePhoneNumber(phoneNumber);
+
+		validate(0, emailAddress, phoneNumber);
 
 		List<String> passwordAndSalt = generatePasswordAndSalt(
 			plainTextPassword);
@@ -95,7 +99,8 @@ public class UserUtil {
 	public static void updateUser(User user)
 		throws
 			DatabaseConnectionException, DuplicateEmailAddressException,
-				SQLException {
+				InvalidEmailAddressException, InvalidPhoneNumberException,
+					SQLException {
 
 		updateUser(
 			user.getUserId(), user.getEmailAddress(), user.getPhoneNumber());
@@ -105,9 +110,12 @@ public class UserUtil {
 			int userId, String emailAddress, String phoneNumber)
 		throws
 			DatabaseConnectionException, DuplicateEmailAddressException,
-				SQLException {
+				InvalidEmailAddressException, InvalidPhoneNumberException,
+					SQLException {
 
-		validateEmailAddress(userId, emailAddress);
+		phoneNumber = sanitizePhoneNumber(phoneNumber);
+
+		validate(userId, emailAddress, phoneNumber);
 
 		_userDAO.updateUser(userId, emailAddress, phoneNumber);
 	}
@@ -135,15 +143,42 @@ public class UserUtil {
 		_userDAO = userDAO;
 	}
 
+	private static String sanitizePhoneNumber(String phoneNumber) {
+		return phoneNumber.replaceAll("[^\\d]", "");
+	}
+
+	private static void validate(
+			int userId, String emailAddress, String phoneNumber)
+		throws
+			DatabaseConnectionException, DuplicateEmailAddressException,
+				InvalidEmailAddressException, InvalidPhoneNumberException,
+					SQLException {
+
+		validateEmailAddress(userId, emailAddress);
+		validatePhoneNumber(phoneNumber);
+	}
+
 	private static void validateEmailAddress(int userId, String emailAddress)
 		throws
 			DatabaseConnectionException, DuplicateEmailAddressException,
-				SQLException {
+				InvalidEmailAddressException, SQLException {
+
+		if (!ValidatorUtil.isValidEmailAddress(emailAddress)) {
+			throw new InvalidEmailAddressException();
+		}
 
 		User user = _userDAO.getUserByEmailAddress(emailAddress);
 
 		if ((user != null) && (userId != user.getUserId())) {
 			throw new DuplicateEmailAddressException();
+		}
+	}
+
+	private static void validatePhoneNumber(String phoneNumber)
+		throws InvalidPhoneNumberException {
+
+		if (!ValidatorUtil.isValidPhoneNumber(phoneNumber)) {
+			throw new InvalidPhoneNumberException();
 		}
 	}
 

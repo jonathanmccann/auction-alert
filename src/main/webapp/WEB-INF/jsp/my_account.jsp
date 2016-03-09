@@ -41,12 +41,23 @@
 				<div>
 					<h3>My Details:</h3>
 
+					Email Address <form:input id="emailAddress" path="user.emailAddress" value="${user.emailAddress}" />
+
 					<c:if test="${not empty duplicateEmailAddressException}">
-						${duplicateEmailAddressException}</br>
+						${duplicateEmailAddressException}
 					</c:if>
 
-					Email Address <form:input id="emailAddress" path="user.emailAddress" value="${user.emailAddress}" /> <br>
+					<c:if test="${not empty invalidEmailAddressException}">
+						${invalidEmailAddressException}
+					</c:if>
+
+					<br>
+
 					Phone Number <form:input path="user.phoneNumber" value="${user.phoneNumber}" />
+
+					<c:if test="${not empty invalidPhoneNumberException}">
+						${invalidPhoneNumberException}</br>
+					</c:if>
 				</div>
 				<hr>
 				<div>
