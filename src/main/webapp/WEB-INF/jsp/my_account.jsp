@@ -26,6 +26,7 @@
 	<head>
 		<title>My Account</title>
 		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
@@ -41,7 +42,7 @@
 				<div>
 					<h3>My Details:</h3>
 
-					Email Address <form:input id="emailAddress" path="user.emailAddress" value="${user.emailAddress}" />
+					Email Address <form:input path="user.emailAddress" value="${user.emailAddress}" />
 
 					<c:if test="${not empty duplicateEmailAddressException}">
 						${duplicateEmailAddressException}
