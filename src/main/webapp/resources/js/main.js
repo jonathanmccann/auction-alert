@@ -114,7 +114,7 @@ $(window).load(function() {
 	});
 
 	$('#updateSearchQuerySubmit').click(function() {
-		$('#updateUserForm').valid();
+		$('#addSearchQueryForm').valid();
 	});
 
 	$('#updateUserSubmit').click(function() {
