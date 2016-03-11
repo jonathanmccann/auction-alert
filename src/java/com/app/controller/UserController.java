@@ -120,12 +120,12 @@ public class UserController {
 				"duplicateEmailAddressException",
 				"This email address already exists. Please try again.");
 		}
-		catch (InvalidEmailAddressException e) {
+		catch (InvalidEmailAddressException ieae) {
 			model.put(
 				"invalidEmailAddressException",
 				"This email address is invalid. Please try again.");
 		}
-		catch (InvalidPhoneNumberException e) {
+		catch (InvalidPhoneNumberException ipne) {
 			model.put(
 				"invalidPhoneNumberException",
 				"This phone number is invalid. Please try again.");

@@ -137,6 +137,51 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(
 			model().attributeExists("duplicateEmailAddressException"));
 	}
+
+	@Test
+	public void testUpdateMyAccountWithInvalidEmailAddress()
+		throws Exception {
+
+		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+
+		request.param("user.emailAddress", "test");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(model().attributeExists("userDetails"));
+		resultActions.andExpect(model().attributeExists("hourList"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("duplicateEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeExists("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidPhoneNumberException"));
+	}
+
+	@Test
+	public void testUpdateMyAccountWithInvalidPhoneNumber()
+		throws Exception {
+
+		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+
+		request.param("user.phoneNumber", "1");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(model().attributeExists("userDetails"));
+		resultActions.andExpect(model().attributeExists("hourList"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("duplicateEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeExists("invalidPhoneNumberException"));
+	}
+
 	@Test
 	public void testViewMyAccount() throws Exception {
 		this.mockMvc.perform(get("/my_account"))
