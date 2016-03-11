@@ -14,18 +14,17 @@
 
 package com.app.test.util;
 
+import com.app.model.NotificationPreferences;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
-import com.app.util.PropertiesValues;
 
 import freemarker.template.Template;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -190,114 +189,174 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testSetNotificationDeliveryMethodsAfterEndOfDay()
+	public void testSetNotificationDeliveryMethodsNotBasedOnTime()
 		throws Exception {
+
+		NotificationPreferences notificationPreferences =
+			new NotificationPreferences();
+
+		notificationPreferences.setBasedOnTime(false);
+		notificationPreferences.setEmailNotification(true);
+		notificationPreferences.setTextNotification(true);
+
+		DateTime dateTime = new DateTime();
+
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			notificationPreferences, dateTime);
+
+		Assert.assertTrue(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsWeekdayAfterEndOfDay()
+		throws Exception {
+
+		NotificationPreferences notificationPreferences =
+			new NotificationPreferences();
+
+		notificationPreferences.setBasedOnTime(true);
+		notificationPreferences.setStartOfDay(_START_OF_DAY);
+		notificationPreferences.setEndOfDay(_END_OF_DAY);
+		notificationPreferences.setWeekdayNightEmailNotification(false);
+		notificationPreferences.setWeekdayNightTextNotification(true);
 
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_END_OF_DAY + 1);
 
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			dateTime);
+			notificationPreferences, dateTime);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
 	}
 
 	@Test
-	public void testSetNotificationDeliveryMethodsBeforeStartOfDay()
+	public void testSetNotificationDeliveryMethodsWeekdayBeforeStartOfDay()
 		throws Exception {
+
+		NotificationPreferences notificationPreferences =
+			new NotificationPreferences();
+
+		notificationPreferences.setBasedOnTime(true);
+		notificationPreferences.setStartOfDay(_START_OF_DAY);
+		notificationPreferences.setEndOfDay(_END_OF_DAY);
+		notificationPreferences.setWeekdayNightEmailNotification(false);
+		notificationPreferences.setWeekdayNightTextNotification(true);
 
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY - 1);
 
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			dateTime);
+			notificationPreferences, dateTime);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
 	}
 
 	@Test
-	public void testSetNotificationDeliveryMethodsDuringDay()
+	public void testSetNotificationDeliveryMethodsWeekdayDuringDay()
 		throws Exception {
+
+		NotificationPreferences notificationPreferences =
+			new NotificationPreferences();
+
+		notificationPreferences.setBasedOnTime(true);
+		notificationPreferences.setStartOfDay(_START_OF_DAY);
+		notificationPreferences.setEndOfDay(_END_OF_DAY);
+		notificationPreferences.setWeekdayDayEmailNotification(true);
+		notificationPreferences.setWeekdayDayTextNotification(false);
 
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY + 1);
 
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			dateTime);
+			notificationPreferences, dateTime);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertFalse(notificationDeliverMethods[1]);
 	}
 
 	@Test
-	public void testSetNotificationDeliveryMethodsNotBasedOnTime()
+	public void testSetNotificationDeliveryMethodsWeekendAfterEndOfDay()
 		throws Exception {
 
-		Class clazz = Class.forName(PropertiesValues.class.getName());
+		NotificationPreferences notificationPreferences =
+			new NotificationPreferences();
 
-		Field sendNotificationsBasedOnTimeField = clazz.getDeclaredField(
-			"SEND_NOTIFICATIONS_BASED_ON_TIME");
+		notificationPreferences.setBasedOnTime(true);
+		notificationPreferences.setStartOfDay(_START_OF_DAY);
+		notificationPreferences.setEndOfDay(_END_OF_DAY);
+		notificationPreferences.setWeekendNightEmailNotification(false);
+		notificationPreferences.setWeekendNightTextNotification(true);
 
-		sendNotificationsBasedOnTimeField.setAccessible(true);
-
-		Field modifiersField = Field.class.getDeclaredField("modifiers");
-
-		modifiersField.setAccessible(true);
-
-		modifiersField.setInt(
-			sendNotificationsBasedOnTimeField,
-			sendNotificationsBasedOnTimeField.getModifiers() & ~Modifier.FINAL);
-
-		sendNotificationsBasedOnTimeField.set(clazz, false);
-
-		DateTime dateTime = new DateTime();
+		DateTime dateTime =
+			new DateTime().withDayOfWeek(_SATURDAY).withHourOfDay(_END_OF_DAY + 1);
 
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			dateTime);
+			notificationPreferences, dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsWeekendBeforeStartOfDay()
+		throws Exception {
+
+		NotificationPreferences notificationPreferences =
+			new NotificationPreferences();
+
+		notificationPreferences.setBasedOnTime(true);
+		notificationPreferences.setStartOfDay(_START_OF_DAY);
+		notificationPreferences.setEndOfDay(_END_OF_DAY);
+		notificationPreferences.setWeekendNightEmailNotification(false);
+		notificationPreferences.setWeekendNightTextNotification(true);
+
+		DateTime dateTime =
+			new DateTime().withDayOfWeek(_SATURDAY).withHourOfDay(_START_OF_DAY - 1);
+
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			notificationPreferences, dateTime);
+
+		Assert.assertFalse(notificationDeliverMethods[0]);
+		Assert.assertTrue(notificationDeliverMethods[1]);
+	}
+
+	@Test
+	public void testSetNotificationDeliveryMethodsWeekendDuringDay()
+		throws Exception {
+
+		NotificationPreferences notificationPreferences =
+			new NotificationPreferences();
+
+		notificationPreferences.setBasedOnTime(true);
+		notificationPreferences.setStartOfDay(_START_OF_DAY);
+		notificationPreferences.setEndOfDay(_END_OF_DAY);
+		notificationPreferences.setWeekendDayEmailNotification(true);
+		notificationPreferences.setWeekendDayTextNotification(false);
+
+		DateTime dateTime =
+			new DateTime().withDayOfWeek(_SATURDAY).withHourOfDay(_START_OF_DAY + 1);
+
+		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+			notificationPreferences, dateTime);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-
-		sendNotificationsBasedOnTimeField.set(clazz, true);
+		Assert.assertFalse(notificationDeliverMethods[1]);
 	}
 
-	@Test
-	public void testSetNotificationDeliveryMethodsOnSaturday()
-		throws Exception {
-
-		DateTime dateTime = new DateTime().withDayOfWeek(_SATURDAY);
-
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-	}
-
-	@Test
-	public void testSetNotificationDeliveryMethodsOnSunday()
-		throws Exception {
-
-		DateTime dateTime = new DateTime().withDayOfWeek(_SUNDAY);
-
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			dateTime);
-
-		Assert.assertFalse(notificationDeliverMethods[0]);
-		Assert.assertTrue(notificationDeliverMethods[1]);
-	}
-
-	private static boolean[] setNotificationDeliveryMethods(DateTime dateTime)
+	private static boolean[] setNotificationDeliveryMethods(
+			NotificationPreferences notificationPreferences, DateTime dateTime)
 		throws Exception {
 
 		Method method = _clazz.getDeclaredMethod(
-			"setNotificationDeliveryMethod", DateTime.class);
+			"setNotificationDeliveryMethod", NotificationPreferences.class,
+			DateTime.class);
 
 		method.setAccessible(true);
 
-		method.invoke(_classInstance, dateTime);
+		method.invoke(_classInstance, notificationPreferences, dateTime);
 
 		Field sendViaEmailField = _clazz.getDeclaredField("_sendViaEmail");
 		Field sendViaTextField = _clazz.getDeclaredField("_sendViaText");
@@ -317,7 +376,6 @@ public class MailUtilTest extends BaseTestCase {
 	private static final int _END_OF_DAY = 17;
 	private static final int _SATURDAY = 6;
 	private static final int _START_OF_DAY = 7;
-	private static final int _SUNDAY = 7;
 	private static final int _USER_ID = 1;
 
 }

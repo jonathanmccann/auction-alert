@@ -15,6 +15,7 @@
 package com.app.util;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.model.NotificationPreferences;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 
@@ -29,15 +30,10 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -71,9 +67,12 @@ public class MailUtil {
 
 		Session session = authenticateOutboundEmailAddress();
 
-		setNotificationDeliveryMethod(new DateTime());
-
 		User user = UserUtil.getUserByUserId(userId);
+
+		setNotificationDeliveryMethod(
+			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
+				userId),
+			new DateTime());
 
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
@@ -221,12 +220,16 @@ public class MailUtil {
 		return message;
 	}
 
-	private static void setNotificationDeliveryMethod(DateTime dateTime) {
-		if (PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME) {
-			setNotificationDeliveryMethodsBasedOnTime(dateTime);
+	private static void setNotificationDeliveryMethod(
+		NotificationPreferences notificationPreferences, DateTime dateTime) {
+
+		if (notificationPreferences.isBasedOnTime()) {
+			setNotificationDeliveryMethodsBasedOnTime(
+				notificationPreferences, dateTime);
 		}
 		else {
-			setNotificationDeliveryMethodsNotBasedOnTime();
+			setNotificationDeliveryMethodsNotBasedOnTime(
+				notificationPreferences);
 		}
 
 		_log.debug("Sending via email: {}", _sendViaEmail);
@@ -234,30 +237,55 @@ public class MailUtil {
 	}
 
 	private static void setNotificationDeliveryMethodsBasedOnTime(
-		DateTime dateTime) {
+		NotificationPreferences notificationPreferences, DateTime dateTime) {
 
 		int hourOfDay = dateTime.getHourOfDay();
 		int dayOfWeek = dateTime.getDayOfWeek();
 
-		if ((dayOfWeek == _SATURDAY) || (dayOfWeek == _SUNDAY)) {
-			_sendViaEmail = false;
-			_sendViaText = true;
-		}
-		else if ((hourOfDay < _START_OF_DAY) ||
-				 (hourOfDay >= _END_OF_DAY)) {
+		boolean isDaytime = true;
+		boolean isWeekday = true;
 
-			_sendViaEmail = false;
-			_sendViaText = true;
+		if ((hourOfDay < notificationPreferences.getStartOfDay()) ||
+			hourOfDay >= notificationPreferences.getEndOfDay()) {
+
+			isDaytime = false;
+		}
+
+		if ((dayOfWeek == _SATURDAY) || (dayOfWeek == _SUNDAY)) {
+			isWeekday = false;
+		}
+
+		if (isWeekday && isDaytime) {
+			_sendViaEmail =
+				notificationPreferences.isWeekdayDayEmailNotification();
+			_sendViaText =
+				notificationPreferences.isWeekdayDayTextNotification();
+		}
+		else if (isWeekday && !isDaytime) {
+			_sendViaEmail =
+				notificationPreferences.isWeekdayNightEmailNotification();
+			_sendViaText =
+				notificationPreferences.isWeekdayNightTextNotification();
+		}
+		else if (!isWeekday && isDaytime) {
+			_sendViaEmail =
+				notificationPreferences.isWeekendDayEmailNotification();
+			_sendViaText =
+				notificationPreferences.isWeekendDayTextNotification();
 		}
 		else {
-			_sendViaEmail = true;
-			_sendViaText = false;
+			_sendViaEmail =
+				notificationPreferences.isWeekendNightEmailNotification();
+			_sendViaText =
+				notificationPreferences.isWeekendNightTextNotification();
 		}
 	}
 
-	private static void setNotificationDeliveryMethodsNotBasedOnTime() {
-		_sendViaEmail = true;
-		_sendViaText = true;
+	private static void setNotificationDeliveryMethodsNotBasedOnTime(
+		NotificationPreferences notificationPreferences) {
+
+		_sendViaEmail = notificationPreferences.isEmailNotification();
+		_sendViaText = notificationPreferences.isTextNotification();
 	}
 
 	private static final ThreadLocal<DateFormat> _DATE_FORMAT =
@@ -268,12 +296,7 @@ public class MailUtil {
 			}
 		};
 
-	private static final int _END_OF_DAY = 17;
-
 	private static final int _SATURDAY = 6;
-
-	private static final int _START_OF_DAY = 7;
-
 	private static final int _SUNDAY = 7;
 
 	private static final Logger _log = LoggerFactory.getLogger(MailUtil.class);
