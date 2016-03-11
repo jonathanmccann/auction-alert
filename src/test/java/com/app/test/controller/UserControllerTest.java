@@ -102,6 +102,7 @@ public class UserControllerTest extends BaseTestCase {
 		Assert.assertTrue(notificationPreferences.isBasedOnTime());
 		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
 		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
+		Assert.assertEquals("PST", notificationPreferences.getTimeZone());
 		Assert.assertTrue(
 			notificationPreferences.isWeekdayDayEmailNotification());
 		Assert.assertTrue(
@@ -213,6 +214,8 @@ public class UserControllerTest extends BaseTestCase {
 			"notificationPreferences.startOfDay", "1");
 		request.param(
 			"notificationPreferences.endOfDay", "2");
+		request.param(
+			"notificationPreferences.timeZone", "PST");
 		request.param(
 			"notificationPreferences.weekdayDayEmailNotification", "true");
 		request.param(

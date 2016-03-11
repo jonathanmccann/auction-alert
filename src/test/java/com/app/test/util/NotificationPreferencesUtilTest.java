@@ -56,6 +56,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setBasedOnTime(true);
 		notificationPreferences.setStartOfDay(1);
 		notificationPreferences.setEndOfDay(2);
+		notificationPreferences.setTimeZone("PST");
 		notificationPreferences.setWeekdayDayEmailNotification(true);
 		notificationPreferences.setWeekdayDayTextNotification(true);
 		notificationPreferences.setWeekdayNightEmailNotification(true);
@@ -78,6 +79,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		Assert.assertTrue(notificationPreferences.isBasedOnTime());
 		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
 		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
+		Assert.assertEquals("PST", notificationPreferences.getTimeZone());
 		Assert.assertTrue(
 			notificationPreferences.isWeekdayDayEmailNotification());
 		Assert.assertTrue(
@@ -107,6 +109,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setBasedOnTime(true);
 		notificationPreferences.setStartOfDay(1);
 		notificationPreferences.setEndOfDay(2);
+		notificationPreferences.setTimeZone("PST");
 		notificationPreferences.setWeekdayDayEmailNotification(true);
 		notificationPreferences.setWeekdayDayTextNotification(true);
 		notificationPreferences.setWeekdayNightEmailNotification(true);
@@ -124,6 +127,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setBasedOnTime(false);
 		notificationPreferences.setStartOfDay(2);
 		notificationPreferences.setEndOfDay(3);
+		notificationPreferences.setTimeZone("MST");
 		notificationPreferences.setWeekdayDayEmailNotification(false);
 		notificationPreferences.setWeekdayDayTextNotification(false);
 		notificationPreferences.setWeekdayNightEmailNotification(false);
@@ -146,6 +150,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		Assert.assertFalse(notificationPreferences.isBasedOnTime());
 		Assert.assertEquals(2, notificationPreferences.getStartOfDay());
 		Assert.assertEquals(3, notificationPreferences.getEndOfDay());
+		Assert.assertEquals("MST", notificationPreferences.getTimeZone());
 		Assert.assertFalse(
 			notificationPreferences.isWeekdayDayEmailNotification());
 		Assert.assertFalse(

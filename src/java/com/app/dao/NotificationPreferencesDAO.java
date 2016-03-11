@@ -126,6 +126,7 @@ public class NotificationPreferencesDAO {
 			resultSet.getBoolean("basedOnTime"));
 		notificationPreferences.setStartOfDay(resultSet.getInt("startOfDay"));
 		notificationPreferences.setEndOfDay(resultSet.getInt("endOfDay"));
+		notificationPreferences.setTimeZone(resultSet.getString("timeZone"));
 		notificationPreferences.setWeekdayDayEmailNotification(
 			resultSet.getBoolean("weekdayDayEmailNotification"));
 		notificationPreferences.setWeekdayDayTextNotification(
@@ -160,6 +161,39 @@ public class NotificationPreferencesDAO {
 			4, notificationPreferences.isBasedOnTime());
 		preparedStatement.setInt(5, notificationPreferences.getStartOfDay());
 		preparedStatement.setInt(6, notificationPreferences.getEndOfDay());
+		preparedStatement.setString(7, notificationPreferences.getTimeZone());
+		preparedStatement.setBoolean(
+			8, notificationPreferences.isWeekdayDayEmailNotification());
+		preparedStatement.setBoolean(
+			9, notificationPreferences.isWeekdayDayTextNotification());
+		preparedStatement.setBoolean(
+			10, notificationPreferences.isWeekdayNightEmailNotification());
+		preparedStatement.setBoolean(
+			11, notificationPreferences.isWeekdayNightTextNotification());
+		preparedStatement.setBoolean(
+			12, notificationPreferences.isWeekendDayEmailNotification());
+		preparedStatement.setBoolean(
+			13, notificationPreferences.isWeekendDayTextNotification());
+		preparedStatement.setBoolean(
+			14, notificationPreferences.isWeekendNightEmailNotification());
+		preparedStatement.setBoolean(
+			15, notificationPreferences.isWeekendNightTextNotification());
+	}
+
+	private static void populateUpdateNotificationPreferencesPreparedStatement(
+			PreparedStatement preparedStatement,
+			NotificationPreferences notificationPreferences)
+		throws SQLException{
+
+		preparedStatement.setBoolean(
+			1, notificationPreferences.isEmailNotification());
+		preparedStatement.setBoolean(
+			2, notificationPreferences.isTextNotification());
+		preparedStatement.setBoolean(
+			3, notificationPreferences.isBasedOnTime());
+		preparedStatement.setInt(4, notificationPreferences.getStartOfDay());
+		preparedStatement.setInt(5, notificationPreferences.getEndOfDay());
+		preparedStatement.setString(6, notificationPreferences.getTimeZone());
 		preparedStatement.setBoolean(
 			7, notificationPreferences.isWeekdayDayEmailNotification());
 		preparedStatement.setBoolean(
@@ -176,48 +210,17 @@ public class NotificationPreferencesDAO {
 			13, notificationPreferences.isWeekendNightEmailNotification());
 		preparedStatement.setBoolean(
 			14, notificationPreferences.isWeekendNightTextNotification());
-	}
-
-	private static void populateUpdateNotificationPreferencesPreparedStatement(
-			PreparedStatement preparedStatement,
-			NotificationPreferences notificationPreferences)
-		throws SQLException{
-
-		preparedStatement.setBoolean(
-			1, notificationPreferences.isEmailNotification());
-		preparedStatement.setBoolean(
-			2, notificationPreferences.isTextNotification());
-		preparedStatement.setBoolean(
-			3, notificationPreferences.isBasedOnTime());
-		preparedStatement.setInt(4, notificationPreferences.getStartOfDay());
-		preparedStatement.setInt(5, notificationPreferences.getEndOfDay());
-		preparedStatement.setBoolean(
-			6, notificationPreferences.isWeekdayDayEmailNotification());
-		preparedStatement.setBoolean(
-			7, notificationPreferences.isWeekdayDayTextNotification());
-		preparedStatement.setBoolean(
-			8, notificationPreferences.isWeekdayNightEmailNotification());
-		preparedStatement.setBoolean(
-			9, notificationPreferences.isWeekdayNightTextNotification());
-		preparedStatement.setBoolean(
-			10, notificationPreferences.isWeekendDayEmailNotification());
-		preparedStatement.setBoolean(
-			11, notificationPreferences.isWeekendDayTextNotification());
-		preparedStatement.setBoolean(
-			12, notificationPreferences.isWeekendNightEmailNotification());
-		preparedStatement.setBoolean(
-			13, notificationPreferences.isWeekendNightTextNotification());
-		preparedStatement.setInt(14, notificationPreferences.getUserId());
+		preparedStatement.setInt(15, notificationPreferences.getUserId());
 	}
 
 	private static final String _ADD_NOTIFICATION_PREFERENCES =
 		"INSERT INTO NotificationPreferences(userId, emailNotification, " +
-			"textNotification, basedOnTime, startOfDay, endOfDay, " +
+			"textNotification, basedOnTime, startOfDay, endOfDay, timeZone, " +
 				"weekdayDayEmailNotification, weekdayDayTextNotification, " +
 					"weekdayNightEmailNotification, weekdayNightTextNotification, " +
 						"weekendDayEmailNotification, weekendDayTextNotification, " +
 							"weekendNightEmailNotification, weekendNightTextNotification) " +
-								"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+								"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _DELETE_NOTIFICATION_PREFERENCES_SQL =
 		"DELETE FROM NotificationPreferences WHERE userId = ?";
@@ -228,7 +231,7 @@ public class NotificationPreferencesDAO {
 	private static final String _UPDATE_NOTIFICATION_PREFERENCES =
 		"UPDATE NotificationPreferences SET emailNotification = ?, " +
 			"textNotification = ?, basedOnTime = ?, startOfDay = ?, endOfDay = ?, " +
-				"weekdayDayEmailNotification = ?, weekdayDayTextNotification = ?, " +
+				"timeZone = ?, weekdayDayEmailNotification = ?, weekdayDayTextNotification = ?, " +
 					"weekdayNightEmailNotification = ?, weekdayNightTextNotification = ?, " +
 						"weekendDayEmailNotification = ?, weekendDayTextNotification = ?, " +
 							"weekendNightEmailNotification = ?, weekendNightTextNotification = ? " +

@@ -34,6 +34,10 @@ public class NotificationPreferences {
 		return _startOfDay;
 	}
 
+	public String getTimeZone() {
+		return _timeZone;
+	}
+
 	public int getUserId() {
 		return _userId;
 	}
@@ -102,6 +106,10 @@ public class NotificationPreferences {
 		_textNotification = textNotification;
 	}
 
+	public void setTimeZone(String timeZone) {
+		_timeZone = timeZone;
+	}
+
 	public void setUserId(int userId) {
 		_userId = userId;
 	}
@@ -159,6 +167,7 @@ public class NotificationPreferences {
 	private int _endOfDay;
 	private int _startOfDay;
 	private boolean _textNotification;
+	private String _timeZone;
 	private int _userId;
 	private boolean _weekdayDayEmailNotification;
 	private boolean _weekdayDayTextNotification;
