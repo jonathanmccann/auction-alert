@@ -109,6 +109,9 @@ $(window).load(function() {
 			$("#basedOnTimeOptions").show();
 		}
 		else {
+			$('#notificationPreferences\\.startOfDay').tooltipster('hide');
+			$('#notificationPreferences\\.endOfDay').tooltipster('hide');
+
 			$("#basedOnTimeOptions").hide();
 		}
 	});
