@@ -73,7 +73,9 @@ public class ValidatorUtil {
 	}
 
 	private static final Pattern _emailAddressPattern = Pattern.compile(
-		"[a-zA-Z0-9]*@[a-zA-Z0-9]*\\.[a-zA-Z]{1,6}");
+		"^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}" +
+			"[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}" +
+				"[a-zA-Z0-9])?)*$");
 	private static final Pattern _phoneNumberPattern = Pattern.compile(
 		"[0-9]{10,10}");
 
