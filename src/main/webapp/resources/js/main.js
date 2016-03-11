@@ -7,7 +7,7 @@ $(window).load(function() {
 		$content.slideToggle(500);
 	});
 
-	$('#keywords, #minPrice, #maxPrice').tooltipster({
+	$("#user\\.emailAddress, #user\\.phoneNumber, #keywords, #minPrice, #maxPrice").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
@@ -39,7 +39,15 @@ $(window).load(function() {
 		return parseFloat(value) < parseFloat($min.val());
 	}, "Max price must be greater than min price");
 
-	$('#addSearchQueryForm').validate({
+	$.validator.addMethod("phoneNumber", function (value) {
+		value = value.replace(/\D/g, "");
+
+		var pattern = new RegExp("[0-9]{10,10}");
+
+		return pattern.test(value);
+	}, "Phone number must contain 10 digits");
+
+	$('#addSearchQueryForm, #updateUserForm').validate({
 		errorPlacement: function (error, element) {
 			var lastError = $(element).data('lastError');
 			var newError = $(error).text();
@@ -65,6 +73,15 @@ $(window).load(function() {
 			maxPrice: {
 				decimalPlaces: true,
 				greaterThan: '#minPrice'
+			},
+			'user.emailAddress': {
+				minlength: 3,
+				maxlength: 255,
+				required: true,
+				email: true
+			},
+			'user.phoneNumber': {
+				phoneNumber: true
 			}
 		}
 	});
@@ -78,8 +95,12 @@ $(window).load(function() {
 		}
 	});
 
-	$('#submit').click(function() {
-		$('#addSearchQueryForm').valid();
+	$('#updateSearchQuerySubmit').click(function() {
+		$('#updateUserForm').valid();
+	});
+
+	$('#updateUserSubmit').click(function() {
+		$('#updateUserForm').valid();
 	});
 
 	$(document).ready(function () {

@@ -114,7 +114,7 @@
 					</div>
 				</div>
 				<div>
-					<input type="submit" value="Update User" />
+					<input id="updateUserSubmit" type="submit" value="Update User" />
 				</div>
 			</form:form>
 			<div align="center">

@@ -104,13 +104,13 @@
 					<div>
 						<c:choose>
 							<c:when test="${disabled}">
-								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled id="submit" title="" type="submit" value="Add Search Query" />
+								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled id="updateSearchQuerySubmit" title="" type="submit" value="Add Search Query" />
 							</c:when>
 							<c:when test="${isAdd}">
-								<input id="submit" type="submit" value="Add Search Query" formmethod="post" formaction="add_search_query" />
+								<input id="updateSearchQuerySubmit" type="submit" value="Add Search Query" formmethod="post" formaction="add_search_query" />
 							</c:when>
 							<c:otherwise>
-								<input id="submit" type="submit" value="Update Search Query" formmethod="post" formaction="update_search_query" />
+								<input id="updateSearchQuerySubmit" type="submit" value="Update Search Query" formmethod="post" formaction="update_search_query" />
 							</c:otherwise>
 						</c:choose>
 					</div>
