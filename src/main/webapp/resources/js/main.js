@@ -7,7 +7,7 @@ $(window).load(function() {
 		$content.slideToggle(500);
 	});
 
-	$("#user\\.emailAddress, #user\\.phoneNumber, #keywords, #minPrice, #maxPrice").tooltipster({
+	$("#user\\.emailAddress, #user\\.phoneNumber, #notificationPreferences\\.endOfDay, #notificationPreferences\\.startOfDay, #keywords, #minPrice, #maxPrice").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
@@ -18,6 +18,12 @@ $(window).load(function() {
 
 		return pattern.test(value);
 	}, "Price must have two decimal places");
+
+	$.validator.addMethod("endOfDay", function (value, element, param) {
+		var $startOfDay = $(param);
+
+		return parseFloat(value) > parseFloat($startOfDay.val());
+	}, "End of day must be after start of day");
 
 	$.validator.addMethod("greaterThan", function (value, element, param) {
 		var $min = $(param);
@@ -46,6 +52,12 @@ $(window).load(function() {
 
 		return pattern.test(value);
 	}, "Phone number must contain 10 digits");
+
+	$.validator.addMethod("startOfDay", function (value, element, param) {
+		var $endOfDay = $(param);
+
+		return parseFloat(value) < parseFloat($endOfDay.val());
+	}, "Start of day must be before end of day");
 
 	$('#addSearchQueryForm, #updateUserForm').validate({
 		errorPlacement: function (error, element) {
@@ -82,6 +94,12 @@ $(window).load(function() {
 			},
 			'user.phoneNumber': {
 				phoneNumber: true
+			},
+			'notificationPreferences.endOfDay': {
+				endOfDay: '#notificationPreferences\\.startOfDay'
+			},
+			'notificationPreferences.startOfDay': {
+				startOfDay: '#notificationPreferences\\.endOfDay'
 			}
 		}
 	});
