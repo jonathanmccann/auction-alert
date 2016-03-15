@@ -70,9 +70,7 @@ public class MailUtil {
 
 		User user = UserUtil.getUserByUserId(userId);
 
-		setNotificationDeliveryMethod(
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				userId));
+		setNotificationDeliveryMethod(userId);
 
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
@@ -221,12 +219,9 @@ public class MailUtil {
 	}
 
 	private static void setNotificationDeliveryMethod(
-		NotificationPreferences notificationPreferences) {
+		NotificationPreferences notificationPreferences, DateTime dateTime) {
 
 		if (notificationPreferences.isBasedOnTime()) {
-			DateTime dateTime = new DateTime(
-				DateTimeZone.forID(notificationPreferences.getTimeZone()));
-
 			setNotificationDeliveryMethodsBasedOnTime(
 				notificationPreferences, dateTime);
 		}
@@ -237,6 +232,19 @@ public class MailUtil {
 
 		_log.debug("Sending via email: {}", _sendViaEmail);
 		_log.debug("Sending via text: {}", _sendViaText);
+	}
+
+	private static void setNotificationDeliveryMethod(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		NotificationPreferences notificationPreferences =
+			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
+				userId);
+
+		DateTime dateTime = new DateTime(
+			DateTimeZone.forID(notificationPreferences.getTimeZone()));
+
+		setNotificationDeliveryMethod(notificationPreferences, dateTime);
 	}
 
 	private static void setNotificationDeliveryMethodsBasedOnTime(
