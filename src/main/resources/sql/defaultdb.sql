@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS NotificationPreferences(
 	basedOnTime BOOLEAN,
 	startOfDay INT,
 	endOfDay INT,
-	timeZone VARCHAR(3),
+	timeZone VARCHAR(30),
 	weekdayDayEmailNotification BOOLEAN,
 	weekdayDayTextNotification BOOLEAN,
 	weekdayNightEmailNotification BOOLEAN,

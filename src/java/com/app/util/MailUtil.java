@@ -45,6 +45,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.joda.time.DateTime;
 
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +72,7 @@ public class MailUtil {
 
 		setNotificationDeliveryMethod(
 			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				userId),
-			new DateTime());
+				userId));
 
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
@@ -221,9 +221,12 @@ public class MailUtil {
 	}
 
 	private static void setNotificationDeliveryMethod(
-		NotificationPreferences notificationPreferences, DateTime dateTime) {
+		NotificationPreferences notificationPreferences) {
 
 		if (notificationPreferences.isBasedOnTime()) {
+			DateTime dateTime = new DateTime(
+				DateTimeZone.forID(notificationPreferences.getTimeZone()));
+
 			setNotificationDeliveryMethodsBasedOnTime(
 				notificationPreferences, dateTime);
 		}

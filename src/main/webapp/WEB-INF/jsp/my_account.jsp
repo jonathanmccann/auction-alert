@@ -72,16 +72,24 @@
 					<div>
 						<b>Customize notifications based on time:</b> <form:checkbox id="basedOnTime" path="notificationPreferences.basedOnTime" value="${notificationPreferences.basedOnTime}" /> <br>
 						<div id="basedOnTimeOptions">
-							<br> <b>Set times to specify day and night time frames:</b> <br>
+							<b>Set your current time zone:</b> <br>
+							Time Zone
+							<form:select path="notificationPreferences.timeZone" value="${notificationPreferences.timeZone}">
+								<form:options items="${timeZones}" />
+							</form:select>
+							<hr>
+
+							<b>Set times to specify day and night time frames:</b> <br>
 							Start of Day
 							<form:select path="notificationPreferences.startOfDay" value="${notificationPreferences.startOfDay}">
-								<form:options items="${hourList}" />
+								<form:options items="${hours}" />
 							</form:select> <br>
 							End of Day
 							<form:select path="notificationPreferences.endOfDay" value="${notificationPreferences.endOfDay}">
-								<form:options items="${hourList}" />
+								<form:options items="${hours}" />
 							</form:select>
 							<hr>
+
 							<b>Delivery method during time frames:</b>
 							<table>
 								<tr>

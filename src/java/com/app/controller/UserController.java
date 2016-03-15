@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +137,8 @@ public class UserController {
 
 		model.put("userDetails", userDetails);
 
-		populateHourList(model);
+		model.put("hours", _HOURS);
+		model.put("timeZones", _TIME_ZONES);
 
 		return "my_account";
 	}
@@ -156,22 +158,35 @@ public class UserController {
 
 		model.put("userDetails", userDetails);
 
-		populateHourList(model);
+		model.put("hours", _HOURS);
+		model.put("timeZones", _TIME_ZONES);
 
 		return "my_account";
 	}
 
-	private void populateHourList(Map<String, Object> model) {
-		List<Integer> hourList = new ArrayList<>();
-
-		for (int i = 1; i <= 24; i++) {
-			hourList.add(i);
-		}
-
-		model.put("hourList", hourList);
-	}
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		UserController.class);
+
+	private static final List<Integer> _HOURS = new ArrayList<Integer>() {
+		{
+			for (int i = 1; i <= 24; i++) {
+				add(i);
+			}
+		}
+	};
+
+	private static final Map<String, String> _TIME_ZONES =
+		new LinkedHashMap<String, String>() {
+			{
+				put("Pacific/Honolulu", "HST");
+				put("America/Anchorage", "AST");
+				put("America/Los_Angeles", "PST");
+				put("America/Denver", "MST");
+				put("America/Phoenix", "PNT");
+				put("America/Chicago", "CST");
+				put("America/New_York", "EST");
+				put("America/Indiana/Indianapolis", "IET");
+			}
+		};
 
 }
