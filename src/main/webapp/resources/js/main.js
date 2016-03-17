@@ -7,7 +7,7 @@ $(window).load(function() {
 		$content.slideToggle(500);
 	});
 
-	$("#user\\.emailAddress, #user\\.phoneNumber, #keywords, #minPrice, #maxPrice").tooltipster({
+	$("#user\\.emailAddress, #user\\.phoneNumber, #keywords, #maxPrice, #minPrice").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
@@ -25,18 +25,14 @@ $(window).load(function() {
 		return pattern.test(value);
 	}, "Price must have two decimal places");
 
-	$.validator.addMethod("greaterThan", function (value, element, param) {
-		var $min = $(param);
-
-		if ((value == 0) && ($min.val() == 0)) {
-			return true;
-		}
-
-		return parseFloat(value) > parseFloat($min.val());
-	}, "Max price must be greater than min price");
-
 	$.validator.addMethod("lessThan", function (value, element, param) {
 		var $min = $(param);
+
+		if (this.settings.onfocusout) {
+			$min.off(".validate-startOfDay").on("blur.validate-startOfDay", function () {
+				$(element).valid();
+			});
+		}
 
 		if ((value == 0) && ($min.val() == 0)) {
 			return true;
@@ -89,8 +85,7 @@ $(window).load(function() {
 				lessThan: '#maxPrice'
 			},
 			maxPrice: {
-				decimalPlaces: true,
-				greaterThan: '#minPrice'
+				decimalPlaces: true
 			},
 			'user.emailAddress': {
 				minlength: 3,
@@ -113,7 +108,6 @@ $(window).load(function() {
 		}
 		else {
 			$('#notificationPreferences\\.startOfDay').tooltipster('hide');
-			$('#notificationPreferences\\.endOfDay').tooltipster('hide');
 
 			$("#basedOnTimeOptions").hide();
 		}
