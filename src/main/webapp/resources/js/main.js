@@ -7,10 +7,16 @@ $(window).load(function() {
 		$content.slideToggle(500);
 	});
 
-	$("#user\\.emailAddress, #user\\.phoneNumber, #notificationPreferences\\.endOfDay, #notificationPreferences\\.startOfDay, #keywords, #minPrice, #maxPrice").tooltipster({
+	$("#user\\.emailAddress, #user\\.phoneNumber, #keywords, #minPrice, #maxPrice").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
+	});
+
+	$("#notificationPreferences\\.startOfDay").tooltipster({
+		trigger: 'custom',
+		onlyOne: false,
+		position: 'right'
 	});
 
 	$.validator.addMethod("decimalPlaces", function (value) {
@@ -18,12 +24,6 @@ $(window).load(function() {
 
 		return pattern.test(value);
 	}, "Price must have two decimal places");
-
-	$.validator.addMethod("endOfDay", function (value, element, param) {
-		var $startOfDay = $(param);
-
-		return parseFloat(value) > parseFloat($startOfDay.val());
-	}, "End of day must be after start of day");
 
 	$.validator.addMethod("greaterThan", function (value, element, param) {
 		var $min = $(param);
@@ -55,6 +55,12 @@ $(window).load(function() {
 
 	$.validator.addMethod("startOfDay", function (value, element, param) {
 		var $endOfDay = $(param);
+
+		if (this.settings.onfocusout) {
+			$endOfDay.off(".validate-startOfDay").on("blur.validate-startOfDay", function () {
+				$(element).valid();
+			});
+		}
 
 		return parseFloat(value) < parseFloat($endOfDay.val());
 	}, "Start of day must be before end of day");
@@ -94,9 +100,6 @@ $(window).load(function() {
 			},
 			'user.phoneNumber': {
 				phoneNumber: true
-			},
-			'notificationPreferences.endOfDay': {
-				endOfDay: '#notificationPreferences\\.startOfDay'
 			},
 			'notificationPreferences.startOfDay': {
 				startOfDay: '#notificationPreferences\\.endOfDay'
