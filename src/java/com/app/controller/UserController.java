@@ -167,13 +167,35 @@ public class UserController {
 	private static final Logger _log = LoggerFactory.getLogger(
 		UserController.class);
 
-	private static final List<Integer> _HOURS = new ArrayList<Integer>() {
-		{
-			for (int i = 1; i <= 24; i++) {
-				add(i);
+	private static final Map<Integer, String> _HOURS =
+		new LinkedHashMap<Integer, String>() {
+			{
+				put(1, "12 AM");
+				put(2, "1 AM");
+				put(3, "2 AM");
+				put(4, "3 AM");
+				put(5, "4 AM");
+				put(6, "5 AM");
+				put(7, "6 AM");
+				put(8, "7 AM");
+				put(9, "8 AM");
+				put(10, "9 AM");
+				put(11, "10 AM");
+				put(12, "11 AM");
+				put(13, "12 PM");
+				put(14, "1 PM");
+				put(15, "2 PM");
+				put(16, "3 PM");
+				put(17, "4 PM");
+				put(18, "5 PM");
+				put(19, "6 PM");
+				put(20, "7 PM");
+				put(21, "8 PM");
+				put(22, "9 PM");
+				put(23, "10 PM");
+				put(24, "11 PM");
 			}
-		}
-	};
+		};
 
 	private static final Map<String, String> _TIME_ZONES =
 		new LinkedHashMap<String, String>() {
