@@ -63,62 +63,62 @@
 				<hr>
 				<div>
 					<h3>Notification Details:</h3>
-					<div>
+
+					<b>Customize notifications based on time:</b> <form:checkbox id="basedOnTime" path="notificationPreferences.basedOnTime" value="${notificationPreferences.basedOnTime}" /> <br>
+
+					<div id="notificationOptions">
 						<b>Receive notifications via:</b> <br>
 						<form:checkbox label="Email" path="notificationPreferences.emailNotification" value="${notificationPreferences.emailNotification}" /> <br>
 						<form:checkbox label="Text" path="notificationPreferences.textNotification" value="${notificationPreferences.textNotification}" />
 					</div>
-					<hr>
-					<div>
-						<b>Customize notifications based on time:</b> <form:checkbox id="basedOnTime" path="notificationPreferences.basedOnTime" value="${notificationPreferences.basedOnTime}" /> <br>
-						<div id="basedOnTimeOptions">
-							<b>Set your current time zone:</b> <br>
-							Time Zone
-							<form:select path="notificationPreferences.timeZone" value="${notificationPreferences.timeZone}">
-								<form:options items="${timeZones}" />
-							</form:select>
-							<hr>
 
-							<b>Set times to specify day and night time frames:</b> <br>
-							Start of Day
-							<form:select path="notificationPreferences.startOfDay" value="${notificationPreferences.startOfDay}">
-								<form:options items="${hours}" />
-							</form:select> <br>
-							End of Day
-							<form:select path="notificationPreferences.endOfDay" value="${notificationPreferences.endOfDay}">
-								<form:options items="${hours}" />
-							</form:select>
-							<hr>
+					<div id="basedOnTimeOptions">
+						<b>Set your current time zone:</b> <br>
+						Time Zone
+						<form:select path="notificationPreferences.timeZone" value="${notificationPreferences.timeZone}">
+							<form:options items="${timeZones}" />
+						</form:select>
+						<hr>
 
-							<b>Delivery method during time frames:</b>
-							<table>
-								<tr>
-									<td></td>
-									<td>Email</td>
-									<td>Text</td>
-								</tr>
-								<tr>
-									<td>Weekday Day Notification</td>
-									<td><form:checkbox path="notificationPreferences.weekdayDayEmailNotification" value="${notificationPreferences.weekdayDayEmailNotification}" /></td>
-									<td><form:checkbox path="notificationPreferences.weekdayDayTextNotification" value="${notificationPreferences.weekdayDayTextNotification}" /></td>
-								</tr>
-								<tr>
-									<td>Weekday Night Notification</td>
-									<td><form:checkbox path="notificationPreferences.weekdayNightEmailNotification" value="${notificationPreferences.weekdayNightEmailNotification}" /></td>
-									<td><form:checkbox path="notificationPreferences.weekdayNightTextNotification" value="${notificationPreferences.weekdayNightTextNotification}" /></td>
-								</tr>
-								<tr>
-									<td>Weekend Day Notification</td>
-									<td><form:checkbox path="notificationPreferences.weekendDayEmailNotification" value="${notificationPreferences.weekendDayEmailNotification}" /></td>
-									<td><form:checkbox path="notificationPreferences.weekendDayTextNotification" value="${notificationPreferences.weekendDayTextNotification}" /></td>
-								</tr>
-								<tr>
-									<td>Weekend Night Notification</td>
-									<td><form:checkbox path="notificationPreferences.weekendNightEmailNotification" value="${notificationPreferences.weekendNightEmailNotification}" /></td>
-									<td><form:checkbox path="notificationPreferences.weekendNightTextNotification" value="${notificationPreferences.weekendNightTextNotification}" /></td>
-								</tr>
-							</table>
-						</div>
+						<b>Set times to specify day and night time frames:</b> <br>
+						Start of Day
+						<form:select path="notificationPreferences.startOfDay" value="${notificationPreferences.startOfDay}">
+							<form:options items="${hours}" />
+						</form:select> <br>
+						End of Day
+						<form:select path="notificationPreferences.endOfDay" value="${notificationPreferences.endOfDay}">
+							<form:options items="${hours}" />
+						</form:select>
+						<hr>
+
+						<b>Delivery method during time frames:</b>
+						<table>
+							<tr>
+								<td></td>
+								<td>Email</td>
+								<td>Text</td>
+							</tr>
+							<tr>
+								<td>Weekday Day Notification</td>
+								<td><form:checkbox path="notificationPreferences.weekdayDayEmailNotification" value="${notificationPreferences.weekdayDayEmailNotification}" /></td>
+								<td><form:checkbox path="notificationPreferences.weekdayDayTextNotification" value="${notificationPreferences.weekdayDayTextNotification}" /></td>
+							</tr>
+							<tr>
+								<td>Weekday Night Notification</td>
+								<td><form:checkbox path="notificationPreferences.weekdayNightEmailNotification" value="${notificationPreferences.weekdayNightEmailNotification}" /></td>
+								<td><form:checkbox path="notificationPreferences.weekdayNightTextNotification" value="${notificationPreferences.weekdayNightTextNotification}" /></td>
+							</tr>
+							<tr>
+								<td>Weekend Day Notification</td>
+								<td><form:checkbox path="notificationPreferences.weekendDayEmailNotification" value="${notificationPreferences.weekendDayEmailNotification}" /></td>
+								<td><form:checkbox path="notificationPreferences.weekendDayTextNotification" value="${notificationPreferences.weekendDayTextNotification}" /></td>
+							</tr>
+							<tr>
+								<td>Weekend Night Notification</td>
+								<td><form:checkbox path="notificationPreferences.weekendNightEmailNotification" value="${notificationPreferences.weekendNightEmailNotification}" /></td>
+								<td><form:checkbox path="notificationPreferences.weekendNightTextNotification" value="${notificationPreferences.weekendNightTextNotification}" /></td>
+							</tr>
+						</table>
 					</div>
 				</div>
 				<div>

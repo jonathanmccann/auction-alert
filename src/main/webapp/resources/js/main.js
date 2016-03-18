@@ -103,10 +103,14 @@ $(window).load(function() {
 	});
 
 	$('#basedOnTime').click(function() {
-		if( $(this).is(':checked')) {
+		if($(this).is(':checked')) {
+			$("#notificationOptions").hide();
+
 			$("#basedOnTimeOptions").show();
 		}
 		else {
+			$("#notificationOptions").show();
+
 			$('#notificationPreferences\\.startOfDay').tooltipster('hide');
 
 			$("#basedOnTimeOptions").hide();
@@ -125,7 +129,7 @@ $(window).load(function() {
 		var basedOnTime = $('#basedOnTime').is(':checked');
 
 		if (basedOnTime) {
-			$("#basedOnTimeOptions").show();
+			$("#notificationOptions").hide();
 		}
 		else {
 			$("#basedOnTimeOptions").hide();
