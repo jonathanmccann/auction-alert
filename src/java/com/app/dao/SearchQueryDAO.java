@@ -114,6 +114,22 @@ public class SearchQueryDAO {
 		}
 	}
 
+	public void deactivateSearchQuery(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deactivating search query ID: {}", searchQueryId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DEACTIVATE_SEARCH_QUERY_SQL)) {
+
+			preparedStatement.setBoolean(1, false);
+			preparedStatement.setInt(2, searchQueryId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	public void deleteSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -167,17 +183,17 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public List<SearchQuery> getSearchQueries(int userId, boolean muted)
+	public List<SearchQuery> getSearchQueries(int userId, boolean active)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting all search queries for userId: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_QUERIES_BY_USER_ID_AND_MUTED_SQL)) {
+				_GET_SEARCH_QUERIES_BY_USER_ID_AND_ACTIVE_SQL)) {
 
 			preparedStatement.setInt(1, userId);
-			preparedStatement.setBoolean(2, muted);
+			preparedStatement.setBoolean(2, active);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -234,22 +250,6 @@ public class SearchQueryDAO {
 			}
 
 			return searchQueryCount;
-		}
-	}
-
-	public void muteSearchQuery(int searchQueryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug("Muting search query ID: {}", searchQueryId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_MUTE_SEARCH_QUERY_SQL)) {
-
-			preparedStatement.setBoolean(1, true);
-			preparedStatement.setInt(2, searchQueryId);
-
-			preparedStatement.executeUpdate();
 		}
 	}
 
@@ -333,7 +333,7 @@ public class SearchQueryDAO {
 			resultSet.getBoolean("fixedPriceListing"));
 		searchQuery.setMaxPrice(resultSet.getDouble("maxPrice"));
 		searchQuery.setMinPrice(resultSet.getDouble("minPrice"));
-		searchQuery.setMuted(resultSet.getBoolean("muted"));
+		searchQuery.setActive(resultSet.getBoolean("active"));
 
 		return searchQuery;
 	}
@@ -355,7 +355,7 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(10, searchQuery.isFixedPriceListing());
 		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(12, searchQuery.getMinPrice());
-		preparedStatement.setBoolean(13, searchQuery.isMuted());
+		preparedStatement.setBoolean(13, searchQuery.isActive());
 	}
 
 	private static void populateUpdateSearchQueryPreparedStatement(
@@ -373,14 +373,14 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(9, searchQuery.isFixedPriceListing());
 		preparedStatement.setDouble(10, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(11, searchQuery.getMinPrice());
-		preparedStatement.setBoolean(12, searchQuery.isMuted());
+		preparedStatement.setBoolean(12, searchQuery.isActive());
 	}
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(userId, keywords, categoryId, " +
 			"searchDescription, freeShippingOnly, newCondition, " +
 				"usedCondition, unspecifiedCondition, auctionListing, " +
-					"fixedPriceListing, maxPrice, minPrice, muted) VALUES(?, " +
+					"fixedPriceListing, maxPrice, minPrice, active) VALUES(?, " +
 						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _ADD_SEARCH_QUERY_SQL =
@@ -398,8 +398,8 @@ public class SearchQueryDAO {
 	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_SQL =
 		"SELECT * FROM SearchQuery WHERE userId = ?";
 
-	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_AND_MUTED_SQL =
-		"SELECT * FROM SearchQuery WHERE userId = ? and muted = ?";
+	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_AND_ACTIVE_SQL =
+		"SELECT * FROM SearchQuery WHERE userId = ? and active = ?";
 
 	private static final String _GET_SEARCH_QUERY_COUNT_SQL =
 		"SELECT COUNT(*) FROM SearchQuery WHERE userId = ?";
@@ -407,15 +407,15 @@ public class SearchQueryDAO {
 	private static final String _GET_SEARCH_QUERY_SQL =
 		"SELECT * FROM SearchQuery WHERE searchQueryId = ?";
 
-	private static final String _MUTE_SEARCH_QUERY_SQL =
-		"UPDATE SearchQuery SET muted = ? WHERE searchQueryId = ?";
+	private static final String _DEACTIVATE_SEARCH_QUERY_SQL =
+		"UPDATE SearchQuery SET active = ? WHERE searchQueryId = ?";
 
 	private static final String _UPDATE_ADVANCED_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, " +
 			"searchDescription = ?, freeShippingOnly = ?, newCondition = ?, " +
 				"usedCondition = ?, unspecifiedCondition = ?, " +
 					"auctionListing = ?, fixedPriceListing = ?, maxPrice = ?, " +
-						"minPrice = ?, muted = ? WHERE searchQueryId = ?";
+						"minPrice = ?, active = ? WHERE searchQueryId = ?";
 
 	private static final String _UPDATE_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ? WHERE searchQueryId = ?";

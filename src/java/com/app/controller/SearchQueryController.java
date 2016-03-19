@@ -143,15 +143,15 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
-	@RequestMapping(value = "/mute_search_query", method = RequestMethod.POST)
-	public String muteSearchQuery(String[] searchQueryIds)
+	@RequestMapping(value = "/deactivate_search_query", method = RequestMethod.POST)
+	public String deactivateSearchQuery(String[] searchQueryIds)
 		throws DatabaseConnectionException, SQLException {
 
 		if (ValidatorUtil.isNotNull(searchQueryIds)) {
 			for (String searchQueryId : searchQueryIds) {
 				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
-				SearchQueryUtil.muteSearchQuery(searchQueryIdInteger);
+				SearchQueryUtil.deactivateSearchQuery(searchQueryIdInteger);
 			}
 		}
 

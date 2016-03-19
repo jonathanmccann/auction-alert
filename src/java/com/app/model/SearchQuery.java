@@ -43,8 +43,9 @@ public class SearchQuery {
 		boolean newCondition, boolean usedCondition,
 		boolean unspecifiedCondition, boolean auctionListing,
 		boolean fixedPriceListing, double minPrice, double maxPrice,
-		boolean muted) {
+		boolean active) {
 
+		_active = active;
 		_auctionListing = auctionListing;
 		_categoryId = categoryId;
 		_fixedPriceListing = fixedPriceListing;
@@ -52,7 +53,6 @@ public class SearchQuery {
 		_keywords = keywords;
 		_maxPrice = maxPrice;
 		_minPrice = minPrice;
-		_muted = muted;
 		_newCondition = newCondition;
 		_searchDescription = searchDescription;
 		_searchQueryId = searchQueryId;
@@ -97,8 +97,8 @@ public class SearchQuery {
 		return _freeShippingOnly;
 	}
 
-	public boolean isMuted() {
-		return _muted;
+	public boolean isActive() {
+		return _active;
 	}
 
 	public boolean isNewCondition() {
@@ -145,8 +145,8 @@ public class SearchQuery {
 		this._minPrice = minPrice;
 	}
 
-	public void setMuted(boolean muted) {
-		_muted = muted;
+	public void setActive(boolean active) {
+		_active = active;
 	}
 
 	public void setNewCondition(boolean newCondition) {
@@ -173,6 +173,7 @@ public class SearchQuery {
 		_userId = userId;
 	}
 
+	private boolean _active;
 	private boolean _auctionListing;
 	private String _categoryId;
 	private boolean _fixedPriceListing;
@@ -180,7 +181,6 @@ public class SearchQuery {
 	private String _keywords;
 	private double _maxPrice;
 	private double _minPrice;
-	private boolean _muted;
 	private boolean _newCondition;
 	private boolean _searchDescription;
 	private int _searchQueryId;

@@ -68,10 +68,10 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.getSearchQueries(userId);
 	}
 
-	public static List<SearchQuery> getSearchQueries(int userId, boolean muted)
+	public static List<SearchQuery> getSearchQueries(int userId, boolean active)
 		throws DatabaseConnectionException, SQLException {
 
-		return _searchQueryDAO.getSearchQueries(userId, muted);
+		return _searchQueryDAO.getSearchQueries(userId, active);
 	}
 
 	public static SearchQuery getSearchQuery(int searchQueryId)
@@ -100,10 +100,10 @@ public class SearchQueryUtil {
 		return false;
 	}
 
-	public static void muteSearchQuery(int searchQueryId)
+	public static void deactivateSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.muteSearchQuery(searchQueryId);
+		_searchQueryDAO.deactivateSearchQuery(searchQueryId);
 	}
 
 	public static void updateSearchQuery(SearchQuery searchQuery)

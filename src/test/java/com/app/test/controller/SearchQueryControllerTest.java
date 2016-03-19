@@ -261,20 +261,23 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testMuteSearchQuery() throws Exception {
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords");
+	public void testDeactivateSearchQuery() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, true);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		String[] searchQueryIds = new String[] { String.valueOf(searchQueryId) };
 
-		this.mockMvc.perform(post("/mute_search_query")
+		this.mockMvc.perform(post("/deactivate_search_query")
 			.param("searchQueryIds", searchQueryIds))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		Assert.assertTrue(searchQuery.isMuted());
+		Assert.assertFalse(searchQuery.isActive());
 	}
 
 	@Test
@@ -463,7 +466,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
-		Assert.assertFalse(searchQuery.isMuted());
+		Assert.assertFalse(searchQuery.isActive());
 
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/update_search_query");
@@ -477,7 +480,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
-		request.param("muted", "true");
+		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -505,7 +508,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertTrue(searchQuery.isMuted());
+		Assert.assertTrue(searchQuery.isActive());
 	}
 
 	@Test
@@ -528,7 +531,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
-		request.param("muted", "true");
+		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -557,7 +560,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertTrue(searchQuery.isMuted());
+		Assert.assertTrue(searchQuery.isActive());
 	}
 
 	@Test
@@ -580,7 +583,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
-		request.param("muted", "true");
+		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -609,7 +612,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertTrue(searchQuery.isMuted());
+		Assert.assertTrue(searchQuery.isActive());
 	}
 
 	@Test

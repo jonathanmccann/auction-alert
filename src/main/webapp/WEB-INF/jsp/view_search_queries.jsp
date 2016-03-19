@@ -48,7 +48,7 @@
 									<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
 								</div>
 								<div>
-									<input formaction="mute_search_query" type="submit" value="Mute Search Query" />
+									<input formaction="deactivate_search_query" type="submit" value="Deactivate Search Query" />
 								</div>
 							</div>
 						</c:otherwise>

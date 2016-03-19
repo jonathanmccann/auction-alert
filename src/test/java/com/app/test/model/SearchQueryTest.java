@@ -50,7 +50,7 @@ public class SearchQueryTest {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertFalse(searchQuery.isMuted());
+		Assert.assertFalse(searchQuery.isActive());
 	}
 
 	@Test
@@ -102,10 +102,10 @@ public class SearchQueryTest {
 	}
 
 	@Test
-	public void testIsMuted() {
-		_searchQuery.setMuted(true);
+	public void testIsActive() {
+		_searchQuery.setActive(true);
 
-		Assert.assertTrue(_searchQuery.isMuted());
+		Assert.assertTrue(_searchQuery.isActive());
 	}
 
 	@Test
