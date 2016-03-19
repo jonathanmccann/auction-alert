@@ -43,6 +43,7 @@
 		<div>
 			<form:form commandName="searchQuery" id="addSearchQueryForm">
 				<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
+				<form:input path="muted" type="hidden" value="${searchQuery.muted}" />
 
 				<fmt:formatNumber value="${searchQuery.minPrice}" pattern="0.00" var="minPrice" />
 				<fmt:formatNumber value="${searchQuery.maxPrice}" pattern="0.00" var="maxPrice" />
