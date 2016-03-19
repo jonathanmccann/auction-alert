@@ -94,6 +94,12 @@ public class SearchQueryUtil {
 		return false;
 	}
 
+	public static void muteSearchQuery(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_searchQueryDAO.muteSearchQuery(searchQueryId);
+	}
+
 	public static void updateSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 

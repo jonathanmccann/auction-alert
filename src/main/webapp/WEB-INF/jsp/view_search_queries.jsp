@@ -28,7 +28,7 @@
 	</head>
 	<body>
 		<div>
-			<form:form action="delete_search_query" commandName="searchQueryCheckboxes" method="post">
+			<form:form commandName="searchQueryCheckboxes" method="post">
 				<div>
 					<h2>Current Search Queries</h2>
 					<c:choose>
@@ -45,7 +45,10 @@
 							</c:forEach>
 							<div>
 								<div>
-									<input type="submit" value="Delete Search Query" />
+									<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
+								</div>
+								<div>
+									<input formaction="mute_search_query" type="submit" value="Mute Search Query" />
 								</div>
 							</div>
 						</c:otherwise>

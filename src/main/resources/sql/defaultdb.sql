@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS SearchQuery(
 	auctionListing BOOLEAN,
 	fixedPriceListing BOOLEAN,
 	minPrice DOUBLE,
-	maxPrice DOUBLE
+	maxPrice DOUBLE,
+	muted BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS SearchResult(

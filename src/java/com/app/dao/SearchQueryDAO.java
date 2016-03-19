@@ -213,6 +213,22 @@ public class SearchQueryDAO {
 		}
 	}
 
+	public void muteSearchQuery(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Muting search query ID: {}", searchQueryId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_MUTE_SEARCH_QUERY_SQL)) {
+
+			preparedStatement.setBoolean(1, true);
+			preparedStatement.setInt(2, searchQueryId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	public void updateSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
@@ -226,7 +242,7 @@ public class SearchQueryDAO {
 			populateUpdateSearchQueryPreparedStatement(
 				preparedStatement, searchQuery);
 
-			preparedStatement.setInt(12, searchQuery.getSearchQueryId());
+			preparedStatement.setInt(13, searchQuery.getSearchQueryId());
 
 			preparedStatement.executeUpdate();
 		}
@@ -293,6 +309,7 @@ public class SearchQueryDAO {
 			resultSet.getBoolean("fixedPriceListing"));
 		searchQuery.setMaxPrice(resultSet.getDouble("maxPrice"));
 		searchQuery.setMinPrice(resultSet.getDouble("minPrice"));
+		searchQuery.setMuted(resultSet.getBoolean("muted"));
 
 		return searchQuery;
 	}
@@ -314,6 +331,7 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(10, searchQuery.isFixedPriceListing());
 		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(12, searchQuery.getMinPrice());
+		preparedStatement.setBoolean(13, searchQuery.isMuted());
 	}
 
 	private static void populateUpdateSearchQueryPreparedStatement(
@@ -331,14 +349,15 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(9, searchQuery.isFixedPriceListing());
 		preparedStatement.setDouble(10, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(11, searchQuery.getMinPrice());
+		preparedStatement.setBoolean(12, searchQuery.isMuted());
 	}
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(userId, keywords, categoryId, " +
 			"searchDescription, freeShippingOnly, newCondition, " +
 				"usedCondition, unspecifiedCondition, auctionListing, " +
-					"fixedPriceListing, maxPrice, minPrice) VALUES(?, " +
-						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					"fixedPriceListing, maxPrice, minPrice, muted) VALUES(?, " +
+						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _ADD_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(userId, keywords) VALUES(?, ?)";
@@ -361,12 +380,15 @@ public class SearchQueryDAO {
 	private static final String _GET_SEARCH_QUERY_SQL =
 		"SELECT * FROM SearchQuery WHERE searchQueryId = ?";
 
+	private static final String _MUTE_SEARCH_QUERY_SQL =
+		"UPDATE SearchQuery SET muted = ? WHERE searchQueryId = ?";
+
 	private static final String _UPDATE_ADVANCED_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, " +
 			"searchDescription = ?, freeShippingOnly = ?, newCondition = ?, " +
 				"usedCondition = ?, unspecifiedCondition = ?, " +
 					"auctionListing = ?, fixedPriceListing = ?, maxPrice = ?, " +
-						"minPrice = ? WHERE searchQueryId = ?";
+						"minPrice = ?, muted = ? WHERE searchQueryId = ?";
 
 	private static final String _UPDATE_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ? WHERE searchQueryId = ?";

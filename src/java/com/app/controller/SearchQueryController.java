@@ -143,6 +143,21 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
+	@RequestMapping(value = "/mute_search_query", method = RequestMethod.POST)
+	public String muteSearchQuery(String[] searchQueryIds)
+		throws DatabaseConnectionException, SQLException {
+
+		if (ValidatorUtil.isNotNull(searchQueryIds)) {
+			for (String searchQueryId : searchQueryIds) {
+				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
+
+				SearchQueryUtil.muteSearchQuery(searchQueryIdInteger);
+			}
+		}
+
+		return "redirect:view_search_queries";
+	}
+
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
 	public String updateSearchQuery(
 			HttpServletRequest request, Map<String, Object> model)

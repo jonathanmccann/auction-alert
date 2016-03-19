@@ -53,7 +53,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testAddSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", true, true, true, true, true,
-			true, true, 5.00, 10.00);
+			true, true, 5.00, 10.00, true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -71,6 +71,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertTrue(searchQuery.isMuted());
 	}
 
 	@Test
@@ -99,7 +100,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testAddSearchQueryWithNormalizedValues() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", true, true, false, false, false,
-			false, false, 5.00, 10.00);
+			false, false, 5.00, 10.00, true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -117,6 +118,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertTrue(searchQuery.isMuted());
 	}
 
 	@Test
@@ -191,7 +193,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testUpdateSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00);
+			false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -209,10 +211,11 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertFalse(searchQuery.isMuted());
 
 		searchQuery = new SearchQuery(
 			searchQueryId, _USER_ID, "New test keywords", "101", true, true,
-			true, false, false, true, false, 5.00, 10.00);
+			true, false, false, true, false, 5.00, 10.00, true);
 
 		SearchQueryUtil.updateSearchQuery(searchQuery);
 
@@ -230,6 +233,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertTrue(searchQuery.isMuted());;
 	}
 
 	@Test
