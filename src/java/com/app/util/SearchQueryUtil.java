@@ -68,6 +68,12 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.getSearchQueries(userId);
 	}
 
+	public static List<SearchQuery> getSearchQueries(int userId, boolean muted)
+		throws DatabaseConnectionException, SQLException {
+
+		return _searchQueryDAO.getSearchQueries(userId, muted);
+	}
+
 	public static SearchQuery getSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 

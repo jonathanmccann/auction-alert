@@ -163,6 +163,27 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetSearchQueries() throws Exception {
+		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
+		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID, false);
+
+		Assert.assertEquals(2, searchQueries.size());
+
+		SearchQuery searchQuery = searchQueries.get(0);
+
+		searchQuery.setMuted(true);
+
+		SearchQueryUtil.updateSearchQuery(searchQuery);
+
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, false);
+
+		Assert.assertEquals(1, searchQueries.size());
+	}
+
+	@Test
 	public void testGetSearchQueryCount() throws Exception {
 		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
 		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");

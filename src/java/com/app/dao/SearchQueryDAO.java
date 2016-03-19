@@ -151,9 +151,33 @@ public class SearchQueryDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_QUERIES_SQL)) {
+				_GET_SEARCH_QUERIES_BY_USER_ID_SQL)) {
 
 			preparedStatement.setInt(1, userId);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			List<SearchQuery> searchQueries = new ArrayList<>();
+
+			while (resultSet.next()) {
+				searchQueries.add(createSearchQueryFromResultSet(resultSet));
+			}
+
+			return searchQueries;
+		}
+	}
+
+	public List<SearchQuery> getSearchQueries(int userId, boolean muted)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Getting all search queries for userId: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_SEARCH_QUERIES_BY_USER_ID_AND_MUTED_SQL)) {
+
+			preparedStatement.setInt(1, userId);
+			preparedStatement.setBoolean(2, muted);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -371,8 +395,11 @@ public class SearchQueryDAO {
 	private static final String _DELETE_SEARCH_QUERY_SQL =
 		"DELETE FROM SearchQuery WHERE searchQueryId = ?";
 
-	private static final String _GET_SEARCH_QUERIES_SQL =
+	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_SQL =
 		"SELECT * FROM SearchQuery WHERE userId = ?";
+
+	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_AND_MUTED_SQL =
+		"SELECT * FROM SearchQuery WHERE userId = ? and muted = ?";
 
 	private static final String _GET_SEARCH_QUERY_COUNT_SQL =
 		"SELECT COUNT(*) FROM SearchQuery WHERE userId = ?";
