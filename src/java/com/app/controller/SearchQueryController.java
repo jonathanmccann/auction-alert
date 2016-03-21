@@ -21,6 +21,8 @@ import com.app.util.CategoryUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
+import com.app.util.UserUtil;
+import com.app.util.ValidatorUtil;
 
 import java.sql.SQLException;
 
@@ -30,8 +32,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.app.util.UserUtil;
-import com.app.util.ValidatorUtil;
+import org.apache.commons.lang3.ArrayUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,8 +125,12 @@ public class SearchQueryController {
 	}
 
 	@RequestMapping(value = "/delete_search_query", method = RequestMethod.POST)
-	public String deleteSearchQuery(String[] searchQueryIds)
+	public String deleteSearchQuery(
+			String[] activeSearchQueryIds, String[] inactiveSearchQueryIds)
 		throws DatabaseConnectionException, SQLException {
+
+		String[] searchQueryIds = ArrayUtils.addAll(
+			activeSearchQueryIds, inactiveSearchQueryIds);
 
 		if (ValidatorUtil.isNotNull(searchQueryIds)) {
 			for (String searchQueryId : searchQueryIds) {
@@ -144,11 +150,11 @@ public class SearchQueryController {
 	}
 
 	@RequestMapping(value = "/deactivate_search_query", method = RequestMethod.POST)
-	public String deactivateSearchQuery(String[] searchQueryIds)
+	public String deactivateSearchQuery(String[] activeSearchQueryIds)
 		throws DatabaseConnectionException, SQLException {
 
-		if (ValidatorUtil.isNotNull(searchQueryIds)) {
-			for (String searchQueryId : searchQueryIds) {
+		if (ValidatorUtil.isNotNull(activeSearchQueryIds)) {
+			for (String searchQueryId : activeSearchQueryIds) {
 				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
 				SearchQueryUtil.deactivateSearchQuery(searchQueryIdInteger);
@@ -222,10 +228,14 @@ public class SearchQueryController {
 	public String viewSearchQueries(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
+		List<SearchQuery> activeSearchQueries =
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), true);
 
-		model.put("searchQueries", searchQueries);
+		List<SearchQuery> inactiveSearchQueries =
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), false);
+
+		model.put("activeSearchQueries", activeSearchQueries);
+		model.put("inactiveSearchQueries", inactiveSearchQueries);
 
 		return "view_search_queries";
 	}

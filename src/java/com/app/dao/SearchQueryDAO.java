@@ -186,7 +186,9 @@ public class SearchQueryDAO {
 	public List<SearchQuery> getSearchQueries(int userId, boolean active)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Getting all search queries for userId: {}", userId);
+		_log.debug(
+			"Getting all search queries for userId: {} and active: {}",
+			userId, active);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(

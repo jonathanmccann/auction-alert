@@ -31,28 +31,48 @@
 			<form:form commandName="searchQueryCheckboxes" method="post">
 				<div>
 					<h2>Current Search Queries</h2>
-					<c:choose>
-						<c:when test="${empty searchQueries}">
+					<div>
+						<b>Active Search Queries</b>
+						<c:choose>
+							<c:when test="${empty activeSearchQueries}">
+								<div>
+									There are currently no active search queries.
+								</div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${activeSearchQueries}" var="activeSearchQuery">
+									<div>
+										<input id="activeCheckboxes" name="activeSearchQueryIds" type="checkbox" value="${activeSearchQuery.searchQueryId}" /><label><a href="update_search_query?searchQueryId=${activeSearchQuery.searchQueryId}">${activeSearchQuery.keywords}</a></label>
+									</div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<div>
+						<b>Inactive Search Queries</b>
+						<c:choose>
+							<c:when test="${empty inactiveSearchQueries}">
+								<div>
+									There are currently no inactive search queries.
+								</div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${inactiveSearchQueries}" var="inactiveSearchQuery">
+									<div>
+										<input id="inactiveCheckboxes" name="inactiveSearchQueryIds" type="checkbox" value="${inactiveSearchQuery.searchQueryId}" /><label><a href="update_search_query?searchQueryId=${inactiveSearchQuery.searchQueryId}">${inactiveSearchQuery.keywords}</a></label>
+									</div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<c:if test="${(not empty activeSearchQueries) || (not empty inactiveSearchQueries)}">
+						<div>
 							<div>
-								There are currently no search queries.
+								<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
+								<input formaction="deactivate_search_query" type="submit" value="Deactivate Search Query" />
 							</div>
-						</c:when>
-						<c:otherwise>
-							<c:forEach items="${searchQueries}" var="searchQuery">
-								<div>
-									<input id="checkboxes" name="searchQueryIds" type="checkbox" value="${searchQuery.searchQueryId}" /><label><a href="update_search_query?searchQueryId=${searchQuery.searchQueryId}">${searchQuery.keywords}</a></label>
-								</div>
-							</c:forEach>
-							<div>
-								<div>
-									<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
-								</div>
-								<div>
-									<input formaction="deactivate_search_query" type="submit" value="Deactivate Search Query" />
-								</div>
-							</div>
-						</c:otherwise>
-					</c:choose>
+						</div>
+					</c:if>
 				</div>
 			</form:form>
 			</br>

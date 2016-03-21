@@ -43,7 +43,6 @@
 		<div>
 			<form:form commandName="searchQuery" id="addSearchQueryForm">
 				<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
-				<form:input path="active" type="hidden" value="${searchQuery.active}" />
 
 				<fmt:formatNumber value="${searchQuery.minPrice}" pattern="0.00" var="minPrice" />
 				<fmt:formatNumber value="${searchQuery.maxPrice}" pattern="0.00" var="maxPrice" />
@@ -52,9 +51,13 @@
 					<c:choose>
 						<c:when test="${isAdd}">
 							<h2>Add Search Query</h2>
+
+							<form:input path="active" type="hidden" value="true" />
 						</c:when>
 						<c:otherwise>
 							<h2>Update Search Query</h2>
+
+							<form:input path="active" type="hidden" value="${searchQuery.active}" />
 						</c:otherwise>
 					</c:choose>
 					<div>

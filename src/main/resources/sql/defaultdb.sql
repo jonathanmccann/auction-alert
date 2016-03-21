@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS SearchQuery(
 	fixedPriceListing BOOLEAN,
 	minPrice DOUBLE,
 	maxPrice DOUBLE,
-	active BOOLEAN NOT NULL DEFAULT 0
+	active BOOLEAN NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS SearchResult(
