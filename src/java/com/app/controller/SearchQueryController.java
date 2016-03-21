@@ -98,19 +98,12 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
 	public String addSearchQuery(
-			@ModelAttribute("searchQuery")SearchQuery searchQuery,
-			Map<String, Object> model)
+			@ModelAttribute("searchQuery")SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
 		int userId = UserUtil.getCurrentUserId();
 
 		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(userId)) {
-			_log.debug(
-				"Unable to add more search queries since it would exceed the " +
-					"total number of search queries allowed");
-
-			model.put("disabled", true);
-
 			return "redirect:add_search_query";
 		}
 
@@ -126,11 +119,6 @@ public class SearchQueryController {
 			}
 
 			SearchQueryUtil.addSearchQuery(searchQuery);
-
-			List<SearchQuery> searchQueries =
-				SearchQueryUtil.getSearchQueries(userId);
-
-			model.put("searchQueries", searchQueries);
 
 			return "redirect:view_search_queries";
 		}
@@ -212,8 +200,7 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.POST)
 	public String updateSearchQuery(
-			@ModelAttribute("searchQuery")SearchQuery searchQuery,
-			Map<String, Object> model)
+			@ModelAttribute("searchQuery")SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
 		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
@@ -226,11 +213,6 @@ public class SearchQueryController {
 			}
 
 			SearchQueryUtil.updateSearchQuery(searchQuery);
-
-			List<SearchQuery> searchQueries =
-				SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
-
-			model.put("searchQueries", searchQueries);
 
 			return "redirect:view_search_queries";
 		}

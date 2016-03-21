@@ -356,9 +356,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		this.mockMvc.perform(post("/add_search_query"))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:add_search_query"))
-			.andExpect(model().attributeDoesNotExist("searchQueries"))
 			.andExpect(model().attributeDoesNotExist("searchQueryCategories"))
-			.andExpect(model().attribute("disabled", true))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
@@ -373,7 +371,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		this.mockMvc.perform(request)
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"))
-			.andExpect(model().attributeExists("searchQueries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
@@ -408,7 +405,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		this.mockMvc.perform(request)
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"))
-			.andExpect(model().attributeExists("searchQueries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
@@ -441,7 +437,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
-		resultActions.andExpect(model().attributeExists("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
@@ -480,7 +475,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
-		resultActions.andExpect(model().attributeExists("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
@@ -552,7 +546,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
-		resultActions.andExpect(model().attributeExists("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
@@ -603,7 +596,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
-		resultActions.andExpect(model().attributeExists("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
@@ -655,7 +647,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
-		resultActions.andExpect(model().attributeExists("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
