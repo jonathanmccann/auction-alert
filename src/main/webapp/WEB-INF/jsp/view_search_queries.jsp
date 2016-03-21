@@ -48,6 +48,7 @@
 							</c:otherwise>
 						</c:choose>
 					</div>
+					<hr>
 					<div>
 						<b>Inactive Search Queries</b>
 						<c:choose>
@@ -66,11 +67,12 @@
 						</c:choose>
 					</div>
 					<c:if test="${(not empty activeSearchQueries) || (not empty inactiveSearchQueries)}">
+						<hr>
 						<div>
 							<div>
-								<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
 								<input formaction="activate_search_query" type="submit" value="Activate Search Query" />
 								<input formaction="deactivate_search_query" type="submit" value="Deactivate Search Query" />
+								<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
 							</div>
 						</div>
 					</c:if>
