@@ -67,9 +67,7 @@
 					<div>
 						<b>Mobile Operating System</b>
 						<form:select path="notificationPreferences.mobileOperatingSystem" value="${notificationPreferences.mobileOperatingSystem}">
-							<form:option value="Android" />
-							<form:option value="iOS" />
-							<form:option value="Other" />
+							<form:options items="${mobileOperatingSystems}" />
 						</form:select>
 					</div>
 				</div>

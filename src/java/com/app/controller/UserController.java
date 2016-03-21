@@ -14,6 +14,7 @@
 
 package com.app.controller;
 
+import com.app.constant.AccountConstants;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
@@ -39,9 +40,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.sql.SQLException;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -137,8 +135,11 @@ public class UserController {
 
 		model.put("userDetails", userDetails);
 
-		model.put("hours", _HOURS);
-		model.put("timeZones", _TIME_ZONES);
+		model.put("hours", AccountConstants.getHours());
+		model.put(
+			"mobileOperatingSystems",
+			AccountConstants.getMobileOperatingSystems());
+		model.put("timeZones", AccountConstants.getTimeZones());
 
 		return "my_account";
 	}
@@ -158,57 +159,16 @@ public class UserController {
 
 		model.put("userDetails", userDetails);
 
-		model.put("hours", _HOURS);
-		model.put("timeZones", _TIME_ZONES);
+		model.put("hours", AccountConstants.getHours());
+		model.put(
+			"mobileOperatingSystems",
+			AccountConstants.getMobileOperatingSystems());
+		model.put("timeZones", AccountConstants.getTimeZones());
 
 		return "my_account";
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		UserController.class);
-
-	private static final Map<Integer, String> _HOURS =
-		new LinkedHashMap<Integer, String>() {
-			{
-				put(1, "12 AM");
-				put(2, "1 AM");
-				put(3, "2 AM");
-				put(4, "3 AM");
-				put(5, "4 AM");
-				put(6, "5 AM");
-				put(7, "6 AM");
-				put(8, "7 AM");
-				put(9, "8 AM");
-				put(10, "9 AM");
-				put(11, "10 AM");
-				put(12, "11 AM");
-				put(13, "12 PM");
-				put(14, "1 PM");
-				put(15, "2 PM");
-				put(16, "3 PM");
-				put(17, "4 PM");
-				put(18, "5 PM");
-				put(19, "6 PM");
-				put(20, "7 PM");
-				put(21, "8 PM");
-				put(22, "9 PM");
-				put(23, "10 PM");
-				put(24, "11 PM");
-			}
-		};
-
-	private static final Map<String, String> _TIME_ZONES =
-		new LinkedHashMap<String, String>() {
-			{
-				put("Pacific/Honolulu", "HST");
-				put("America/Anchorage", "AST");
-				put("America/Los_Angeles", "PST");
-				put("America/Denver", "MST");
-				put("America/Phoenix", "PNT");
-				put("America/Chicago", "CST");
-				put("America/New_York", "EST");
-				put("America/Indiana/Indianapolis", "IET");
-			}
-		};
 
 }

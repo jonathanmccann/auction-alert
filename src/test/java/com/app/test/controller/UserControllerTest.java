@@ -88,6 +88,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("userDetails"));
 		resultActions.andExpect(model().attributeExists("hours"));
+		resultActions.andExpect(
+			model().attributeExists("mobileOperatingSystems"));
 		resultActions.andExpect(model().attributeExists("timeZones"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("duplicateEmailAddressException"));
@@ -136,6 +138,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("userDetails"));
 		resultActions.andExpect(model().attributeExists("hours"));
+		resultActions.andExpect(
+			model().attributeExists("mobileOperatingSystems"));
 		resultActions.andExpect(model().attributeExists("timeZones"));
 		resultActions.andExpect(
 			model().attributeExists("duplicateEmailAddressException"));
@@ -155,6 +159,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("userDetails"));
 		resultActions.andExpect(model().attributeExists("hours"));
+		resultActions.andExpect(
+			model().attributeExists("mobileOperatingSystems"));
 		resultActions.andExpect(model().attributeExists("timeZones"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("duplicateEmailAddressException"));
@@ -178,6 +184,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("userDetails"));
 		resultActions.andExpect(model().attributeExists("hours"));
+		resultActions.andExpect(
+			model().attributeExists("mobileOperatingSystems"));
 		resultActions.andExpect(model().attributeExists("timeZones"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("duplicateEmailAddressException"));
@@ -195,6 +203,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("userDetails"))
 			.andExpect(model().attributeExists("hours"))
+			.andExpect(model().attributeExists("mobileOperatingSystems"))
 			.andExpect(model().attributeExists("timeZones"));
 	}
 
