@@ -143,6 +143,8 @@ public class NotificationPreferencesDAO {
 			resultSet.getBoolean("weekendNightEmailNotification"));
 		notificationPreferences.setWeekendNightTextNotification(
 			resultSet.getBoolean("weekendNightTextNotification"));
+		notificationPreferences.setMobileOperatingSystem(
+			resultSet.getString("mobileOperatingSystem"));
 
 		return notificationPreferences;
 	}
@@ -178,6 +180,8 @@ public class NotificationPreferencesDAO {
 			14, notificationPreferences.isWeekendNightEmailNotification());
 		preparedStatement.setBoolean(
 			15, notificationPreferences.isWeekendNightTextNotification());
+		preparedStatement.setString(
+			16, notificationPreferences.getMobileOperatingSystem());
 	}
 
 	private static void populateUpdateNotificationPreferencesPreparedStatement(
@@ -210,7 +214,9 @@ public class NotificationPreferencesDAO {
 			13, notificationPreferences.isWeekendNightEmailNotification());
 		preparedStatement.setBoolean(
 			14, notificationPreferences.isWeekendNightTextNotification());
-		preparedStatement.setInt(15, notificationPreferences.getUserId());
+		preparedStatement.setString(
+			15, notificationPreferences.getMobileOperatingSystem());
+		preparedStatement.setInt(16, notificationPreferences.getUserId());
 	}
 
 	private static final String _ADD_NOTIFICATION_PREFERENCES =
@@ -219,8 +225,9 @@ public class NotificationPreferencesDAO {
 				"weekdayDayEmailNotification, weekdayDayTextNotification, " +
 					"weekdayNightEmailNotification, weekdayNightTextNotification, " +
 						"weekendDayEmailNotification, weekendDayTextNotification, " +
-							"weekendNightEmailNotification, weekendNightTextNotification) " +
-								"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+							"weekendNightEmailNotification, weekendNightTextNotification, " +
+								"mobileOperatingSystem) " +
+									"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _DELETE_NOTIFICATION_PREFERENCES_SQL =
 		"DELETE FROM NotificationPreferences WHERE userId = ?";
@@ -234,8 +241,8 @@ public class NotificationPreferencesDAO {
 				"timeZone = ?, weekdayDayEmailNotification = ?, weekdayDayTextNotification = ?, " +
 					"weekdayNightEmailNotification = ?, weekdayNightTextNotification = ?, " +
 						"weekendDayEmailNotification = ?, weekendDayTextNotification = ?, " +
-							"weekendNightEmailNotification = ?, weekendNightTextNotification = ? " +
-								"WHERE userId = ?";
+							"weekendNightEmailNotification = ?, weekendNightTextNotification = ?, " +
+								"mobileOperatingSystem = ? WHERE userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		NotificationPreferencesDAO.class);

@@ -65,6 +65,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setWeekendDayTextNotification(true);
 		notificationPreferences.setWeekendNightEmailNotification(true);
 		notificationPreferences.setWeekendNightTextNotification(true);
+		notificationPreferences.setMobileOperatingSystem("Android");
 
 		NotificationPreferencesUtil.addNotificationPreferences(
 			notificationPreferences);
@@ -96,6 +97,8 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 			notificationPreferences.isWeekendNightEmailNotification());
 		Assert.assertTrue(
 			notificationPreferences.isWeekendNightTextNotification());
+		Assert.assertEquals(
+			"Android", notificationPreferences.getMobileOperatingSystem());
 	}
 
 	@Test
@@ -118,6 +121,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setWeekendDayTextNotification(true);
 		notificationPreferences.setWeekendNightEmailNotification(true);
 		notificationPreferences.setWeekendNightTextNotification(true);
+		notificationPreferences.setMobileOperatingSystem("Android");
 
 		NotificationPreferencesUtil.addNotificationPreferences(
 			notificationPreferences);
@@ -136,6 +140,7 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setWeekendDayTextNotification(false);
 		notificationPreferences.setWeekendNightEmailNotification(false);
 		notificationPreferences.setWeekendNightTextNotification(false);
+		notificationPreferences.setMobileOperatingSystem("iOS");
 
 		NotificationPreferencesUtil.updateNotificationPreferences(
 			notificationPreferences);
@@ -167,6 +172,8 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 			notificationPreferences.isWeekendNightEmailNotification());
 		Assert.assertFalse(
 			notificationPreferences.isWeekendNightTextNotification());
+		Assert.assertEquals(
+			"iOS", notificationPreferences.getMobileOperatingSystem());
 	}
 
 }

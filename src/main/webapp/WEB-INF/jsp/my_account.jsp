@@ -62,6 +62,19 @@
 				</div>
 				<hr>
 				<div>
+					<h3>Mobile Details:</h3>
+
+					<div>
+						<b>Mobile Operating System</b>
+						<form:select path="notificationPreferences.mobileOperatingSystem" value="${notificationPreferences.mobileOperatingSystem}">
+							<form:option value="Android" />
+							<form:option value="iOS" />
+							<form:option value="Other" />
+						</form:select>
+					</div>
+				</div>
+				<hr>
+				<div>
 					<h3>Notification Details:</h3>
 
 					<b>Customize notifications based on time:</b> <form:checkbox id="basedOnTime" path="notificationPreferences.basedOnTime" value="${notificationPreferences.basedOnTime}" /> <br>
@@ -78,7 +91,8 @@
 						<form:select path="notificationPreferences.timeZone" value="${notificationPreferences.timeZone}">
 							<form:options items="${timeZones}" />
 						</form:select>
-						<hr>
+						<br>
+						<br>
 
 						<b>Set times to specify day and night time frames:</b> <br>
 						Start of Day
@@ -89,7 +103,8 @@
 						<form:select path="notificationPreferences.endOfDay" value="${notificationPreferences.endOfDay}">
 							<form:options items="${hours}" />
 						</form:select>
-						<hr>
+						<br>
+						<br>
 
 						<b>Delivery method during time frames:</b>
 						<table>
