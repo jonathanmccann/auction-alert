@@ -49,6 +49,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class SearchQueryController {
 
+	@RequestMapping(value = "/activate_search_query", method = RequestMethod.POST)
+	public String activateSearchQuery(String[] inactiveSearchQueryIds)
+		throws DatabaseConnectionException, SQLException {
+
+		if (ValidatorUtil.isNotNull(inactiveSearchQueryIds)) {
+			for (String searchQueryId : inactiveSearchQueryIds) {
+				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
+
+				SearchQueryUtil.activateSearchQuery(searchQueryIdInteger);
+			}
+		}
+
+		return "redirect:view_search_queries";
+	}
+
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
 	public String addSearchQuery(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {

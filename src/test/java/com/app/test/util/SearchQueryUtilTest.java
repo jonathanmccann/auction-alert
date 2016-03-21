@@ -31,6 +31,10 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 /**
  * @author Jonathan McCann
  */
@@ -47,6 +51,21 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@After
 	public void tearDown() throws Exception {
 		SearchQueryUtil.deleteSearchQueries(_USER_ID);
+	}
+
+	@Test
+	public void testActivateSearchQuery() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, false);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		SearchQueryUtil.activateSearchQuery(searchQueryId);
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertTrue(searchQuery.isActive());
 	}
 
 	@Test
@@ -122,6 +141,21 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testDeactivateSearchQuery() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, true);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		SearchQueryUtil.deactivateSearchQuery(searchQueryId);
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertFalse(searchQuery.isActive());
+	}
+
+	@Test
 	public void testDeleteSearchQueries() throws Exception {
 		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
 		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
@@ -168,13 +202,13 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID, false);
+			_USER_ID, true);
 
 		Assert.assertEquals(2, searchQueries.size());
 
 		SearchQuery searchQuery = searchQueries.get(0);
 
-		searchQuery.setActive(true);
+		searchQuery.setActive(false);
 
 		SearchQueryUtil.updateSearchQuery(searchQuery);
 

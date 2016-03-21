@@ -69,6 +69,7 @@
 						<div>
 							<div>
 								<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
+								<input formaction="activate_search_query" type="submit" value="Activate Search Query" />
 								<input formaction="deactivate_search_query" type="submit" value="Deactivate Search Query" />
 							</div>
 						</div>

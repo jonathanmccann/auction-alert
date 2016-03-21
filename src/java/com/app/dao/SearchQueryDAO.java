@@ -35,6 +35,22 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchQueryDAO {
 
+	public void activateSearchQuery(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Activating search query ID: {}", searchQueryId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DEACTIVATE_SEARCH_QUERY_SQL)) {
+
+			preparedStatement.setBoolean(1, true);
+			preparedStatement.setInt(2, searchQueryId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	public int addSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 

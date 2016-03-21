@@ -92,6 +92,28 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testActivateSearchQuery() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, false);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		String[] inactiveSearchQueryIds = new String[] {
+			String.valueOf(searchQueryId)
+		};
+
+		this.mockMvc.perform(post("/activate_search_query")
+			.param("inactiveSearchQueryIds", inactiveSearchQueryIds))
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"));
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertTrue(searchQuery.isActive());
+	}
+
+	@Test
 	public void testDeleteSearchQuery() throws Exception {
 		SearchQuery activeSearchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", false, false, false, false,
