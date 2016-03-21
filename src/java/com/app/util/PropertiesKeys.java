@@ -50,9 +50,6 @@ public class PropertiesKeys {
 	public static final String OUTBOUND_EMAIL_ADDRESS_PASSWORD =
 		"outbound.email.address.password";
 
-	public static final String RECIPIENT_MOBILE_OPERATING_SYSTEM =
-		"recipient.mobile.operating.system";
-
 	public static final String RECIPIENT_PHONE_CARRIER =
 		"recipient.phone.carrier";
 

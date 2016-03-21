@@ -36,6 +36,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.joda.time.DateTime;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,6 +53,16 @@ public class MailUtilTest extends BaseTestCase {
 		_classInstance = _clazz.newInstance();
 
 		setUpProperties();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		Field textTemplateField = _clazz.getDeclaredField("_textTemplate");
+
+		textTemplateField.setAccessible(true);
+
+		textTemplateField.set(null, null);
+		System.out.println(" = ");
 	}
 
 	@Test
@@ -85,12 +96,39 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetTextTemplate() throws Exception {
-		Method method = _clazz.getDeclaredMethod("getTextTemplate");
+	public void testGetAndroidTextTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"getTextTemplate", String.class);
 
 		method.setAccessible(true);
 
-		Template template = (Template)method.invoke(_classInstance);
+		Template template = (Template)method.invoke(_classInstance, "Android");
+
+		Assert.assertNotNull(template);
+		Assert.assertEquals("text_body_android.ftl", template.getName());
+	}
+
+	@Test
+	public void testGetiOSTextTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"getTextTemplate", String.class);
+
+		method.setAccessible(true);
+
+		Template template = (Template)method.invoke(_classInstance, "iOS");
+
+		Assert.assertNotNull(template);
+		Assert.assertEquals("text_body_ios.ftl", template.getName());
+	}
+
+	@Test
+	public void testGetTextTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"getTextTemplate", String.class);
+
+		method.setAccessible(true);
+
+		Template template = (Template)method.invoke(_classInstance, "Other");
 
 		Assert.assertNotNull(template);
 		Assert.assertEquals("text_body.ftl", template.getName());
@@ -148,9 +186,10 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testPopulateTextMessage() throws Exception {
+	public void testPopulateAndroidTextMessage() throws Exception {
 		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", List.class, String.class, Session.class);
+			"populateTextMessage", List.class, String.class, String.class,
+			Session.class);
 
 		populateTextMessageMethod.setAccessible(true);
 
@@ -174,7 +213,91 @@ public class MailUtilTest extends BaseTestCase {
 				_classInstance);
 
 		Message message = (Message)populateTextMessageMethod.invoke(
-			_classInstance, searchResults, "1234567890@txt.att.net",
+			_classInstance, searchResults, "1234567890@txt.att.net", "Android",
+			session);
+
+		Assert.assertEquals(
+			"itemTitle\neBay://item/view?id=1234\n", message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+	}
+
+	@Test
+	public void testPopulateiOSTextMessage() throws Exception {
+		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
+			"populateTextMessage", List.class, String.class, String.class,
+			Session.class);
+
+		populateTextMessageMethod.setAccessible(true);
+
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		Date endingTime = new Date();
+
+		SearchResult searchResult = new SearchResult(
+			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
+			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+
+		searchResults.add(searchResult);
+
+		Method authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
+
+		authenticateOutboundEmailAddressMethod.setAccessible(true);
+
+		Session session =
+			(Session)authenticateOutboundEmailAddressMethod.invoke(
+				_classInstance);
+
+		Message message = (Message)populateTextMessageMethod.invoke(
+			_classInstance, searchResults, "1234567890@txt.att.net", "iOS",
+			session);
+
+		Assert.assertEquals(
+			"itemTitle\nebay://launch?itm=1234\n", message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+	}
+
+	@Test
+	public void testPopulateTextMessage() throws Exception {
+		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
+			"populateTextMessage", List.class, String.class, String.class,
+			Session.class);
+
+		populateTextMessageMethod.setAccessible(true);
+
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		Date endingTime = new Date();
+
+		SearchResult searchResult = new SearchResult(
+			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
+			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+
+		searchResults.add(searchResult);
+
+		Method authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
+
+		authenticateOutboundEmailAddressMethod.setAccessible(true);
+
+		Session session =
+			(Session)authenticateOutboundEmailAddressMethod.invoke(
+				_classInstance);
+
+		Message message = (Message)populateTextMessageMethod.invoke(
+			_classInstance, searchResults, "1234567890@txt.att.net", "Other",
 			session);
 
 		Assert.assertEquals(

@@ -70,7 +70,11 @@ public class MailUtil {
 
 		User user = UserUtil.getUserByUserId(userId);
 
-		setNotificationDeliveryMethod(userId);
+		NotificationPreferences notificationPreferences =
+			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
+				userId);
+
+		setNotificationDeliveryMethod(notificationPreferences);
 
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
@@ -90,7 +94,9 @@ public class MailUtil {
 				if (_sendViaText) {
 					Message textMessage = populateTextMessage(
 						mapEntry.getValue(),
-						convertPhoneNumberToEmailAddress(user), session);
+						convertPhoneNumberToEmailAddress(user),
+						notificationPreferences.getMobileOperatingSystem(),
+						session);
 
 					Transport.send(textMessage);
 				}
@@ -134,7 +140,9 @@ public class MailUtil {
 		return _emailTemplate;
 	}
 
-	private static Template getTextTemplate() throws IOException {
+	private static Template getTextTemplate(
+		String mobileOperatingSystem) throws IOException {
+
 		if (null != _textTemplate) {
 			return _textTemplate;
 		}
@@ -145,13 +153,10 @@ public class MailUtil {
 
 		String template = "/text_body.ftl";
 
-		String recipientMobileOperatingSystem =
-			PropertiesValues.RECIPIENT_MOBILE_OPERATING_SYSTEM;
-
-		if ("iOS".equalsIgnoreCase(recipientMobileOperatingSystem)) {
+		if ("iOS".equalsIgnoreCase(mobileOperatingSystem)) {
 			template = "/text_body_ios.ftl";
 		}
-		else if ("Android".equalsIgnoreCase(recipientMobileOperatingSystem)) {
+		else if ("Android".equalsIgnoreCase(mobileOperatingSystem)) {
 			template = "/text_body_android.ftl";
 		}
 
@@ -204,7 +209,7 @@ public class MailUtil {
 
 	private static Message populateTextMessage(
 			List<SearchResult> searchResults, String recipientPhoneNumber,
-			Session session)
+			String mobileOperatingSystem, Session session)
 		throws Exception {
 
 		Message message = new MimeMessage(session);
@@ -213,7 +218,9 @@ public class MailUtil {
 			Message.RecipientType.CC,
 			new InternetAddress(recipientPhoneNumber));
 
-		populateMessage(null, searchResults, message, getTextTemplate());
+		populateMessage(
+			null, searchResults, message,
+			getTextTemplate(mobileOperatingSystem));
 
 		return message;
 	}
@@ -234,12 +241,9 @@ public class MailUtil {
 		_log.debug("Sending via text: {}", _sendViaText);
 	}
 
-	private static void setNotificationDeliveryMethod(int userId)
+	private static void setNotificationDeliveryMethod(
+			NotificationPreferences notificationPreferences)
 		throws DatabaseConnectionException, SQLException {
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				userId);
 
 		DateTime dateTime = new DateTime(
 			DateTimeZone.forID(notificationPreferences.getTimeZone()));
