@@ -50,20 +50,11 @@ public class PropertiesKeys {
 	public static final String OUTBOUND_EMAIL_ADDRESS_PASSWORD =
 		"outbound.email.address.password";
 
-	public static final String RECIPIENT_EMAIL_ADDRESSES =
-		"recipient.email.addresses";
-
 	public static final String RECIPIENT_MOBILE_OPERATING_SYSTEM =
 		"recipient.mobile.operating.system";
 
 	public static final String RECIPIENT_PHONE_CARRIER =
 		"recipient.phone.carrier";
-
-	public static final String RECIPIENT_PHONE_NUMBERS =
-		"recipient.phone.numbers";
-
-	public static final String SEND_NOTIFICATIONS_BASED_ON_TIME =
-		"send.notifications.based.on.time";
 
 	public static final String TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		"total.number.of.previous.search.result.ids";

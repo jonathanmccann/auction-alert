@@ -67,14 +67,7 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals("true", PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
 		Assert.assertEquals("smtp.gmail.com", PropertiesValues.MAIL_SMTP_HOST);
 		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
-		Assert.assertEquals(
-			"test@test.com,test2@test2.com",
-			PropertiesValues.RECIPIENT_EMAIL_ADDRESSES);
-		Assert.assertEquals(
-			"1234567890,2345678901", PropertiesValues.RECIPIENT_PHONE_NUMBERS);
 		Assert.assertEquals("AT&T", PropertiesValues.RECIPIENT_PHONE_CARRIER);
-		Assert.assertEquals(
-			true, PropertiesValues.SEND_NOTIFICATIONS_BASED_ON_TIME);
 		Assert.assertEquals(
 			1, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}

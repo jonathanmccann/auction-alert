@@ -67,10 +67,6 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 
-	public static final String RECIPIENT_EMAIL_ADDRESSES =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.RECIPIENT_EMAIL_ADDRESSES);
-
 	public static final String RECIPIENT_MOBILE_OPERATING_SYSTEM =
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.RECIPIENT_MOBILE_OPERATING_SYSTEM);
@@ -78,15 +74,6 @@ public class PropertiesValues {
 	public static final String RECIPIENT_PHONE_CARRIER =
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.RECIPIENT_PHONE_CARRIER);
-
-	public static final String RECIPIENT_PHONE_NUMBERS =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.RECIPIENT_PHONE_NUMBERS);
-
-	public static final boolean SEND_NOTIFICATIONS_BASED_ON_TIME =
-		Boolean.valueOf(
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesKeys.SEND_NOTIFICATIONS_BASED_ON_TIME));
 
 	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		Integer.parseInt(
