@@ -67,10 +67,6 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 
-	public static final String RECIPIENT_PHONE_CARRIER =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.RECIPIENT_PHONE_CARRIER);
-
 	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		Integer.parseInt(
 			PropertiesUtil.getConfigurationProperty(

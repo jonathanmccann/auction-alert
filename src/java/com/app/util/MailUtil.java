@@ -94,7 +94,8 @@ public class MailUtil {
 				if (_sendViaText) {
 					Message textMessage = populateTextMessage(
 						mapEntry.getValue(),
-						convertPhoneNumberToEmailAddress(user),
+						convertPhoneNumberToEmailAddress(
+							user, notificationPreferences),
 						notificationPreferences.getMobileOperatingSystem(),
 						session);
 
@@ -119,11 +120,12 @@ public class MailUtil {
 			});
 	}
 
-	private static String convertPhoneNumberToEmailAddress(User user) {
-		String phoneCarrierEmailSuffix = _carrierSuffixMap.get(
-			PropertiesValues.RECIPIENT_PHONE_CARRIER);
+	private static String convertPhoneNumberToEmailAddress(
+		User user, NotificationPreferences notificationPreferences) {
 
-		return user.getPhoneNumber() + phoneCarrierEmailSuffix;
+		return
+			user.getPhoneNumber() +
+				notificationPreferences.getMobileCarrierSuffix();
 	}
 
 	private static Template getEmailTemplate() throws IOException {
@@ -316,28 +318,11 @@ public class MailUtil {
 
 	private static final Logger _log = LoggerFactory.getLogger(MailUtil.class);
 
-	private static final Map<String, String> _carrierSuffixMap =
-		new HashMap<>();
 	private static final Configuration _configuration = new Configuration(
 		Configuration.VERSION_2_3_21);
 	private static Template _emailTemplate;
 	private static boolean _sendViaEmail = true;
 	private static boolean _sendViaText = true;
 	private static Template _textTemplate;
-
-	static {
-		_carrierSuffixMap.put("AT&T", "@txt.att.net");
-		_carrierSuffixMap.put("T-Mobile", "@tmomail.net");
-		_carrierSuffixMap.put("Verizon", "@vtext.com");
-		_carrierSuffixMap.put("Sprint", "@messaging.sprintpcs.com");
-		_carrierSuffixMap.put("Virgin Mobile", "@vmobl.com");
-		_carrierSuffixMap.put("Tracfone", "@mmst5.tracfone.com");
-		_carrierSuffixMap.put("Metro PCS", "@mymetropcs.com");
-		_carrierSuffixMap.put("Boost Mobile", "@myboostmobile.com");
-		_carrierSuffixMap.put("Cricket", "@sms.mycricket.com");
-		_carrierSuffixMap.put("Alltel", "@message.alltel.com");
-		_carrierSuffixMap.put("Ptel", "@ptel.com");
-		_carrierSuffixMap.put("U.S. Cellular", "@email.uscc.net");
-	}
 
 }

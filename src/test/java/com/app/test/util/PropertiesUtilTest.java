@@ -67,7 +67,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals("true", PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
 		Assert.assertEquals("smtp.gmail.com", PropertiesValues.MAIL_SMTP_HOST);
 		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
-		Assert.assertEquals("AT&T", PropertiesValues.RECIPIENT_PHONE_CARRIER);
 		Assert.assertEquals(
 			1, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}
