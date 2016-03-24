@@ -137,6 +137,8 @@ public class UserController {
 
 		model.put("hours", AccountConstants.getHours());
 		model.put(
+			"mobileCarrierSuffixes", AccountConstants.getMobileCarrierSuffixes());
+		model.put(
 			"mobileOperatingSystems",
 			AccountConstants.getMobileOperatingSystems());
 		model.put("timeZones", AccountConstants.getTimeZones());
@@ -160,6 +162,8 @@ public class UserController {
 		model.put("userDetails", userDetails);
 
 		model.put("hours", AccountConstants.getHours());
+		model.put(
+			"mobileCarrierSuffixes", AccountConstants.getMobileCarrierSuffixes());
 		model.put(
 			"mobileOperatingSystems",
 			AccountConstants.getMobileOperatingSystems());

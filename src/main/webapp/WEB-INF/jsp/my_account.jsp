@@ -64,10 +64,14 @@
 				<div>
 					<h3>Mobile Details:</h3>
 
-					<div>
-						<b>Mobile Operating System</b>
+					<div style="display: table">
+						Mobile Operating System
 						<form:select path="notificationPreferences.mobileOperatingSystem" value="${notificationPreferences.mobileOperatingSystem}">
 							<form:options items="${mobileOperatingSystems}" />
+						</form:select> <br>
+						Mobile Carrier
+						<form:select path="notificationPreferences.mobileCarrierSuffix" value="${notificationPreferences.mobileCarrierSuffix}">
+							<form:options items="${mobileCarrierSuffixes}" />
 						</form:select>
 					</div>
 				</div>

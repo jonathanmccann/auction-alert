@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS NotificationPreferences(
 	weekendDayTextNotification BOOLEAN,
 	weekendNightEmailNotification BOOLEAN,
 	weekendNightTextNotification BOOLEAN,
-	mobileOperatingSystem VARCHAR(30)
+	mobileOperatingSystem VARCHAR(30),
+	mobileCarrierSuffix VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS Release_(

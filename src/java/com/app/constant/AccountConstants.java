@@ -25,6 +25,10 @@ public class AccountConstants {
 		return _HOURS;
 	}
 
+	public static Map<String, String> getMobileCarrierSuffixes() {
+		return _MOBILE_CARRIER_SUFFIXES;
+	}
+
 	public static List<String> getMobileOperatingSystems() {
 		return _MOBILE_OPERATING_SYSTEMS;
 	}
@@ -60,6 +64,24 @@ public class AccountConstants {
 				put(22, "9 PM");
 				put(23, "10 PM");
 				put(24, "11 PM");
+			}
+		};
+
+	private static final Map<String, String> _MOBILE_CARRIER_SUFFIXES =
+		new LinkedHashMap<String, String>() {
+			{
+				put("@message.alltel.com", "Alltel");
+				put("@txt.att.net", "AT&T");
+				put("@myboostmobile.com", "Boost Mobile");
+				put("@sms.mycricket.com", "Cricket");
+				put("@mymetropcs.com", "Metro PCS");
+				put("@ptel.com", "Ptel");
+				put("@messaging.sprintpcs.com", "Sprint");
+				put("@tmomail.net", "T-Mobile");
+				put("@mmst5.tracfone.com", "Tracfone");
+				put("@email.uscc.net", "U.S. Cellular");
+				put("@vtext.com", "Verizon");
+				put("@vmobl.com", "Virgin Mobile");
 			}
 		};
 
