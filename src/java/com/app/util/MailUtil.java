@@ -74,13 +74,14 @@ public class MailUtil {
 			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
 				userId);
 
-		setNotificationDeliveryMethod(notificationPreferences);
+		boolean[] notificationDeliveryMethod = setNotificationDeliveryMethod(
+			notificationPreferences);
 
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
 					searchQueryResultMap.entrySet()) {
 
-				if (_sendViaEmail) {
+				if (notificationDeliveryMethod[0]) {
 					Message emailMessage = populateEmailMessage(
 						mapEntry.getKey(), mapEntry.getValue(),
 						user.getEmailAddress(),
@@ -91,7 +92,7 @@ public class MailUtil {
 					Transport.send(emailMessage);
 				}
 
-				if (_sendViaText) {
+				if (notificationDeliveryMethod[1]) {
 					Message textMessage = populateTextMessage(
 						mapEntry.getValue(),
 						convertPhoneNumberToEmailAddress(
@@ -227,34 +228,39 @@ public class MailUtil {
 		return message;
 	}
 
-	private static void setNotificationDeliveryMethod(
+	private static boolean[] setNotificationDeliveryMethod(
 		NotificationPreferences notificationPreferences, DateTime dateTime) {
+
+		boolean[] notificationDeliveryMethod = new boolean[2];
 
 		if (notificationPreferences.isBasedOnTime()) {
 			setNotificationDeliveryMethodsBasedOnTime(
-				notificationPreferences, dateTime);
+				notificationPreferences, dateTime, notificationDeliveryMethod);
 		}
 		else {
 			setNotificationDeliveryMethodsNotBasedOnTime(
-				notificationPreferences);
+				notificationPreferences, notificationDeliveryMethod);
 		}
 
-		_log.debug("Sending via email: {}", _sendViaEmail);
-		_log.debug("Sending via text: {}", _sendViaText);
+		_log.debug("Sending via email: {}", notificationDeliveryMethod[0]);
+		_log.debug("Sending via text: {}", notificationDeliveryMethod[1]);
+
+		return notificationDeliveryMethod;
 	}
 
-	private static void setNotificationDeliveryMethod(
+	private static boolean[] setNotificationDeliveryMethod(
 			NotificationPreferences notificationPreferences)
 		throws DatabaseConnectionException, SQLException {
 
 		DateTime dateTime = new DateTime(
 			DateTimeZone.forID(notificationPreferences.getTimeZone()));
 
-		setNotificationDeliveryMethod(notificationPreferences, dateTime);
+		return setNotificationDeliveryMethod(notificationPreferences, dateTime);
 	}
 
 	private static void setNotificationDeliveryMethodsBasedOnTime(
-		NotificationPreferences notificationPreferences, DateTime dateTime) {
+		NotificationPreferences notificationPreferences, DateTime dateTime,
+		boolean[] notificationDeliveryMethod) {
 
 		int hourOfDay = dateTime.getHourOfDay();
 		int dayOfWeek = dateTime.getDayOfWeek();
@@ -273,36 +279,39 @@ public class MailUtil {
 		}
 
 		if (isWeekday && isDaytime) {
-			_sendViaEmail =
+			notificationDeliveryMethod[0] =
 				notificationPreferences.isWeekdayDayEmailNotification();
-			_sendViaText =
+			notificationDeliveryMethod[1] =
 				notificationPreferences.isWeekdayDayTextNotification();
 		}
 		else if (isWeekday && !isDaytime) {
-			_sendViaEmail =
+			notificationDeliveryMethod[0] =
 				notificationPreferences.isWeekdayNightEmailNotification();
-			_sendViaText =
+			notificationDeliveryMethod[1] =
 				notificationPreferences.isWeekdayNightTextNotification();
 		}
 		else if (!isWeekday && isDaytime) {
-			_sendViaEmail =
+			notificationDeliveryMethod[0] =
 				notificationPreferences.isWeekendDayEmailNotification();
-			_sendViaText =
+			notificationDeliveryMethod[1] =
 				notificationPreferences.isWeekendDayTextNotification();
 		}
 		else {
-			_sendViaEmail =
+			notificationDeliveryMethod[0] =
 				notificationPreferences.isWeekendNightEmailNotification();
-			_sendViaText =
+			notificationDeliveryMethod[1] =
 				notificationPreferences.isWeekendNightTextNotification();
 		}
 	}
 
 	private static void setNotificationDeliveryMethodsNotBasedOnTime(
-		NotificationPreferences notificationPreferences) {
+		NotificationPreferences notificationPreferences,
+		boolean[] notificationDeliveryMethod) {
 
-		_sendViaEmail = notificationPreferences.isEmailNotification();
-		_sendViaText = notificationPreferences.isTextNotification();
+		notificationDeliveryMethod[0] =
+			notificationPreferences.isEmailNotification();
+		notificationDeliveryMethod[1] =
+			notificationPreferences.isTextNotification();
 	}
 
 	private static final ThreadLocal<DateFormat> _DATE_FORMAT =
@@ -321,8 +330,6 @@ public class MailUtil {
 	private static final Configuration _configuration = new Configuration(
 		Configuration.VERSION_2_3_21);
 	private static Template _emailTemplate;
-	private static boolean _sendViaEmail = true;
-	private static boolean _sendViaText = true;
 	private static Template _textTemplate;
 
 }

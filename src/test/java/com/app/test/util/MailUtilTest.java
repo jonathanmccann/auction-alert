@@ -485,18 +485,9 @@ public class MailUtilTest extends BaseTestCase {
 
 		method.setAccessible(true);
 
-		method.invoke(_classInstance, notificationPreferences, dateTime);
-
-		Field sendViaEmailField = _clazz.getDeclaredField("_sendViaEmail");
-		Field sendViaTextField = _clazz.getDeclaredField("_sendViaText");
-
-		sendViaEmailField.setAccessible(true);
-		sendViaTextField.setAccessible(true);
-
-		return new boolean[] {
-			(boolean)sendViaEmailField.get(_clazz),
-			(boolean)sendViaTextField.get(_clazz)
-		};
+		return
+			(boolean[])method.invoke(
+				_classInstance, notificationPreferences, dateTime);
 	}
 
 	private static Object _classInstance;
