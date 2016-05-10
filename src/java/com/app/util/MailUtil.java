@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,14 +94,17 @@ public class MailUtil {
 				}
 
 				if (notificationDeliveryMethod[1]) {
-					Message textMessage = populateTextMessage(
-						mapEntry.getValue(),
-						convertPhoneNumberToEmailAddress(
-							user, notificationPreferences),
-						notificationPreferences.getMobileOperatingSystem(),
-						session);
+					List<SearchResult> searchResults = mapEntry.getValue();
 
-					Transport.send(textMessage);
+					for (SearchResult searchResult : searchResults) {
+						Message textMessage = populateTextMessage(
+							searchResult, convertPhoneNumberToEmailAddress(
+								user, notificationPreferences),
+							notificationPreferences.getMobileOperatingSystem(),
+							session);
+
+						Transport.send(textMessage);
+					}
 				}
 			}
 		}
@@ -211,9 +215,13 @@ public class MailUtil {
 	}
 
 	private static Message populateTextMessage(
-			List<SearchResult> searchResults, String recipientPhoneNumber,
+			SearchResult searchResult, String recipientPhoneNumber,
 			String mobileOperatingSystem, Session session)
 		throws Exception {
+
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(searchResult);
 
 		Message message = new MimeMessage(session);
 

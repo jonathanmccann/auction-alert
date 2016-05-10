@@ -194,20 +194,16 @@ public class MailUtilTest extends BaseTestCase {
 	@Test
 	public void testPopulateAndroidTextMessage() throws Exception {
 		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", List.class, String.class, String.class,
-			Session.class);
+			"populateTextMessage", SearchResult.class, String.class,
+			String.class, Session.class);
 
 		populateTextMessageMethod.setAccessible(true);
-
-		List<SearchResult> searchResults = new ArrayList<>();
 
 		Date endingTime = new Date();
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
 			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
-
-		searchResults.add(searchResult);
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
@@ -219,7 +215,7 @@ public class MailUtilTest extends BaseTestCase {
 				_classInstance);
 
 		Message message = (Message)populateTextMessageMethod.invoke(
-			_classInstance, searchResults, "1234567890@txt.att.net", "Android",
+			_classInstance, searchResult, "1234567890@txt.att.net", "Android",
 			session);
 
 		Assert.assertEquals(
@@ -236,20 +232,16 @@ public class MailUtilTest extends BaseTestCase {
 	@Test
 	public void testPopulateiOSTextMessage() throws Exception {
 		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", List.class, String.class, String.class,
-			Session.class);
+			"populateTextMessage", SearchResult.class, String.class,
+			String.class, Session.class);
 
 		populateTextMessageMethod.setAccessible(true);
-
-		List<SearchResult> searchResults = new ArrayList<>();
 
 		Date endingTime = new Date();
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
 			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
-
-		searchResults.add(searchResult);
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
@@ -261,7 +253,7 @@ public class MailUtilTest extends BaseTestCase {
 				_classInstance);
 
 		Message message = (Message)populateTextMessageMethod.invoke(
-			_classInstance, searchResults, "1234567890@txt.att.net", "iOS",
+			_classInstance, searchResult, "1234567890@txt.att.net", "iOS",
 			session);
 
 		Assert.assertEquals(
@@ -278,20 +270,16 @@ public class MailUtilTest extends BaseTestCase {
 	@Test
 	public void testPopulateTextMessage() throws Exception {
 		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", List.class, String.class, String.class,
-			Session.class);
+			"populateTextMessage", SearchResult.class, String.class,
+			String.class, Session.class);
 
 		populateTextMessageMethod.setAccessible(true);
-
-		List<SearchResult> searchResults = new ArrayList<>();
 
 		Date endingTime = new Date();
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
 			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
-
-		searchResults.add(searchResult);
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
@@ -303,7 +291,7 @@ public class MailUtilTest extends BaseTestCase {
 				_classInstance);
 
 		Message message = (Message)populateTextMessageMethod.invoke(
-			_classInstance, searchResults, "1234567890@txt.att.net", "Other",
+			_classInstance, searchResult, "1234567890@txt.att.net", "Other",
 			session);
 
 		Assert.assertEquals(
