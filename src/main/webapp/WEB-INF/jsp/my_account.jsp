@@ -143,7 +143,8 @@
 				</div>
 			</form:form>
 			<div align="center">
-				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> | My Account
+				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
+				My Account | <a href="log_out">Log Out</a>
 			</div>
 		</div>
 	</body>

@@ -96,7 +96,7 @@ public class UserController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/log_out", method = RequestMethod.POST)
+	@RequestMapping(value = "/log_out", method = RequestMethod.GET)
 	public String logOut() {
 		Subject currentUser = SecurityUtils.getSubject();
 

@@ -124,10 +124,12 @@
 			<div align="center">
 				<c:choose>
 					<c:when test="${isAdd}">
-						Add Search Query | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> | <a href="my_account">My Account</a>
+						Add Search Query | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> | <a href="my_account">My Account</a> <br> <br>
+						<a href="my_account">My Account</a> | <a href="log_out">Log Out</a>
 					</c:when>
 					<c:otherwise>
-						<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> | <a href="my_account">My Account</a>
+						<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
+						<a href="my_account">My Account</a> | <a href="log_out">Log Out</a>
 					</c:otherwise>
 				</c:choose>
 			</div>
