@@ -190,7 +190,7 @@ public class MailUtilTest extends BaseTestCase {
 		internetAddresses[0] = new InternetAddress("test@test.com");
 
 		Assert.assertArrayEquals(
-			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
 	}
 
 	@Test
@@ -228,7 +228,7 @@ public class MailUtilTest extends BaseTestCase {
 		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
 
 		Assert.assertArrayEquals(
-			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
 	}
 
 	@Test
@@ -266,7 +266,7 @@ public class MailUtilTest extends BaseTestCase {
 		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
 
 		Assert.assertArrayEquals(
-			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
 	}
 
 	@Test
@@ -304,7 +304,7 @@ public class MailUtilTest extends BaseTestCase {
 		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
 
 		Assert.assertArrayEquals(
-			internetAddresses, message.getRecipients(Message.RecipientType.CC));
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
 	}
 
 	@Test
