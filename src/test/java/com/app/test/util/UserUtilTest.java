@@ -19,9 +19,8 @@ import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,15 +36,9 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserUtilTest extends BaseTestCase {
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		setUpDatabase();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		UserUtil.deleteUserByEmailAddress("test@test.com");
-		UserUtil.deleteUserByEmailAddress("test2@test.com");
 	}
 
 	@Test
@@ -117,7 +110,10 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
 		Assert.assertEquals("1234567890", user.getPhoneNumber());
 
-		UserUtil.updateUser(user.getUserId(), "test@test.com", "2345678901");
+		user.setEmailAddress("test@test.com");
+		user.setPhoneNumber("2345678901");
+
+		UserUtil.updateUser(user);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 

@@ -14,6 +14,7 @@
 
 package com.app.test.controller;
 
+import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.DatabaseUtil;
@@ -102,7 +103,12 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewSearchResultsWithSearchQuery() throws Exception {
-		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
 
 		this.mockMvc.perform(get("/view_search_query_results"))
 			.andExpect(status().isOk())
@@ -116,8 +122,12 @@ public class SearchResultControllerTest extends BaseTestCase {
 	public void testViewSearchResultsWithSearchQueryAndSearchResult()
 		throws Exception {
 
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,

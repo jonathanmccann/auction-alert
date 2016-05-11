@@ -117,29 +117,6 @@ public class SearchResultDAO {
 		}
 	}
 
-	public SearchResult getSearchResult(int searchResultId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug("Getting search result for ID: {}", searchResultId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SEARCH_RESULT_SQL)) {
-
-			preparedStatement.setInt(1, searchResultId);
-
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return createSearchResultFromResultSet(resultSet);
-			}
-			else {
-				throw new SQLException(
-					"No search result exists with ID: " + searchResultId);
-			}
-		}
-	}
-
 	private static SearchResult createSearchResultFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {

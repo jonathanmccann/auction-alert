@@ -34,18 +34,6 @@ public class ReleaseUtil {
 		_releaseDAO.addRelease(releaseName, version);
 	}
 
-	public static void deleteRelease(String releaseName)
-		throws DatabaseConnectionException, SQLException {
-
-		_releaseDAO.deleteRelease(releaseName);
-	}
-
-	public static void deleteReleases()
-		throws DatabaseConnectionException, SQLException {
-
-		_releaseDAO.deleteReleases();
-	}
-
 	public static String getReleaseVersion(String releaseName)
 		throws DatabaseConnectionException, SQLException {
 

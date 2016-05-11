@@ -52,22 +52,10 @@ public class CategoryUtil {
 		_categoryDAO.deleteCategories();
 	}
 
-	public static void deleteCategory(String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_categoryDAO.deleteCategory(categoryId);
-	}
-
 	public static List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
  		return _categoryDAO.getCategories();
-	}
-
-	public static Category getCategory(String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		return _categoryDAO.getCategory(categoryId);
 	}
 
 	public static void initializeCategories() throws Exception {

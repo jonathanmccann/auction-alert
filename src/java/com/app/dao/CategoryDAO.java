@@ -72,21 +72,6 @@ public class CategoryDAO {
 		}
 	}
 
-	public void deleteCategory(String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug("Deleting category ID: {}", categoryId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_CATEGORY_SQL)) {
-
-			preparedStatement.setString(1, categoryId);
-
-			preparedStatement.executeUpdate();
-		}
-	}
-
 	public List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
@@ -108,29 +93,6 @@ public class CategoryDAO {
 		}
 	}
 
-	public Category getCategory(String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug("Getting category ID: {}", categoryId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_CATEGORY_SQL)) {
-
-			preparedStatement.setString(1, categoryId);
-
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return createCategoryFromResultSet(resultSet);
-			}
-			else {
-				throw new SQLException(
-					"No category exists with category ID: " + categoryId);
-			}
-		}
-	}
-
 	private static Category createCategoryFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
@@ -149,13 +111,7 @@ public class CategoryDAO {
 	private static final String _DELETE_CATEGORIES_SQL =
 		"TRUNCATE TABLE Category";
 
-	private static final String _DELETE_CATEGORY_SQL =
-		"DELETE FROM Category WHERE categoryId = ?";
-
 	private static final String _GET_CATEGORIES_SQL = "SELECT * FROM Category";
-
-	private static final String _GET_CATEGORY_SQL =
-		"SELECT * FROM Category WHERE categoryId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryDAO.class);

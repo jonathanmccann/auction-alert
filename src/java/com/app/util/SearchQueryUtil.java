@@ -35,19 +35,6 @@ public class SearchQueryUtil {
 		_searchQueryDAO.activateSearchQuery(searchQueryId);
 	}
 
-	public static int addSearchQuery(int userId, String keywords)
-		throws DatabaseConnectionException, SQLException {
-
-		return _searchQueryDAO.addSearchQuery(userId, keywords);
-	}
-
-	public static int addSearchQuery(
-			int userId, String keywords, String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		return _searchQueryDAO.addSearchQuery(userId, keywords, categoryId);
-	}
-
 	public static int addSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
@@ -92,12 +79,6 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.getSearchQuery(searchQueryId);
 	}
 
-	public static int getSearchQueryCount(int userId)
-		throws DatabaseConnectionException, SQLException {
-
-		return _searchQueryDAO.getSearchQueryCount(userId);
-	}
-
 	public static boolean isExceedsTotalNumberOfSearchQueriesAllowed(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -118,20 +99,6 @@ public class SearchQueryUtil {
 		normalizeSearchQuery(searchQuery);
 
 		_searchQueryDAO.updateSearchQuery(searchQuery);
-	}
-
-	public static void updateSearchQuery(int searchQueryId, String keywords)
-		throws DatabaseConnectionException, SQLException {
-
-		_searchQueryDAO.updateSearchQuery(searchQueryId, keywords);
-	}
-
-	public static void updateSearchQuery(
-			int searchQueryId, String keywords, String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_searchQueryDAO.updateSearchQuery(
-			searchQueryId, keywords, categoryId);
 	}
 
 	@Autowired

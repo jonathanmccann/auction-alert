@@ -17,16 +17,12 @@ package com.app.test.util;
 import com.app.model.Category;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
-import com.app.util.PropertiesKeys;
 import com.app.util.ReleaseUtil;
 
-import com.app.util.eBayAPIUtil;
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.call.GetCategoriesCall;
 
 import java.lang.reflect.Method;
-
-import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +31,8 @@ import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,14 +54,11 @@ public class CategoryUtilTest extends BaseTestCase {
 		_classInstance = _clazz.newInstance();
 
 		setUpApiContext();
-		setUpDatabase();
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		CategoryUtil.deleteCategories();
-
-		ReleaseUtil.deleteRelease(_CATEGORY_RELEASE_NAME);
+	@Before
+	public void setUp() throws Exception {
+		setUpDatabase();
 	}
 
 	@Test
@@ -117,8 +110,8 @@ public class CategoryUtilTest extends BaseTestCase {
 		method.setAccessible(true);
 
 		Assert.assertFalse((boolean) method.invoke(_classInstance, ""));
-		Assert.assertFalse((boolean)method.invoke(_classInstance, "1"));
-		Assert.assertFalse((boolean)method.invoke(_classInstance, "100"));
+		Assert.assertFalse((boolean) method.invoke(_classInstance, "1"));
+		Assert.assertFalse((boolean) method.invoke(_classInstance, "100"));
 		Assert.assertTrue((boolean) method.invoke(_classInstance, "200"));
 	}
 
@@ -139,17 +132,6 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testDeleteCategory() throws Exception {
-		addCategory();
-
-		CategoryUtil.deleteCategory(_CATEGORY_ID);
-
-		List<Category> categories = CategoryUtil.getCategories();
-
-		Assert.assertEquals(0, categories.size());
-	}
-
-	@Test
 	public void testGetCategories() throws Exception {
 		addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
@@ -161,21 +143,6 @@ public class CategoryUtilTest extends BaseTestCase {
 		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(2, categories.size());
-	}
-
-	@Test
-	public void testGetCategory() throws Exception {
-		addCategory();
-
-		Category category = CategoryUtil.getCategory(_CATEGORY_ID);
-
-		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
-		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
-	}
-
-	@Test(expected = SQLException.class)
-	public void testGetNonExistentCategory() throws Exception {
-		CategoryUtil.getCategory(_CATEGORY_ID);
 	}
 
 	@Test

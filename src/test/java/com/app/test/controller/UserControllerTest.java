@@ -20,7 +20,6 @@ import com.app.test.BaseTestCase;
 import com.app.util.NotificationPreferencesUtil;
 
 import com.app.util.UserUtil;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -68,14 +67,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		NotificationPreferencesUtil.addNotificationPreferences(
 			new NotificationPreferences(_USER.getUserId()));
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		UserUtil.deleteUserByEmailAddress("test@test.com");
-
-		NotificationPreferencesUtil.deleteNotificationPreferencesByUserId(
-			_USER.getUserId());
 	}
 
 	@Test

@@ -23,8 +23,6 @@ import com.app.util.SearchResultUtil;
 
 import java.lang.reflect.Method;
 
-import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,20 +55,23 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		SearchResultUtil.deleteSearchQueryResults(1);
-		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(1);
+		SearchResultUtil.deleteSearchQueryResults(_SEARCH_QUERY_ID);
+		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
+			_SEARCH_QUERY_ID);
 	}
 
 	@Test
 	public void testAddSearchResult() throws Exception {
 		Date endingTime = new Date();
 
-		int searchResultId = addSearchResult("1234", endingTime);
+		addSearchResult("1234", endingTime);
 
-		SearchResult searchResult = SearchResultUtil.getSearchResult(
-			searchResultId);
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
-		Assert.assertEquals(1, searchResult.getSearchQueryId());
+		SearchResult searchResult = searchResults.get(0);
+
+		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
 		Assert.assertEquals(10.00, searchResult.getAuctionPrice(), 0);
@@ -91,13 +92,14 @@ public class SearchResultUtilTest extends BaseTestCase {
 		addSearchResult("2345", endingTime);
 
 		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(1);
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(2, searchResults.size());
 
-		SearchResultUtil.deleteSearchQueryResults(1);
+		SearchResultUtil.deleteSearchQueryResults(_SEARCH_QUERY_ID);
 
-		searchResults = SearchResultUtil.getSearchQueryResults(1);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(0, searchResults.size());
 	}
@@ -106,17 +108,21 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testDeleteSearchResult() throws Exception {
 		Date endingTime = new Date();
 
-		int firstSearchResultId = addSearchResult("1234", endingTime);
+		addSearchResult("1234", endingTime);
 		addSearchResult("2345", endingTime);
 
 		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(1);
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(2, searchResults.size());
 
-		SearchResultUtil.deleteSearchResult(firstSearchResultId);
+		SearchResult firstSearchResult = searchResults.get(0);
 
-		searchResults = SearchResultUtil.getSearchQueryResults(1);
+		SearchResultUtil.deleteSearchResult(
+			firstSearchResult.getSearchResultId());
+
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(1, searchResults.size());
 	}
@@ -125,16 +131,17 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testFilterSearchResultsWithCompletePreviousResults()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery(
+			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
 
 		Date endingTime = new Date();
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		addSearchResult("1234", endingTime);
 
-		SearchResult searchResult = SearchResultUtil.getSearchResult(
-			addSearchResult("1234", endingTime));
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
-		searchResults.add(searchResult);
+		SearchResult searchResult = searchResults.get(0);
 
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			searchResult.getSearchQueryId(), "1234");
@@ -154,7 +161,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testFilterSearchResultsWithNullNewSearchResults()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery(
+			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
 
 		Method method = _clazz.getDeclaredMethod(
 			"_filterSearchResults", SearchQuery.class, List.class);
@@ -171,23 +179,19 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testFilterSearchResultsWithPartialPreviousResults()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery(
+			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
 
 		Date endingTime = new Date();
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		addSearchResult("1234", endingTime);
+		addSearchResult("2345", endingTime);
 
-		SearchResult firstSearchResult = SearchResultUtil.getSearchResult(
-			addSearchResult("1234", endingTime));
-
-		SearchResult secondSearchResult = SearchResultUtil.getSearchResult(
-			addSearchResult("2345", endingTime));
-
-		searchResults.add(firstSearchResult);
-		searchResults.add(secondSearchResult);
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			firstSearchResult.getSearchQueryId(), "1234");
+			_SEARCH_QUERY_ID, "1234");
 
 		Method method = _clazz.getDeclaredMethod(
 			"_filterSearchResults", SearchQuery.class, List.class);
@@ -204,10 +208,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testAddNewResults() throws Exception {
 		Date endingTime = new Date();
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		addSearchResult("1234", endingTime);
 
-		searchResults.add(SearchResultUtil.getSearchResult(
-			addSearchResult("1234", endingTime)));
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Method method = _clazz.getDeclaredMethod("_addNewResults", List.class);
 
@@ -215,11 +219,12 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		method.invoke(_classInstance, searchResults);
 
-		searchResults = SearchResultUtil.getSearchQueryResults(1);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
 
 		SearchResult searchResult = searchResults.get(0);
 
-		Assert.assertEquals(1, searchResult.getSearchQueryId());
+		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
 		Assert.assertEquals(10.00, searchResult.getAuctionPrice(), 0);
@@ -233,7 +238,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			1,
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(1));
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
+				_SEARCH_QUERY_ID));
 	}
 
 	@Test
@@ -242,12 +248,12 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Date endingTime = new Date();
 
-		SearchResult searchResult = SearchResultUtil.getSearchResult(
-			addSearchResult("1234", endingTime));
+		addSearchResult("1234", endingTime);
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
-		searchResults.add(searchResult);
+		SearchResult searchResult = searchResults.get(0);
 
 		for (int i = 0; i < PropertiesValues.TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS; i++) {
 			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
@@ -256,7 +262,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			10,
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(1));
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
+				_SEARCH_QUERY_ID));
 
 		Method method = _clazz.getDeclaredMethod("_addNewResults", List.class);
 
@@ -264,11 +271,12 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		method.invoke(_classInstance, searchResults);
 
-		searchResults = SearchResultUtil.getSearchQueryResults(1);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
 
 		searchResult = searchResults.get(0);
 
-		Assert.assertEquals(1, searchResult.getSearchQueryId());
+		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
 		Assert.assertEquals(10.00, searchResult.getAuctionPrice(), 0);
@@ -282,10 +290,12 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			10,
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(1));
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
+				_SEARCH_QUERY_ID));
 
 		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
+				_SEARCH_QUERY_ID);
 
 		String latestSearchQueryPreviousResult =
 			searchQueryPreviousResults.get(9);
@@ -302,27 +312,19 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Date endingTime = new Date();
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		addSearchResult("1234", endingTime);
+		addSearchResult("2345", endingTime);
+		addSearchResult("3456", endingTime);
+		addSearchResult("4567", endingTime);
+		addSearchResult("5678", endingTime);
 
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("1234", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("2345", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("3456", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("4567", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("7890", endingTime)));
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		method.invoke(_classInstance, searchResults, 0);
 
-		searchResults = SearchResultUtil.getSearchQueryResults(1);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(5, searchResults.size());
 	}
@@ -336,27 +338,19 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Date endingTime = new Date();
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		addSearchResult("1234", endingTime);
+		addSearchResult("2345", endingTime);
+		addSearchResult("3456", endingTime);
+		addSearchResult("4567", endingTime);
+		addSearchResult("5678", endingTime);
 
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("1234", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("2345", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("3456", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("4567", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("7890", endingTime)));
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		method.invoke(_classInstance, searchResults, 3);
 
-		searchResults = SearchResultUtil.getSearchQueryResults(1);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(2, searchResults.size());
 	}
@@ -370,27 +364,19 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Date endingTime = new Date();
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		addSearchResult("1234", endingTime);
+		addSearchResult("2345", endingTime);
+		addSearchResult("3456", endingTime);
+		addSearchResult("4567", endingTime);
+		addSearchResult("5678", endingTime);
 
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("1234", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("2345", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("3456", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("4567", endingTime)));
-		searchResults.add(
-			SearchResultUtil.getSearchResult(
-				addSearchResult("7890", endingTime)));
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		method.invoke(_classInstance, searchResults, 5);
 
-		searchResults = SearchResultUtil.getSearchQueryResults(1);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(0, searchResults.size());
 	}
@@ -430,16 +416,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(0, searchResults.size());
 	}
 
-	@Test(expected = SQLException.class)
-	public void testGetNonExistentSearchResult() throws Exception {
-		SearchResultUtil.getSearchResult(1);
-	}
-
 	private static int addSearchResult(String itemId, Date endingTime)
 		throws Exception {
 
 		SearchResult searchResult = new SearchResult(
-			1, itemId, "First Item", 10.00, 14.99,
+			_SEARCH_QUERY_ID, itemId, "First Item", 10.00, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
 			endingTime, "Auction");
 
@@ -448,6 +429,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	private static Object _classInstance;
 	private static Class _clazz;
+	private static final int _SEARCH_QUERY_ID = 1;
 	private static final int _USER_ID = 1;
 
 }

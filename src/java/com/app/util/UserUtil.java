@@ -58,12 +58,6 @@ public class UserUtil {
 			passwordAndSalt.get(1));
 	}
 
-	public static void deleteUserByEmailAddress(String emailAddress)
-		throws DatabaseConnectionException, SQLException {
-
-		_userDAO.deleteUserByEmailAddress(emailAddress);
-	}
-
 	public static void deleteUserByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -102,18 +96,10 @@ public class UserUtil {
 				InvalidEmailAddressException, InvalidPhoneNumberException,
 					SQLException {
 
-		updateUser(
-			user.getUserId(), user.getEmailAddress(), user.getPhoneNumber());
-	}
+		int userId = user.getUserId();
 
-	public static void updateUser(
-			int userId, String emailAddress, String phoneNumber)
-		throws
-			DatabaseConnectionException, DuplicateEmailAddressException,
-				InvalidEmailAddressException, InvalidPhoneNumberException,
-					SQLException {
-
-		phoneNumber = sanitizePhoneNumber(phoneNumber);
+		String emailAddress = user.getEmailAddress();
+		String phoneNumber = sanitizePhoneNumber(user.getPhoneNumber());
 
 		validate(userId, emailAddress, phoneNumber);
 

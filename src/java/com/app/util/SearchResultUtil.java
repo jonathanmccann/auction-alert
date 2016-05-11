@@ -62,12 +62,6 @@ public class SearchResultUtil {
 		return _searchResultDAO.getSearchQueryResults(searchQueryId);
 	}
 
-	public static SearchResult getSearchResult(int searchResultId)
-		throws DatabaseConnectionException, SQLException {
-
-		return _searchResultDAO.getSearchResult(searchResultId);
-	}
-
 	public static void performSearch()
 		throws DatabaseConnectionException, SQLException {
 

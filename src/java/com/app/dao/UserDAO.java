@@ -61,21 +61,6 @@ public class UserDAO {
 		}
 	}
 
-	public void deleteUserByEmailAddress(String emailAddress)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug("Deleting user with email address: {}", emailAddress);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DELETE_USER_BY_EMAIL_ADDRESS_SQL)) {
-
-			preparedStatement.setString(1, emailAddress);
-
-			preparedStatement.executeUpdate();
-		}
-	}
-
 	public void deleteUserByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -191,9 +176,6 @@ public class UserDAO {
 	private static final String _ADD_USER_SQL =
 		"INSERT INTO User_(emailAddress, phoneNumber, password, salt) " +
 			"VALUES(?, ?, ?, ?)";
-
-	private static final String _DELETE_USER_BY_EMAIL_ADDRESS_SQL =
-		"DELETE FROM User_ WHERE emailAddress = ?";
 
 	private static final String _DELETE_USER_BY_USER_ID_SQL =
 		"DELETE FROM User_ WHERE userId = ?";

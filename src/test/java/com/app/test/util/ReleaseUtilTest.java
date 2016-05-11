@@ -14,16 +14,11 @@
 
 package com.app.test.util;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.test.BaseTestCase;
 import com.app.util.ReleaseUtil;
-import com.app.util.ValidatorUtil;
 
-import java.sql.SQLException;
-
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,14 +32,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ReleaseUtilTest extends BaseTestCase {
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		setUpDatabase();
-	}
-
-	@After
-	public void tearDown() throws DatabaseConnectionException, SQLException {
-		ReleaseUtil.deleteReleases();
 	}
 
 	@Test
@@ -62,40 +52,6 @@ public class ReleaseUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			"2.0", ReleaseUtil.getReleaseVersion("Test Release"));
-	}
-
-	@Test
-	public void testDeleteRelease() throws Exception {
-		ReleaseUtil.addRelease("Test Release", "1.0");
-
-		Assert.assertEquals(
-			"1.0", ReleaseUtil.getReleaseVersion("Test Release"));
-
-		ReleaseUtil.deleteRelease("Test Release");
-
-		Assert.assertTrue(
-			ValidatorUtil.isNull(
-				ReleaseUtil.getReleaseVersion("Test Release")));
-	}
-
-	@Test
-	public void testDeleteReleases() throws Exception {
-		ReleaseUtil.addRelease("First Test Release", "1.0");
-		ReleaseUtil.addRelease("Second Test Release", "2.0");
-
-		Assert.assertEquals(
-			"1.0", ReleaseUtil.getReleaseVersion("First Test Release"));
-		Assert.assertEquals(
-			"2.0", ReleaseUtil.getReleaseVersion("Second Test Release"));
-
-		ReleaseUtil.deleteReleases();
-
-		Assert.assertTrue(
-			ValidatorUtil.isNull(
-				ReleaseUtil.getReleaseVersion("First Test Release")));
-		Assert.assertTrue(
-			ValidatorUtil.isNull(
-				ReleaseUtil.getReleaseVersion("Second Test Release")));
 	}
 
 }

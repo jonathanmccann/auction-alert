@@ -237,7 +237,11 @@ public class MailUtil {
 	}
 
 	private static boolean[] setNotificationDeliveryMethod(
-		NotificationPreferences notificationPreferences, DateTime dateTime) {
+			NotificationPreferences notificationPreferences)
+		throws DatabaseConnectionException, SQLException {
+
+		DateTime dateTime = new DateTime(
+			DateTimeZone.forID(notificationPreferences.getTimeZone()));
 
 		boolean[] notificationDeliveryMethod = new boolean[2];
 
@@ -254,16 +258,6 @@ public class MailUtil {
 		_log.debug("Sending via text: {}", notificationDeliveryMethod[1]);
 
 		return notificationDeliveryMethod;
-	}
-
-	private static boolean[] setNotificationDeliveryMethod(
-			NotificationPreferences notificationPreferences)
-		throws DatabaseConnectionException, SQLException {
-
-		DateTime dateTime = new DateTime(
-			DateTimeZone.forID(notificationPreferences.getTimeZone()));
-
-		return setNotificationDeliveryMethod(notificationPreferences, dateTime);
 	}
 
 	private static void setNotificationDeliveryMethodsBasedOnTime(

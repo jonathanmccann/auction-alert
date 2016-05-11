@@ -36,6 +36,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.joda.time.DateTime;
 
+import org.joda.time.DateTimeUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -62,7 +63,8 @@ public class MailUtilTest extends BaseTestCase {
 		textTemplateField.setAccessible(true);
 
 		textTemplateField.set(null, null);
-		System.out.println(" = ");
+
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 
 	@Test
@@ -316,10 +318,8 @@ public class MailUtilTest extends BaseTestCase {
 		notificationPreferences.setEmailNotification(true);
 		notificationPreferences.setTextNotification(true);
 
-		DateTime dateTime = new DateTime();
-
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			notificationPreferences, dateTime);
+			notificationPreferences);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -341,8 +341,10 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_END_OF_DAY + 1);
 
+		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			notificationPreferences, dateTime);
+			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -364,8 +366,10 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY - 1);
 
+		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			notificationPreferences, dateTime);
+			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -387,8 +391,10 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(1).withHourOfDay(_START_OF_DAY + 1);
 
+		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			notificationPreferences, dateTime);
+			notificationPreferences);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertFalse(notificationDeliverMethods[1]);
@@ -410,8 +416,10 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(_SATURDAY).withHourOfDay(_END_OF_DAY + 1);
 
+		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			notificationPreferences, dateTime);
+			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -433,8 +441,10 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(_SATURDAY).withHourOfDay(_START_OF_DAY - 1);
 
+		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			notificationPreferences, dateTime);
+			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
 		Assert.assertTrue(notificationDeliverMethods[1]);
@@ -456,26 +466,26 @@ public class MailUtilTest extends BaseTestCase {
 		DateTime dateTime =
 			new DateTime().withDayOfWeek(_SATURDAY).withHourOfDay(_START_OF_DAY + 1);
 
+		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+
 		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
-			notificationPreferences, dateTime);
+			notificationPreferences);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertFalse(notificationDeliverMethods[1]);
 	}
 
 	private static boolean[] setNotificationDeliveryMethods(
-			NotificationPreferences notificationPreferences, DateTime dateTime)
+			NotificationPreferences notificationPreferences)
 		throws Exception {
 
 		Method method = _clazz.getDeclaredMethod(
-			"setNotificationDeliveryMethod", NotificationPreferences.class,
-			DateTime.class);
+			"setNotificationDeliveryMethod", NotificationPreferences.class);
 
 		method.setAccessible(true);
 
 		return
-			(boolean[])method.invoke(
-				_classInstance, notificationPreferences, dateTime);
+			(boolean[])method.invoke(_classInstance, notificationPreferences);
 	}
 
 	private static Object _classInstance;

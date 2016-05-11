@@ -197,8 +197,12 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchQueryWithNullSearchQueryIds() throws Exception {
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
@@ -258,8 +262,18 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void testGetAddSearchQueryExceedingTotalNumberOfQueriesAllows()
 		throws Exception {
 
-		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
-		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
+		SearchQuery firstSearchQuery = new SearchQuery();
+
+		firstSearchQuery.setUserId(_USER_ID);
+		firstSearchQuery.setKeywords("First test keywords");
+
+		SearchQuery secondSearchQuery = new SearchQuery();
+
+		secondSearchQuery.setUserId(_USER_ID);
+		secondSearchQuery.setKeywords("Second test keywords");
+
+		SearchQueryUtil.addSearchQuery(firstSearchQuery);
+		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		this.mockMvc.perform(get("/add_search_query"))
 			.andExpect(status().isOk())
@@ -286,8 +300,12 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		CategoryUtil.addCategories(categories);
 
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(
 			"/update_search_query");
@@ -350,8 +368,18 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void testPostAddSearchQueryExceedingTotalNumberOfQueriesAllows()
 		throws Exception {
 
-		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
-		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
+		SearchQuery firstSearchQuery = new SearchQuery();
+
+		firstSearchQuery.setUserId(_USER_ID);
+		firstSearchQuery.setKeywords("First test keywords");
+
+		SearchQuery secondSearchQuery = new SearchQuery();
+
+		secondSearchQuery.setUserId(_USER_ID);
+		secondSearchQuery.setKeywords("Second test keywords");
+
+		SearchQueryUtil.addSearchQuery(firstSearchQuery);
+		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		this.mockMvc.perform(post("/add_search_query"))
 			.andExpect(status().isFound())

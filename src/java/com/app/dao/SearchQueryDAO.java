@@ -77,59 +77,6 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public int addSearchQuery(int userId, String searchKeywords)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug(
-			"Adding new searchQuery for userId: {} with keywords: {}", userId,
-			searchKeywords);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_QUERY_SQL, Statement.RETURN_GENERATED_KEYS)) {
-
-			preparedStatement.setInt(1, userId);
-			preparedStatement.setString(2, searchKeywords);
-
-			preparedStatement.executeUpdate();
-
-			ResultSet resultSet = preparedStatement.getGeneratedKeys();
-
-			resultSet.next();
-
-			return resultSet.getInt(1);
-		}
-	}
-
-	public int addSearchQuery(
-			int userId, String searchKeywords, String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug(
-			"Adding new searchQuery for userId: {} with keywords: {} and " +
-				"category ID: {}",
-			userId, searchKeywords, categoryId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement =
-				connection.prepareStatement(
-					_ADD_SEARCH_QUERY_WITH_CATEGORY_SQL,
-					Statement.RETURN_GENERATED_KEYS)) {
-
-			preparedStatement.setInt(1, userId);
-			preparedStatement.setString(2, searchKeywords);
-			preparedStatement.setString(3, categoryId);
-
-			preparedStatement.executeUpdate();
-
-			ResultSet resultSet = preparedStatement.getGeneratedKeys();
-
-			resultSet.next();
-
-			return resultSet.getInt(1);
-		}
-	}
-
 	public void deactivateSearchQuery(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -290,44 +237,6 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public void updateSearchQuery(int searchQueryId, String keywords)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug(
-			"Updating search query ID: {} to keywords: {}", searchQueryId,
-			keywords);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_UPDATE_SEARCH_QUERY_SQL)) {
-
-			preparedStatement.setString(1, keywords);
-			preparedStatement.setInt(2, searchQueryId);
-
-			preparedStatement.executeUpdate();
-		}
-	}
-
-	public void updateSearchQuery(
-			int searchQueryId, String keywords, String categoryId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug(
-			"Updating search query ID: {} to keywords: {} with category ID: {}",
-			searchQueryId, keywords, categoryId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_UPDATE_SEARCH_QUERY_WITH_CATEGORY_SQL)) {
-
-			preparedStatement.setString(1, keywords);
-			preparedStatement.setString(2, categoryId);
-			preparedStatement.setInt(3, searchQueryId);
-
-			preparedStatement.executeUpdate();
-		}
-	}
-
 	private static SearchQuery createSearchQueryFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
@@ -401,12 +310,6 @@ public class SearchQueryDAO {
 					"fixedPriceListing, maxPrice, minPrice, active) VALUES(?, " +
 						"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	private static final String _ADD_SEARCH_QUERY_SQL =
-		"INSERT INTO SearchQuery(userId, keywords) VALUES(?, ?)";
-
-	private static final String _ADD_SEARCH_QUERY_WITH_CATEGORY_SQL =
-		"INSERT INTO SearchQuery(userId, keywords, categoryId) VALUES(?, ?, ?)";
-
 	private static final String _DELETE_SEARCH_QUERIES_SQL =
 		"DELETE FROM SearchQuery WHERE userId = ?";
 
@@ -434,13 +337,6 @@ public class SearchQueryDAO {
 				"usedCondition = ?, unspecifiedCondition = ?, " +
 					"auctionListing = ?, fixedPriceListing = ?, maxPrice = ?, " +
 						"minPrice = ?, active = ? WHERE searchQueryId = ?";
-
-	private static final String _UPDATE_SEARCH_QUERY_SQL =
-		"UPDATE SearchQuery SET keywords = ? WHERE searchQueryId = ?";
-
-	private static final String _UPDATE_SEARCH_QUERY_WITH_CATEGORY_SQL =
-		"UPDATE SearchQuery SET keywords = ?, categoryId = ? WHERE " +
-			"searchQueryId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryDAO.class);

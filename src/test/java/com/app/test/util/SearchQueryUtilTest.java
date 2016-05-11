@@ -95,10 +95,14 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddSearchQueryWithKeywords() throws Exception {
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords");
+		SearchQuery searchQuery = new SearchQuery();
 
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertNull(searchQuery.getCategoryId());
@@ -106,10 +110,15 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddSearchQueryWithKeywordsAndCategory() throws Exception {
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords", "100");
+		SearchQuery searchQuery = new SearchQuery();
 
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+		searchQuery.setCategoryId("100");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
@@ -157,8 +166,18 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchQueries() throws Exception {
-		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
-		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
+		SearchQuery firstSearchQuery = new SearchQuery();
+
+		firstSearchQuery.setUserId(_USER_ID);
+		firstSearchQuery.setKeywords("First test keywords");
+
+		SearchQuery secondSearchQuery = new SearchQuery();
+
+		secondSearchQuery.setUserId(_USER_ID);
+		secondSearchQuery.setKeywords("Second test keywords");
+
+		SearchQueryUtil.addSearchQuery(firstSearchQuery);
+		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID);
@@ -174,10 +193,20 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchQuery() throws Exception {
-		int firstSearchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords");
+		SearchQuery firstSearchQuery = new SearchQuery();
 
-		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
+		firstSearchQuery.setUserId(_USER_ID);
+		firstSearchQuery.setKeywords("First test keywords");
+
+		int firstSearchQueryId = SearchQueryUtil.addSearchQuery(
+			firstSearchQuery);
+
+		SearchQuery secondSearchQuery = new SearchQuery();
+
+		secondSearchQuery.setUserId(_USER_ID);
+		secondSearchQuery.setKeywords("Second test keywords");
+
+		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID);
@@ -198,8 +227,20 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetSearchQueries() throws Exception {
-		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
-		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
+		SearchQuery firstSearchQuery = new SearchQuery();
+
+		firstSearchQuery.setUserId(_USER_ID);
+		firstSearchQuery.setKeywords("First test keywords");
+		firstSearchQuery.setActive(true);
+
+		SearchQuery secondSearchQuery = new SearchQuery();
+
+		secondSearchQuery.setUserId(_USER_ID);
+		secondSearchQuery.setKeywords("Second test keywords");
+		secondSearchQuery.setActive(true);
+
+		SearchQueryUtil.addSearchQuery(firstSearchQuery);
+		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -218,17 +259,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetSearchQueryCount() throws Exception {
-		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
-		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
-
-		int numberOfSearchQueries = SearchQueryUtil.getSearchQueryCount(
-			_USER_ID);
-
-		Assert.assertEquals(2, numberOfSearchQueries);
-	}
-
-	@Test
 	public void testIsExceedsTotalNumberOfSearchQueriesAllowed()
 		throws Exception {
 
@@ -236,8 +266,18 @@ public class SearchQueryUtilTest extends BaseTestCase {
 			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
 				_USER_ID));
 
-		SearchQueryUtil.addSearchQuery(_USER_ID, "First test keywords");
-		SearchQueryUtil.addSearchQuery(_USER_ID, "Second test keywords");
+		SearchQuery firstSearchQuery = new SearchQuery();
+
+		firstSearchQuery.setUserId(_USER_ID);
+		firstSearchQuery.setKeywords("First test keywords");
+
+		SearchQuery secondSearchQuery = new SearchQuery();
+
+		secondSearchQuery.setUserId(_USER_ID);
+		secondSearchQuery.setKeywords("Second test keywords");
+
+		SearchQueryUtil.addSearchQuery(firstSearchQuery);
+		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		Assert.assertTrue(
 			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
@@ -289,45 +329,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertTrue(searchQuery.isActive());;
-	}
-
-	@Test
-	public void testUpdateSearchQueryWithKeywords() throws Exception {
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords");
-
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
-		Assert.assertNull(searchQuery.getCategoryId());
-
-		SearchQueryUtil.updateSearchQuery(searchQueryId, "New test keywords");
-
-		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		Assert.assertEquals("New test keywords", searchQuery.getKeywords());
-		Assert.assertNull(searchQuery.getCategoryId());
-	}
-
-	@Test
-	public void testUpdateSearchQueryWithKeywordsAndCategory()
-		throws Exception {
-
-		int searchQueryId = SearchQueryUtil.addSearchQuery(
-			_USER_ID, "First test keywords", "100");
-
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
-		Assert.assertEquals("100", searchQuery.getCategoryId());
-
-		SearchQueryUtil.updateSearchQuery(
-			searchQueryId, "New test keywords", "200");
-
-		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		Assert.assertEquals("New test keywords", searchQuery.getKeywords());
-		Assert.assertEquals("200", searchQuery.getCategoryId());
 	}
 
 	private static final int _USER_ID = 1;
