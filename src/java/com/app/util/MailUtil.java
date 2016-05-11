@@ -98,9 +98,8 @@ public class MailUtil {
 
 					for (SearchResult searchResult : searchResults) {
 						Message textMessage = populateTextMessage(
-							searchResult, convertPhoneNumberToEmailAddress(
-								user, notificationPreferences),
-							notificationPreferences.getMobileOperatingSystem(),
+							searchResult, user.getPhoneNumberEmailAddress(),
+							user.getMobileOperatingSystem(),
 							session);
 
 						Transport.send(textMessage);
@@ -123,14 +122,6 @@ public class MailUtil {
 						PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 				}
 			});
-	}
-
-	private static String convertPhoneNumberToEmailAddress(
-		User user, NotificationPreferences notificationPreferences) {
-
-		return
-			user.getPhoneNumber() +
-				notificationPreferences.getMobileCarrierSuffix();
 	}
 
 	private static Template getEmailTemplate() throws IOException {

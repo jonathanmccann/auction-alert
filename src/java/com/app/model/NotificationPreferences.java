@@ -30,14 +30,6 @@ public class NotificationPreferences {
 		return _endOfDay;
 	}
 
-	public String getMobileCarrierSuffix() {
-		return _mobileCarrierSuffix;
-	}
-
-	public String getMobileOperatingSystem() {
-		return _mobileOperatingSystem;
-	}
-
 	public int getStartOfDay() {
 		return _startOfDay;
 	}
@@ -104,14 +96,6 @@ public class NotificationPreferences {
 
 	public void setEndOfDay(int endOfDay) {
 		_endOfDay = endOfDay;
-	}
-
-	public void setMobileCarrierSuffix(String mobileCarrierSuffix) {
-		_mobileCarrierSuffix = mobileCarrierSuffix;
-	}
-
-	public void setMobileOperatingSystem(String mobileOperatingSystem) {
-		_mobileOperatingSystem = mobileOperatingSystem;
 	}
 
 	public void setStartOfDay(int startOfDay) {
@@ -181,8 +165,6 @@ public class NotificationPreferences {
 	private boolean _basedOnTime;
 	private boolean _emailNotification;
 	private int _endOfDay;
-	private String _mobileCarrierSuffix;
-	private String _mobileOperatingSystem;
 	private int _startOfDay;
 	private boolean _textNotification;
 	private String _timeZone;

@@ -66,11 +66,11 @@
 
 					<div style="display: table">
 						Mobile Operating System
-						<form:select path="notificationPreferences.mobileOperatingSystem" value="${notificationPreferences.mobileOperatingSystem}">
+						<form:select path="user.mobileOperatingSystem" value="${user.mobileOperatingSystem}">
 							<form:options items="${mobileOperatingSystems}" />
 						</form:select> <br>
 						Mobile Carrier
-						<form:select path="notificationPreferences.mobileCarrierSuffix" value="${notificationPreferences.mobileCarrierSuffix}">
+						<form:select path="user.mobileCarrierSuffix" value="${user.mobileCarrierSuffix}">
 							<form:options items="${mobileCarrierSuffixes}" />
 						</form:select>
 					</div>

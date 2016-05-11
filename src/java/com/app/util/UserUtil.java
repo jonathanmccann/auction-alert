@@ -100,10 +100,14 @@ public class UserUtil {
 
 		String emailAddress = user.getEmailAddress();
 		String phoneNumber = sanitizePhoneNumber(user.getPhoneNumber());
+		String mobileOperatingSystem = user.getMobileOperatingSystem();
+		String mobileCarrierSuffix = user.getMobileCarrierSuffix();
 
 		validate(userId, emailAddress, phoneNumber);
 
-		_userDAO.updateUser(userId, emailAddress, phoneNumber);
+		_userDAO.updateUser(
+			userId, emailAddress, phoneNumber, mobileOperatingSystem,
+			mobileCarrierSuffix);
 	}
 
 	private static List<String> generatePasswordAndSalt(

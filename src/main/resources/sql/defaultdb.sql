@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS User_(
 	userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	emailAddress VARCHAR(100) NOT NULL UNIQUE,
 	phoneNumber VARCHAR(12),
+	mobileOperatingSystem VARCHAR(30),
+	mobileCarrierSuffix VARCHAR(50),
 	password VARCHAR(128),
 	salt VARCHAR(128)
 );
@@ -63,9 +65,7 @@ CREATE TABLE IF NOT EXISTS NotificationPreferences(
 	weekendDayEmailNotification BOOLEAN,
 	weekendDayTextNotification BOOLEAN,
 	weekendNightEmailNotification BOOLEAN,
-	weekendNightTextNotification BOOLEAN,
-	mobileOperatingSystem VARCHAR(30),
-	mobileCarrierSuffix VARCHAR(50)
+	weekendNightTextNotification BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS Release_(

@@ -49,8 +49,28 @@ public class User {
 		_emailAddress = emailAddress;
 	}
 
+	public String getMobileCarrierSuffix() {
+		return _mobileCarrierSuffix;
+	}
+
+	public String getMobileOperatingSystem() {
+		return _mobileOperatingSystem;
+	}
+
 	public String getPhoneNumber() {
 		return _phoneNumber;
+	}
+
+	public String getPhoneNumberEmailAddress() {
+		return _phoneNumber + _mobileCarrierSuffix;
+	}
+
+	public void setMobileCarrierSuffix(String mobileCarrierSuffix) {
+		_mobileCarrierSuffix = mobileCarrierSuffix;
+	}
+
+	public void setMobileOperatingSystem(String mobileOperatingSystem) {
+		_mobileOperatingSystem = mobileOperatingSystem;
 	}
 
 	public void setPhoneNumber(String phoneNumber) {
@@ -75,6 +95,8 @@ public class User {
 
 	private int _userId;
 	private String _emailAddress;
+	private String _mobileCarrierSuffix;
+	private String _mobileOperatingSystem;
 	private String _phoneNumber;
 	private String _password;
 	private String _salt;

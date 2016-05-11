@@ -68,30 +68,6 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testConvertPhoneNumberToEmailAddress() throws Exception {
-		Method method = _clazz.getDeclaredMethod(
-			"convertPhoneNumberToEmailAddress", User.class,
-			NotificationPreferences.class);
-
-		method.setAccessible(true);
-
-		User user = new User();
-
-		user.setPhoneNumber("1234567890");
-
-		NotificationPreferences notificationPreferences =
-			new NotificationPreferences();
-
-		notificationPreferences.setMobileCarrierSuffix("@txt.att.net");
-
-		String phoneNumberEmailAddress = (String)method.invoke(
-			_classInstance, user, notificationPreferences);
-
-		Assert.assertEquals(
-			"1234567890@txt.att.net", phoneNumberEmailAddress);
-	}
-
-	@Test
 	public void testGetEmailTemplate() throws Exception {
 		Method method = _clazz.getDeclaredMethod("getEmailTemplate");
 

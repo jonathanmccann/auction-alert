@@ -112,6 +112,8 @@ public class UserUtilTest extends BaseTestCase {
 
 		user.setEmailAddress("test@test.com");
 		user.setPhoneNumber("2345678901");
+		user.setMobileOperatingSystem("Android");
+		user.setMobileCarrierSuffix("@txt.att.net");
 
 		UserUtil.updateUser(user);
 
@@ -120,6 +122,8 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertEquals("2345678901", user.getPhoneNumber());
+		Assert.assertEquals("Android", user.getMobileOperatingSystem());
+		Assert.assertEquals("@txt.att.net", user.getMobileCarrierSuffix());
 	}
 
 }

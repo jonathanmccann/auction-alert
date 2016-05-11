@@ -140,7 +140,9 @@ public class UserDAO {
 		}
 	}
 
-	public void updateUser(int userId, String emailAddress, String phoneNumber)
+	public void updateUser(
+			int userId, String emailAddress, String phoneNumber,
+			String mobileOperatingSystem, String mobileCarrierSuffix)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
@@ -153,7 +155,9 @@ public class UserDAO {
 
 			preparedStatement.setString(1, emailAddress);
 			preparedStatement.setString(2, phoneNumber);
-			preparedStatement.setInt(3, userId);
+			preparedStatement.setString(3, mobileOperatingSystem);
+			preparedStatement.setString(4, mobileCarrierSuffix);
+			preparedStatement.setInt(5, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -167,6 +171,10 @@ public class UserDAO {
 		user.setEmailAddress(resultSet.getString("emailAddress"));
 		user.setUserId(resultSet.getInt("userId"));
 		user.setPhoneNumber(resultSet.getString("phoneNumber"));
+		user.setMobileOperatingSystem(
+			resultSet.getString("mobileOperatingSystem"));
+		user.setMobileCarrierSuffix(
+			resultSet.getString("mobileCarrierSuffix"));
 		user.setPassword(resultSet.getString("password"));
 		user.setSalt(resultSet.getString("salt"));
 
@@ -190,7 +198,8 @@ public class UserDAO {
 		"SELECT userId FROM User_ ORDER BY userId";
 
 	private static final String _UPDATE_USER_SQL =
-		"UPDATE User_ SET emailAddress = ?, phoneNumber = ? WHERE userId = ?";
+		"UPDATE User_ SET emailAddress = ?, phoneNumber = ?, " +
+			"mobileOperatingSystem = ?, mobileCarrierSuffix = ? WHERE userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		UserDAO.class);

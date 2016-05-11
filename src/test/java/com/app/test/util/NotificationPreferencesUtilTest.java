@@ -65,8 +65,6 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setWeekendDayTextNotification(true);
 		notificationPreferences.setWeekendNightEmailNotification(true);
 		notificationPreferences.setWeekendNightTextNotification(true);
-		notificationPreferences.setMobileOperatingSystem("Android");
-		notificationPreferences.setMobileCarrierSuffix("@txt.att.net");
 
 		NotificationPreferencesUtil.addNotificationPreferences(
 			notificationPreferences);
@@ -98,10 +96,6 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 			notificationPreferences.isWeekendNightEmailNotification());
 		Assert.assertTrue(
 			notificationPreferences.isWeekendNightTextNotification());
-		Assert.assertEquals(
-			"Android", notificationPreferences.getMobileOperatingSystem());
-		Assert.assertEquals(
-			"@txt.att.net", notificationPreferences.getMobileCarrierSuffix());
 	}
 
 	@Test
@@ -124,8 +118,6 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setWeekendDayTextNotification(true);
 		notificationPreferences.setWeekendNightEmailNotification(true);
 		notificationPreferences.setWeekendNightTextNotification(true);
-		notificationPreferences.setMobileOperatingSystem("Android");
-		notificationPreferences.setMobileCarrierSuffix("@txt.att.net");
 
 		NotificationPreferencesUtil.addNotificationPreferences(
 			notificationPreferences);
@@ -144,8 +136,6 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 		notificationPreferences.setWeekendDayTextNotification(false);
 		notificationPreferences.setWeekendNightEmailNotification(false);
 		notificationPreferences.setWeekendNightTextNotification(false);
-		notificationPreferences.setMobileOperatingSystem("iOS");
-		notificationPreferences.setMobileCarrierSuffix("@vtext.com");
 
 		NotificationPreferencesUtil.updateNotificationPreferences(
 			notificationPreferences);
@@ -177,10 +167,6 @@ public class NotificationPreferencesUtilTest extends BaseTestCase {
 			notificationPreferences.isWeekendNightEmailNotification());
 		Assert.assertFalse(
 			notificationPreferences.isWeekendNightTextNotification());
-		Assert.assertEquals(
-			"iOS", notificationPreferences.getMobileOperatingSystem());
-		Assert.assertEquals(
-			"@vtext.com", notificationPreferences.getMobileCarrierSuffix());
 	}
 
 }
