@@ -183,7 +183,7 @@ public class MailUtil {
 		message.setFrom(new InternetAddress(emailFrom));
 
 		message.addRecipient(
-			Message.RecipientType.CC,
+			Message.RecipientType.TO,
 			new InternetAddress(recipientEmailAddress));
 
 		DateFormat dateFormat = _DATE_FORMAT.get();
@@ -226,7 +226,7 @@ public class MailUtil {
 		Message message = new MimeMessage(session);
 
 		message.addRecipient(
-			Message.RecipientType.CC,
+			Message.RecipientType.TO,
 			new InternetAddress(recipientPhoneNumber));
 
 		populateMessage(
