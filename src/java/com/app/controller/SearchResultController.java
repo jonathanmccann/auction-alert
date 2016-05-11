@@ -58,7 +58,7 @@ public class SearchResultController {
 		Map<String, List<SearchResult>> searchResultMap = new HashMap<>();
 
 		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), true);
 
 		_log.debug("Found {} search query results", searchQueries.size());
 
