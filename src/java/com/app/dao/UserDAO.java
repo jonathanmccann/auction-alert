@@ -29,11 +29,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+
 /**
  * @author Jonathan McCann
  */
 public class UserDAO {
 
+	@CacheEvict(value = "userIds", allEntries = true)
 	public User addUser(
 			String emailAddress, String password, String salt)
 		throws DatabaseConnectionException, SQLException {
@@ -59,6 +64,10 @@ public class UserDAO {
 		}
 	}
 
+	@Caching(evict = {
+		@CacheEvict(value = "userByUserId", key = "#userId"),
+		@CacheEvict(value = "userIds", allEntries = true)
+	})
 	public void deleteUserByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -96,6 +105,7 @@ public class UserDAO {
 		}
 	}
 
+	@Cacheable(value = "userByUserId", key = "#userId")
 	public User getUserByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -118,6 +128,7 @@ public class UserDAO {
 		}
 	}
 
+	@Cacheable(value = "userIds")
 	public List<Integer> getUserIds()
 		throws DatabaseConnectionException, SQLException {
 
@@ -138,6 +149,7 @@ public class UserDAO {
 		}
 	}
 
+	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUser(
 			int userId, String emailAddress, String phoneNumber,
 			String mobileOperatingSystem, String mobileCarrierSuffix)
