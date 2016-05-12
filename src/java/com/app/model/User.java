@@ -23,12 +23,10 @@ public class User {
 	}
 
 	public User(
-		int userId, String emailAddress, String phoneNumber, String password,
-		String salt) {
+		int userId, String emailAddress, String password, String salt) {
 
 		_userId = userId;
 		_emailAddress = emailAddress;
-		_phoneNumber = phoneNumber;
 		_password = password;
 		_salt = salt;
 	}

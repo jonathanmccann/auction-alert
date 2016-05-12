@@ -7,7 +7,7 @@ $(window).load(function() {
 		$content.slideToggle(500);
 	});
 
-	$("#user\\.emailAddress, #user\\.phoneNumber, #keywords, #maxPrice, #minPrice").tooltipster({
+	$("#emailAddress, #user\\.emailAddress, #user\\.phoneNumber, #keywords, #maxPrice, #minPrice, #password").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
@@ -61,7 +61,7 @@ $(window).load(function() {
 		return parseFloat(value) < parseFloat($endOfDay.val());
 	}, "Start of day must be before end of day");
 
-	$('#addSearchQueryForm, #updateUserForm').validate({
+	$('#addSearchQueryForm, #createAccountForm, #updateUserForm').validate({
 		errorPlacement: function (error, element) {
 			var lastError = $(element).data('lastError');
 			var newError = $(error).text();
@@ -77,6 +77,12 @@ $(window).load(function() {
 			$(element).tooltipster('hide');
 		},
 		rules: {
+			emailAddress: {
+				minlength: 3,
+				maxlength: 255,
+				required: true,
+				email: true
+			},
 			keywords: {
 				required: true
 			},
@@ -86,6 +92,9 @@ $(window).load(function() {
 			},
 			maxPrice: {
 				decimalPlaces: true
+			},
+			password: {
+				required: true
 			},
 			'user.emailAddress': {
 				minlength: 3,
@@ -115,6 +124,10 @@ $(window).load(function() {
 
 			$("#basedOnTimeOptions").hide();
 		}
+	});
+
+	$('#createAccountSubmit').click(function() {
+		$('#createAccountForm').valid();
 	});
 
 	$('#updateSearchQuerySubmit').click(function() {

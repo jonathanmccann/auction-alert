@@ -63,7 +63,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpDatabase();
 		setUpUserUtil();
 
-		_USER = UserUtil.addUser("test@test.com", "1234567890", "password");
+		_USER = UserUtil.addUser("test@test.com", "password");
 
 		NotificationPreferencesUtil.addNotificationPreferences(
 			new NotificationPreferences(_USER.getUserId()));
@@ -121,7 +121,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testUpdateMyAccountWithDuplicateEmailAddress()
 		throws Exception {
 
-		UserUtil.addUser("test2@test.com", "2345678901", "password");
+		UserUtil.addUser("test2@test.com", "password");
 
 		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
 

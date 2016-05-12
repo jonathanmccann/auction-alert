@@ -31,18 +31,32 @@
 		<div>
 			<h1>eBay Searcher</h1>
 			<shiro:guest>
-				<c:if test="${not empty authenticationError}">
-					${authenticationError}</br>
-				</c:if>
-				<form:form action="log_in" commandName="logIn" method="post">
-					<div>
-						<b>Email Address: </b><input id="emailAddress" name="emailAddress" /></br>
-						<b>Password: </b><input id="password" name="password" type="password" />
-					</div>
-					<div>
-						<input type="submit" value="Log In" />
-					</div>
-				</form:form>
+				<div style="float: left; width: 50%">
+					<h3>Returning Users</h3>
+
+					<c:if test="${not empty authenticationError}">
+						${authenticationError}</br>
+					</c:if>
+					<form:form action="log_in" commandName="logIn" method="post">
+						<div>
+							<b>Email Address: </b><input id="emailAddress" name="emailAddress" /></br>
+							<b>Password: </b><input id="password" name="password" type="password" />
+						</div>
+						<div>
+							<input type="submit" value="Log In" />
+						</div>
+					</form:form>
+				</div>
+				<div style="margin-left: 55%">
+					<h3>New Users</h3>
+
+					<form:form action="create_account" commandName="createAccount" method="get">
+						Register now
+						<div>
+							<input type="submit" value="Create Account" />
+						</div>
+					</form:form>
+				</div>
 			</shiro:guest>
 			<shiro:user>
 				<h3>View and update search queries and results</h3>

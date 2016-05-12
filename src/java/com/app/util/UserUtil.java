@@ -43,19 +43,18 @@ import java.util.List;
 public class UserUtil {
 
 	public static User addUser(
-			String emailAddress, String phoneNumber, String plainTextPassword)
-		throws Exception {
+			String emailAddress, String plainTextPassword)
+		throws
+			DatabaseConnectionException, DuplicateEmailAddressException,
+				InvalidEmailAddressException, SQLException {
 
-		phoneNumber = sanitizePhoneNumber(phoneNumber);
-
-		validate(0, emailAddress, phoneNumber);
+		validateEmailAddress(0, emailAddress);
 
 		List<String> passwordAndSalt = generatePasswordAndSalt(
 			plainTextPassword);
 
 		return _userDAO.addUser(
-			emailAddress, phoneNumber, passwordAndSalt.get(0),
-			passwordAndSalt.get(1));
+			emailAddress, passwordAndSalt.get(0), passwordAndSalt.get(1));
 	}
 
 	public static void deleteUserByUserId(int userId)

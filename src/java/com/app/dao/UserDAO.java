@@ -35,9 +35,8 @@ import org.slf4j.LoggerFactory;
 public class UserDAO {
 
 	public User addUser(
-			String emailAddress, String phoneNumber, String password,
-			String salt)
-		throws Exception {
+			String emailAddress, String password, String salt)
+		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Adding user with emailAddress: {}", emailAddress);
 
@@ -46,9 +45,8 @@ public class UserDAO {
 				_ADD_USER_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
 			preparedStatement.setString(1, emailAddress);
-			preparedStatement.setString(2, phoneNumber);
-			preparedStatement.setString(3, password);
-			preparedStatement.setString(4, salt);
+			preparedStatement.setString(2, password);
+			preparedStatement.setString(3, salt);
 
 			preparedStatement.executeUpdate();
 
@@ -57,7 +55,7 @@ public class UserDAO {
 			resultSet.next();
 
 			return new User(
-				resultSet.getInt(1), emailAddress, phoneNumber, password, salt);
+				resultSet.getInt(1), emailAddress, password, salt);
 		}
 	}
 
@@ -182,8 +180,7 @@ public class UserDAO {
 	}
 
 	private static final String _ADD_USER_SQL =
-		"INSERT INTO User_(emailAddress, phoneNumber, password, salt) " +
-			"VALUES(?, ?, ?, ?)";
+		"INSERT INTO User_(emailAddress, password, salt) VALUES(?, ?, ?)";
 
 	private static final String _DELETE_USER_BY_USER_ID_SQL =
 		"DELETE FROM User_ WHERE userId = ?";

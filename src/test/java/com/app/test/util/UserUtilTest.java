@@ -43,19 +43,18 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddAndGetUserByEmailAddress() throws Exception {
-		UserUtil.addUser("test@test.com", "1234567890", "password");
+		UserUtil.addUser("test@test.com", "password");
 
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
-		Assert.assertEquals("1234567890", user.getPhoneNumber());
 	}
 
 	@Test(expected=DuplicateEmailAddressException.class)
 	public void testAddUserWithDuplicateEmailAddress() throws Exception {
-		UserUtil.addUser("test@test.com", "1234567890", "password");
-		UserUtil.addUser("test@test.com", "2345678901", "updatedPassword");
+		UserUtil.addUser("test@test.com", "password");
+		UserUtil.addUser("test@test.com", "updatedPassword");
 	}
 
 	@Test
@@ -74,10 +73,8 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserIds() throws Exception {
-		User firstUser = UserUtil.addUser(
-			"test@test.com", "1234567890", "password");
-		User secondUser = UserUtil.addUser(
-			"test2@test.com", "2345678901", "password");
+		User firstUser = UserUtil.addUser("test@test.com", "password");
+		User secondUser = UserUtil.addUser("test2@test.com", "password");
 
 		List<Integer> userIds = UserUtil.getUserIds();
 
@@ -88,7 +85,7 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteUser() throws Exception {
-		UserUtil.addUser("test@test.com", "1234567890", "password");
+		UserUtil.addUser("test@test.com", "password");
 
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
@@ -104,7 +101,7 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateUser() throws Exception {
-		User user = UserUtil.addUser("update@test.com", "1234567890", "password");
+		User user = UserUtil.addUser("update@test.com", "password");
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());

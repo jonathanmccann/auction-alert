@@ -48,6 +48,49 @@ import java.util.Map;
 @Controller
 public class UserController {
 
+	@RequestMapping(value = "/create_account", method = RequestMethod.GET)
+	public String createAccount()
+		throws Exception {
+
+		return "create_account";
+	}
+
+	@RequestMapping(value = "/create_account", method = RequestMethod.POST)
+	public String createAccount(
+			String emailAddress, String password, Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		User user = null;
+
+		try {
+			user = UserUtil.addUser(emailAddress, password);
+		}
+		catch (DuplicateEmailAddressException deae) {
+			model.put(
+				"duplicateEmailAddressException",
+				"This email address already exists. Please try again.");
+
+			return "create_account";
+		}
+		catch (InvalidEmailAddressException ieae) {
+			model.put(
+				"invalidEmailAddressException",
+				"This email address is invalid. Please try again.");
+
+			return "create_account";
+		}
+
+		NotificationPreferences notificationPreferences =
+				new NotificationPreferences();
+
+		notificationPreferences.setUserId(user.getUserId());
+
+		NotificationPreferencesUtil.addNotificationPreferences(
+			notificationPreferences);
+
+		return logIn(emailAddress, password, model);
+	}
+
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
 	public String logIn(
 		String emailAddress, String password, Map<String, Object> model) {
