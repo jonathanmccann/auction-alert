@@ -26,11 +26,15 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+
 /**
  * @author Jonathan McCann
  */
 public class NotificationPreferencesDAO {
 
+	@CacheEvict(value = "notificationPreferences", allEntries = true)
 	public void addNotificationPreferences(
 			NotificationPreferences notificationPreferences)
 		throws DatabaseConnectionException, SQLException {
@@ -50,6 +54,7 @@ public class NotificationPreferencesDAO {
 		}
 	}
 
+	@CacheEvict(value = "notificationPreferences", allEntries = true)
 	public void deleteNotificationPreferencesByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -65,6 +70,7 @@ public class NotificationPreferencesDAO {
 		}
 	}
 
+	@Cacheable(value = "notificationPreferences", key = "#userId")
 	public NotificationPreferences getNotificationPreferencesByUserId(
 			int userId)
 		throws DatabaseConnectionException, SQLException {
@@ -91,6 +97,7 @@ public class NotificationPreferencesDAO {
 		}
 	}
 
+	@CacheEvict(value = "notificationPreferences", allEntries = true)
 	public void updateNotificationPreferences(
 			NotificationPreferences notificationPreferences)
 		throws DatabaseConnectionException, SQLException {
