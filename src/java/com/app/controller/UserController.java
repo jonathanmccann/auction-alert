@@ -154,8 +154,17 @@ public class UserController {
 		throws
 			DatabaseConnectionException, SQLException {
 
+		User user = userDetails.getUser();
+
+		if (user.getUserId() != UserUtil.getCurrentUserId()) {
+			return viewMyAccount(model);
+		}
+
 		try {
-			UserUtil.updateUser(userDetails.getUser());
+			UserUtil.updateUser(user);
+
+			NotificationPreferencesUtil.updateNotificationPreferences(
+				userDetails.getNotificationPreferences());
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
@@ -172,9 +181,6 @@ public class UserController {
 				"invalidPhoneNumberException",
 				"This phone number is invalid. Please try again.");
 		}
-
-		NotificationPreferencesUtil.updateNotificationPreferences(
-			userDetails.getNotificationPreferences());
 
 		model.put("userDetails", userDetails);
 
