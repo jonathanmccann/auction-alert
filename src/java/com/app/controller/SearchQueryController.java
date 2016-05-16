@@ -133,13 +133,18 @@ public class SearchQueryController {
 			for (String searchQueryId : searchQueryIds) {
 				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
-				SearchQueryUtil.deleteSearchQuery(searchQueryIdInteger);
-
-				SearchResultUtil.deleteSearchQueryResults(
+				SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
 					searchQueryIdInteger);
 
-				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
-					searchQueryIdInteger);
+				if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
+					SearchQueryUtil.deleteSearchQuery(searchQueryIdInteger);
+
+					SearchResultUtil.deleteSearchQueryResults(
+						searchQueryIdInteger);
+
+					SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
+						searchQueryIdInteger);
+				}
 			}
 		}
 

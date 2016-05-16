@@ -146,6 +146,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "100", false, false, false, false,
 			false, false, false, 0.00, 0.00, true);
 
+		SearchQueryUtil.addSearchQuery(activeSearchQuery);
+
 		SearchResult firstSearchResult = new SearchResult(
 			activeSearchQuery.getSearchQueryId(), "1234", "itemTitle", 14.99,
 			14.99, "http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
@@ -159,6 +161,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchQuery inactiveSearchQuery = new SearchQuery(
 			2, _USER_ID, "Test keywords", "100", false, false, false, false,
 			false, false, false, 0.00, 0.00, false);
+
+		SearchQueryUtil.addSearchQuery(inactiveSearchQuery);
 
 		SearchResult secondSearchResult = new SearchResult(
 			inactiveSearchQuery.getSearchQueryId(), "2345", "itemTitle", 14.99,
@@ -244,6 +248,52 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			searchQueryId, "100");
 
 		this.mockMvc.perform(post("/delete_search_query"))
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"));
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID);
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
+
+		List<String> searchQueryPreviousResults =
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
+				searchQueryId);
+
+		Assert.assertEquals(1, searchQueries.size());
+		Assert.assertEquals(1, searchResults.size());
+		Assert.assertEquals(1, searchQueryPreviousResults.size());
+	}
+
+	@Test
+	public void testDeleteSearchQueryWithInvalidUserId() throws Exception {
+		setUpIncorrectUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+		searchQuery.setActive(true);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		SearchResult searchResult = new SearchResult(
+			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
+			new Date(), "Buy It Now");
+
+		SearchResultUtil.addSearchResult(searchResult);
+
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			searchQueryId, "100");
+
+		String[] activeSearchQueryIds = new String[] {
+			String.valueOf(searchQueryId)
+		};
+
+		this.mockMvc.perform(post("/delete_search_query")
+			.param("activeSearchQueryIds", activeSearchQueryIds))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
