@@ -220,7 +220,7 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public void updateSearchQuery(SearchQuery searchQuery)
+	public void updateSearchQuery(int userId, SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
@@ -234,6 +234,7 @@ public class SearchQueryDAO {
 				preparedStatement, searchQuery);
 
 			preparedStatement.setInt(13, searchQuery.getSearchQueryId());
+			preparedStatement.setInt(14, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -338,7 +339,8 @@ public class SearchQueryDAO {
 			"searchDescription = ?, freeShippingOnly = ?, newCondition = ?, " +
 				"usedCondition = ?, unspecifiedCondition = ?, " +
 					"auctionListing = ?, fixedPriceListing = ?, maxPrice = ?, " +
-						"minPrice = ?, active = ? WHERE searchQueryId = ?";
+						"minPrice = ?, active = ? WHERE searchQueryId = ? " +
+							"AND userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryDAO.class);

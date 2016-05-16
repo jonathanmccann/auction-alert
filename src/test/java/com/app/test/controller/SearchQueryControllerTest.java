@@ -779,6 +779,79 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPostUpdateSearchQueryWithInvalidUserId() throws Exception {
+		setUpIncorrectUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, false);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertFalse(searchQuery.isSearchDescription());
+		Assert.assertFalse(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertFalse(searchQuery.isActive());
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/update_search_query");
+
+		request.param("searchQueryId", String.valueOf(searchQueryId));
+		request.param("keywords", "First test keywords");
+		request.param("categoryId", "101");
+		request.param("searchDescription", "true");
+		request.param("freeShippingOnly", "true");
+		request.param("newCondition", "true");
+		request.param("auctionListing", "true");
+		request.param("minPrice", "5.00");
+		request.param("maxPrice", "10.00");
+		request.param("active", "true");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isFound());
+		resultActions.andExpect(view().name("redirect:view_search_queries"));
+		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertFalse(searchQuery.isSearchDescription());
+		Assert.assertFalse(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertFalse(searchQuery.isActive());
+	}
+
+	@Test
 	public void testPostUpdateWithNullCategoryId() throws Exception {
 		setUpUserUtil();
 

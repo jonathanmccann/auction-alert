@@ -205,7 +205,8 @@ public class SearchQueryController {
 				searchQuery.setCategoryId("");
 			}
 
-			SearchQueryUtil.updateSearchQuery(searchQuery);
+			SearchQueryUtil.updateSearchQuery(
+				UserUtil.getCurrentUserId(), searchQuery);
 
 			return "redirect:view_search_queries";
 		}

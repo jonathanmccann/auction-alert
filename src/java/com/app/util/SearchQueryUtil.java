@@ -93,12 +93,12 @@ public class SearchQueryUtil {
 		return false;
 	}
 
-	public static void updateSearchQuery(SearchQuery searchQuery)
+	public static void updateSearchQuery(int userId, SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
 		normalizeSearchQuery(searchQuery);
 
-		_searchQueryDAO.updateSearchQuery(searchQuery);
+		_searchQueryDAO.updateSearchQuery(userId, searchQuery);
 	}
 
 	@Autowired

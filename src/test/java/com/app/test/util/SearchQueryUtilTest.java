@@ -251,7 +251,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		searchQuery.setActive(false);
 
-		SearchQueryUtil.updateSearchQuery(searchQuery);
+		SearchQueryUtil.updateSearchQuery(_USER_ID, searchQuery);
 
 		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, false);
 
@@ -312,7 +312,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 			searchQueryId, _USER_ID, "New test keywords", "101", true, true,
 			true, false, false, true, false, 5.00, 10.00, true);
 
-		SearchQueryUtil.updateSearchQuery(searchQuery);
+		SearchQueryUtil.updateSearchQuery(_USER_ID, searchQuery);
 
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
