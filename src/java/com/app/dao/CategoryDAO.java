@@ -29,11 +29,15 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+
 /**
  * @author Jonathan McCann
  */
 public class CategoryDAO {
 
+	@CacheEvict(value = "categories", allEntries = true)
 	public void addCategories(List<Category> categories)
 		throws DatabaseConnectionException, SQLException {
 
@@ -59,6 +63,7 @@ public class CategoryDAO {
 		}
 	}
 
+	@CacheEvict(value = "categories", allEntries = true)
 	public void deleteCategories()
 		throws DatabaseConnectionException, SQLException {
 
@@ -72,6 +77,7 @@ public class CategoryDAO {
 		}
 	}
 
+	@Cacheable(value = "categories")
 	public List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 

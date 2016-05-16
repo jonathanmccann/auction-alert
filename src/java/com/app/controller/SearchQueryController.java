@@ -82,7 +82,7 @@ public class SearchQueryController {
 			model.put("disabled", true);
 		}
 
-		populateCategories(model);
+		model.put("searchQueryCategories", CategoryUtil.getCategories());
 
 		model.put("isAdd", true);
 
@@ -172,7 +172,7 @@ public class SearchQueryController {
 
 		model.put("searchQuery", searchQuery);
 
-		populateCategories(model);
+		model.put("searchQueryCategories", CategoryUtil.getCategories());
 
 		return "add_search_query";
 	}
@@ -223,22 +223,7 @@ public class SearchQueryController {
 		return "view_search_queries";
 	}
 
-	private void populateCategories(Map<String, Object> model)
-		throws DatabaseConnectionException, SQLException {
-
-		if (_CATEGORIES.isEmpty()) {
-			for (Category category : CategoryUtil.getCategories()) {
-				_CATEGORIES.put(
-					category.getCategoryId(), category.getCategoryName());
-			}
-		}
-
-		model.put("searchQueryCategories", _CATEGORIES);
-	}
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
-
-	private static final Map<String, String> _CATEGORIES = new LinkedHashMap<>();
 
 }
