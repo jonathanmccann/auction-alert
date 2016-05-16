@@ -61,7 +61,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		SearchQueryUtil.activateSearchQuery(searchQueryId);
+		SearchQueryUtil.activateSearchQuery(_USER_ID, searchQueryId);
 
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
@@ -157,7 +157,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		SearchQueryUtil.deactivateSearchQuery(searchQueryId);
+		SearchQueryUtil.deactivateSearchQuery(_USER_ID, searchQueryId);
 
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 

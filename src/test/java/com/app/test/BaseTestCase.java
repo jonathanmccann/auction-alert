@@ -81,7 +81,18 @@ public abstract class BaseTestCase {
 		);
 	}
 
+	protected static void setUpIncorrectUserUtil() throws Exception {
+		PowerMockito.spy(UserUtil.class);
+
+		PowerMockito.doReturn(
+			_INCORRECT_USER_ID
+		).when(
+			UserUtil.class, "getCurrentUserId"
+		);
+	}
+
 	protected static final int _USER_ID = 1;
+	protected static final int _INCORRECT_USER_ID = 2;
 
 	private static final String _TEST_DATABASE_PATH = "/sql/testdb.sql";
 

@@ -57,7 +57,8 @@ public class SearchQueryController {
 			for (String searchQueryId : inactiveSearchQueryIds) {
 				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
-				SearchQueryUtil.activateSearchQuery(searchQueryIdInteger);
+				SearchQueryUtil.activateSearchQuery(
+					UserUtil.getCurrentUserId(), searchQueryIdInteger);
 			}
 		}
 
@@ -153,7 +154,8 @@ public class SearchQueryController {
 			for (String searchQueryId : activeSearchQueryIds) {
 				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
-				SearchQueryUtil.deactivateSearchQuery(searchQueryIdInteger);
+				SearchQueryUtil.deactivateSearchQuery(
+					UserUtil.getCurrentUserId(), searchQueryIdInteger);
 			}
 		}
 

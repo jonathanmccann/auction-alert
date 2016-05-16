@@ -29,10 +29,10 @@ import java.util.List;
 @Service
 public class SearchQueryUtil {
 
-	public static void activateSearchQuery(int searchQueryId)
+	public static void activateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.activateSearchQuery(searchQueryId);
+		_searchQueryDAO.activateSearchQuery(userId, searchQueryId);
 	}
 
 	public static int addSearchQuery(SearchQuery searchQuery)
@@ -43,10 +43,10 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.addSearchQuery(searchQuery);
 	}
 
-	public static void deactivateSearchQuery(int searchQueryId)
+	public static void deactivateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.deactivateSearchQuery(searchQueryId);
+		_searchQueryDAO.deactivateSearchQuery(userId, searchQueryId);
 	}
 
 	public static void deleteSearchQueries(int userId)

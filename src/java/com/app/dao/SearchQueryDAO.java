@@ -35,17 +35,18 @@ import org.slf4j.LoggerFactory;
  */
 public class SearchQueryDAO {
 
-	public void activateSearchQuery(int searchQueryId)
+	public void activateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Activating search query ID: {}", searchQueryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DEACTIVATE_SEARCH_QUERY_SQL)) {
+				_ACTIVATION_SEARCH_QUERY_SQL)) {
 
 			preparedStatement.setBoolean(1, true);
 			preparedStatement.setInt(2, searchQueryId);
+			preparedStatement.setInt(3, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -77,17 +78,18 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public void deactivateSearchQuery(int searchQueryId)
+	public void deactivateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Deactivating search query ID: {}", searchQueryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_DEACTIVATE_SEARCH_QUERY_SQL)) {
+				_ACTIVATION_SEARCH_QUERY_SQL)) {
 
 			preparedStatement.setBoolean(1, false);
 			preparedStatement.setInt(2, searchQueryId);
+			preparedStatement.setInt(3, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -328,8 +330,8 @@ public class SearchQueryDAO {
 	private static final String _GET_SEARCH_QUERY_SQL =
 		"SELECT * FROM SearchQuery WHERE searchQueryId = ?";
 
-	private static final String _DEACTIVATE_SEARCH_QUERY_SQL =
-		"UPDATE SearchQuery SET active = ? WHERE searchQueryId = ?";
+	private static final String _ACTIVATION_SEARCH_QUERY_SQL =
+		"UPDATE SearchQuery SET active = ? WHERE searchQueryId = ? and userId = ?";
 
 	private static final String _UPDATE_ADVANCED_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, " +
