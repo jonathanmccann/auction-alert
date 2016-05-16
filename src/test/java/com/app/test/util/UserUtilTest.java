@@ -107,7 +107,7 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
-		Assert.assertEquals("1234567890", user.getPhoneNumber());
+		Assert.assertNull(user.getPhoneNumber());
 
 		user.setEmailAddress("test@test.com");
 		user.setPhoneNumber("2345678901");
