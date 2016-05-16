@@ -116,7 +116,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testActivateSearchQueryWithInvalidUserId() throws Exception {
-		setUpIncorrectUserUtil();
+		setUpInvalidUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", false, false, false, false,
@@ -268,7 +268,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchQueryWithInvalidUserId() throws Exception {
-		setUpIncorrectUserUtil();
+		setUpInvalidUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery();
 
@@ -409,6 +409,43 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetUpdateSearchQueryWithInvalidUserId() throws Exception {
+		setUpInvalidUserUtil();
+
+		List<Category> categories = new ArrayList<>();
+
+		Category category = new Category("100", "Category Name");
+
+		categories.add(category);
+
+		category = new Category("200", "Category Name2");
+
+		categories.add(category);
+
+		CategoryUtil.addCategories(categories);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(
+			"/update_search_query");
+
+		request.param("searchQueryId", String.valueOf(searchQueryId));
+
+		this.mockMvc.perform(request)
+			.andExpect(status().isOk())
+			.andExpect(view().name("add_search_query"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"))
+			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("isAdd"))
+			.andExpect(model().attributeDoesNotExist("disabled"));
+	}
+
+	@Test
 	public void testHandleError() throws Exception {
 		setUpUserUtil();
 
@@ -455,7 +492,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeactivateSearchQueryWithInvalidUserId() throws Exception {
-		setUpIncorrectUserUtil();
+		setUpInvalidUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", false, false, false, false,
@@ -780,7 +817,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostUpdateSearchQueryWithInvalidUserId() throws Exception {
-		setUpIncorrectUserUtil();
+		setUpInvalidUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", false, false, false, false,

@@ -177,11 +177,15 @@ public class SearchQueryController {
 
 		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		model.put("searchQuery", searchQuery);
+		if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
+			model.put("searchQuery", searchQuery);
+			model.put("searchQueryCategories", CategoryUtil.getCategories());
 
-		model.put("searchQueryCategories", CategoryUtil.getCategories());
-
-		return "add_search_query";
+			return "add_search_query";
+		}
+		else {
+			return addSearchQuery(model);
+		}
 	}
 
 	@ExceptionHandler(Exception.class)

@@ -81,7 +81,7 @@ public abstract class BaseTestCase {
 		);
 	}
 
-	protected static void setUpIncorrectUserUtil() throws Exception {
+	protected static void setUpInvalidUserUtil() throws Exception {
 		PowerMockito.spy(UserUtil.class);
 
 		PowerMockito.doReturn(
