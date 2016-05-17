@@ -202,6 +202,39 @@ public class SearchQueryDAOCacheTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testDeleteSearchQuery() throws Exception {
+		assertBeforeCacheEvict();
+
+		searchQueryDAO.deleteSearchQuery(_USER_ID, 1);
+
+		Cache cache = cacheManager.getCache("searchQueries");
+
+		StatisticsGateway statistics = cache.getStatistics();
+
+		List<SearchQuery> activeSearchQueries = searchQueryDAO.getSearchQueries(
+			_USER_ID, true);
+
+		List<SearchQuery> inactiveSearchQueries =
+			searchQueryDAO.getSearchQueries(_USER_ID, false);
+
+		Assert.assertEquals(0, activeSearchQueries.size());
+		Assert.assertEquals(1, inactiveSearchQueries.size());
+		Assert.assertEquals(2, statistics.cacheHitCount());
+		Assert.assertEquals(4, statistics.cacheMissCount());
+
+		activeSearchQueries = searchQueryDAO.getSearchQueries(
+			_USER_ID, true);
+
+		inactiveSearchQueries =
+			searchQueryDAO.getSearchQueries(_USER_ID, false);
+
+		Assert.assertEquals(0, activeSearchQueries.size());
+		Assert.assertEquals(1, inactiveSearchQueries.size());
+		Assert.assertEquals(4, statistics.cacheHitCount());
+		Assert.assertEquals(4, statistics.cacheMissCount());
+	}
+
+	@Test
 	public void testUpdateSearchQuery() throws Exception {
 		assertBeforeCacheEvict();
 

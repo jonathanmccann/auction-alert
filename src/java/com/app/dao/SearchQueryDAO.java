@@ -130,6 +130,10 @@ public class SearchQueryDAO {
 		}
 	}
 
+	@Caching(evict = {
+		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+	})
 	public void deleteSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
