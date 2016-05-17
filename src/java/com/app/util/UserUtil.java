@@ -133,6 +133,10 @@ public class UserUtil {
 	}
 
 	private static String sanitizePhoneNumber(String phoneNumber) {
+		if (ValidatorUtil.isNull(phoneNumber)) {
+			return "";
+		}
+
 		return phoneNumber.replaceAll("[^\\d]", "");
 	}
 
@@ -144,7 +148,10 @@ public class UserUtil {
 					SQLException {
 
 		validateEmailAddress(userId, emailAddress);
-		validatePhoneNumber(phoneNumber);
+
+		if (ValidatorUtil.isNotNull(phoneNumber)) {
+			validatePhoneNumber(phoneNumber);
+		}
 	}
 
 	private static void validateEmailAddress(int userId, String emailAddress)

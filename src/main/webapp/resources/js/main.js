@@ -42,6 +42,10 @@ $(window).load(function() {
 	}, "Max price must be greater than min price");
 
 	$.validator.addMethod("phoneNumber", function (value) {
+		if (!value) {
+			return true;
+		}
+
 		value = value.replace(/\D/g, "");
 
 		var pattern = new RegExp("[0-9]{10,10}");
