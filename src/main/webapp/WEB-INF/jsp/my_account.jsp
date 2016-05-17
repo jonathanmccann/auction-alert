@@ -51,20 +51,18 @@
 					<c:if test="${not empty invalidEmailAddressException}">
 						${invalidEmailAddressException}
 					</c:if>
-
-					<br>
-
-					Phone Number <form:input path="user.phoneNumber" value="${user.phoneNumber}" />
-
-					<c:if test="${not empty invalidPhoneNumberException}">
-						${invalidPhoneNumberException}</br>
-					</c:if>
 				</div>
 				<hr>
 				<div>
 					<h3>Mobile Details:</h3>
 
 					<div style="display: table">
+						Phone Number <form:input path="user.phoneNumber" value="${user.phoneNumber}" />
+
+						<c:if test="${not empty invalidPhoneNumberException}">
+							${invalidPhoneNumberException}</br>
+						</c:if> <br> <br>
+
 						Mobile Operating System
 						<form:select path="user.mobileOperatingSystem" value="${user.mobileOperatingSystem}">
 							<form:options items="${mobileOperatingSystems}" />
