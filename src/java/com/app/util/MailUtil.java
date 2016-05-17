@@ -93,7 +93,9 @@ public class MailUtil {
 					Transport.send(emailMessage);
 				}
 
-				if (notificationDeliveryMethod[1]) {
+				if (notificationDeliveryMethod[1] &&
+					ValidatorUtil.isNotNull(user.getPhoneNumber())) {
+
 					List<SearchResult> searchResults = mapEntry.getValue();
 
 					for (SearchResult searchResult : searchResults) {
