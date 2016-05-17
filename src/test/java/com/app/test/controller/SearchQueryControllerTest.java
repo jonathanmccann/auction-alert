@@ -236,6 +236,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("First test keywords");
+		searchQuery.setActive(true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -254,7 +255,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:view_search_queries"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(searchQueryId);
@@ -300,7 +301,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:view_search_queries"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(searchQueryId);
@@ -551,6 +552,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "All Categories");
+		request.param("active", "true");
 
 		this.mockMvc.perform(request)
 			.andExpect(status().isFound())
@@ -559,7 +561,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -589,6 +591,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			"/add_search_query");
 
 		request.param("keywords", "First test keywords");
+		request.param("active", "true");
 
 		this.mockMvc.perform(request)
 			.andExpect(status().isFound())
@@ -597,7 +600,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -622,6 +625,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
+		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -631,7 +635,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -662,6 +666,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
+		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -671,7 +676,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -702,7 +707,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, false);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -743,7 +748,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
-		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID);
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -796,7 +801,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -828,7 +833,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, false);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -869,7 +874,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
-		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID);
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, false);
 
 		Assert.assertEquals(1, searchQueries.size());
 
@@ -922,7 +927,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 

@@ -172,23 +172,25 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		firstSearchQuery.setUserId(_USER_ID);
 		firstSearchQuery.setKeywords("First test keywords");
+		firstSearchQuery.setActive(true);
 
 		SearchQuery secondSearchQuery = new SearchQuery();
 
 		secondSearchQuery.setUserId(_USER_ID);
 		secondSearchQuery.setKeywords("Second test keywords");
+		secondSearchQuery.setActive(true);
 
 		SearchQueryUtil.addSearchQuery(firstSearchQuery);
 		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(2, searchQueries.size());
 
 		SearchQueryUtil.deleteSearchQueries(_USER_ID);
 
-		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID);
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, true);
 
 		Assert.assertEquals(0, searchQueries.size());
 	}
@@ -199,6 +201,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		firstSearchQuery.setUserId(_USER_ID);
 		firstSearchQuery.setKeywords("First test keywords");
+		firstSearchQuery.setActive(true);
 
 		int firstSearchQueryId = SearchQueryUtil.addSearchQuery(
 			firstSearchQuery);
@@ -207,17 +210,18 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		secondSearchQuery.setUserId(_USER_ID);
 		secondSearchQuery.setKeywords("Second test keywords");
+		secondSearchQuery.setActive(true);
 
 		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID);
+			_USER_ID, true);
 
 		Assert.assertEquals(2, searchQueries.size());
 
 		SearchQueryUtil.deleteSearchQuery(firstSearchQueryId);
 
-		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID);
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, true);
 
 		Assert.assertEquals(1, searchQueries.size());
 	}

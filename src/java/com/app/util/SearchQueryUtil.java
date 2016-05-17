@@ -61,12 +61,6 @@ public class SearchQueryUtil {
 		_searchQueryDAO.deleteSearchQuery(searchQueryId);
 	}
 
-	public static List<SearchQuery> getSearchQueries(int userId)
-		throws DatabaseConnectionException, SQLException {
-
-		return _searchQueryDAO.getSearchQueries(userId);
-	}
-
 	public static List<SearchQuery> getSearchQueries(int userId, boolean active)
 		throws DatabaseConnectionException, SQLException {
 
