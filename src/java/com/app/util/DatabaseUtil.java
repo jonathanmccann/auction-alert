@@ -54,16 +54,26 @@ public class DatabaseUtil {
 		}
 	}
 
-	public static void initializeDatabase() throws DatabaseConnectionException {
+	public static void initializeDatabase()
+		throws DatabaseConnectionException, SQLException {
+
 		initializeDatabase(_DEFAULT_DATABASE_PATH);
 	}
 
 	public static void initializeDatabase(String path)
-		throws DatabaseConnectionException {
+		throws DatabaseConnectionException, SQLException {
 
-		Resource resource = new ClassPathResource(path);
+		try {
+			ReleaseUtil.getReleaseVersion(_APPLICATION_RELEASE_NAME);
+		}
+		catch (SQLException sqle) {
+			Resource resource = new ClassPathResource(path);
 
-		ScriptUtils.executeSqlScript(getDatabaseConnection(), resource);
+			ScriptUtils.executeSqlScript(getDatabaseConnection(), resource);
+
+			ReleaseUtil.addRelease(
+				_APPLICATION_RELEASE_NAME, _APPLICATION_VERSION);
+		}
 	}
 
 	public static void loadDatabaseProperties() {
@@ -84,6 +94,8 @@ public class DatabaseUtil {
 		_isPropertiesSet = true;
 	}
 
+	private static final String _APPLICATION_RELEASE_NAME = "application";
+	private static final String _APPLICATION_VERSION = "1";
 	private static final String _DEFAULT_DATABASE_PATH = "/sql/defaultdb.sql";
 
 	private static final Logger _log = LoggerFactory.getLogger(
