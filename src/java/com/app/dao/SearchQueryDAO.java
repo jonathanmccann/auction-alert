@@ -130,7 +130,7 @@ public class SearchQueryDAO {
 		}
 	}
 
-	public void deleteSearchQuery(int searchQueryId)
+	public void deleteSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Deleting search query ID: {}", searchQueryId);
@@ -140,6 +140,7 @@ public class SearchQueryDAO {
 				_DELETE_SEARCH_QUERY_SQL)) {
 
 			preparedStatement.setInt(1, searchQueryId);
+			preparedStatement.setInt(2, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -319,7 +320,7 @@ public class SearchQueryDAO {
 		"DELETE FROM SearchQuery WHERE userId = ?";
 
 	private static final String _DELETE_SEARCH_QUERY_SQL =
-		"DELETE FROM SearchQuery WHERE searchQueryId = ?";
+		"DELETE FROM SearchQuery WHERE searchQueryId = ? AND userId = ?";
 
 	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_AND_ACTIVE_SQL =
 		"SELECT * FROM SearchQuery WHERE userId = ? and active = ?";

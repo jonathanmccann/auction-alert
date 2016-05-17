@@ -219,7 +219,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(2, searchQueries.size());
 
-		SearchQueryUtil.deleteSearchQuery(firstSearchQueryId);
+		SearchQueryUtil.deleteSearchQuery(_USER_ID, firstSearchQueryId);
 
 		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, true);
 

@@ -55,10 +55,10 @@ public class SearchQueryUtil {
 		_searchQueryDAO.deleteSearchQueries(userId);
 	}
 
-	public static void deleteSearchQuery(int searchQueryId)
+	public static void deleteSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchQueryDAO.deleteSearchQuery(searchQueryId);
+		_searchQueryDAO.deleteSearchQuery(userId, searchQueryId);
 	}
 
 	public static List<SearchQuery> getSearchQueries(int userId, boolean active)

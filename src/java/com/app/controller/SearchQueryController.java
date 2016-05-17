@@ -136,8 +136,11 @@ public class SearchQueryController {
 				SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
 					searchQueryIdInteger);
 
-				if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
-					SearchQueryUtil.deleteSearchQuery(searchQueryIdInteger);
+				int userId = UserUtil.getCurrentUserId();
+
+				if (searchQuery.getUserId() == userId) {
+					SearchQueryUtil.deleteSearchQuery(
+						userId, searchQueryIdInteger);
 
 					SearchResultUtil.deleteSearchQueryResults(
 						searchQueryIdInteger);
