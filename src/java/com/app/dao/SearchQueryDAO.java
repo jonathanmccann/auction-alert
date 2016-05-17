@@ -30,11 +30,19 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+
 /**
  * @author Jonathan McCann
  */
 public class SearchQueryDAO {
 
+	@Caching(evict = {
+		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+	})
 	public void activateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -52,6 +60,10 @@ public class SearchQueryDAO {
 		}
 	}
 
+	@Caching(evict = {
+		@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'true'"),
+		@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'false'")
+	})
 	public int addSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
@@ -78,6 +90,10 @@ public class SearchQueryDAO {
 		}
 	}
 
+	@Caching(evict = {
+		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+	})
 	public void deactivateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -95,6 +111,10 @@ public class SearchQueryDAO {
 		}
 	}
 
+	@Caching(evict = {
+		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+	})
 	public void deleteSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -125,6 +145,7 @@ public class SearchQueryDAO {
 		}
 	}
 
+	@Cacheable(value = "searchQueries", key = "#userId + #active.toString()")
 	public List<SearchQuery> getSearchQueries(int userId, boolean active)
 		throws DatabaseConnectionException, SQLException {
 
@@ -197,6 +218,10 @@ public class SearchQueryDAO {
 		}
 	}
 
+	@Caching(evict = {
+		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+	})
 	public void updateSearchQuery(int userId, SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
