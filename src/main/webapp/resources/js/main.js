@@ -42,7 +42,7 @@ $(window).load(function() {
 	}, "Max price must be greater than min price");
 
 	$.validator.addMethod("phoneNumber", function (value) {
-		if (!value) {
+		if (!value && !$('#textNotification').is(':checked')) {
 			return true;
 		}
 

@@ -82,7 +82,7 @@
 					<div id="notificationOptions">
 						<b>Receive notifications via:</b> <br>
 						<form:checkbox label="Email" path="notificationPreferences.emailNotification" value="${notificationPreferences.emailNotification}" /> <br>
-						<form:checkbox label="Text" path="notificationPreferences.textNotification" value="${notificationPreferences.textNotification}" />
+						<form:checkbox label="Text" id="textNotification" path="notificationPreferences.textNotification" value="${notificationPreferences.textNotification}" />
 					</div>
 
 					<div id="basedOnTimeOptions">
