@@ -69,7 +69,7 @@ public class SearchResultUtil {
 
 		for (int userId : userIds) {
 			List<SearchQuery> searchQueries =
-				SearchQueryUtil.getSearchQueries(userId, false);
+				SearchQueryUtil.getSearchQueries(userId, true);
 
 			if (searchQueries.size() == 0) {
 				_log.info("There are no search queries");
