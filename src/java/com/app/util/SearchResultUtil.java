@@ -72,7 +72,7 @@ public class SearchResultUtil {
 				SearchQueryUtil.getSearchQueries(userId, true);
 
 			if (searchQueries.size() == 0) {
-				_log.info("There are no search queries");
+				_log.info("There are no search queries for userId: {}", userId);
 
 				return;
 			}
