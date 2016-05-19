@@ -144,15 +144,18 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void testDeleteSearchQuery() throws Exception {
 		setUpUserUtil();
 
-		SearchQuery activeSearchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, true);
+		SearchQuery activeSearchQuery = new SearchQuery();
 
-		SearchQueryUtil.addSearchQuery(activeSearchQuery);
+		activeSearchQuery.setUserId(_USER_ID);
+		activeSearchQuery.setKeywords("First test keywords");
+		activeSearchQuery.setActive(true);
+
+		int activeSearchQueryId = SearchQueryUtil.addSearchQuery(
+			activeSearchQuery);
 
 		SearchResult firstSearchResult = new SearchResult(
-			activeSearchQuery.getSearchQueryId(), "1234", "itemTitle", 14.99,
-			14.99, "http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
+			activeSearchQueryId, "1234", "itemTitle", 14.99, 14.99,
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
 			"Buy It Now");
 
 		SearchResultUtil.addSearchResult(firstSearchResult);
@@ -160,15 +163,18 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			activeSearchQuery.getSearchQueryId(), "100");
 
-		SearchQuery inactiveSearchQuery = new SearchQuery(
-			2, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+		SearchQuery inactiveSearchQuery = new SearchQuery();
 
-		SearchQueryUtil.addSearchQuery(inactiveSearchQuery);
+		inactiveSearchQuery.setUserId(_USER_ID);
+		inactiveSearchQuery.setKeywords("First test keywords");
+		inactiveSearchQuery.setActive(true);
+
+		int inactiveSearchQueryId = SearchQueryUtil.addSearchQuery(
+			inactiveSearchQuery);
 
 		SearchResult secondSearchResult = new SearchResult(
-			inactiveSearchQuery.getSearchQueryId(), "2345", "itemTitle", 14.99,
-			14.99, "http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
+			inactiveSearchQueryId, "2345", "itemTitle", 14.99, 14.99,
+			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
 			"Buy It Now");
 
 		SearchResultUtil.addSearchResult(secondSearchResult);
@@ -177,11 +183,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			inactiveSearchQuery.getSearchQueryId(), "200");
 
 		String[] activeSearchQueryIds = new String[] {
-			String.valueOf(activeSearchQuery.getSearchQueryId())
+			String.valueOf(activeSearchQueryId)
 		};
 
 		String[] inactiveSearchQueryIds = new String[] {
-			String.valueOf(inactiveSearchQuery.getSearchQueryId())
+			String.valueOf(inactiveSearchQueryId)
 		};
 
 		this.mockMvc.perform(post("/delete_search_query")
@@ -207,22 +213,22 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(
-				activeSearchQuery.getSearchQueryId());
+				activeSearchQueryId);
 
 		List<String> searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				activeSearchQuery.getSearchQueryId());
+				activeSearchQueryId);
 
 		Assert.assertEquals(0, searchResults.size());
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
 
 		searchResults =
 			SearchResultUtil.getSearchQueryResults(
-				inactiveSearchQuery.getSearchQueryId());
+				inactiveSearchQueryId);
 
 		searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				inactiveSearchQuery.getSearchQueryId());
+				inactiveSearchQueryId);
 
 		Assert.assertEquals(0, searchResults.size());
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
