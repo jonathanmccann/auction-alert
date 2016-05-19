@@ -85,7 +85,7 @@
 
 						<div>
 							<form:checkbox path="auctionListing" label="Auction" value="${searchQuery.auctionListing}"/> <br>
-							<form:checkbox path="fixedPriceListing" label="BIN" value="${searchQuery.fixedPriceListing}"/>
+							<form:checkbox path="fixedPriceListing" label="Buy It Now" value="${searchQuery.fixedPriceListing}"/>
 						</div>
 					</div>
 					<hr>
