@@ -26,7 +26,7 @@ public class SearchResult {
 
 	public SearchResult(
 		int searchQueryId, String itemId, String itemTitle, double auctionPrice,
-		double fixedPrice, String itemURL, String galleryURL, Date endingTime,
+		double fixedPrice, String itemURL, String galleryURL,
 		String typeOfAuction) {
 
 		_searchQueryId = searchQueryId;
@@ -36,7 +36,6 @@ public class SearchResult {
 		_fixedPrice = fixedPrice;
 		_itemURL = itemURL;
 		_galleryURL = galleryURL;
-		_endingTime = endingTime;
 		_typeOfAuction = typeOfAuction;
 	}
 
@@ -50,10 +49,6 @@ public class SearchResult {
 
 	public double getAuctionPrice() {
 		return _auctionPrice;
-	}
-
-	public Date getEndingTime() {
-		return _endingTime;
 	}
 
 	public double getFixedPrice() {
@@ -96,10 +91,6 @@ public class SearchResult {
 		_auctionPrice = auctionPrice;
 	}
 
-	public void setEndingTime(Date itemEndingTime) {
-		_endingTime = itemEndingTime;
-	}
-
 	public void setFixedPrice(double fixedPrice) {
 		_fixedPrice = fixedPrice;
 	}
@@ -133,7 +124,6 @@ public class SearchResult {
 	}
 
 	private double _auctionPrice;
-	private Date _endingTime;
 	private double _fixedPrice;
 	private String _galleryURL;
 	private String _itemId;

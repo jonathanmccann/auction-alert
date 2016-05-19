@@ -99,8 +99,6 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 			_EBAY_URL_PREFIX + searchResult.getItemId(),
 			searchResult.getItemURL());
 		Assert.assertEquals(_GALLERY_URL, searchResult.getGalleryURL());
-		Assert.assertEquals(
-			_CALENDAR.getTime(), searchResult.getEndingTime());
 		Assert.assertEquals(_AUCTION, searchResult.getTypeOfAuction());
 		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);

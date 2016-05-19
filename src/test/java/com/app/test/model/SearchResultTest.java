@@ -34,12 +34,10 @@ public class SearchResultTest {
 
 	@Test
 	public void testConstructor() {
-		Date endingTime = new Date();
-
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			endingTime, "Buy It Now");
+			"Buy It Now");
 
 		Assert.assertEquals(1, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
@@ -50,7 +48,6 @@ public class SearchResultTest {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals(endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Buy It Now", searchResult.getTypeOfAuction());
 	}
 
@@ -98,14 +95,6 @@ public class SearchResultTest {
 		_searchResult.setItemId("1234");
 
 		Assert.assertEquals(1234, _searchResult.hashCode());
-	}
-	@Test
-	public void testSetAndGetEndingTime() {
-		Date endingTime = new Date();
-
-		_searchResult.setEndingTime(endingTime);
-
-		Assert.assertEquals(endingTime, _searchResult.getEndingTime());
 	}
 
 	@Test

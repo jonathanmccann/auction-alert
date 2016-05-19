@@ -64,9 +64,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddSearchResult() throws Exception {
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
+		addSearchResult("1234");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -82,16 +80,13 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals(endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 	}
 
 	@Test
 	public void testDeleteSearchQueryResults() throws Exception {
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
-		addSearchResult("2345", endingTime);
+		addSearchResult("1234");
+		addSearchResult("2345");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -108,10 +103,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchResult() throws Exception {
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
-		addSearchResult("2345", endingTime);
+		addSearchResult("1234");
+		addSearchResult("2345");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -136,9 +129,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchQuery searchQuery = new SearchQuery(
 			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
 
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
+		addSearchResult("1234");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -184,10 +175,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchQuery searchQuery = new SearchQuery(
 			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
 
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
-		addSearchResult("2345", endingTime);
+		addSearchResult("1234");
+		addSearchResult("2345");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -208,9 +197,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddNewResults() throws Exception {
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
+		addSearchResult("1234");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -235,7 +222,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals(endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
 		Assert.assertEquals(
@@ -248,9 +234,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testAddNewResultsWithPreviousSearchQueryResults()
 		throws Exception {
 
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
+		addSearchResult("1234");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -287,7 +271,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals(endingTime, searchResult.getEndingTime());
 		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
 		Assert.assertEquals(
@@ -312,13 +295,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		method.setAccessible(true);
 
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
-		addSearchResult("2345", endingTime);
-		addSearchResult("3456", endingTime);
-		addSearchResult("4567", endingTime);
-		addSearchResult("5678", endingTime);
+		addSearchResult("1234");
+		addSearchResult("2345");
+		addSearchResult("3456");
+		addSearchResult("4567");
+		addSearchResult("5678");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -338,13 +319,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		method.setAccessible(true);
 
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
-		addSearchResult("2345", endingTime);
-		addSearchResult("3456", endingTime);
-		addSearchResult("4567", endingTime);
-		addSearchResult("5678", endingTime);
+		addSearchResult("1234");
+		addSearchResult("2345");
+		addSearchResult("3456");
+		addSearchResult("4567");
+		addSearchResult("5678");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -364,13 +343,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		method.setAccessible(true);
 
-		Date endingTime = new Date();
-
-		addSearchResult("1234", endingTime);
-		addSearchResult("2345", endingTime);
-		addSearchResult("3456", endingTime);
-		addSearchResult("4567", endingTime);
-		addSearchResult("5678", endingTime);
+		addSearchResult("1234");
+		addSearchResult("2345");
+		addSearchResult("3456");
+		addSearchResult("4567");
+		addSearchResult("5678");
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
@@ -388,7 +365,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "First Item", 10.00, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			new Date(), "Auction");
+			"Auction");
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -418,13 +395,13 @@ public class SearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(0, searchResults.size());
 	}
 
-	private static int addSearchResult(String itemId, Date endingTime)
+	private static int addSearchResult(String itemId)
 		throws Exception {
 
 		SearchResult searchResult = new SearchResult(
 			_SEARCH_QUERY_ID, itemId, "First Item", 10.00, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			endingTime, "Auction");
+			"Auction");
 
 		return SearchResultUtil.addSearchResult(searchResult);
 	}

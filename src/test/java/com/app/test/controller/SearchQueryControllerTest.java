@@ -153,7 +153,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchResult firstSearchResult = new SearchResult(
 			activeSearchQuery.getSearchQueryId(), "1234", "itemTitle", 14.99,
 			14.99, "http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			new Date(), "Buy It Now");
+			"Buy It Now");
 
 		SearchResultUtil.addSearchResult(firstSearchResult);
 
@@ -169,7 +169,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchResult secondSearchResult = new SearchResult(
 			inactiveSearchQuery.getSearchQueryId(), "2345", "itemTitle", 14.99,
 			14.99, "http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg",
-			new Date(), "Buy It Now");
+			"Buy It Now");
 
 		SearchResultUtil.addSearchResult(secondSearchResult);
 
@@ -243,7 +243,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			new Date(), "Buy It Now");
+			"Buy It Now");
 
 		SearchResultUtil.addSearchResult(searchResult);
 
@@ -284,7 +284,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			new Date(), "Buy It Now");
+			"Buy It Now");
 
 		SearchResultUtil.addSearchResult(searchResult);
 

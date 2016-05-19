@@ -77,10 +77,6 @@ public class eBaySearchResultUtil {
 			_EBAY_URL_PREFIX + searchResult.getItemId());
 		searchResult.setGalleryURL(item.getGalleryURL());
 
-		Calendar endTimeCalendar = listingInfo.getEndTime();
-
-		searchResult.setEndingTime(endTimeCalendar.getTime());
-
 		String typeOfAuction = listingInfo.getListingType();
 
 		searchResult.setTypeOfAuction(typeOfAuction);

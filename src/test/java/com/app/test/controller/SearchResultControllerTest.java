@@ -134,7 +134,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			new Date(), "Buy It Now");
+			"Buy It Now");
 
 		SearchResultUtil.addSearchResult(searchResult);
 

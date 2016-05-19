@@ -128,14 +128,12 @@ public class MailUtilTest extends BaseTestCase {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		Date endingTime = new Date();
-
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+			"http://www.ebay.com/123.jpg", "Buy It Now");
 
 		searchResults.add(searchResult);
 
@@ -177,11 +175,9 @@ public class MailUtilTest extends BaseTestCase {
 
 		populateTextMessageMethod.setAccessible(true);
 
-		Date endingTime = new Date();
-
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+			"http://www.ebay.com/123.jpg", "Buy It Now");
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
@@ -215,11 +211,9 @@ public class MailUtilTest extends BaseTestCase {
 
 		populateTextMessageMethod.setAccessible(true);
 
-		Date endingTime = new Date();
-
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+			"http://www.ebay.com/123.jpg", "Buy It Now");
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
@@ -253,11 +247,9 @@ public class MailUtilTest extends BaseTestCase {
 
 		populateTextMessageMethod.setAccessible(true);
 
-		Date endingTime = new Date();
-
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", endingTime, "Buy It Now");
+			"http://www.ebay.com/123.jpg", "Buy It Now");
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
