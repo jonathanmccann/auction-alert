@@ -133,7 +133,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", "Buy It Now");
+			"http://www.ebay.com/123.jpg");
 
 		searchResults.add(searchResult);
 
@@ -177,7 +177,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", "Buy It Now");
+			"http://www.ebay.com/123.jpg");
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
@@ -213,7 +213,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", "Buy It Now");
+			"http://www.ebay.com/123.jpg");
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
@@ -249,7 +249,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg", "Buy It Now");
+			"http://www.ebay.com/123.jpg");
 
 		Method authenticateOutboundEmailAddressMethod =
 			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");

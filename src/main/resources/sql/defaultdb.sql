@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 	searchQueryId INT NOT NULL,
 	itemId VARCHAR(25) NOT NULL,
 	itemTitle VARCHAR(100),
-	typeOfAuction VARCHAR(25),
 	itemURL VARCHAR(50),
 	galleryURL VARCHAR(100),
 	auctionPrice DOUBLE,

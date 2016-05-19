@@ -80,7 +80,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 	}
 
 	@Test
@@ -207,7 +206,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
 		Assert.assertEquals(
 			1,
@@ -256,7 +254,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals("Auction", searchResult.getTypeOfAuction());
 
 		Assert.assertEquals(
 			10,
@@ -349,8 +346,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testRemovePreviouslyNotifiedResults() throws Exception {
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "First Item", 10.00, 14.99,
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			"Auction");
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -385,8 +381,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		SearchResult searchResult = new SearchResult(
 			_SEARCH_QUERY_ID, itemId, "First Item", 10.00, 14.99,
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			"Auction");
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		return SearchResultUtil.addSearchResult(searchResult);
 	}

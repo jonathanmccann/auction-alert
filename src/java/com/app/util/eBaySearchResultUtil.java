@@ -77,13 +77,9 @@ public class eBaySearchResultUtil {
 			_EBAY_URL_PREFIX + searchResult.getItemId());
 		searchResult.setGalleryURL(item.getGalleryURL());
 
-		String typeOfAuction = listingInfo.getListingType();
-
-		searchResult.setTypeOfAuction(typeOfAuction);
-
 		setPrice(
 			searchResult, listingInfo, item.getSellingStatus(),
-			typeOfAuction);
+			listingInfo.getListingType());
 
 		return searchResult;
 	}

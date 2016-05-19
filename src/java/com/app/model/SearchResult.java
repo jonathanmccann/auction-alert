@@ -26,8 +26,7 @@ public class SearchResult {
 
 	public SearchResult(
 		int searchQueryId, String itemId, String itemTitle, double auctionPrice,
-		double fixedPrice, String itemURL, String galleryURL,
-		String typeOfAuction) {
+		double fixedPrice, String itemURL, String galleryURL) {
 
 		_searchQueryId = searchQueryId;
 		_itemId = itemId;
@@ -36,7 +35,6 @@ public class SearchResult {
 		_fixedPrice = fixedPrice;
 		_itemURL = itemURL;
 		_galleryURL = galleryURL;
-		_typeOfAuction = typeOfAuction;
 	}
 
 	public boolean equals(Object obj) {
@@ -79,10 +77,6 @@ public class SearchResult {
 		return _searchResultId;
 	}
 
-	public String getTypeOfAuction() {
-		return _typeOfAuction;
-	}
-
 	public int hashCode() {
 		return Integer.parseInt(_itemId);
 	}
@@ -119,10 +113,6 @@ public class SearchResult {
 		_searchResultId = searchResultId;
 	}
 
-	public void setTypeOfAuction(String typeOfAuction) {
-		_typeOfAuction = typeOfAuction;
-	}
-
 	private double _auctionPrice;
 	private double _fixedPrice;
 	private String _galleryURL;
@@ -131,6 +121,5 @@ public class SearchResult {
 	private String _itemURL;
 	private int _searchQueryId;
 	private int _searchResultId;
-	private String _typeOfAuction;
 
 }

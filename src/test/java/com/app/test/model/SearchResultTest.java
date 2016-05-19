@@ -36,8 +36,7 @@ public class SearchResultTest {
 	public void testConstructor() {
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg",
-			"Buy It Now");
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		Assert.assertEquals(1, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
@@ -48,7 +47,6 @@ public class SearchResultTest {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals("Buy It Now", searchResult.getTypeOfAuction());
 	}
 
 	@Test
@@ -146,14 +144,6 @@ public class SearchResultTest {
 		_searchResult.setSearchResultId(1);
 
 		Assert.assertEquals(1, _searchResult.getSearchResultId());
-	}
-
-	@Test
-	public void testSetAndGetTypeOfAuction() {
-		_searchResult.setTypeOfAuction("Buy It Now");
-
-		Assert.assertEquals(
-			"Buy It Now", _searchResult.getTypeOfAuction());
 	}
 
 	private SearchResult _searchResult;
