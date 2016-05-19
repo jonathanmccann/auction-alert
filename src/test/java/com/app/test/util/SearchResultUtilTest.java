@@ -139,13 +139,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			searchResult.getSearchQueryId(), "1234");
 
-		Method method = _clazz.getDeclaredMethod(
-			"_filterSearchResults", SearchQuery.class, List.class);
-
-		method.setAccessible(true);
-
-		searchResults = (List<SearchResult>)method.invoke(
-			_classInstance, searchQuery, searchResults);
+		searchResults = SearchResultUtil.filterSearchResults(
+			searchQuery, searchResults);
 
 		Assert.assertEquals(0, searchResults.size());
 	}
@@ -157,13 +152,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchQuery searchQuery = new SearchQuery(
 			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
 
-		Method method = _clazz.getDeclaredMethod(
-			"_filterSearchResults", SearchQuery.class, List.class);
-
-		method.setAccessible(true);
-
-		List<SearchResult> searchResults = (List<SearchResult>)method.invoke(
-			_classInstance, searchQuery, new ArrayList<>());
+		List<SearchResult> searchResults = SearchResultUtil.filterSearchResults(
+			searchQuery, new ArrayList<SearchResult>());
 
 		Assert.assertEquals(0, searchResults.size());
 	}
@@ -184,13 +174,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			_SEARCH_QUERY_ID, "1234");
 
-		Method method = _clazz.getDeclaredMethod(
-			"_filterSearchResults", SearchQuery.class, List.class);
-
-		method.setAccessible(true);
-
-		searchResults = (List<SearchResult>)method.invoke(
-			_classInstance, searchQuery, searchResults);
+		searchResults = SearchResultUtil.filterSearchResults(
+			searchQuery, searchResults);
 
 		Assert.assertEquals(1, searchResults.size());
 	}
