@@ -25,7 +25,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import com.app.runnable.SearchResultRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,54 +60,7 @@ public class SearchResultUtil {
 		_searchResultDAO.deleteSearchResult(searchResultId);
 	}
 
-	public static List<SearchResult> getSearchQueryResults(int searchQueryId)
-		throws DatabaseConnectionException, SQLException {
-
-		return _searchResultDAO.getSearchQueryResults(searchQueryId);
-	}
-
-	public static void performSearch()
-		throws DatabaseConnectionException, SQLException {
-
-		List<Integer> userIds = UserUtil.getUserIds();
-
-		for (int userId : userIds) {
-			List<SearchQuery> searchQueries =
-				SearchQueryUtil.getSearchQueries(userId, true);
-
-			if (searchQueries.size() == 0) {
-				_log.info("There are no search queries for userId: {}", userId);
-
-				return;
-			}
-
-			_log.info(
-				"Getting eBay search results for {} search queries",
-				searchQueries.size());
-
-			Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
-				new HashMap<>();
-
-			for (SearchQuery searchQuery : searchQueries) {
-				List<SearchResult> searchResults =
-					eBaySearchResultUtil.geteBaySearchResults(searchQuery);
-
-				searchResults = _filterSearchResults(
-					searchQuery, searchResults);
-
-				if (!searchResults.isEmpty()) {
-					searchQueryResultMap.put(searchQuery, searchResults);
-				}
-			}
-
-			if (!searchQueryResultMap.isEmpty()) {
-				MailUtil.sendSearchResultsToRecipient(
-					userId, searchQueryResultMap);
-			}
-		}
-	}
-
-	private static List<SearchResult> _filterSearchResults(
+	public static List<SearchResult> filterSearchResults(
 			SearchQuery searchQuery,
 			List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
@@ -127,6 +84,38 @@ public class SearchResultUtil {
 		}
 
 		return newSearchResults;
+	}
+
+	public static List<SearchResult> getSearchQueryResults(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		return _searchResultDAO.getSearchQueryResults(searchQueryId);
+	}
+
+	public static void performSearch()
+		throws DatabaseConnectionException, SQLException {
+
+		ExecutorService executor = Executors.newFixedThreadPool(
+			_THREAD_POOL_SIZE);
+
+		List<Integer> userIds = UserUtil.getUserIds();
+
+		for (int userId : userIds) {
+			SearchResultRunnable searchResultRunnable =
+				new SearchResultRunnable(userId);
+
+			executor.execute(searchResultRunnable);
+		}
+
+		executor.shutdown();
+
+		try {
+			executor.awaitTermination(
+				_THREAD_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+		}
+		catch (InterruptedException ie) {
+			_log.error("The executor encountered an exception", ie);
+		}
 	}
 
 	private static void _addNewResults(List<SearchResult> newSearchResults)
@@ -206,6 +195,9 @@ public class SearchResultUtil {
 
 	private static SearchResultDAO _searchResultDAO;
 
+	private static final int _THREAD_POOL_SIZE =
+		Runtime.getRuntime().availableProcessors() + 1;
+	private static final long _THREAD_TIMEOUT_SECONDS = 15;
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultUtil.class);
 
