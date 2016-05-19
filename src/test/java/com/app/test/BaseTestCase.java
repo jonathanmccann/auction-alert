@@ -27,6 +27,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.net.URL;
@@ -55,7 +58,10 @@ public abstract class BaseTestCase {
 		DatabaseUtil.setDatabaseProperties(
 			databaseURL, databaseUsername, databasePassword);
 
-		DatabaseUtil.initializeDatabase(_TEST_DATABASE_PATH);
+		Resource resource = new ClassPathResource(_TEST_DATABASE_PATH);
+
+		ScriptUtils.executeSqlScript(
+			DatabaseUtil.getDatabaseConnection(), resource);
 	}
 
 	protected static void setUpProperties() throws Exception {
