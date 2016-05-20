@@ -85,6 +85,10 @@ public class SearchQuery {
 		return _userId;
 	}
 
+	public boolean isActive() {
+		return _active;
+	}
+
 	public boolean isAuctionListing() {
 		return _auctionListing;
 	}
@@ -95,10 +99,6 @@ public class SearchQuery {
 
 	public boolean isFreeShippingOnly() {
 		return _freeShippingOnly;
-	}
-
-	public boolean isActive() {
-		return _active;
 	}
 
 	public boolean isNewCondition() {
@@ -115,6 +115,10 @@ public class SearchQuery {
 
 	public boolean isUsedCondition() {
 		return _usedCondition;
+	}
+
+	public void setActive(boolean active) {
+		_active = active;
 	}
 
 	public void setAuctionListing(boolean auctionListing) {
@@ -143,10 +147,6 @@ public class SearchQuery {
 
 	public void setMinPrice(double minPrice) {
 		this._minPrice = minPrice;
-	}
-
-	public void setActive(boolean active) {
-		_active = active;
 	}
 
 	public void setNewCondition(boolean newCondition) {

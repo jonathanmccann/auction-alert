@@ -28,30 +28,30 @@
 		</property>
 	</bean>
 
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
 		<property name="driverClassName" value="${jdbc.default.driverClassName}" />
 		<property name="url" value="${jdbc.default.url}" />
 		<property name="username" value="${jdbc.default.username}" />
 		<property name="password" value="${jdbc.default.password}" />
 	</bean>
 
-	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
-	<bean id="notificationPreferencesDAO" class="com.app.dao.NotificationPreferencesDAO" />
-	<bean id="releaseDAO" class="com.app.dao.ReleaseDAO" />
-	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
-	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
-	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
-	<bean id="userDAO" class="com.app.dao.UserDAO" />
+	<bean class="com.app.dao.CategoryDAO" id="categoryDAO" />
+	<bean class="com.app.dao.NotificationPreferencesDAO" id="notificationPreferencesDAO" />
+	<bean class="com.app.dao.ReleaseDAO" id="releaseDAO" />
+	<bean class="com.app.dao.SearchQueryDAO" id="searchQueryDAO" />
+	<bean class="com.app.dao.SearchQueryPreviousResultDAO" id="searchQueryPreviousResultDAO" />
+	<bean class="com.app.dao.SearchResultDAO" id="searchResultDAO" />
+	<bean class="com.app.dao.UserDAO" id="userDAO" />
 
-	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	<bean class="org.apache.shiro.spring.LifecycleBeanPostProcessor" id="lifecycleBeanPostProcessor" />
 
-	<bean id="sha512Matcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+	<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher" id="sha512Matcher">
 		<property name="hashAlgorithmName" value="SHA-512" />
 		<property name="storedCredentialsHexEncoded" value="false" />
 		<property name="hashIterations" value="1024" />
 	</bean>
 
-	<bean id="eBayRealm" class="com.app.shiro.SaltedJdbcRealm">
+	<bean class="com.app.shiro.SaltedJdbcRealm" id="eBayRealm">
 		<property name="dataSource" ref="dataSource" />
 		<property name="authenticationQuery" value="SELECT password, salt FROM user WHERE username = ?" />
 		<property name="userRolesQuery" value="SELECT roleName FROM UserRole WHERE email = ?" />
@@ -60,29 +60,29 @@
 		<property name="credentialsMatcher" ref="sha512Matcher" />
 	</bean>
 
-	<bean id="builtInCacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+	<bean class="org.apache.shiro.cache.MemoryConstrainedCacheManager" id="builtInCacheManager" />
 
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+	<bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
 		<property name="cacheManager" ref="builtInCacheManager" />
 		<property name="realm" ref="eBayRealm" />
 	</bean>
 
-	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />
 
 	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-		<property name="securityManager" ref="securityManager"/>
+		<property name="securityManager" ref="securityManager" />
 	</bean>
 
-	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-		<property name="securityManager" ref="securityManager"/>
+	<bean class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" id="shiroFilter">
+		<property name="securityManager" ref="securityManager" />
 	</bean>
 
 	<cache:annotation-driven/>
 
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+	<bean class="org.springframework.cache.ehcache.EhCacheCacheManager" id="cacheManager">
 		<property name="cacheManager" ref="ehcache" />
 	</bean>
-	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+	<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" id="ehcache">
 		<property name="configLocation" value="/WEB-INF/ehcache.xml" />
 	</bean>
 

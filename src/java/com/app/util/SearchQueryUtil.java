@@ -17,11 +17,13 @@ package com.app.util;
 import com.app.dao.SearchQueryDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Jonathan McCann
@@ -38,7 +40,7 @@ public class SearchQueryUtil {
 	public static int addSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
-		normalizeSearchQuery(searchQuery);
+		_normalizeSearchQuery(searchQuery);
 
 		return _searchQueryDAO.addSearchQuery(searchQuery);
 	}
@@ -90,7 +92,7 @@ public class SearchQueryUtil {
 	public static void updateSearchQuery(int userId, SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
-		normalizeSearchQuery(searchQuery);
+		_normalizeSearchQuery(searchQuery);
 
 		_searchQueryDAO.updateSearchQuery(userId, searchQuery);
 	}
@@ -100,7 +102,7 @@ public class SearchQueryUtil {
 		_searchQueryDAO = searchQueryDAO;
 	}
 
-	private static void normalizeSearchQuery(SearchQuery searchQuery) {
+	private static void _normalizeSearchQuery(SearchQuery searchQuery) {
 		if (!searchQuery.isNewCondition() && !searchQuery.isUsedCondition() &&
 			!searchQuery.isUnspecifiedCondition()) {
 

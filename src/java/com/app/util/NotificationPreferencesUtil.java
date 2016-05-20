@@ -37,8 +37,7 @@ public class NotificationPreferencesUtil {
 			notificationPreferences);
 	}
 
-	public static void deleteNotificationPreferencesByUserId(
-			int userId)
+	public static void deleteNotificationPreferencesByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
 		_notificationPreferencesDAO.deleteNotificationPreferencesByUserId(

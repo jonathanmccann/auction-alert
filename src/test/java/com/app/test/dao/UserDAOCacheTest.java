@@ -16,10 +16,10 @@ package com.app.test.dao;
 
 import com.app.dao.UserDAO;
 import com.app.model.User;
+import com.app.test.BaseTestCase;
 
 import java.util.List;
 
-import com.app.test.BaseTestCase;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.statistics.StatisticsGateway;
@@ -38,15 +38,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class UserDAOCacheTest extends BaseTestCase {
-
-	@Autowired
-	private CacheManager cacheManager;
-
-	@Autowired
-	private UserDAO userDAO;
 
 	@Before
 	public void setUp() throws Exception {
@@ -55,45 +49,45 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserByUserId() throws Exception {
-		Cache cache = cacheManager.getCache("userByUserId");
+		Cache cache = _cacheManager.getCache("userByUserId");
 
 		StatisticsGateway statistics = cache.getStatistics();
 
-		userDAO.addUser("test@test.com", "password", "salt");
+		_userDAO.addUser("test@test.com", "password", "salt");
 
-		User user = userDAO.getUserByUserId(1);
+		User user = _userDAO.getUserByUserId(1);
 
-		assertUser(user, "test@test.com");
+		_assertUser(user, "test@test.com");
 
-		user = userDAO.getUserByUserId(1);
+		user = _userDAO.getUserByUserId(1);
 
-		assertUser(user, "test@test.com");
+		_assertUser(user, "test@test.com");
 
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		userDAO.updateUser(
+		_userDAO.updateUser(
 			1, "test2@test.com", "1234567890", "iOS", "@txt.att.net");
 
-		user = userDAO.getUserByUserId(1);
+		user = _userDAO.getUserByUserId(1);
 
-		assertUser(user, "test2@test.com");
+		_assertUser(user, "test2@test.com");
 
-		user = userDAO.getUserByUserId(1);
+		user = _userDAO.getUserByUserId(1);
 
-		assertUser(user, "test2@test.com");
+		_assertUser(user, "test2@test.com");
 
 		Assert.assertEquals(2, statistics.cacheMissCount());
 		Assert.assertEquals(2, statistics.cacheHitCount());
 		Assert.assertEquals(1, statistics.cacheRemoveCount());
 
-		userDAO.deleteUserByUserId(1);
+		_userDAO.deleteUserByUserId(1);
 
-		user = userDAO.getUserByUserId(1);
+		user = _userDAO.getUserByUserId(1);
 
 		Assert.assertNull(user);
 
-		user = userDAO.getUserByUserId(1);
+		user = _userDAO.getUserByUserId(1);
 
 		Assert.assertNull(user);
 
@@ -104,57 +98,59 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserIds() throws Exception {
-		Cache cache = cacheManager.getCache("userIds");
+		Cache cache = _cacheManager.getCache("userIds");
 
 		StatisticsGateway statistics = cache.getStatistics();
 
-		userDAO.addUser("test@test.com", "password", "salt");
-		userDAO.addUser("test2@test.com", "password", "salt");
+		_userDAO.addUser("test@test.com", "password", "salt");
+		_userDAO.addUser("test2@test.com", "password", "salt");
 
-		List<Integer> userIds = userDAO.getUserIds();
+		List<Integer> userIds = _userDAO.getUserIds();
 
-		assertUserIds(userIds, 2);
+		_assertUserIds(userIds, 2);
 
-		userIds = userDAO.getUserIds();
+		userIds = _userDAO.getUserIds();
 
-		assertUserIds(userIds, 2);
+		_assertUserIds(userIds, 2);
 
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		userDAO.addUser("test3@test.com", "password", "salt");
+		_userDAO.addUser("test3@test.com", "password", "salt");
 
-		userIds = userDAO.getUserIds();
+		userIds = _userDAO.getUserIds();
 
-		assertUserIds(userIds, 3);
+		_assertUserIds(userIds, 3);
 
-		userIds = userDAO.getUserIds();
+		userIds = _userDAO.getUserIds();
 
-		assertUserIds(userIds, 3);
+		_assertUserIds(userIds, 3);
 
 		Assert.assertEquals(2, statistics.cacheMissCount());
 		Assert.assertEquals(2, statistics.cacheHitCount());
 
-		userDAO.deleteUserByUserId(3);
+		_userDAO.deleteUserByUserId(3);
 
-		userIds = userDAO.getUserIds();
+		userIds = _userDAO.getUserIds();
 
-		assertUserIds(userIds, 2);
+		_assertUserIds(userIds, 2);
 
-		userIds = userDAO.getUserIds();
+		userIds = _userDAO.getUserIds();
 
-		assertUserIds(userIds, 2);
+		_assertUserIds(userIds, 2);
 
 		Assert.assertEquals(3, statistics.cacheMissCount());
 		Assert.assertEquals(3, statistics.cacheHitCount());
 	}
 
-	private static void assertUser(User user, String emailAddress) {
+	private static void _assertUser(User user, String emailAddress) {
 		Assert.assertEquals(1, user.getUserId());
 		Assert.assertEquals(emailAddress, user.getEmailAddress());
 	}
 
-	private static void assertUserIds(List<Integer> userIds, int expectedSize) {
+	private static void _assertUserIds(
+		List<Integer> userIds, int expectedSize) {
+
 		Assert.assertEquals(expectedSize, userIds.size());
 		Assert.assertEquals(1, (int)userIds.get(0));
 		Assert.assertEquals(2, (int)userIds.get(1));
@@ -163,5 +159,11 @@ public class UserDAOCacheTest extends BaseTestCase {
 			Assert.assertEquals(3, (int)userIds.get(2));
 		}
 	}
+
+	@Autowired
+	private CacheManager _cacheManager;
+
+	@Autowired
+	private UserDAO _userDAO;
 
 }

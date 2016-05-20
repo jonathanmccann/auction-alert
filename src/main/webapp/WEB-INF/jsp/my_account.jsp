@@ -82,7 +82,7 @@
 					<div id="notificationOptions">
 						<b>Receive notifications via:</b> <br>
 						<form:checkbox label="Email" path="notificationPreferences.emailNotification" value="${notificationPreferences.emailNotification}" /> <br>
-						<form:checkbox label="Text" id="textNotification" path="notificationPreferences.textNotification" value="${notificationPreferences.textNotification}" />
+						<form:checkbox id="textNotification" label="Text" path="notificationPreferences.textNotification" value="${notificationPreferences.textNotification}" />
 					</div>
 
 					<div id="basedOnTimeOptions">
@@ -91,6 +91,7 @@
 						<form:select path="notificationPreferences.timeZone" value="${notificationPreferences.timeZone}">
 							<form:options items="${timeZones}" />
 						</form:select>
+
 						<br>
 						<br>
 
@@ -103,6 +104,7 @@
 						<form:select path="notificationPreferences.endOfDay" value="${notificationPreferences.endOfDay}">
 							<form:options items="${hours}" />
 						</form:select>
+
 						<br>
 						<br>
 
@@ -140,6 +142,7 @@
 					<input id="updateUserSubmit" type="submit" value="Update User" />
 				</div>
 			</form:form>
+
 			<div align="center">
 				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
 				My Account | <a href="log_out">Log Out</a>

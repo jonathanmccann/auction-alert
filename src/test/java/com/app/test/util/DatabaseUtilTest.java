@@ -19,6 +19,7 @@ import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
 
 import java.lang.reflect.Field;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -39,14 +40,14 @@ public class DatabaseUtilTest {
 
 	@After
 	public void tearDown() {
-		setDatabaseProperties();
+		_setDatabaseProperties();
 	}
 
 	@Test
 	public void testGetDatabaseConnection()
 		throws DatabaseConnectionException, SQLException {
 
-		setDatabaseProperties();
+		_setDatabaseProperties();
 
 		Connection connection = DatabaseUtil.getDatabaseConnection();
 
@@ -75,7 +76,7 @@ public class DatabaseUtilTest {
 		DatabaseUtil.getDatabaseConnection();
 	}
 
-	private static void setDatabaseProperties() {
+	private static void _setDatabaseProperties() {
 		String databasePassword = System.getProperty(
 			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
 		String databaseURL = System.getProperty(

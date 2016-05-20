@@ -22,14 +22,14 @@ import com.app.util.eBayAPIUtil;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Driver;
-import java.sql.DriverManager;
 
 /**
  * @author Jonathan McCann

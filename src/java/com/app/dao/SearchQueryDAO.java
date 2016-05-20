@@ -39,10 +39,12 @@ import org.springframework.cache.annotation.Caching;
  */
 public class SearchQueryDAO {
 
-	@Caching(evict = {
-		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
-		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
-	})
+	@Caching(
+		evict = {
+			@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+			@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+		}
+	)
 	public void activateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -60,10 +62,12 @@ public class SearchQueryDAO {
 		}
 	}
 
-	@Caching(evict = {
-		@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'true'"),
-		@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'false'")
-	})
+	@Caching(
+		evict = {
+			@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'true'"),
+			@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'false'")
+		}
+	)
 	public int addSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
@@ -77,7 +81,7 @@ public class SearchQueryDAO {
 					_ADD_ADVANCED_SEARCH_QUERY_SQL,
 					Statement.RETURN_GENERATED_KEYS)) {
 
-			populateAddSearchQueryPreparedStatement(
+			_populateAddSearchQueryPreparedStatement(
 				preparedStatement, searchQuery);
 
 			preparedStatement.executeUpdate();
@@ -90,10 +94,12 @@ public class SearchQueryDAO {
 		}
 	}
 
-	@Caching(evict = {
-		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
-		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
-	})
+	@Caching(
+		evict = {
+			@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+			@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+		}
+	)
 	public void deactivateSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -111,10 +117,12 @@ public class SearchQueryDAO {
 		}
 	}
 
-	@Caching(evict = {
-		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
-		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
-	})
+	@Caching(
+		evict = {
+			@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+			@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+		}
+	)
 	public void deleteSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -130,10 +138,12 @@ public class SearchQueryDAO {
 		}
 	}
 
-	@Caching(evict = {
-		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
-		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
-	})
+	@Caching(
+		evict = {
+			@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+			@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+		}
+	)
 	public void deleteSearchQuery(int userId, int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -155,8 +165,8 @@ public class SearchQueryDAO {
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Getting all search queries for userId: {} and active: {}",
-			userId, active);
+			"Getting all search queries for userId: {} and active: {}", userId,
+			active);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -170,7 +180,7 @@ public class SearchQueryDAO {
 			List<SearchQuery> searchQueries = new ArrayList<>();
 
 			while (resultSet.next()) {
-				searchQueries.add(createSearchQueryFromResultSet(resultSet));
+				searchQueries.add(_createSearchQueryFromResultSet(resultSet));
 			}
 
 			return searchQueries;
@@ -191,7 +201,7 @@ public class SearchQueryDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
-				return createSearchQueryFromResultSet(resultSet);
+				return _createSearchQueryFromResultSet(resultSet);
 			}
 			else {
 				throw new SQLException(
@@ -223,10 +233,12 @@ public class SearchQueryDAO {
 		}
 	}
 
-	@Caching(evict = {
-		@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
-		@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
-	})
+	@Caching(
+		evict = {
+			@CacheEvict(value = "searchQueries", key = "#userId + 'true'"),
+			@CacheEvict(value = "searchQueries", key = "#userId + 'false'")
+		}
+	)
 	public void updateSearchQuery(int userId, SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
@@ -237,7 +249,7 @@ public class SearchQueryDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_UPDATE_ADVANCED_SEARCH_QUERY_SQL)) {
 
-			populateUpdateSearchQueryPreparedStatement(
+			_populateUpdateSearchQueryPreparedStatement(
 				preparedStatement, searchQuery);
 
 			preparedStatement.setInt(13, searchQuery.getSearchQueryId());
@@ -247,7 +259,7 @@ public class SearchQueryDAO {
 		}
 	}
 
-	private static SearchQuery createSearchQueryFromResultSet(
+	private static SearchQuery _createSearchQueryFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
 
@@ -275,9 +287,8 @@ public class SearchQueryDAO {
 		return searchQuery;
 	}
 
-	private static void populateAddSearchQueryPreparedStatement(
-			PreparedStatement preparedStatement,
-			SearchQuery searchQuery)
+	private static void _populateAddSearchQueryPreparedStatement(
+			PreparedStatement preparedStatement, SearchQuery searchQuery)
 		throws SQLException {
 
 		preparedStatement.setInt(1, searchQuery.getUserId());
@@ -295,7 +306,7 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(13, searchQuery.isActive());
 	}
 
-	private static void populateUpdateSearchQueryPreparedStatement(
+	private static void _populateUpdateSearchQueryPreparedStatement(
 			PreparedStatement preparedStatement, SearchQuery searchQuery)
 		throws SQLException {
 
@@ -312,6 +323,9 @@ public class SearchQueryDAO {
 		preparedStatement.setDouble(11, searchQuery.getMinPrice());
 		preparedStatement.setBoolean(12, searchQuery.isActive());
 	}
+
+	private static final String _ACTIVATION_SEARCH_QUERY_SQL =
+		"UPDATE SearchQuery SET active = ? WHERE searchQueryId = ? and userId = ?";
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(userId, keywords, categoryId, " +
@@ -334,9 +348,6 @@ public class SearchQueryDAO {
 
 	private static final String _GET_SEARCH_QUERY_SQL =
 		"SELECT * FROM SearchQuery WHERE searchQueryId = ?";
-
-	private static final String _ACTIVATION_SEARCH_QUERY_SQL =
-		"UPDATE SearchQuery SET active = ? WHERE searchQueryId = ? and userId = ?";
 
 	private static final String _UPDATE_ADVANCED_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, " +

@@ -38,19 +38,19 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class SpringTest {
 
 	@Autowired
-	CategoryDAO categoryDAO;
+	private CategoryDAO categoryDAO;
 
 	@Autowired
-	ReleaseDAO releaseDAO;
+	private ReleaseDAO releaseDAO;
 
 	@Autowired
-	SearchQueryDAO searchQueryDAO;
+	private SearchQueryDAO searchQueryDAO;
 
 	@Autowired
-	SearchQueryPreviousResultDAO searchQueryPreviousResultDAO;
+	private SearchQueryPreviousResultDAO searchQueryPreviousResultDAO;
 
 	@Autowired
-	SearchResultDAO searchResultDAO;
+	private SearchResultDAO searchResultDAO;
 
 	@Test
 	public void testCategoryDAO() {
@@ -76,4 +76,5 @@ public class SpringTest {
 	public void testSearchResultDAO() {
 		Assert.assertNotNull(searchResultDAO);
 	}
+
 }

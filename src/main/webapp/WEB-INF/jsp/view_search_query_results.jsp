@@ -52,10 +52,11 @@
 										<a href="${item.itemURL}" target="_blank">${item.itemTitle}</a></br>
 
 										<c:if test="${item.auctionPrice gt 0.00}">
-											Auction Price: <fmt:formatNumber value="${item.auctionPrice}" type="currency" /></br>
+											Auction Price: <fmt:formatNumber type="currency" value="${item.auctionPrice}" /></br>
 										</c:if>
+
 										<c:if test="${item.fixedPrice gt 0.00}">
-											Fixed Price: <fmt:formatNumber value="${item.fixedPrice}" type="currency" />
+											Fixed Price: <fmt:formatNumber type="currency" value="${item.fixedPrice}" />
 										</c:if>
 									</div>
 								</div>

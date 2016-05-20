@@ -45,12 +45,12 @@ public class DatabaseUtil {
 			return DriverManager.getConnection(
 				_databaseURL, _databaseUsername, _databasePassword);
 		}
-		catch (SQLException exception) {
+		catch (SQLException sqle) {
 			_log.error(
 				"Could not get a database connection. Please check your " +
 					"database settings in 'config.properties'");
 
-			throw new DatabaseConnectionException(exception);
+			throw new DatabaseConnectionException(sqle);
 		}
 	}
 
@@ -95,7 +95,9 @@ public class DatabaseUtil {
 	}
 
 	private static final String _APPLICATION_RELEASE_NAME = "application";
+
 	private static final String _APPLICATION_VERSION = "1";
+
 	private static final String _DEFAULT_DATABASE_PATH = "/sql/defaultdb.sql";
 
 	private static final Logger _log = LoggerFactory.getLogger(

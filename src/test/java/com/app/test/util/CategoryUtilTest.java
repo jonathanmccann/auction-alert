@@ -21,14 +21,14 @@ import com.app.util.ReleaseUtil;
 
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.call.GetCategoriesCall;
+import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
+import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
-import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import org.junit.Assert;
@@ -65,7 +65,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddCategory() throws Exception {
-		addCategory();
+		_addCategory();
 
 		List<Category> categories = CategoryUtil.getCategories();
 
@@ -79,7 +79,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testCreateGetCategoriesCall() throws Exception {
-		Method method = _clazz.getDeclaredMethod("createGetCategoriesCall");
+		Method method = _clazz.getDeclaredMethod("_createGetCategoriesCall");
 
 		method.setAccessible(true);
 
@@ -103,26 +103,11 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testIsNewerCategoryVersion() throws Exception {
-		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
-
-		Method method = _clazz.getDeclaredMethod(
-			"isNewerCategoryVersion", String.class);
-
-		method.setAccessible(true);
-
-		Assert.assertFalse((boolean) method.invoke(_classInstance, ""));
-		Assert.assertFalse((boolean) method.invoke(_classInstance, "1"));
-		Assert.assertFalse((boolean) method.invoke(_classInstance, "100"));
-		Assert.assertTrue((boolean) method.invoke(_classInstance, "200"));
-	}
-
-	@Test
 	public void testDeleteCategories() throws Exception {
-		addCategory(
+		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
-		addCategory(
+		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 
@@ -135,10 +120,10 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetCategories() throws Exception {
-		addCategory(
+		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
-		addCategory(
+		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 
@@ -156,11 +141,26 @@ public class CategoryUtilTest extends BaseTestCase {
 		Assert.assertFalse(categories.isEmpty());
 	}
 
-	private static void addCategory() throws Exception {
-		addCategory(_CATEGORY_ID, _CATEGORY_NAME);
+	@Test
+	public void testIsNewerCategoryVersion() throws Exception {
+		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
+
+		Method method = _clazz.getDeclaredMethod(
+			"_isNewerCategoryVersion", String.class);
+
+		method.setAccessible(true);
+
+		Assert.assertFalse((boolean)method.invoke(_classInstance, ""));
+		Assert.assertFalse((boolean)method.invoke(_classInstance, "1"));
+		Assert.assertFalse((boolean) method.invoke(_classInstance, "100"));
+		Assert.assertTrue((boolean) method.invoke(_classInstance, "200"));
 	}
 
-	private static void addCategory(String categoryId, String categoryName)
+	private static void _addCategory() throws Exception {
+		_addCategory(_CATEGORY_ID, _CATEGORY_NAME);
+	}
+
+	private static void _addCategory(String categoryId, String categoryName)
 		throws Exception {
 
 		List<Category> categories = new ArrayList<>();
@@ -172,13 +172,15 @@ public class CategoryUtilTest extends BaseTestCase {
 		CategoryUtil.addCategories(categories);
 	}
 
-	private static Object _classInstance;
-	private static Class _clazz;
+	private static final String _CATEGORY_ID = "categoryId";
+
+	private static final String _CATEGORY_NAME = "categoryName";
+
+	private static final String _CATEGORY_RELEASE_NAME = "category";
 
 	private static final int _ROOT_CATEGORY_LEVEL_LIMIT = 1;
 
-	private static final String _CATEGORY_ID = "categoryId";
-	private static final String _CATEGORY_NAME = "categoryName";
-	private static final String _CATEGORY_RELEASE_NAME = "category";
+	private static Object _classInstance;
+	private static Class _clazz;
 
 }

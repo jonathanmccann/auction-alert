@@ -32,7 +32,6 @@ import com.ebay.services.finding.SortOrderType;
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class eBaySearchResultUtil {
 
 		com.ebay.services.finding.SearchResult searchResults = null;
 
-		FindItemsAdvancedRequest request = setUpAdvancedRequest(searchQuery);
+		FindItemsAdvancedRequest request = _setUpAdvancedRequest(searchQuery);
 
 		FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
 			request);
@@ -62,29 +61,28 @@ public class eBaySearchResultUtil {
 
 		List<SearchItem> searchItems = searchResults.getItem();
 
-		return createSearchResults(
+		return _createSearchResults(
 			searchItems, searchQuery.getSearchQueryId());
 	}
 
-	private static SearchResult createSearchResult(SearchItem item) {
+	private static SearchResult _createSearchResult(SearchItem item) {
 		SearchResult searchResult = new SearchResult();
 
 		ListingInfo listingInfo = item.getListingInfo();
 
 		searchResult.setItemId(item.getItemId());
 		searchResult.setItemTitle(item.getTitle());
-		searchResult.setItemURL(
-			_EBAY_URL_PREFIX + searchResult.getItemId());
+		searchResult.setItemURL(_EBAY_URL_PREFIX + searchResult.getItemId());
 		searchResult.setGalleryURL(item.getGalleryURL());
 
-		setPrice(
+		_setPrice(
 			searchResult, listingInfo, item.getSellingStatus(),
 			listingInfo.getListingType());
 
 		return searchResult;
 	}
 
-	private static List<SearchResult> createSearchResults(
+	private static List<SearchResult> _createSearchResults(
 		List<SearchItem> searchItems, int searchQueryId) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
@@ -92,8 +90,7 @@ public class eBaySearchResultUtil {
 		Collections.reverse(searchItems);
 
 		for (SearchItem searchItem : searchItems) {
-			SearchResult searchResult = createSearchResult(
-				searchItem);
+			SearchResult searchResult = _createSearchResult(searchItem);
 
 			searchResult.setSearchQueryId(searchQueryId);
 
@@ -103,7 +100,7 @@ public class eBaySearchResultUtil {
 		return searchResults;
 	}
 
-	private static void setPrice(
+	private static void _setPrice(
 		SearchResult searchResult, ListingInfo listingInfo,
 		SellingStatus sellingStatus, String typeOfAuction) {
 
@@ -131,7 +128,7 @@ public class eBaySearchResultUtil {
 		}
 	}
 
-	private static FindItemsAdvancedRequest setUpAdvancedRequest(
+	private static FindItemsAdvancedRequest _setUpAdvancedRequest(
 		SearchQuery searchQuery) {
 
 		_log.info("Setting up advanced request");
@@ -162,6 +159,7 @@ public class eBaySearchResultUtil {
 
 			if (searchQuery.isNewCondition()) {
 				ItemFilter newCondition = new ItemFilter();
+
 				newCondition.setName(ItemFilterType.CONDITION);
 				newCondition.getValue().add("New");
 				request.getItemFilter().add(newCondition);
@@ -169,6 +167,7 @@ public class eBaySearchResultUtil {
 
 			if (searchQuery.isUsedCondition()) {
 				ItemFilter usedCondition = new ItemFilter();
+
 				usedCondition.setName(ItemFilterType.CONDITION);
 				usedCondition.getValue().add("Used");
 				request.getItemFilter().add(usedCondition);
@@ -176,6 +175,7 @@ public class eBaySearchResultUtil {
 
 			if (searchQuery.isUnspecifiedCondition()) {
 				ItemFilter unspecifiedCondition = new ItemFilter();
+
 				unspecifiedCondition.setName(ItemFilterType.CONDITION);
 				unspecifiedCondition.getValue().add("Unspecified");
 				request.getItemFilter().add(unspecifiedCondition);
@@ -186,6 +186,7 @@ public class eBaySearchResultUtil {
 			!searchQuery.isFixedPriceListing()) {
 
 			ItemFilter listingType = new ItemFilter();
+
 			listingType.setName(ItemFilterType.LISTING_TYPE);
 			listingType.getValue().add("AuctionWithBIN");
 
@@ -201,6 +202,7 @@ public class eBaySearchResultUtil {
 
 		if (searchQuery.getMinPrice() > 0) {
 			ItemFilter minPrice = new ItemFilter();
+
 			minPrice.setName(ItemFilterType.MIN_PRICE);
 			minPrice.getValue().add(
 				_DECIMAL_FORMAT.format(searchQuery.getMinPrice()));
@@ -209,6 +211,7 @@ public class eBaySearchResultUtil {
 
 		if (searchQuery.getMaxPrice() > 0) {
 			ItemFilter maxPrice = new ItemFilter();
+
 			maxPrice.setName(ItemFilterType.MAX_PRICE);
 			maxPrice.getValue().add(
 				_DECIMAL_FORMAT.format(searchQuery.getMaxPrice()));
@@ -216,6 +219,7 @@ public class eBaySearchResultUtil {
 		}
 
 		PaginationInput paginationInput = new PaginationInput();
+
 		paginationInput.setEntriesPerPage(
 			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
 

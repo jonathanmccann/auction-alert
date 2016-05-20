@@ -25,7 +25,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -39,14 +38,13 @@ public class SearchResultDAO {
 	public int addSearchResult(SearchResult searchResult)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug(
-			"Adding new search result: {}", searchResult.getItemId());
+		_log.debug("Adding new search result: {}", searchResult.getItemId());
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_ADD_SEARCH_RESULT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
-			populateAddSearchResultPreparedStatement(
+			_populateAddSearchResultPreparedStatement(
 				preparedStatement, searchResult);
 
 			preparedStatement.executeUpdate();
@@ -109,15 +107,14 @@ public class SearchResultDAO {
 			List<SearchResult> searchResults = new ArrayList<>();
 
 			while (resultSet.next()) {
-				searchResults.add(
-					createSearchResultFromResultSet(resultSet));
+				searchResults.add(_createSearchResultFromResultSet(resultSet));
 			}
 
 			return searchResults;
 		}
 	}
 
-	private static SearchResult createSearchResultFromResultSet(
+	private static SearchResult _createSearchResultFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
 
@@ -135,9 +132,8 @@ public class SearchResultDAO {
 		return searchResult;
 	}
 
-	private static void populateAddSearchResultPreparedStatement(
-			PreparedStatement preparedStatement,
-			SearchResult searchResult)
+	private static void _populateAddSearchResultPreparedStatement(
+			PreparedStatement preparedStatement, SearchResult searchResult)
 		throws SQLException {
 
 		preparedStatement.setInt(1, searchResult.getSearchQueryId());

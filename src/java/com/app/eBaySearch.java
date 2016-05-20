@@ -36,8 +36,8 @@ public class eBaySearch {
 		try {
 			SearchResultUtil.performSearch();
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error("Unable to perform eBay search", exception);
+		catch (DatabaseConnectionException | SQLException e) {
+			_log.error("Unable to perform eBay search", e);
 		}
 	}
 

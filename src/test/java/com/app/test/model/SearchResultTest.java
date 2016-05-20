@@ -16,8 +16,6 @@ package com.app.test.model;
 
 import com.app.model.SearchResult;
 
-import java.util.Date;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,11 +59,6 @@ public class SearchResultTest {
 	}
 
 	@Test
-	public void testEqualsWithInequalObject() {
-		Assert.assertFalse(_searchResult.equals(new Object()));
-	}
-
-	@Test
 	public void testEqualsWithInequalItemId() {
 		_searchResult.setItemId("1234");
 
@@ -77,15 +70,13 @@ public class SearchResultTest {
 	}
 
 	@Test
-	public void testEqualsWithNullObject() {
-		Assert.assertFalse(_searchResult.equals(null));
+	public void testEqualsWithInequalObject() {
+		Assert.assertFalse(_searchResult.equals(new Object()));
 	}
 
 	@Test
-	public void testSetAndGetAuctionPrice() {
-		_searchResult.setAuctionPrice(14.99);
-
-		Assert.assertEquals(14.99, _searchResult.getAuctionPrice(), 0);
+	public void testEqualsWithNullObject() {
+		Assert.assertFalse(_searchResult.equals(null));
 	}
 
 	@Test
@@ -93,6 +84,13 @@ public class SearchResultTest {
 		_searchResult.setItemId("1234");
 
 		Assert.assertEquals(1234, _searchResult.hashCode());
+	}
+
+	@Test
+	public void testSetAndGetAuctionPrice() {
+		_searchResult.setAuctionPrice(14.99);
+
+		Assert.assertEquals(14.99, _searchResult.getAuctionPrice(), 0);
 	}
 
 	@Test

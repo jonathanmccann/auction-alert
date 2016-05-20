@@ -19,25 +19,28 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Jonathan McCann
+ */
 public class AccountConstants {
 
 	public static Map<Integer, String> getHours() {
-		return _HOURS;
+		return _hours;
 	}
 
 	public static Map<String, String> getMobileCarrierSuffixes() {
-		return _MOBILE_CARRIER_SUFFIXES;
+		return _mobileCarrierSuffixes;
 	}
 
 	public static List<String> getMobileOperatingSystems() {
-		return _MOBILE_OPERATING_SYSTEMS;
+		return _mobileOperatingSystems;
 	}
 
 	public static Map<String, String> getTimeZones() {
-		return _TIME_ZONES;
+		return _timeZones;
 	}
 
-	private static final Map<Integer, String> _HOURS =
+	private static final Map<Integer, String> _hours =
 		new LinkedHashMap<Integer, String>() {
 			{
 				put(1, "12 AM");
@@ -66,8 +69,7 @@ public class AccountConstants {
 				put(24, "11 PM");
 			}
 		};
-
-	private static final Map<String, String> _MOBILE_CARRIER_SUFFIXES =
+	private static final Map<String, String> _mobileCarrierSuffixes =
 		new LinkedHashMap<String, String>() {
 			{
 				put("@message.alltel.com", "Alltel");
@@ -84,8 +86,7 @@ public class AccountConstants {
 				put("@vmobl.com", "Virgin Mobile");
 			}
 		};
-
-	private static final List<String> _MOBILE_OPERATING_SYSTEMS =
+	private static final List<String> _mobileOperatingSystems =
 		new ArrayList<String>() {
 			{
 				add("Android");
@@ -93,8 +94,7 @@ public class AccountConstants {
 				add("Other");
 			}
 		};
-
-	private static final Map<String, String> _TIME_ZONES =
+	private static final Map<String, String> _timeZones =
 		new LinkedHashMap<String, String>() {
 			{
 				put("Pacific/Honolulu", "HST");

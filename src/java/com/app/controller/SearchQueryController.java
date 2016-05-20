@@ -15,7 +15,6 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
@@ -26,7 +25,6 @@ import com.app.util.ValidatorUtil;
 
 import java.sql.SQLException;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +47,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class SearchQueryController {
 
-	@RequestMapping(value = "/activate_search_query", method = RequestMethod.POST)
+	@RequestMapping(
+		value = "/activate_search_query", method = RequestMethod.POST
+	)
 	public String activateSearchQuery(String[] inactiveSearchQueryIds)
 		throws DatabaseConnectionException, SQLException {
 
@@ -63,6 +63,39 @@ public class SearchQueryController {
 		}
 
 		return "redirect:view_search_queries";
+	}
+
+	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
+	public String addSearchQuery(
+			@ModelAttribute("searchQuery")SearchQuery searchQuery)
+		throws DatabaseConnectionException, SQLException {
+
+		int userId = UserUtil.getCurrentUserId();
+
+		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
+				userId)) {
+
+			return "redirect:add_search_query";
+		}
+
+		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
+			searchQuery.setUserId(userId);
+
+			String categoryId = searchQuery.getCategoryId();
+
+			if (ValidatorUtil.isNull(categoryId) ||
+				categoryId.equalsIgnoreCase("All Categories")) {
+
+				searchQuery.setCategoryId("");
+			}
+
+			SearchQueryUtil.addSearchQuery(searchQuery);
+
+			return "redirect:view_search_queries";
+		}
+		else {
+			return "redirect:error.jsp";
+		}
 	}
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
@@ -90,35 +123,22 @@ public class SearchQueryController {
 		return "add_search_query";
 	}
 
-	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
-	public String addSearchQuery(
-			@ModelAttribute("searchQuery")SearchQuery searchQuery)
+	@RequestMapping(
+		value = "/deactivate_search_query", method = RequestMethod.POST
+	)
+	public String deactivateSearchQuery(String[] activeSearchQueryIds)
 		throws DatabaseConnectionException, SQLException {
 
-		int userId = UserUtil.getCurrentUserId();
+		if (ValidatorUtil.isNotNull(activeSearchQueryIds)) {
+			for (String searchQueryId : activeSearchQueryIds) {
+				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
 
-		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(userId)) {
-			return "redirect:add_search_query";
-		}
-
-		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
-			searchQuery.setUserId(userId);
-
-			String categoryId = searchQuery.getCategoryId();
-
-			if (ValidatorUtil.isNull(categoryId) ||
-				categoryId.equalsIgnoreCase("All Categories")) {
-
-				searchQuery.setCategoryId("");
+				SearchQueryUtil.deactivateSearchQuery(
+					UserUtil.getCurrentUserId(), searchQueryIdInteger);
 			}
-
-			SearchQueryUtil.addSearchQuery(searchQuery);
-
-			return "redirect:view_search_queries";
 		}
-		else {
-			return "redirect:error.jsp";
-		}
+
+		return "redirect:view_search_queries";
 	}
 
 	@RequestMapping(value = "/delete_search_query", method = RequestMethod.POST)
@@ -154,43 +174,6 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
-	@RequestMapping(value = "/deactivate_search_query", method = RequestMethod.POST)
-	public String deactivateSearchQuery(String[] activeSearchQueryIds)
-		throws DatabaseConnectionException, SQLException {
-
-		if (ValidatorUtil.isNotNull(activeSearchQueryIds)) {
-			for (String searchQueryId : activeSearchQueryIds) {
-				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
-
-				SearchQueryUtil.deactivateSearchQuery(
-					UserUtil.getCurrentUserId(), searchQueryIdInteger);
-			}
-		}
-
-		return "redirect:view_search_queries";
-	}
-
-	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
-	public String updateSearchQuery(
-			HttpServletRequest request, Map<String, Object> model)
-		throws DatabaseConnectionException, SQLException {
-
-		int searchQueryId = Integer.parseInt(
-			request.getParameter("searchQueryId"));
-
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
-			model.put("searchQuery", searchQuery);
-			model.put("searchQueryCategories", CategoryUtil.getCategories());
-
-			return "add_search_query";
-		}
-		else {
-			return addSearchQuery(model);
-		}
-	}
-
 	@ExceptionHandler(Exception.class)
 	public String handleError(HttpServletRequest request, Exception exception) {
 		_log.error("Request: {}", request.getRequestURL(), exception);
@@ -222,6 +205,27 @@ public class SearchQueryController {
 		}
 	}
 
+	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
+	public String updateSearchQuery(
+			HttpServletRequest request, Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		int searchQueryId = Integer.parseInt(
+			request.getParameter("searchQueryId"));
+
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
+			model.put("searchQuery", searchQuery);
+			model.put("searchQueryCategories", CategoryUtil.getCategories());
+
+			return "add_search_query";
+		}
+		else {
+			return addSearchQuery(model);
+		}
+	}
+
 	@RequestMapping(value = "/view_search_queries", method = RequestMethod.GET)
 	public String viewSearchQueries(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
@@ -230,7 +234,8 @@ public class SearchQueryController {
 			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), true);
 
 		List<SearchQuery> inactiveSearchQueries =
-			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), false);
+			SearchQueryUtil.getSearchQueries(
+				UserUtil.getCurrentUserId(), false);
 
 		model.put("activeSearchQueries", activeSearchQueries);
 		model.put("inactiveSearchQueries", inactiveSearchQueries);

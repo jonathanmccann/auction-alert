@@ -16,10 +16,11 @@ package com.app.test;
 
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesKeys;
-
 import com.app.util.PropertiesUtil;
 import com.app.util.UserUtil;
 import com.app.util.eBayAPIUtil;
+
+import java.net.URL;
 
 import org.junit.runner.RunWith;
 
@@ -31,8 +32,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.net.URL;
 
 /**
  * @author Jonathan McCann
@@ -64,6 +63,16 @@ public abstract class BaseTestCase {
 			DatabaseUtil.getDatabaseConnection(), resource);
 	}
 
+	protected static void setUpInvalidUserUtil() throws Exception {
+		PowerMockito.spy(UserUtil.class);
+
+		PowerMockito.doReturn(
+			_INVALID_USER_ID
+		).when(
+			UserUtil.class, "getCurrentUserId"
+		);
+	}
+
 	protected static void setUpProperties() throws Exception {
 		Class<?> clazz = BaseTestCase.class;
 
@@ -87,18 +96,9 @@ public abstract class BaseTestCase {
 		);
 	}
 
-	protected static void setUpInvalidUserUtil() throws Exception {
-		PowerMockito.spy(UserUtil.class);
-
-		PowerMockito.doReturn(
-			_INVALID_USER_ID
-		).when(
-			UserUtil.class, "getCurrentUserId"
-		);
-	}
+	protected static final int _INVALID_USER_ID = 2;
 
 	protected static final int _USER_ID = 1;
-	protected static final int _INVALID_USER_ID = 2;
 
 	private static final String _TEST_DATABASE_PATH = "/sql/testdb.sql";
 

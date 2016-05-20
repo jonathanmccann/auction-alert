@@ -17,7 +17,6 @@ package com.app.test.util;
 import com.app.model.NotificationPreferences;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
-import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.MailUtil;
 
@@ -27,7 +26,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.mail.Message;
@@ -35,8 +33,8 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
 import org.joda.time.DateTime;
-
 import org.joda.time.DateTimeUtils;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -68,21 +66,9 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetEmailTemplate() throws Exception {
-		Method method = _clazz.getDeclaredMethod("getEmailTemplate");
-
-		method.setAccessible(true);
-
-		Template template = (Template)method.invoke(_classInstance);
-
-		Assert.assertNotNull(template);
-		Assert.assertEquals("email_body.ftl", template.getName());
-	}
-
-	@Test
 	public void testGetAndroidTextTemplate() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"getTextTemplate", String.class);
+			"_getTextTemplate", String.class);
 
 		method.setAccessible(true);
 
@@ -93,9 +79,21 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetEmailTemplate() throws Exception {
+		Method method = _clazz.getDeclaredMethod("_getEmailTemplate");
+
+		method.setAccessible(true);
+
+		Template template = (Template)method.invoke(_classInstance);
+
+		Assert.assertNotNull(template);
+		Assert.assertEquals("email_body.ftl", template.getName());
+	}
+
+	@Test
 	public void testGetiOSTextTemplate() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"getTextTemplate", String.class);
+			"_getTextTemplate", String.class);
 
 		method.setAccessible(true);
 
@@ -108,7 +106,7 @@ public class MailUtilTest extends BaseTestCase {
 	@Test
 	public void testGetTextTemplate() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"getTextTemplate", String.class);
+			"_getTextTemplate", String.class);
 
 		method.setAccessible(true);
 
@@ -119,17 +117,52 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulateAndroidTextMessage() throws Exception {
+		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
+			"_populateTextMessage", SearchResult.class, String.class,
+			String.class, Session.class);
+
+		populateTextMessageMethod.setAccessible(true);
+
+		SearchResult searchResult = new SearchResult(
+			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
+			"http://www.ebay.com/123.jpg");
+
+		Method _authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("_authenticateOutboundEmailAddress");
+
+		_authenticateOutboundEmailAddressMethod.setAccessible(true);
+
+		Session session =
+			(Session)_authenticateOutboundEmailAddressMethod.invoke(
+				_classInstance);
+
+		Message message = (Message)populateTextMessageMethod.invoke(
+			_classInstance, searchResult, "1234567890@txt.att.net", "Android",
+			session);
+
+		Assert.assertEquals(
+			"itemTitle\neBay://item/view?id=1234\n", message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
+	}
+
+	@Test
 	public void testPopulateEmailMessage() throws Exception {
 		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
-			"populateEmailMessage", SearchQuery.class, List.class,
-			String.class, String.class, Session.class);
+			"_populateEmailMessage", SearchQuery.class, List.class, String.class,
+			String.class, Session.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
@@ -137,18 +170,18 @@ public class MailUtilTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
-		Method authenticateOutboundEmailAddressMethod =
-			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
+		Method _authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("_authenticateOutboundEmailAddress");
 
-		authenticateOutboundEmailAddressMethod.setAccessible(true);
+		_authenticateOutboundEmailAddressMethod.setAccessible(true);
 
 		Session session =
-			(Session)authenticateOutboundEmailAddressMethod.invoke(
+			(Session)_authenticateOutboundEmailAddressMethod.invoke(
 				_classInstance);
 
 		Message message = (Message)populateEmailMessageMethod.invoke(
-			_classInstance, searchQuery, searchResults,
-			"test@test.com", "test@test.com", session);
+			_classInstance, searchQuery, searchResults, "test@test.com",
+			"test@test.com", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertTrue(
@@ -168,45 +201,9 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testPopulateAndroidTextMessage() throws Exception {
-		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", SearchResult.class, String.class,
-			String.class, Session.class);
-
-		populateTextMessageMethod.setAccessible(true);
-
-		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg");
-
-		Method authenticateOutboundEmailAddressMethod =
-			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
-
-		authenticateOutboundEmailAddressMethod.setAccessible(true);
-
-		Session session =
-			(Session)authenticateOutboundEmailAddressMethod.invoke(
-				_classInstance);
-
-		Message message = (Message)populateTextMessageMethod.invoke(
-			_classInstance, searchResult, "1234567890@txt.att.net", "Android",
-			session);
-
-		Assert.assertEquals(
-			"itemTitle\neBay://item/view?id=1234\n", message.getContent());
-
-		InternetAddress[] internetAddresses = new InternetAddress[1];
-
-		internetAddresses[0] = new InternetAddress("1234567890@txt.att.net");
-
-		Assert.assertArrayEquals(
-			internetAddresses, message.getRecipients(Message.RecipientType.TO));
-	}
-
-	@Test
 	public void testPopulateiOSTextMessage() throws Exception {
 		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", SearchResult.class, String.class,
+			"_populateTextMessage", SearchResult.class, String.class,
 			String.class, Session.class);
 
 		populateTextMessageMethod.setAccessible(true);
@@ -215,13 +212,13 @@ public class MailUtilTest extends BaseTestCase {
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
 			"http://www.ebay.com/123.jpg");
 
-		Method authenticateOutboundEmailAddressMethod =
-			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
+		Method _authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("_authenticateOutboundEmailAddress");
 
-		authenticateOutboundEmailAddressMethod.setAccessible(true);
+		_authenticateOutboundEmailAddressMethod.setAccessible(true);
 
 		Session session =
-			(Session)authenticateOutboundEmailAddressMethod.invoke(
+			(Session)_authenticateOutboundEmailAddressMethod.invoke(
 				_classInstance);
 
 		Message message = (Message)populateTextMessageMethod.invoke(
@@ -242,7 +239,7 @@ public class MailUtilTest extends BaseTestCase {
 	@Test
 	public void testPopulateTextMessage() throws Exception {
 		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"populateTextMessage", SearchResult.class, String.class,
+			"_populateTextMessage", SearchResult.class, String.class,
 			String.class, Session.class);
 
 		populateTextMessageMethod.setAccessible(true);
@@ -251,13 +248,13 @@ public class MailUtilTest extends BaseTestCase {
 			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
 			"http://www.ebay.com/123.jpg");
 
-		Method authenticateOutboundEmailAddressMethod =
-			_clazz.getDeclaredMethod("authenticateOutboundEmailAddress");
+		Method _authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("_authenticateOutboundEmailAddress");
 
-		authenticateOutboundEmailAddressMethod.setAccessible(true);
+		_authenticateOutboundEmailAddressMethod.setAccessible(true);
 
 		Session session =
-			(Session)authenticateOutboundEmailAddressMethod.invoke(
+			(Session)_authenticateOutboundEmailAddressMethod.invoke(
 				_classInstance);
 
 		Message message = (Message)populateTextMessageMethod.invoke(
@@ -286,7 +283,7 @@ public class MailUtilTest extends BaseTestCase {
 		notificationPreferences.setEmailNotification(true);
 		notificationPreferences.setTextNotification(true);
 
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+		boolean[] notificationDeliverMethods = _setNotificationDeliveryMethods(
 			notificationPreferences);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
@@ -311,7 +308,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
 
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+		boolean[] notificationDeliverMethods = _setNotificationDeliveryMethods(
 			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
@@ -336,7 +333,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
 
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+		boolean[] notificationDeliverMethods = _setNotificationDeliveryMethods(
 			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
@@ -361,7 +358,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
 
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+		boolean[] notificationDeliverMethods = _setNotificationDeliveryMethods(
 			notificationPreferences);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
@@ -386,7 +383,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
 
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+		boolean[] notificationDeliverMethods = _setNotificationDeliveryMethods(
 			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
@@ -411,7 +408,7 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
 
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+		boolean[] notificationDeliverMethods = _setNotificationDeliveryMethods(
 			notificationPreferences);
 
 		Assert.assertFalse(notificationDeliverMethods[0]);
@@ -436,19 +433,19 @@ public class MailUtilTest extends BaseTestCase {
 
 		DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
 
-		boolean[] notificationDeliverMethods = setNotificationDeliveryMethods(
+		boolean[] notificationDeliverMethods = _setNotificationDeliveryMethods(
 			notificationPreferences);
 
 		Assert.assertTrue(notificationDeliverMethods[0]);
 		Assert.assertFalse(notificationDeliverMethods[1]);
 	}
 
-	private static boolean[] setNotificationDeliveryMethods(
+	private static boolean[] _setNotificationDeliveryMethods(
 			NotificationPreferences notificationPreferences)
 		throws Exception {
 
 		Method method = _clazz.getDeclaredMethod(
-			"setNotificationDeliveryMethod", NotificationPreferences.class);
+			"_setNotificationDeliveryMethod", NotificationPreferences.class);
 
 		method.setAccessible(true);
 
@@ -456,12 +453,15 @@ public class MailUtilTest extends BaseTestCase {
 			(boolean[])method.invoke(_classInstance, notificationPreferences);
 	}
 
+	private static final int _END_OF_DAY = 17;
+
+	private static final int _SATURDAY = 6;
+
+	private static final int _START_OF_DAY = 7;
+
+	private static final int _USER_ID = 1;
+
 	private static Object _classInstance;
 	private static Class _clazz;
-
-	private static final int _END_OF_DAY = 17;
-	private static final int _SATURDAY = 6;
-	private static final int _START_OF_DAY = 7;
-	private static final int _USER_ID = 1;
 
 }

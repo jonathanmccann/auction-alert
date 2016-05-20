@@ -18,8 +18,8 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.model.NotificationPreferences;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
-
 import com.app.model.User;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import java.sql.SQLException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -45,8 +46,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.joda.time.DateTime;
-
 import org.joda.time.DateTimeZone;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,7 @@ public class MailUtil {
 			"Sending search results for {} queries",
 			searchQueryResultMap.size());
 
-		Session session = authenticateOutboundEmailAddress();
+		Session session = _authenticateOutboundEmailAddress();
 
 		User user = UserUtil.getUserByUserId(userId);
 
@@ -75,7 +76,7 @@ public class MailUtil {
 			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
 				userId);
 
-		boolean[] notificationDeliveryMethod = setNotificationDeliveryMethod(
+		boolean[] notificationDeliveryMethod = _setNotificationDeliveryMethod(
 			notificationPreferences);
 
 		try {
@@ -83,7 +84,7 @@ public class MailUtil {
 					searchQueryResultMap.entrySet()) {
 
 				if (notificationDeliveryMethod[0]) {
-					Message emailMessage = populateEmailMessage(
+					Message emailMessage = _populateEmailMessage(
 						mapEntry.getKey(), mapEntry.getValue(),
 						user.getEmailAddress(),
 						session.getProperty(
@@ -99,10 +100,9 @@ public class MailUtil {
 					List<SearchResult> searchResults = mapEntry.getValue();
 
 					for (SearchResult searchResult : searchResults) {
-						Message textMessage = populateTextMessage(
+						Message textMessage = _populateTextMessage(
 							searchResult, user.getPhoneNumberEmailAddress(),
-							user.getMobileOperatingSystem(),
-							session);
+							user.getMobileOperatingSystem(), session);
 
 						Transport.send(textMessage);
 					}
@@ -114,19 +114,21 @@ public class MailUtil {
 		}
 	}
 
-	private static Session authenticateOutboundEmailAddress() {
+	private static Session _authenticateOutboundEmailAddress() {
 		return Session.getInstance(
 			PropertiesUtil.getConfigurationProperties(),
 			new Authenticator() {
+
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication(
 						PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
 						PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 				}
+
 			});
 	}
 
-	private static Template getEmailTemplate() throws IOException {
+	private static Template _getEmailTemplate() throws IOException {
 		if (null != _emailTemplate) {
 			return _emailTemplate;
 		}
@@ -140,8 +142,8 @@ public class MailUtil {
 		return _emailTemplate;
 	}
 
-	private static Template getTextTemplate(
-		String mobileOperatingSystem) throws IOException {
+	private static Template _getTextTemplate(String mobileOperatingSystem)
+		throws IOException {
 
 		if (null != _textTemplate) {
 			return _textTemplate;
@@ -165,10 +167,9 @@ public class MailUtil {
 		return _textTemplate;
 	}
 
-	private static Message populateEmailMessage(
+	private static Message _populateEmailMessage(
 			SearchQuery searchQuery, List<SearchResult> searchResults,
-			String recipientEmailAddress, String emailFrom,
-			Session session)
+			String recipientEmailAddress, String emailFrom, Session session)
 		throws Exception {
 
 		Message message = new MimeMessage(session);
@@ -184,13 +185,13 @@ public class MailUtil {
 		message.setSubject(
 			"New Search Results - " + dateFormat.format(new Date()));
 
-		populateMessage(
-			searchQuery, searchResults, message, getEmailTemplate());
+		_populateMessage(
+			searchQuery, searchResults, message, _getEmailTemplate());
 
 		return message;
 	}
 
-	private static void populateMessage(
+	private static void _populateMessage(
 			SearchQuery searchQuery, List<SearchResult> searchResults,
 			Message message, Template template)
 		throws Exception {
@@ -207,7 +208,7 @@ public class MailUtil {
 		message.setText(stringWriter.toString());
 	}
 
-	private static Message populateTextMessage(
+	private static Message _populateTextMessage(
 			SearchResult searchResult, String recipientPhoneNumber,
 			String mobileOperatingSystem, Session session)
 		throws Exception {
@@ -222,14 +223,14 @@ public class MailUtil {
 			Message.RecipientType.TO,
 			new InternetAddress(recipientPhoneNumber));
 
-		populateMessage(
+		_populateMessage(
 			null, searchResults, message,
-			getTextTemplate(mobileOperatingSystem));
+			_getTextTemplate(mobileOperatingSystem));
 
 		return message;
 	}
 
-	private static boolean[] setNotificationDeliveryMethod(
+	private static boolean[] _setNotificationDeliveryMethod(
 			NotificationPreferences notificationPreferences)
 		throws DatabaseConnectionException, SQLException {
 
@@ -239,11 +240,11 @@ public class MailUtil {
 		boolean[] notificationDeliveryMethod = new boolean[2];
 
 		if (notificationPreferences.isBasedOnTime()) {
-			setNotificationDeliveryMethodsBasedOnTime(
+			_setNotificationDeliveryMethodsBasedOnTime(
 				notificationPreferences, dateTime, notificationDeliveryMethod);
 		}
 		else {
-			setNotificationDeliveryMethodsNotBasedOnTime(
+			_setNotificationDeliveryMethodsNotBasedOnTime(
 				notificationPreferences, notificationDeliveryMethod);
 		}
 
@@ -253,7 +254,7 @@ public class MailUtil {
 		return notificationDeliveryMethod;
 	}
 
-	private static void setNotificationDeliveryMethodsBasedOnTime(
+	private static void _setNotificationDeliveryMethodsBasedOnTime(
 		NotificationPreferences notificationPreferences, DateTime dateTime,
 		boolean[] notificationDeliveryMethod) {
 
@@ -264,7 +265,7 @@ public class MailUtil {
 		boolean isWeekday = true;
 
 		if ((hourOfDay < notificationPreferences.getStartOfDay()) ||
-			hourOfDay >= notificationPreferences.getEndOfDay()) {
+			(hourOfDay >= notificationPreferences.getEndOfDay())) {
 
 			isDaytime = false;
 		}
@@ -299,7 +300,7 @@ public class MailUtil {
 		}
 	}
 
-	private static void setNotificationDeliveryMethodsNotBasedOnTime(
+	private static void _setNotificationDeliveryMethodsNotBasedOnTime(
 		NotificationPreferences notificationPreferences,
 		boolean[] notificationDeliveryMethod) {
 
@@ -311,13 +312,16 @@ public class MailUtil {
 
 	private static final ThreadLocal<DateFormat> _DATE_FORMAT =
 		new ThreadLocal<DateFormat>() {
+
 			@Override
 			protected DateFormat initialValue() {
 				return new SimpleDateFormat("MM/dd/yyyy");
 			}
+
 		};
 
 	private static final int _SATURDAY = 6;
+
 	private static final int _SUNDAY = 7;
 
 	private static final Logger _log = LoggerFactory.getLogger(MailUtil.class);

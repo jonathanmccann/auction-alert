@@ -38,6 +38,19 @@ public class DatabaseConnectionExceptionTest {
 	}
 
 	@Test
+	public void testDatabaseConnectionExceptionWithCause() {
+		try {
+			throw new DatabaseConnectionException(new SQLException());
+		}
+		catch (DatabaseConnectionException dce) {
+			Assert.assertEquals(
+				DatabaseConnectionException.class, dce.getClass());
+
+			Assert.assertEquals(SQLException.class, dce.getCause().getClass());
+		}
+	}
+
+	@Test
 	public void testDatabaseConnectionExceptionWithMessage() {
 		try {
 			throw new DatabaseConnectionException("Error message");
@@ -66,16 +79,4 @@ public class DatabaseConnectionExceptionTest {
 		}
 	}
 
-	@Test
-	public void testDatabaseConnectionExceptionWithCause() {
-		try {
-			throw new DatabaseConnectionException(new SQLException());
-		}
-		catch (DatabaseConnectionException dce) {
-			Assert.assertEquals(
-				DatabaseConnectionException.class, dce.getClass());
-
-			Assert.assertEquals(SQLException.class, dce.getCause().getClass());
-		}
-	}
 }

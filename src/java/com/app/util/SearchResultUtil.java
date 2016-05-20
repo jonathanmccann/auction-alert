@@ -18,18 +18,16 @@ import com.app.dao.SearchResultDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
+import com.app.runnable.SearchResultRunnable;
 
 import java.sql.SQLException;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.app.runnable.SearchResultRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +59,7 @@ public class SearchResultUtil {
 	}
 
 	public static List<SearchResult> filterSearchResults(
-			SearchQuery searchQuery,
-			List<SearchResult> newSearchResults)
+			SearchQuery searchQuery, List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
 
 		_removePreviouslyNotifiedResults(
@@ -71,12 +68,10 @@ public class SearchResultUtil {
 		if (!newSearchResults.isEmpty()) {
 			_log.debug(
 				"Found {} new search results for keywords: {}",
-				newSearchResults.size(),
-				searchQuery.getKeywords());
+				newSearchResults.size(), searchQuery.getKeywords());
 
-			List<SearchResult> existingSearchResults =
-				getSearchQueryResults(
-					searchQuery.getSearchQueryId());
+			List<SearchResult> existingSearchResults = getSearchQueryResults(
+				searchQuery.getSearchQueryId());
 
 			_deleteOldResults(existingSearchResults, newSearchResults.size());
 
@@ -118,6 +113,13 @@ public class SearchResultUtil {
 		}
 	}
 
+	@Autowired
+	public void setSearchQueryPreviousResultDAO(
+		SearchResultDAO searchResultDAO) {
+
+		_searchResultDAO = searchResultDAO;
+	}
+
 	private static void _addNewResults(List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
 
@@ -139,8 +141,7 @@ public class SearchResultUtil {
 			}
 
 			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-				searchResult.getSearchQueryId(),
-				searchResult.getItemId());
+				searchResult.getSearchQueryId(), searchResult.getItemId());
 		}
 	}
 
@@ -153,11 +154,9 @@ public class SearchResultUtil {
 
 		if (numberOfSearchResultsToRemove > 0) {
 			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
-				SearchResult searchResult = existingSearchResults.get(
-					i);
+				SearchResult searchResult = existingSearchResults.get(i);
 
-				deleteSearchResult(
-					searchResult.getSearchResultId());
+				deleteSearchResult(searchResult.getSearchResultId());
 			}
 		}
 	}
@@ -174,11 +173,10 @@ public class SearchResultUtil {
 			Iterator iterator = newSearchResults.iterator();
 
 			while (iterator.hasNext()) {
-				SearchResult searchResult =
-					(SearchResult) iterator.next();
+				SearchResult searchResult = (SearchResult)iterator.next();
 
 				if (searchQueryPreviousResults.contains(
-					searchResult.getItemId())) {
+						searchResult.getItemId())) {
 
 					iterator.remove();
 				}
@@ -186,19 +184,14 @@ public class SearchResultUtil {
 		}
 	}
 
-	@Autowired
-	public void setSearchQueryPreviousResultDAO(
-		SearchResultDAO searchResultDAO) {
-
-		_searchResultDAO = searchResultDAO;
-	}
-
-	private static SearchResultDAO _searchResultDAO;
-
 	private static final int _THREAD_POOL_SIZE =
 		Runtime.getRuntime().availableProcessors() + 1;
+
 	private static final long _THREAD_TIMEOUT_SECONDS = 15;
+
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultUtil.class);
+
+	private static SearchResultDAO _searchResultDAO;
 
 }

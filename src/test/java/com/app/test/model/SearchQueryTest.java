@@ -178,7 +178,8 @@ public class SearchQueryTest {
 		Assert.assertEquals(_USER_ID, _searchQuery.getUserId());
 	}
 
+	private static SearchQuery _searchQuery;
+
 	private static final int _USER_ID = 1;
 
-	SearchQuery _searchQuery;
 }

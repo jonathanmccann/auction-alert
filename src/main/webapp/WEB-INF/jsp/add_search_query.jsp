@@ -32,6 +32,7 @@
 				<title>Update Search Query</title>
 			</c:otherwise>
 		</c:choose>
+
 		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
 		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
@@ -45,8 +46,8 @@
 				<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
 				<form:input path="userId" type="hidden" value="${searchQuery.userId}" />
 
-				<fmt:formatNumber value="${searchQuery.minPrice}" pattern="0.00" var="minPrice" />
-				<fmt:formatNumber value="${searchQuery.maxPrice}" pattern="0.00" var="maxPrice" />
+				<fmt:formatNumber pattern="0.00" value="${searchQuery.minPrice}" var="minPrice" />
+				<fmt:formatNumber pattern="0.00" value="${searchQuery.maxPrice}" var="maxPrice" />
 
 				<div>
 					<c:choose>
@@ -61,6 +62,7 @@
 							<form:input path="active" type="hidden" value="${searchQuery.active}" />
 						</c:otherwise>
 					</c:choose>
+
 					<div>
 						<b>Keywords:</b> <form:input maxlength="300" path="keywords" value="${searchQuery.keywords}" />
 						<form:select path="categoryId">
@@ -69,14 +71,14 @@
 						</form:select>
 					</div>
 					<div>
-						<form:checkbox path="searchDescription" label="Search Description" value="${searchQuery.searchDescription}"/>
+						<form:checkbox label="Search Description" path="searchDescription" value="${searchQuery.searchDescription}" />
 					</div>
 					<hr>
 					<div>
 						<b>Shipping Options:</b>
 
 						<div>
-							<form:checkbox path="freeShippingOnly" label="Free Shipping" value="${searchQuery.freeShippingOnly}"/>
+							<form:checkbox label="Free Shipping" path="freeShippingOnly" value="${searchQuery.freeShippingOnly}" />
 						</div>
 					</div>
 					<hr>
@@ -84,8 +86,8 @@
 						<b>Listing Type:</b>
 
 						<div>
-							<form:checkbox path="auctionListing" label="Auction" value="${searchQuery.auctionListing}"/> <br>
-							<form:checkbox path="fixedPriceListing" label="Buy It Now" value="${searchQuery.fixedPriceListing}"/>
+							<form:checkbox label="Auction" path="auctionListing" value="${searchQuery.auctionListing}"/> <br>
+							<form:checkbox label="Buy It Now" path="fixedPriceListing" value="${searchQuery.fixedPriceListing}" />
 						</div>
 					</div>
 					<hr>
@@ -93,9 +95,9 @@
 						<b>Condition:</b>
 
 						<div>
-							<form:checkbox path="newCondition" label="New" value="${searchQuery.newCondition}"/> <br>
-							<form:checkbox path="usedCondition" label="Used" value="${searchQuery.usedCondition}"/> <br>
-							<form:checkbox path="unspecifiedCondition" label="Unspecified" value="${searchQuery.unspecifiedCondition}"/>
+							<form:checkbox label="New" path="newCondition" value="${searchQuery.newCondition}"/> <br>
+							<form:checkbox label="Used" path="usedCondition" value="${searchQuery.usedCondition}"/> <br>
+							<form:checkbox label="Unspecified" path="unspecifiedCondition" value="${searchQuery.unspecifiedCondition}" />
 						</div>
 					</div>
 					<hr>
@@ -112,10 +114,10 @@
 								<img src="/resources/images/question_mark_small.png" title="You have reached the maximum number of search queries. Please either delete a search query or increase the limit."><input disabled id="updateSearchQuerySubmit" title="" type="submit" value="Add Search Query" />
 							</c:when>
 							<c:when test="${isAdd}">
-								<input id="updateSearchQuerySubmit" type="submit" value="Add Search Query" formmethod="post" formaction="add_search_query" />
+								<input formaction="add_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Add Search Query" />
 							</c:when>
 							<c:otherwise>
-								<input id="updateSearchQuerySubmit" type="submit" value="Update Search Query" formmethod="post" formaction="update_search_query" />
+								<input formaction="update_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Update Search Query" />
 							</c:otherwise>
 						</c:choose>
 					</div>

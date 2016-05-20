@@ -14,14 +14,13 @@
 
 package com.app.test.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.app.dao.CategoryDAO;
 import com.app.model.Category;
 import com.app.test.BaseTestCase;
 
-import com.app.util.CategoryUtil;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.statistics.StatisticsGateway;
@@ -40,15 +39,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class CategoryDAOCacheTest extends BaseTestCase {
-
-	@Autowired
-	private CacheManager cacheManager;
-
-	@Autowired
-	private CategoryDAO categoryDAO;
 
 	@Before
 	public void setUp() throws Exception {
@@ -57,31 +50,31 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 
 	@Test
 	public void testGetCategories() throws Exception {
-		Cache cache = cacheManager.getCache("categories");
+		Cache cache = _cacheManager.getCache("categories");
 
 		StatisticsGateway statistics = cache.getStatistics();
 
-		addCategory("1", "test1");
-		addCategory("2", "test2");
+		_addCategory("1", "test1");
+		_addCategory("2", "test2");
 
-		List<Category> categories = categoryDAO.getCategories();
+		List<Category> categories = _categoryDAO.getCategories();
 
-		assertCategories(categories);
+		_assertCategories(categories);
 
-		categories = categoryDAO.getCategories();
+		categories = _categoryDAO.getCategories();
 
-		assertCategories(categories);
+		_assertCategories(categories);
 
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		categoryDAO.deleteCategories();
+		_categoryDAO.deleteCategories();
 
-		categories = categoryDAO.getCategories();
+		categories = _categoryDAO.getCategories();
 
 		Assert.assertTrue(categories.isEmpty());
 
-		categories = categoryDAO.getCategories();
+		categories = _categoryDAO.getCategories();
 
 		Assert.assertTrue(categories.isEmpty());
 
@@ -89,7 +82,7 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(2, statistics.cacheHitCount());
 	}
 
-	private void addCategory(String categoryId, String categoryName)
+	private void _addCategory(String categoryId, String categoryName)
 		throws Exception {
 
 		List<Category> categories = new ArrayList<>();
@@ -98,10 +91,10 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 
 		categories.add(category);
 
-		categoryDAO.addCategories(categories);
+		_categoryDAO.addCategories(categories);
 	}
 
-	private void assertCategories(List<Category> categories) {
+	private void _assertCategories(List<Category> categories) {
 		Assert.assertEquals(2, categories.size());
 
 		Category firstCategory = categories.get(0);
@@ -113,4 +106,11 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals("2", secondCategory.getCategoryId());
 		Assert.assertEquals("test2", secondCategory.getCategoryName());
 	}
+
+	@Autowired
+	private CacheManager _cacheManager;
+
+	@Autowired
+	private CategoryDAO _categoryDAO;
+
 }

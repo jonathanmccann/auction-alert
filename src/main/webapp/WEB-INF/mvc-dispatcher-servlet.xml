@@ -14,7 +14,7 @@
 	http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 	<task:annotation-driven />
-	<bean id="scheduledTasks" class="com.app.eBaySearch" />
+	<bean class="com.app.eBaySearch" id="scheduledTasks" />
 
 	<context:component-scan	base-package="com.app.controller" />
 
@@ -33,14 +33,14 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 
-	<mvc:resources mapping="/favicon.ico" location="/resources/images/favicon.ico" />
+	<mvc:resources location="/resources/images/favicon.ico" mapping="/favicon.ico" />
 
-	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources location="/resources/" mapping="/resources/**" />
 
 	<mvc:annotation-driven />
 

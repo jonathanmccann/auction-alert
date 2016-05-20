@@ -41,8 +41,7 @@ public class CategoryDAO {
 	public void addCategories(List<Category> categories)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug(
-			"Adding {} categories", categories.size());
+		_log.debug("Adding {} categories", categories.size());
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -92,15 +91,14 @@ public class CategoryDAO {
 			List<Category> categories = new ArrayList<>();
 
 			while (resultSet.next()) {
-				categories.add(createCategoryFromResultSet(resultSet));
+				categories.add(_createCategoryFromResultSet(resultSet));
 			}
 
 			return categories;
 		}
 	}
 
-	private static Category createCategoryFromResultSet(
-			ResultSet resultSet)
+	private static Category _createCategoryFromResultSet(ResultSet resultSet)
 		throws SQLException {
 
 		Category category = new Category();

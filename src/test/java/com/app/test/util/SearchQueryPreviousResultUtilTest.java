@@ -49,8 +49,7 @@ public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddSearchQueryPreviousResult() throws Exception {
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "1234");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "1234");
 
 		List<String> searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(1);
@@ -60,12 +59,9 @@ public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchQueryPreviousResult() throws Exception {
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "1234");
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "2345");
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "3456");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "1234");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "2345");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "3456");
 
 		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResult(1);
 
@@ -86,12 +82,9 @@ public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSearchQueryPreviousResults() throws Exception {
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "1234");
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "2345");
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "3456");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "1234");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "2345");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "3456");
 
 		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(1);
 
@@ -103,12 +96,9 @@ public class SearchQueryPreviousResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetSearchQueryPreviousResultsCount() throws Exception {
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "1234");
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "2345");
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			1, "3456");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "1234");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "2345");
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(1, "3456");
 
 		int numberOfSearchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(1);

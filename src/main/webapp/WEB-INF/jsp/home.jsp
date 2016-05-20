@@ -37,6 +37,7 @@
 					<c:if test="${not empty authenticationError}">
 						${authenticationError}</br>
 					</c:if>
+
 					<form:form action="log_in" commandName="logIn" method="post">
 						<div>
 							<b>Email Address: </b><input id="emailAddress" name="emailAddress" /></br>
@@ -58,6 +59,7 @@
 					</form:form>
 				</div>
 			</shiro:guest>
+
 			<shiro:user>
 				<h3>View and update search queries and results</h3>
 

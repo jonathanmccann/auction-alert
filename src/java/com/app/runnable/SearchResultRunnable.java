@@ -21,13 +21,15 @@ import com.app.util.MailUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.eBaySearchResultUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jonathan McCann
@@ -41,11 +43,12 @@ public class SearchResultRunnable implements Runnable {
 	@Override
 	public void run() {
 		try {
-			List<SearchQuery> searchQueries =
-				SearchQueryUtil.getSearchQueries(_userId, true);
+			List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+				_userId, true);
 
 			if (searchQueries.size() == 0) {
-				_log.info("There are no search queries for userId: {}", _userId);
+				_log.info(
+					"There are no search queries for userId: {}", _userId);
 
 				return;
 			}
@@ -74,15 +77,14 @@ public class SearchResultRunnable implements Runnable {
 					_userId, searchQueryResultMap);
 			}
 		}
-		catch (DatabaseConnectionException | SQLException exception) {
-			_log.error(
-				"Unable to perform search for userId: {}", _userId, exception);
+		catch (DatabaseConnectionException | SQLException e) {
+			_log.error("Unable to perform search for userId: {}", _userId, e);
 		}
 	}
 
-	private final int _userId;
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultRunnable.class);
+
+	private final int _userId;
 
 }

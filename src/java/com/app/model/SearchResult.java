@@ -14,8 +14,6 @@
 
 package com.app.model;
 
-import java.util.Date;
-
 /**
  * @author Jonathan McCann
  */

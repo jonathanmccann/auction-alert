@@ -19,17 +19,17 @@ $(window).load(function() {
 		position: 'right'
 	});
 
-	$.validator.addMethod("decimalPlaces", function (value) {
+	$.validator.addMethod("decimalPlaces", function(value) {
 		var pattern = new RegExp("^\\d+(?:\\.\\d{2})?$");
 
 		return pattern.test(value);
 	}, "Price must have two decimal places");
 
-	$.validator.addMethod("lessThan", function (value, element, param) {
+	$.validator.addMethod("lessThan", function(value, element, param) {
 		var $min = $(param);
 
 		if (this.settings.onfocusout) {
-			$min.off(".validate-startOfDay").on("blur.validate-startOfDay", function () {
+			$min.off(".validate-startOfDay").on("blur.validate-startOfDay", function() {
 				$(element).valid();
 			});
 		}
@@ -41,7 +41,7 @@ $(window).load(function() {
 		return parseFloat(value) < parseFloat($min.val());
 	}, "Max price must be greater than min price");
 
-	$.validator.addMethod("phoneNumber", function (value) {
+	$.validator.addMethod("phoneNumber", function(value) {
 		if (!value && !$('#textNotification').is(':checked')) {
 			return true;
 		}
@@ -53,11 +53,11 @@ $(window).load(function() {
 		return pattern.test(value);
 	}, "Phone number must contain 10 digits");
 
-	$.validator.addMethod("startOfDay", function (value, element, param) {
+	$.validator.addMethod("startOfDay", function(value, element, param) {
 		var $endOfDay = $(param);
 
 		if (this.settings.onfocusout) {
-			$endOfDay.off(".validate-startOfDay").on("blur.validate-startOfDay", function () {
+			$endOfDay.off(".validate-startOfDay").on("blur.validate-startOfDay", function() {
 				$(element).valid();
 			});
 		}
@@ -66,18 +66,18 @@ $(window).load(function() {
 	}, "Start of day must be before end of day");
 
 	$('#addSearchQueryForm, #createAccountForm, #updateUserForm').validate({
-		errorPlacement: function (error, element) {
+		errorPlacement: function(error, element) {
 			var lastError = $(element).data('lastError');
 			var newError = $(error).text();
 
 			$(element).data('lastError', newError);
 
-			if(newError !== '' && newError !== lastError){
+			if (newError !== '' && newError !== lastError) {
 				$(element).tooltipster('content', newError);
 				$(element).tooltipster('show');
 			}
 		},
-		success: function (label, element) {
+		success: function(label, element) {
 			$(element).tooltipster('hide');
 		},
 		rules: {
@@ -116,7 +116,7 @@ $(window).load(function() {
 	});
 
 	$('#basedOnTime').click(function() {
-		if($(this).is(':checked')) {
+		if ($(this).is(':checked')) {
 			$("#notificationOptions").hide();
 
 			$("#basedOnTimeOptions").show();

@@ -61,23 +61,23 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		_classInstance = clazz.newInstance();
 
 		_createSearchResultMethod = clazz.getDeclaredMethod(
-			"createSearchResult", SearchItem.class);
+			"_createSearchResult", SearchItem.class);
 
 		_createSearchResultMethod.setAccessible(true);
 
 		_createSearchResultsMethod = clazz.getDeclaredMethod(
-			"createSearchResults", List.class, int.class);
+			"_createSearchResults", List.class, int.class);
 
 		_createSearchResultsMethod.setAccessible(true);
 
 		_setPriceMethod = clazz.getDeclaredMethod(
-			"setPrice", SearchResult.class, ListingInfo.class,
+			"_setPrice", SearchResult.class, ListingInfo.class,
 			SellingStatus.class, String.class);
 
 		_setPriceMethod.setAccessible(true);
 
 		_setUpAdvanceRequestMethod = clazz.getDeclaredMethod(
-			"setUpAdvancedRequest", SearchQuery.class);
+			"_setUpAdvancedRequest", SearchQuery.class);
 
 		_setUpAdvanceRequestMethod.setAccessible(true);
 
@@ -87,7 +87,7 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testCreateSearchResult() throws Exception {
-		SearchItem searchItem = createSearchItem();
+		SearchItem searchItem = _createSearchItem();
 
 		SearchResult searchResult =
 			(SearchResult)_createSearchResultMethod.invoke(
@@ -107,8 +107,8 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 	public void testCreateSearchResults() throws Exception {
 		List<SearchItem> searchItems = new ArrayList<>();
 
-		searchItems.add(createSearchItem("firstItem"));
-		searchItems.add(createSearchItem("secondItem"));
+		searchItems.add(_createSearchItem("firstItem"));
+		searchItems.add(_createSearchItem("secondItem"));
 
 		List<SearchResult> searchResults =
 			(List<SearchResult>)_createSearchResultsMethod.invoke(
@@ -148,8 +148,8 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, createListingInfo(),
-			createSellingStatus(), _AUCTION);
+			_classInstance, searchResult, _createListingInfo(),
+			_createSellingStatus(), _AUCTION);
 
 		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
@@ -160,8 +160,8 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, createListingInfo(),
-			createSellingStatus(), _AUCTION_WITH_BIN);
+			_classInstance, searchResult, _createListingInfo(),
+			_createSellingStatus(), _AUCTION_WITH_BIN);
 
 		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(10.00, searchResult.getFixedPrice(), 0);
@@ -172,8 +172,8 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, createListingInfo(),
-			createSellingStatus(), _FIXED_PRICE);
+			_classInstance, searchResult, _createListingInfo(),
+			_createSellingStatus(), _FIXED_PRICE);
 
 		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(5.00, searchResult.getFixedPrice(), 0);
@@ -184,8 +184,8 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, createListingInfo(),
-			createSellingStatus(), _STORE_INVENTORY);
+			_classInstance, searchResult, _createListingInfo(),
+			_createSellingStatus(), _STORE_INVENTORY);
 
 		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(5.00, searchResult.getFixedPrice(), 0);
@@ -196,8 +196,8 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, createListingInfo(),
-			createSellingStatus(), _UNKNOWN);
+			_classInstance, searchResult, _createListingInfo(),
+			_createSellingStatus(), _UNKNOWN);
 
 		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
 		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
@@ -226,179 +226,11 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
-			(int) paginationInput.getEntriesPerPage());
+			(int)paginationInput.getEntriesPerPage());
 
 		Assert.assertEquals(
 			SortOrderType.START_TIME_NEWEST,
 			findItemsAdvancedRequest.getSortOrder());
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithDescriptionSearch() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", true, false, true, true, true,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithFreeShippingOnly() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, true, true, true, true,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
-
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.FREE_SHIPPING_ONLY, itemFilter.getName());
-		Assert.assertEquals("true", itemFilter.getValue().get(0));
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithNewCondition() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, false, true, false, false,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
-
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("New", itemFilter.getValue().get(0));
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithUsedCondition() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, false, false, true, false,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
-
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Used", itemFilter.getValue().get(0));
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithUnspecifiedCondition() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, false, false, false, true,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
-
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithNewAndUsedCondition() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, false, true, true, false,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
-
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("New", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(1);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Used", itemFilter.getValue().get(0));
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithNewAndUnspecifiedCondition()
-		throws Exception {
-
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, false, true, false, true,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
-
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("New", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(1);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithUsedAndUnspecifiedCondition()
-		throws Exception {
-
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, false, false, true, true,
-			true, true, 0.00, 0.00, false);
-
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery);
-
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
-
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Used", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(1);
-
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
 	}
 
 	@Test
@@ -415,10 +247,24 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		ItemFilter itemFilter = itemFilters.get(0);
 
-		Assert.assertEquals(
-			ItemFilterType.LISTING_TYPE, itemFilter.getName());
+		Assert.assertEquals(ItemFilterType.LISTING_TYPE, itemFilter.getName());
 		Assert.assertEquals("AuctionWithBIN", itemFilter.getValue().get(0));
 		Assert.assertEquals("Auction", itemFilter.getValue().get(1));
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithDescriptionSearch()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", true, false, true, true, true,
+			true, true, 0.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
 	}
 
 	@Test
@@ -437,17 +283,18 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		ItemFilter itemFilter = itemFilters.get(0);
 
-		Assert.assertEquals(
-			ItemFilterType.LISTING_TYPE, itemFilter.getName());
+		Assert.assertEquals(ItemFilterType.LISTING_TYPE, itemFilter.getName());
 		Assert.assertEquals("AuctionWithBIN", itemFilter.getValue().get(0));
 		Assert.assertEquals("FixedPrice", itemFilter.getValue().get(1));
 	}
 
 	@Test
-	public void testSetUpAdvancedRequestWithMinPrice() throws Exception {
+	public void testSetUpAdvancedRequestWithFreeShippingOnly()
+		throws Exception {
+
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", false, false, true, true, true,
-			true, true, 5.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "", false, true, true, true, true,
+			true, true, 0.00, 0.00, false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -457,8 +304,9 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		ItemFilter itemFilter = itemFilters.get(0);
 
-		Assert.assertEquals(ItemFilterType.MIN_PRICE, itemFilter.getName());
-		Assert.assertEquals("5.00", itemFilter.getValue().get(0));
+		Assert.assertEquals(
+			ItemFilterType.FREE_SHIPPING_ONLY, itemFilter.getName());
+		Assert.assertEquals("true", itemFilter.getValue().get(0));
 	}
 
 	@Test
@@ -477,6 +325,24 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(ItemFilterType.MAX_PRICE, itemFilter.getName());
 		Assert.assertEquals("10.00", itemFilter.getValue().get(0));
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithMinPrice() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", false, false, true, true, true,
+			true, true, 5.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+
+		ItemFilter itemFilter = itemFilters.get(0);
+
+		Assert.assertEquals(ItemFilterType.MIN_PRICE, itemFilter.getName());
+		Assert.assertEquals("5.00", itemFilter.getValue().get(0));
 	}
 
 	@Test
@@ -503,20 +369,17 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		itemFilter = itemFilters.get(1);
 
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
 		Assert.assertEquals("New", itemFilter.getValue().get(0));
 
 		itemFilter = itemFilters.get(2);
 
-		Assert.assertEquals(
-			ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
 		Assert.assertEquals("Used", itemFilter.getValue().get(0));
 
 		itemFilter = itemFilters.get(3);
 
-		Assert.assertEquals(
-			ItemFilterType.LISTING_TYPE, itemFilter.getName());
+		Assert.assertEquals(ItemFilterType.LISTING_TYPE, itemFilter.getName());
 		Assert.assertEquals("AuctionWithBIN", itemFilter.getValue().get(0));
 		Assert.assertEquals("Auction", itemFilter.getValue().get(1));
 
@@ -540,11 +403,79 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
-			(int) paginationInput.getEntriesPerPage());
+			(int)paginationInput.getEntriesPerPage());
 
 		Assert.assertEquals(
 			SortOrderType.START_TIME_NEWEST,
 			findItemsAdvancedRequest.getSortOrder());
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithNewAndUnspecifiedCondition()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", false, false, true, false, true,
+			true, true, 0.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+
+		ItemFilter itemFilter = itemFilters.get(0);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("New", itemFilter.getValue().get(0));
+
+		itemFilter = itemFilters.get(1);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithNewAndUsedCondition()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", false, false, true, true, false,
+			true, true, 0.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+
+		ItemFilter itemFilter = itemFilters.get(0);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("New", itemFilter.getValue().get(0));
+
+		itemFilter = itemFilters.get(1);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("Used", itemFilter.getValue().get(0));
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithNewCondition() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", false, false, true, false, false,
+			true, true, 0.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+
+		ItemFilter itemFilter = itemFilters.get(0);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("New", itemFilter.getValue().get(0));
 	}
 
 	@Test
@@ -569,31 +500,112 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
-			(int) paginationInput.getEntriesPerPage());
+			(int)paginationInput.getEntriesPerPage());
 
 		Assert.assertEquals(
 			SortOrderType.START_TIME_NEWEST,
 			findItemsAdvancedRequest.getSortOrder());
 	}
 
-	private static ListingInfo createListingInfo() {
+	@Test
+	public void testSetUpAdvancedRequestWithUnspecifiedCondition()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", false, false, false, false, true,
+			true, true, 0.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+
+		ItemFilter itemFilter = itemFilters.get(0);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithUsedAndUnspecifiedCondition()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", false, false, false, true, true,
+			true, true, 0.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+
+		ItemFilter itemFilter = itemFilters.get(0);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("Used", itemFilter.getValue().get(0));
+
+		itemFilter = itemFilters.get(1);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithUsedCondition() throws Exception {
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "", false, false, false, true, false,
+			true, true, 0.00, 0.00, false);
+
+		FindItemsAdvancedRequest findItemsAdvancedRequest =
+			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
+				_classInstance, searchQuery);
+
+		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+
+		ItemFilter itemFilter = itemFilters.get(0);
+
+		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
+		Assert.assertEquals("Used", itemFilter.getValue().get(0));
+	}
+
+	private static ListingInfo _createListingInfo() {
 		Amount buyItNowPrice = new Amount();
+
 		buyItNowPrice.setValue(10.00);
 
 		ListingInfo listingInfo = new ListingInfo();
+
 		listingInfo.setBuyItNowPrice(buyItNowPrice);
 
 		return listingInfo;
 	}
 
-	private static SearchItem createSearchItem(String itemId) {
+	private static SellingStatus _createSellingStatus() {
+		Amount currentPrice = new Amount();
+
+		currentPrice.setValue(5.00);
+
+		SellingStatus sellingStatus = new SellingStatus();
+
+		sellingStatus.setCurrentPrice(currentPrice);
+
+		return sellingStatus;
+	}
+
+	private static SearchItem _createSearchItem() {
+		return _createSearchItem(null);
+	}
+
+	private static SearchItem _createSearchItem(String itemId) {
 		SearchItem searchItem = new SearchItem();
 
 		if (ValidatorUtil.isNull(itemId)) {
 			itemId = _ITEM_ID;
 		}
 
-		ListingInfo listingInfo = createListingInfo();
+		ListingInfo listingInfo = _createListingInfo();
 
 		listingInfo.setEndTime(_CALENDAR);
 		listingInfo.setListingType(_AUCTION);
@@ -602,44 +614,37 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 		searchItem.setItemId(itemId);
 		searchItem.setListingInfo(listingInfo);
 		searchItem.setTitle(_ITEM_TITLE);
-		searchItem.setSellingStatus(createSellingStatus());
+		searchItem.setSellingStatus(_createSellingStatus());
 
 		return searchItem;
 	}
 
-	private static SearchItem createSearchItem() {
-		return createSearchItem(null);
-	}
+	private static final String _AUCTION = "Auction";
 
-	private static SellingStatus createSellingStatus() {
-		Amount currentPrice = new Amount();
-		currentPrice.setValue(5.00);
-
-		SellingStatus sellingStatus = new SellingStatus();
-		sellingStatus.setCurrentPrice(currentPrice);
-
-		return sellingStatus;
-	}
+	private static final String _AUCTION_WITH_BIN = "AuctionWithBIN";
 
 	private static final Calendar _CALENDAR = Calendar.getInstance();
 
+	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
+
+	private static final String _FIXED_PRICE = "FixedPrice";
+
+	private static final String _GALLERY_URL = "http://www.test.com";
+
+	private static final String _ITEM_ID = "itemId";
+
+	private static final String _ITEM_TITLE = "Item Title";
+
+	private static final String _STORE_INVENTORY = "StoreInventory";
+
+	private static final String _UNKNOWN = "Unknown";
+
+	private static final int _USER_ID = 1;
+
+	private static Object _classInstance;
 	private static Method _createSearchResultMethod;
 	private static Method _createSearchResultsMethod;
 	private static Method _setPriceMethod;
 	private static Method _setUpAdvanceRequestMethod;
-
-	private static Object _classInstance;
-
-	private static final int _USER_ID = 1;
-
-	private static final String _AUCTION = "Auction";
-	private static final String _AUCTION_WITH_BIN = "AuctionWithBIN";
-	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
-	private static final String _FIXED_PRICE = "FixedPrice";
-	private static final String _GALLERY_URL = "http://www.test.com";
-	private static final String _ITEM_ID = "itemId";
-	private static final String _ITEM_TITLE = "Item Title";
-	private static final String _STORE_INVENTORY = "StoreInventory";
-	private static final String _UNKNOWN = "Unknown";
 
 }

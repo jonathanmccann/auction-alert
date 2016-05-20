@@ -54,10 +54,9 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.MAIL_SMTP_STARTTLS_ENABLE);
 
-	public static final int NUMBER_OF_SEARCH_RESULTS =
-		Integer.parseInt(
-			PropertiesUtil.getConfigurationProperty(
-				PropertiesKeys.NUMBER_OF_SEARCH_RESULTS));
+	public static final int NUMBER_OF_SEARCH_RESULTS = Integer.parseInt(
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.NUMBER_OF_SEARCH_RESULTS));
 
 	public static final String OUTBOUND_EMAIL_ADDRESS =
 		PropertiesUtil.getConfigurationProperty(

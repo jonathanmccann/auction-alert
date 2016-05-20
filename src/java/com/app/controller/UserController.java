@@ -24,6 +24,11 @@ import com.app.model.User;
 import com.app.model.UserDetails;
 import com.app.util.NotificationPreferencesUtil;
 import com.app.util.UserUtil;
+
+import java.sql.SQLException;
+
+import java.util.Map;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
@@ -38,10 +43,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.sql.SQLException;
-
-import java.util.Map;
-
 /**
  * @author Jonathan McCann
  */
@@ -49,9 +50,7 @@ import java.util.Map;
 public class UserController {
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.GET)
-	public String createAccount()
-		throws Exception {
-
+	public String createAccount() throws Exception {
 		return "create_account";
 	}
 
@@ -81,7 +80,7 @@ public class UserController {
 		}
 
 		NotificationPreferences notificationPreferences =
-				new NotificationPreferences();
+			new NotificationPreferences();
 
 		notificationPreferences.setUserId(user.getUserId());
 
@@ -151,8 +150,7 @@ public class UserController {
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
 			UserDetails userDetails, Map<String, Object> model)
-		throws
-			DatabaseConnectionException, SQLException {
+		throws DatabaseConnectionException, SQLException {
 
 		User user = userDetails.getUser();
 
@@ -186,7 +184,8 @@ public class UserController {
 
 		model.put("hours", AccountConstants.getHours());
 		model.put(
-			"mobileCarrierSuffixes", AccountConstants.getMobileCarrierSuffixes());
+			"mobileCarrierSuffixes",
+			AccountConstants.getMobileCarrierSuffixes());
 		model.put(
 			"mobileOperatingSystems",
 			AccountConstants.getMobileOperatingSystems());
@@ -212,7 +211,8 @@ public class UserController {
 
 		model.put("hours", AccountConstants.getHours());
 		model.put(
-			"mobileCarrierSuffixes", AccountConstants.getMobileCarrierSuffixes());
+			"mobileCarrierSuffixes",
+			AccountConstants.getMobileCarrierSuffixes());
 		model.put(
 			"mobileOperatingSystems",
 			AccountConstants.getMobileOperatingSystems());

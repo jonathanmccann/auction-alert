@@ -1,9 +1,9 @@
 /* This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
 .tooltipster-default {
-	border-radius: 5px;
+	background: #4C4C4C;
 	border: 2px solid #000;
-	background: #4c4c4c;
-	color: #fff;
+	border-radius: 5px;
+	color: #FFF;
 }
 
 /* Use this next selector to style things like font-size and line-height: */
@@ -11,8 +11,8 @@
 	font-family: Arial, sans-serif;
 	font-size: 14px;
 	line-height: 16px;
-	padding: 8px 10px;
 	overflow: hidden;
+	padding: 8px 10px;
 }
 
 /* This next selector defines the color of the border on the outside of the arrow. This will automatically match the color and size of the border set on the main tooltip styles. Set display: none; if you would like a border around the tooltip but no border around the arrow */
@@ -36,16 +36,16 @@
 
 /* This is the base styling required to make all Tooltipsters work */
 .tooltipster-base {
-	padding: 0;
 	font-size: 0;
-	line-height: 0;
-	position: absolute;
 	left: 0;
-	top: 0;
-	z-index: 9999999;
-	pointer-events: none;
-	width: auto;
+	line-height: 0;
 	overflow: visible;
+	padding: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: auto;
+	z-index: 9999999;
 }
 .tooltipster-base .tooltipster-content {
 	overflow: hidden;
@@ -55,19 +55,19 @@
 /* These next classes handle the styles for the little arrow attached to the tooltip. By default, the arrow will inherit the same colors and border as what is set on the main tooltip itself. */
 .tooltipster-arrow {
 	display: block;
-	text-align: center;
-	width: 100%;
 	height: 100%;
-	position: absolute;
-	top: 0;
 	left: 0;
+	position: absolute;
+	text-align: center;
+	top: 0;
+	width: 100%;
 	z-index: -1;
 }
 .tooltipster-arrow span, .tooltipster-arrow-border {
 	display: block;
-	width: 0;
 	height: 0;
 	position: absolute;
+	width: 0;
 }
 .tooltipster-arrow-top span, .tooltipster-arrow-top-right span, .tooltipster-arrow-top-left span {
 	border-left: 8px solid transparent !important;
@@ -83,21 +83,21 @@
 }
 
 .tooltipster-arrow-bottom span, .tooltipster-arrow-bottom-right span, .tooltipster-arrow-bottom-left span {
+	border-bottom: 8px solid;
 	border-left: 8px solid transparent !important;
 	border-right: 8px solid transparent !important;
-	border-bottom: 8px solid;
 	top: -7px;
 }
 .tooltipster-arrow-bottom .tooltipster-arrow-border, .tooltipster-arrow-bottom-right .tooltipster-arrow-border, .tooltipster-arrow-bottom-left .tooltipster-arrow-border {
+	border-bottom: 9px solid;
 	border-left: 9px solid transparent !important;
 	border-right: 9px solid transparent !important;
-	border-bottom: 9px solid;
 	top: -7px;
 }
 .tooltipster-arrow-top span, .tooltipster-arrow-top .tooltipster-arrow-border, .tooltipster-arrow-bottom span, .tooltipster-arrow-bottom .tooltipster-arrow-border {
 	left: 0;
-	right: 0;
 	margin: 0 auto;
+	right: 0;
 }
 .tooltipster-arrow-top-left span, .tooltipster-arrow-bottom-left span {
 	left: 6px;
@@ -112,31 +112,31 @@
 	right: 5px;
 }
 .tooltipster-arrow-left span, .tooltipster-arrow-left .tooltipster-arrow-border {
-	border-top: 8px solid transparent !important;
 	border-bottom: 8px solid transparent !important;
 	border-left: 8px solid;
-	top: 50%;
+	border-top: 8px solid transparent !important;
 	margin-top: -7px;
 	right: -7px;
+	top: 50%;
 }
 .tooltipster-arrow-left .tooltipster-arrow-border {
-	border-top: 9px solid transparent !important;
 	border-bottom: 9px solid transparent !important;
 	border-left: 9px solid;
+	border-top: 9px solid transparent !important;
 	margin-top: -8px;
 }
 .tooltipster-arrow-right span, .tooltipster-arrow-right .tooltipster-arrow-border {
-	border-top: 8px solid transparent !important;
 	border-bottom: 8px solid transparent !important;
 	border-right: 8px solid;
-	top: 50%;
-	margin-top: -7px;
+	border-top: 8px solid transparent !important;
 	left: -7px;
+	margin-top: -7px;
+	top: 50%;
 }
 .tooltipster-arrow-right .tooltipster-arrow-border {
-	border-top: 9px solid transparent !important;
 	border-bottom: 9px solid transparent !important;
 	border-right: 9px solid;
+	border-top: 9px solid transparent !important;
 	margin-top: -8px;
 }
 
@@ -231,9 +231,9 @@
 	-moz-transition-property: all;
 	-o-transition-property: all;
 	-ms-transition-property: all;
-	transition-property: all;
-	top: 0px !important;
 	opacity: 0;
+	top: 0px !important;
+	transition-property: all;
 }
 
 .tooltipster-slide {
@@ -257,9 +257,9 @@
 	-moz-transition-property: all;
 	-o-transition-property: all;
 	-ms-transition-property: all;
-	transition-property: all;
 	left: 0px !important;
 	opacity: 0;
+	transition-property: all;
 }
 
 

@@ -14,6 +14,16 @@
 
 package com.app.test.controller;
 
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
@@ -26,8 +36,8 @@ import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
 import java.sql.SQLException;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -50,16 +60,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * @author Jonathan McCann
@@ -102,9 +102,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		String[] inactiveSearchQueryIds = new String[] {
-			String.valueOf(searchQueryId)
-		};
+		String[] inactiveSearchQueryIds =
+			new String[] {String.valueOf(searchQueryId)};
 
 		this.mockMvc.perform(post("/activate_search_query")
 			.param("inactiveSearchQueryIds", inactiveSearchQueryIds))
@@ -126,9 +125,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		String[] inactiveSearchQueryIds = new String[] {
-			String.valueOf(searchQueryId)
-		};
+		String[] inactiveSearchQueryIds =
+			new String[] {String.valueOf(searchQueryId)};
 
 		this.mockMvc.perform(post("/activate_search_query")
 			.param("inactiveSearchQueryIds", inactiveSearchQueryIds))
@@ -138,6 +136,52 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
 		Assert.assertFalse(searchQuery.isActive());
+	}
+
+	@Test
+	public void testDeactivateSearchQuery() throws Exception {
+		setUpUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, true);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		String[] activeSearchQueryIds =
+			new String[] {String.valueOf(searchQueryId)};
+
+		this.mockMvc.perform(post("/deactivate_search_query")
+			.param("activeSearchQueryIds", activeSearchQueryIds))
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"));
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertFalse(searchQuery.isActive());
+	}
+
+	@Test
+	public void testDeactivateSearchQueryWithInvalidUserId() throws Exception {
+		setUpInvalidUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, true);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		String[] activeSearchQueryIds =
+			new String[] {String.valueOf(searchQueryId)};
+
+		this.mockMvc.perform(post("/deactivate_search_query")
+			.param("activeSearchQueryIds", activeSearchQueryIds))
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"));
+
+		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		Assert.assertTrue(searchQuery.isActive());
 	}
 
 	@Test
@@ -180,13 +224,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			inactiveSearchQuery.getSearchQueryId(), "200");
 
-		String[] activeSearchQueryIds = new String[] {
-			String.valueOf(activeSearchQueryId)
-		};
+		String[] activeSearchQueryIds =
+			new String[] {String.valueOf(activeSearchQueryId)};
 
-		String[] inactiveSearchQueryIds = new String[] {
-			String.valueOf(inactiveSearchQueryId)
-		};
+		String[] inactiveSearchQueryIds =
+			new String[] {String.valueOf(inactiveSearchQueryId)};
 
 		this.mockMvc.perform(post("/delete_search_query")
 			.param("activeSearchQueryIds", activeSearchQueryIds)
@@ -195,7 +237,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:view_search_queries"));
 
 		try {
-			SearchQueryUtil.getSearchQuery(activeSearchQuery.getSearchQueryId());
+			SearchQueryUtil.getSearchQuery(
+				activeSearchQuery.getSearchQueryId());
 		}
 		catch (SQLException sqle) {
 			Assert.assertEquals(SQLException.class, sqle.getClass());
@@ -210,8 +253,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		}
 
 		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(
-				activeSearchQueryId);
+			SearchResultUtil.getSearchQueryResults(activeSearchQueryId);
 
 		List<String> searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
@@ -220,9 +262,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(0, searchResults.size());
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
 
-		searchResults =
-			SearchResultUtil.getSearchQueryResults(
-				inactiveSearchQueryId);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			inactiveSearchQueryId);
 
 		searchQueryPreviousResults =
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
@@ -230,6 +271,50 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		Assert.assertEquals(0, searchResults.size());
 		Assert.assertEquals(0, searchQueryPreviousResults.size());
+	}
+
+	@Test
+	public void testDeleteSearchQueryWithInvalidUserId() throws Exception {
+		setUpInvalidUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+		searchQuery.setActive(true);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		SearchResult searchResult = new SearchResult(
+			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+
+		SearchResultUtil.addSearchResult(searchResult);
+
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			searchQueryId, "100");
+
+		String[] activeSearchQueryIds =
+			new String[] {String.valueOf(searchQueryId)};
+
+		this.mockMvc.perform(post("/delete_search_query")
+			.param("activeSearchQueryIds", activeSearchQueryIds))
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"));
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID, true);
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
+
+		List<String> searchQueryPreviousResults =
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
+				searchQueryId);
+
+		Assert.assertEquals(1, searchQueries.size());
+		Assert.assertEquals(1, searchResults.size());
+		Assert.assertEquals(1, searchQueryPreviousResults.size());
 	}
 
 	@Test
@@ -254,51 +339,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			searchQueryId, "100");
 
 		this.mockMvc.perform(post("/delete_search_query"))
-			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:view_search_queries"));
-
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID, true);
-
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(searchQueryId);
-
-		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				searchQueryId);
-
-		Assert.assertEquals(1, searchQueries.size());
-		Assert.assertEquals(1, searchResults.size());
-		Assert.assertEquals(1, searchQueryPreviousResults.size());
-	}
-
-	@Test
-	public void testDeleteSearchQueryWithInvalidUserId() throws Exception {
-		setUpInvalidUserUtil();
-
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setKeywords("First test keywords");
-		searchQuery.setActive(true);
-
-		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
-
-		SearchResult searchResult = new SearchResult(
-			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
-
-		SearchResultUtil.addSearchResult(searchResult);
-
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			searchQueryId, "100");
-
-		String[] activeSearchQueryIds = new String[] {
-			String.valueOf(searchQueryId)
-		};
-
-		this.mockMvc.perform(post("/delete_search_query")
-			.param("activeSearchQueryIds", activeSearchQueryIds))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
@@ -472,54 +512,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testDeactivateSearchQuery() throws Exception {
-		setUpUserUtil();
-
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, true);
-
-		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
-
-		String[] activeSearchQueryIds = new String[] {
-			String.valueOf(searchQueryId)
-		};
-
-		this.mockMvc.perform(post("/deactivate_search_query")
-			.param("activeSearchQueryIds", activeSearchQueryIds))
-			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:view_search_queries"));
-
-		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		Assert.assertFalse(searchQuery.isActive());
-	}
-
-	@Test
-	public void testDeactivateSearchQueryWithInvalidUserId() throws Exception {
-		setUpInvalidUserUtil();
-
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, true);
-
-		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
-
-		String[] activeSearchQueryIds = new String[] {
-			String.valueOf(searchQueryId)
-		};
-
-		this.mockMvc.perform(post("/deactivate_search_query")
-			.param("activeSearchQueryIds", activeSearchQueryIds))
-			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:view_search_queries"));
-
-		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		Assert.assertTrue(searchQuery.isActive());
-	}
-
-	@Test
 	public void testPostAddSearchQueryExceedingTotalNumberOfQueriesAllows()
 		throws Exception {
 
@@ -586,33 +578,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testPostAddSearchQueryWithSearchQuery() throws Exception {
-		setUpUserUtil();
-
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/add_search_query");
-
-		request.param("keywords", "First test keywords");
-		request.param("active", "true");
-
-		this.mockMvc.perform(request)
-			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:view_search_queries"))
-			.andExpect(model().attributeDoesNotExist("disabled"))
-			.andExpect(model().attributeDoesNotExist("isAdd"));
-
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID, true);
-
-		Assert.assertEquals(1, searchQueries.size());
-
-		SearchQuery searchQuery = searchQueries.get(0);
-
-		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
-		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
-	}
-
-	@Test
 	public void testPostAddSearchQueryWithParameters() throws Exception {
 		setUpUserUtil();
 
@@ -658,6 +623,33 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPostAddSearchQueryWithSearchQuery() throws Exception {
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/add_search_query");
+
+		request.param("keywords", "First test keywords");
+		request.param("active", "true");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"))
+			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("isAdd"));
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID, true);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		SearchQuery searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+	}
+
+	@Test
 	public void testPostAddSearchQueryWithSearchQueryAndCategory()
 		throws Exception {
 
@@ -696,6 +688,79 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+	}
+
+	@Test
+	public void testPostUpdateSearchQueryWithInvalidUserId() throws Exception {
+		setUpInvalidUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", false, false, false, false,
+			false, false, false, 0.00, 0.00, false);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID, false);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertFalse(searchQuery.isSearchDescription());
+		Assert.assertFalse(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertFalse(searchQuery.isActive());
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/update_search_query");
+
+		request.param("searchQueryId", String.valueOf(searchQueryId));
+		request.param("keywords", "First test keywords");
+		request.param("categoryId", "101");
+		request.param("searchDescription", "true");
+		request.param("freeShippingOnly", "true");
+		request.param("newCondition", "true");
+		request.param("auctionListing", "true");
+		request.param("minPrice", "5.00");
+		request.param("maxPrice", "10.00");
+		request.param("active", "true");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isFound());
+		resultActions.andExpect(view().name("redirect:view_search_queries"));
+		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+
+		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, false);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertFalse(searchQuery.isSearchDescription());
+		Assert.assertFalse(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertFalse(searchQuery.isActive());
 	}
 
 	@Test
@@ -822,79 +887,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertTrue(searchQuery.isActive());
-	}
-
-	@Test
-	public void testPostUpdateSearchQueryWithInvalidUserId() throws Exception {
-		setUpInvalidUserUtil();
-
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
-
-		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
-
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID, false);
-
-		Assert.assertEquals(1, searchQueries.size());
-
-		searchQuery = searchQueries.get(0);
-
-		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
-		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
-		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertFalse(searchQuery.isSearchDescription());
-		Assert.assertFalse(searchQuery.isFreeShippingOnly());
-		Assert.assertTrue(searchQuery.isNewCondition());
-		Assert.assertTrue(searchQuery.isUsedCondition());
-		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
-		Assert.assertTrue(searchQuery.isAuctionListing());
-		Assert.assertTrue(searchQuery.isFixedPriceListing());
-		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
-		Assert.assertFalse(searchQuery.isActive());
-
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/update_search_query");
-
-		request.param("searchQueryId", String.valueOf(searchQueryId));
-		request.param("keywords", "First test keywords");
-		request.param("categoryId", "101");
-		request.param("searchDescription", "true");
-		request.param("freeShippingOnly", "true");
-		request.param("newCondition", "true");
-		request.param("auctionListing", "true");
-		request.param("minPrice", "5.00");
-		request.param("maxPrice", "10.00");
-		request.param("active", "true");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().isFound());
-		resultActions.andExpect(view().name("redirect:view_search_queries"));
-		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
-		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
-
-		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, false);
-
-		Assert.assertEquals(1, searchQueries.size());
-
-		searchQuery = searchQueries.get(0);
-
-		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
-		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
-		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertFalse(searchQuery.isSearchDescription());
-		Assert.assertFalse(searchQuery.isFreeShippingOnly());
-		Assert.assertTrue(searchQuery.isNewCondition());
-		Assert.assertTrue(searchQuery.isUsedCondition());
-		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
-		Assert.assertTrue(searchQuery.isAuctionListing());
-		Assert.assertTrue(searchQuery.isFixedPriceListing());
-		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
-		Assert.assertFalse(searchQuery.isActive());
 	}
 
 	@Test

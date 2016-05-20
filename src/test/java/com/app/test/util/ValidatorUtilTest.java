@@ -19,44 +19,25 @@ import com.app.util.ValidatorUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Jonathan McCann
  */
 public class ValidatorUtilTest {
 
 	@Test
-	public void testNullString() {
-		Assert.assertTrue(ValidatorUtil.isNull((String)null));
-		Assert.assertTrue(ValidatorUtil.isNull(""));
-		Assert.assertTrue(ValidatorUtil.isNull("null"));
-		Assert.assertTrue(ValidatorUtil.isNull("NULL"));
-
-		Assert.assertFalse(ValidatorUtil.isNotNull((String) null));
-		Assert.assertFalse(ValidatorUtil.isNotNull(""));
-		Assert.assertFalse(ValidatorUtil.isNotNull("null"));
-		Assert.assertFalse(ValidatorUtil.isNotNull("NULL"));
+	public void testInvalidEmailAddress() {
+		Assert.assertFalse(
+			ValidatorUtil.isValidEmailAddress("invalidEmailAddress"));
+		Assert.assertFalse(
+			ValidatorUtil.isValidEmailAddress("invalidEmailAddress#test.com"));
 	}
 
 	@Test
-	public void testNonNullString() {
-		Assert.assertFalse(ValidatorUtil.isNull("test"));
-
-		Assert.assertTrue(ValidatorUtil.isNotNull("test"));
-	}
-
-	@Test
-	public void testNullArray() {
-		Assert.assertTrue(ValidatorUtil.isNull((Object[])null));
-		Assert.assertTrue(ValidatorUtil.isNull(new String[0]));
-		Assert.assertTrue(ValidatorUtil.isNull(new String[1]));
-
-		Assert.assertFalse(ValidatorUtil.isNotNull((Object[]) null));
-		Assert.assertFalse(ValidatorUtil.isNotNull(new String[0]));
-		Assert.assertFalse(ValidatorUtil.isNotNull(new String[1]));
+	public void testInvalidPhoneNumber() {
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("1234"));
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("123-456-7890"));
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("12345678901"));
+		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("test"));
 	}
 
 	@Test
@@ -75,11 +56,21 @@ public class ValidatorUtilTest {
 	}
 
 	@Test
-	public void testInvalidEmailAddress() {
-		Assert.assertFalse(
-			ValidatorUtil.isValidEmailAddress("invalidEmailAddress"));
-		Assert.assertFalse(
-			ValidatorUtil.isValidEmailAddress("invalidEmailAddress#test.com"));
+	public void testNonNullString() {
+		Assert.assertFalse(ValidatorUtil.isNull("test"));
+
+		Assert.assertTrue(ValidatorUtil.isNotNull("test"));
+	}
+
+	@Test
+	public void testNullArray() {
+		Assert.assertTrue(ValidatorUtil.isNull((Object[])null));
+		Assert.assertTrue(ValidatorUtil.isNull(new String[0]));
+		Assert.assertTrue(ValidatorUtil.isNull(new String[1]));
+
+		Assert.assertFalse(ValidatorUtil.isNotNull((Object[])null));
+		Assert.assertFalse(ValidatorUtil.isNotNull(new String[0]));
+		Assert.assertFalse(ValidatorUtil.isNotNull(new String[1]));
 	}
 
 	@Test
@@ -90,28 +81,30 @@ public class ValidatorUtilTest {
 	}
 
 	@Test
-	public void testValidEmailAddress() throws Exception {
-		Assert.assertTrue(
-			ValidatorUtil.isValidEmailAddress("test@test"));
-		Assert.assertTrue(
-			ValidatorUtil.isValidEmailAddress("test@test.com"));
-		Assert.assertTrue(
-			ValidatorUtil.isValidEmailAddress("test2@test2.com"));
-	}
-
-	@Test
-	public void testInvalidPhoneNumber() {
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("1234"));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("123-456-7890"));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("12345678901"));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("test"));
-	}
-
-	@Test
 	public void testNullPhoneNumber() {
 		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(null));
 		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(""));
 		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(" "));
+	}
+
+	@Test
+	public void testNullString() {
+		Assert.assertTrue(ValidatorUtil.isNull((String)null));
+		Assert.assertTrue(ValidatorUtil.isNull(""));
+		Assert.assertTrue(ValidatorUtil.isNull("null"));
+		Assert.assertTrue(ValidatorUtil.isNull("NULL"));
+
+		Assert.assertFalse(ValidatorUtil.isNotNull((String)null));
+		Assert.assertFalse(ValidatorUtil.isNotNull(""));
+		Assert.assertFalse(ValidatorUtil.isNotNull("null"));
+		Assert.assertFalse(ValidatorUtil.isNotNull("NULL"));
+	}
+
+	@Test
+	public void testValidEmailAddress() throws Exception {
+		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test@test"));
+		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test@test.com"));
+		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test2@test2.com"));
 	}
 
 	@Test

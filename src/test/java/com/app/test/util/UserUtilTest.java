@@ -21,6 +21,11 @@ import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -30,11 +35,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import java.util.List;
 
 /**
  * @author Jonathan McCann
@@ -73,6 +73,22 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testDeleteUser() throws Exception {
+		UserUtil.addUser("test@test.com", "password");
+
+		User user = UserUtil.getUserByEmailAddress("test@test.com");
+
+		Assert.assertNotNull(user);
+		Assert.assertEquals("test@test.com", user.getEmailAddress());
+
+		UserUtil.deleteUserByUserId(user.getUserId());
+
+		user = UserUtil.getUserByEmailAddress("test@test.com");
+
+		Assert.assertNull(user);
+	}
+
+	@Test
 	public void testGetUserByInvalidEmailAddress() throws Exception {
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
@@ -99,25 +115,9 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testDeleteUser() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
-
-		User user = UserUtil.getUserByEmailAddress("test@test.com");
-
-		Assert.assertNotNull(user);
-		Assert.assertEquals("test@test.com", user.getEmailAddress());
-
-		UserUtil.deleteUserByUserId(user.getUserId());
-
-		user = UserUtil.getUserByEmailAddress("test@test.com");
-
-		Assert.assertNull(user);
-	}
-
-	@Test
 	public void testSanitizePhoneNumber() throws Exception {
 		Method sanitizePhoneNumber = _clazz.getDeclaredMethod(
-			"sanitizePhoneNumber", String.class);
+			"_sanitizePhoneNumber", String.class);
 
 		sanitizePhoneNumber.setAccessible(true);
 
@@ -136,13 +136,11 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("1234567890", phoneNumber);
 
-		phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, "");
+		phoneNumber = (String)sanitizePhoneNumber.invoke(_classInstance, "");
 
 		Assert.assertEquals("", phoneNumber);
 
-		phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, " ");
+		phoneNumber = (String)sanitizePhoneNumber.invoke(_classInstance, " ");
 
 		Assert.assertEquals("", phoneNumber);
 
@@ -152,7 +150,7 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertEquals("", phoneNumber);
 
 		phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, new Object[]{ null });
+			_classInstance, new Object[] {null});
 
 		Assert.assertEquals("", phoneNumber);
 	}
@@ -184,24 +182,21 @@ public class UserUtilTest extends BaseTestCase {
 	@Test
 	public void testValidate() throws Exception {
 		Method validate = _clazz.getDeclaredMethod(
-			"validate", int.class, String.class, String.class);
+			"_validate", int.class, String.class, String.class);
 
 		validate.setAccessible(true);
 
 		validate.invoke(
 			_classInstance, _USER_ID, "test@test.com", "1234567890");
-		validate.invoke(
-			_classInstance, _USER_ID, "test@test.com", "");
-		validate.invoke(
-			_classInstance, _USER_ID, "test@test.com", "null");
-		validate.invoke(
-			_classInstance, _USER_ID, "test@test.com", null);
+		validate.invoke(_classInstance, _USER_ID, "test@test.com", "");
+		validate.invoke(_classInstance, _USER_ID, "test@test.com", "null");
+		validate.invoke(_classInstance, _USER_ID, "test@test.com", null);
 	}
 
 	@Test
 	public void testValidateEmailAddress() throws Exception {
 		Method validateEmailAddress = _clazz.getDeclaredMethod(
-			"validateEmailAddress", int.class, String.class);
+			"_validateEmailAddress", int.class, String.class);
 
 		validateEmailAddress.setAccessible(true);
 
@@ -209,11 +204,34 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testValidateEmailAddressWithDuplicateEmailAddress()
+		throws Exception {
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		Method validateEmailAddress = _clazz.getDeclaredMethod(
+			"_validateEmailAddress", int.class, String.class);
+
+		validateEmailAddress.setAccessible(true);
+
+		try {
+			validateEmailAddress.invoke(
+				_classInstance, user.getUserId() + 1, "test@test.com");
+
+			Assert.fail();
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(
+				ite.getCause() instanceof DuplicateEmailAddressException);
+		}
+	}
+
+	@Test
 	public void testValidateEmailAddressWithInvalidEmailAddress()
 		throws Exception {
 
 		Method validateEmailAddress = _clazz.getDeclaredMethod(
-			"validateEmailAddress", int.class, String.class);
+			"_validateEmailAddress", int.class, String.class);
 
 		validateEmailAddress.setAccessible(true);
 
@@ -229,32 +247,9 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testValidateEmailAddressWithDuplicateEmailAddress()
-		throws Exception {
-
-		User user = UserUtil.addUser("test@test.com", "password");
-
-		Method validateEmailAddress = _clazz.getDeclaredMethod(
-			"validateEmailAddress", int.class, String.class);
-
-		validateEmailAddress.setAccessible(true);
-
-		try{
-			validateEmailAddress.invoke(
-				_classInstance, user.getUserId() + 1, "test@test.com");
-
-			Assert.fail();
-		}
-		catch (InvocationTargetException ite) {
-			Assert.assertTrue(
-				ite.getCause() instanceof DuplicateEmailAddressException);
-		}
-	}
-
-	@Test
 	public void testValidatePhoneNumber() throws Exception {
 		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"validatePhoneNumber", String.class);
+			"_validatePhoneNumber", String.class);
 
 		validatePhoneNumber.setAccessible(true);
 
@@ -264,7 +259,7 @@ public class UserUtilTest extends BaseTestCase {
 	@Test
 	public void testValidatePhoneNumberWithBlankNumber() throws Exception {
 		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"validatePhoneNumber", String.class);
+			"_validatePhoneNumber", String.class);
 
 		validatePhoneNumber.setAccessible(true);
 
@@ -282,7 +277,7 @@ public class UserUtilTest extends BaseTestCase {
 	@Test
 	public void testValidatePhoneNumberWithEmptyNumber() throws Exception {
 		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"validatePhoneNumber", String.class);
+			"_validatePhoneNumber", String.class);
 
 		validatePhoneNumber.setAccessible(true);
 
@@ -300,7 +295,7 @@ public class UserUtilTest extends BaseTestCase {
 	@Test
 	public void testValidatePhoneNumberWithHyphenatedNumber() throws Exception {
 		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"validatePhoneNumber", String.class);
+			"_validatePhoneNumber", String.class);
 
 		validatePhoneNumber.setAccessible(true);
 
@@ -318,12 +313,12 @@ public class UserUtilTest extends BaseTestCase {
 	@Test
 	public void testValidatePhoneNumberWithNullNumber() throws Exception {
 		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"validatePhoneNumber", String.class);
+			"_validatePhoneNumber", String.class);
 
 		validatePhoneNumber.setAccessible(true);
 
 		try {
-			validatePhoneNumber.invoke(_classInstance, new Object[]{ null });
+			validatePhoneNumber.invoke(_classInstance, new Object[] {null});
 
 			Assert.fail();
 		}
@@ -336,7 +331,7 @@ public class UserUtilTest extends BaseTestCase {
 	@Test
 	public void testValidatePhoneNumberWithTextNumber() throws Exception {
 		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"validatePhoneNumber", String.class);
+			"_validatePhoneNumber", String.class);
 
 		validatePhoneNumber.setAccessible(true);
 

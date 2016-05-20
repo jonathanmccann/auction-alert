@@ -40,6 +40,7 @@ public class eBayAPIUtil {
 
 	public static void loadApiContext(String ebayToken) {
 		ApiCredential apiCredential = new ApiCredential();
+
 		apiCredential.seteBayToken(ebayToken);
 
 		_apiContext = new ApiContext();

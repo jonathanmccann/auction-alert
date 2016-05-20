@@ -25,6 +25,7 @@ import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,14 +56,19 @@ public class CategoryUtil {
 	public static List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
- 		return _categoryDAO.getCategories();
+		return _categoryDAO.getCategories();
 	}
 
 	public static void initializeCategories() throws Exception {
-		populateCategories(createGetCategoriesCall());
+		_populateCategories(_createGetCategoriesCall());
 	}
 
-	private static GetCategoriesCall createGetCategoriesCall() {
+	@Autowired
+	public void setCategoryDAO(CategoryDAO categoryDAO) {
+		_categoryDAO = categoryDAO;
+	}
+
+	private static GetCategoriesCall _createGetCategoriesCall() {
 		ApiContext apiContext = eBayAPIUtil.getApiContext();
 
 		GetCategoriesCall getCategoriesCall = new GetCategoriesCall(apiContext);
@@ -79,7 +85,7 @@ public class CategoryUtil {
 		return getCategoriesCall;
 	}
 
-	private static boolean isNewerCategoryVersion(String version)
+	private static boolean _isNewerCategoryVersion(String version)
 		throws DatabaseConnectionException, SQLException {
 
 		String releaseVersion = ReleaseUtil.getReleaseVersion(
@@ -103,14 +109,14 @@ public class CategoryUtil {
 		return false;
 	}
 
-	private static void populateCategories(GetCategoriesCall getCategoriesCall)
+	private static void _populateCategories(GetCategoriesCall getCategoriesCall)
 		throws Exception {
 
 		CategoryType[] ebayCategories = getCategoriesCall.getCategories();
 
 		String version = getCategoriesCall.getReturnedCategoryVersion();
 
-		if (isNewerCategoryVersion(version)) {
+		if (_isNewerCategoryVersion(version)) {
 			_log.info(
 				"Remove previous categories and inserting categories from " +
 					"version: {}",
@@ -134,18 +140,13 @@ public class CategoryUtil {
 		}
 	}
 
-	@Autowired
-	public void setCategoryDAO(CategoryDAO categoryDAO) {
-		_categoryDAO = categoryDAO;
-	}
-
-	private static CategoryDAO _categoryDAO;
-
 	private static final String _CATEGORY_RELEASE_NAME = "category";
 
 	private static final int _ROOT_CATEGORY_LEVEL_LIMIT = 1;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryUtil.class);
+
+	private static CategoryDAO _categoryDAO;
 
 }

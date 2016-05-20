@@ -16,11 +16,13 @@ package com.app.util;
 
 import com.app.dao.SearchQueryPreviousResultDAO;
 import com.app.exception.DatabaseConnectionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Jonathan McCann
@@ -72,4 +74,5 @@ public class SearchQueryPreviousResultUtil {
 	}
 
 	private static SearchQueryPreviousResultDAO _searchQueryPreviousResultDAO;
+
 }

@@ -36,15 +36,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class NotificationPreferencesDAOCacheTest extends BaseTestCase {
-
-	@Autowired
-	private CacheManager cacheManager;
-
-	@Autowired
-	private NotificationPreferencesDAO notificationPreferencesDAO;
 
 	@Before
 	public void setUp() throws Exception {
@@ -53,7 +47,7 @@ public class NotificationPreferencesDAOCacheTest extends BaseTestCase {
 
 	@Test
 	public void testGetNotificationPreferencesByUserId() throws Exception {
-		Cache cache = cacheManager.getCache("notificationPreferences");
+		Cache cache = _cacheManager.getCache("notificationPreferences");
 
 		StatisticsGateway statistics = cache.getStatistics();
 
@@ -62,17 +56,17 @@ public class NotificationPreferencesDAOCacheTest extends BaseTestCase {
 
 		notificationPreferences.setUserId(_USER_ID);
 
-		notificationPreferencesDAO.addNotificationPreferences(
+		_notificationPreferencesDAO.addNotificationPreferences(
 			notificationPreferences);
 
 		notificationPreferences =
-			notificationPreferencesDAO.getNotificationPreferencesByUserId(
+			_notificationPreferencesDAO.getNotificationPreferencesByUserId(
 				_USER_ID);
 
 		Assert.assertNotNull(notificationPreferences);
 
 		notificationPreferences =
-			notificationPreferencesDAO.getNotificationPreferencesByUserId(
+			_notificationPreferencesDAO.getNotificationPreferencesByUserId(
 				_USER_ID);
 
 		Assert.assertNotNull(notificationPreferences);
@@ -80,17 +74,17 @@ public class NotificationPreferencesDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		notificationPreferencesDAO.updateNotificationPreferences(
+		_notificationPreferencesDAO.updateNotificationPreferences(
 			notificationPreferences);
 
 		notificationPreferences =
-			notificationPreferencesDAO.getNotificationPreferencesByUserId(
+			_notificationPreferencesDAO.getNotificationPreferencesByUserId(
 				_USER_ID);
 
 		Assert.assertNotNull(notificationPreferences);
 
 		notificationPreferences =
-			notificationPreferencesDAO.getNotificationPreferencesByUserId(
+			_notificationPreferencesDAO.getNotificationPreferencesByUserId(
 				_USER_ID);
 
 		Assert.assertNotNull(notificationPreferences);
@@ -100,17 +94,17 @@ public class NotificationPreferencesDAOCacheTest extends BaseTestCase {
 
 		notificationPreferences.setUserId(_USER_ID + 1);
 
-		notificationPreferencesDAO.addNotificationPreferences(
+		_notificationPreferencesDAO.addNotificationPreferences(
 			notificationPreferences);
 
 		notificationPreferences =
-			notificationPreferencesDAO.getNotificationPreferencesByUserId(
+			_notificationPreferencesDAO.getNotificationPreferencesByUserId(
 				_USER_ID);
 
 		Assert.assertNotNull(notificationPreferences);
 
 		notificationPreferences =
-			notificationPreferencesDAO.getNotificationPreferencesByUserId(
+			_notificationPreferencesDAO.getNotificationPreferencesByUserId(
 				_USER_ID);
 
 		Assert.assertNotNull(notificationPreferences);
@@ -118,5 +112,11 @@ public class NotificationPreferencesDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(3, statistics.cacheMissCount());
 		Assert.assertEquals(3, statistics.cacheHitCount());
 	}
+
+	@Autowired
+	private CacheManager _cacheManager;
+
+	@Autowired
+	private NotificationPreferencesDAO _notificationPreferencesDAO;
 
 }

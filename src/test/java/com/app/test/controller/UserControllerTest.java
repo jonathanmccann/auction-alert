@@ -14,12 +14,18 @@
 
 package com.app.test.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.app.model.NotificationPreferences;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.NotificationPreferencesUtil;
-
 import com.app.util.UserUtil;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,12 +45,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * @author Jonathan McCann
@@ -74,7 +74,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testUpdateMyAccount() throws Exception {
 		setUpUserUtil();
 
-		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -94,7 +94,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidPhoneNumberException"));
 
-		assertUpdatedUser();
+		_assertUpdatedUser();
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		UserUtil.addUser("test2@test.com", "password");
 
-		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -125,16 +125,14 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidPhoneNumberException"));
 
-		assertNotUpdatedUser();
+		_assertNotUpdatedUser();
 	}
 
 	@Test
-	public void testUpdateMyAccountWithInvalidEmailAddress()
-		throws Exception {
-
+	public void testUpdateMyAccountWithInvalidEmailAddress() throws Exception {
 		setUpUserUtil();
 
-		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
 		request.param("user.emailAddress", "test");
 
@@ -156,16 +154,14 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidPhoneNumberException"));
 
-		assertNotUpdatedUser();
+		_assertNotUpdatedUser();
 	}
 
 	@Test
-	public void testUpdateMyAccountWithInvalidPhoneNumber()
-		throws Exception {
-
+	public void testUpdateMyAccountWithInvalidPhoneNumber() throws Exception {
 		setUpUserUtil();
 
-		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
 		request.param("user.phoneNumber", "1");
 
@@ -187,7 +183,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(
 			model().attributeExists("invalidPhoneNumberException"));
 
-		assertNotUpdatedUser();
+		_assertNotUpdatedUser();
 	}
 
 	@Test
@@ -199,7 +195,7 @@ public class UserControllerTest extends BaseTestCase {
 		NotificationPreferencesUtil.addNotificationPreferences(
 			new NotificationPreferences(_INVALID_USER_ID));
 
-		MockHttpServletRequestBuilder request = buildUpdateMyAccountRequest();
+		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -219,7 +215,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidPhoneNumberException"));
 
-		assertNotUpdatedUser();
+		_assertNotUpdatedUser();
 	}
 
 	@Test
@@ -237,43 +233,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("timeZones"));
 	}
 
-	private void assertUpdatedUser() throws Exception {
-		User user = UserUtil.getUserByUserId(_USER.getUserId());
-
-		Assert.assertEquals("test2@test.com", user.getEmailAddress());
-		Assert.assertEquals("2345678901", user.getPhoneNumber());
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				_USER.getUserId());
-
-		Assert.assertEquals(
-			_USER.getUserId(), notificationPreferences.getUserId());
-		Assert.assertTrue(notificationPreferences.isEmailNotification());
-		Assert.assertTrue(notificationPreferences.isTextNotification());
-		Assert.assertTrue(notificationPreferences.isBasedOnTime());
-		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
-		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
-		Assert.assertEquals("PST", notificationPreferences.getTimeZone());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayDayEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayDayTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayNightEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayNightTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendDayEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendDayTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendNightEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendNightTextNotification());
-	}
-
-	private void assertNotUpdatedUser() throws Exception {
+	private void _assertNotUpdatedUser() throws Exception {
 		User user = UserUtil.getUserByUserId(_USER.getUserId());
 
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
@@ -309,7 +269,43 @@ public class UserControllerTest extends BaseTestCase {
 			notificationPreferences.isWeekendNightTextNotification());
 	}
 
-	private MockHttpServletRequestBuilder buildUpdateMyAccountRequest() {
+	private void _assertUpdatedUser() throws Exception {
+		User user = UserUtil.getUserByUserId(_USER.getUserId());
+
+		Assert.assertEquals("test2@test.com", user.getEmailAddress());
+		Assert.assertEquals("2345678901", user.getPhoneNumber());
+
+		NotificationPreferences notificationPreferences =
+			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
+				_USER.getUserId());
+
+		Assert.assertEquals(
+			_USER.getUserId(), notificationPreferences.getUserId());
+		Assert.assertTrue(notificationPreferences.isEmailNotification());
+		Assert.assertTrue(notificationPreferences.isTextNotification());
+		Assert.assertTrue(notificationPreferences.isBasedOnTime());
+		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
+		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
+		Assert.assertEquals("PST", notificationPreferences.getTimeZone());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayDayEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayDayTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayNightEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekdayNightTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendDayEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendDayTextNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendNightEmailNotification());
+		Assert.assertTrue(
+			notificationPreferences.isWeekendNightTextNotification());
+	}
+
+	private MockHttpServletRequestBuilder _buildUpdateMyAccountRequest() {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/my_account");
 
@@ -320,18 +316,12 @@ public class UserControllerTest extends BaseTestCase {
 		request.param(
 			"notificationPreferences.userId",
 			String.valueOf(_USER.getUserId()));
-		request.param(
-			"notificationPreferences.emailNotification", "true");
-		request.param(
-			"notificationPreferences.textNotification", "true");
-		request.param(
-			"notificationPreferences.basedOnTime", "true");
-		request.param(
-			"notificationPreferences.startOfDay", "1");
-		request.param(
-			"notificationPreferences.endOfDay", "2");
-		request.param(
-			"notificationPreferences.timeZone", "PST");
+		request.param("notificationPreferences.emailNotification", "true");
+		request.param("notificationPreferences.textNotification", "true");
+		request.param("notificationPreferences.basedOnTime", "true");
+		request.param("notificationPreferences.startOfDay", "1");
+		request.param("notificationPreferences.endOfDay", "2");
+		request.param("notificationPreferences.timeZone", "PST");
 		request.param(
 			"notificationPreferences.weekdayDayEmailNotification", "true");
 		request.param(

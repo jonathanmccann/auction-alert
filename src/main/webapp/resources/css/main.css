@@ -1,8 +1,8 @@
 /* CSS for the expanding and collapsing divs */
 
 .container {
-    border-radius: 25px;
 	border: 2px lightgrey solid;
+	border-radius: 25px;
 }
 
 .container div {
@@ -20,34 +20,34 @@
 }
 
 .flex {
-    display: flex;
-    padding-left: 10px;
+	display: flex;
+	padding-left: 10px;
 }
 
 .flexGrow {
-    flex-grow: 1;
+	flex-grow: 1;
 }
 
 .gallery {
-    width: 150px;
+	width: 150px;
 }
 
 /* CSS for styling the page */
 
 body {
-	margin: 0 auto;
-	padding: 1em 2em 3em;
-	max-width: 800px;
+	background-color: #FFFFFF;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+	color: #545454;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	line-height: 1.5em;
-	color: #545454;
-	background-color: #ffffff;
-	box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+	margin: 0 auto;
+	max-width: 800px;
+	padding: 1em 2em 3em;
 }
 
 div {
-  margin-bottom: 15px;
+margin-bottom: 15px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -56,7 +56,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 html {
-	background-color: #e6e9e9;
+	background-color: #E6E9E9;
 	background-image: -webkit-linear-gradient(270deg,rgb(230,233,233) 0%,rgb(216,221,221) 100%);
 	background-image: linear-gradient(270deg,rgb(230,233,233) 0%,rgb(216,221,221) 100%);
 	-webkit-font-smoothing: antialiased;

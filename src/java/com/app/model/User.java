@@ -22,29 +22,15 @@ public class User {
 	public User() {
 	}
 
-	public User(
-		int userId, String emailAddress, String password, String salt) {
-
+	public User(int userId, String emailAddress, String password, String salt) {
 		_userId = userId;
 		_emailAddress = emailAddress;
 		_password = password;
 		_salt = salt;
 	}
 
-	public int getUserId() {
-		return _userId;
-	}
-
-	public void setUserId(int userId) {
-		_userId = userId;
-	}
-
 	public String getEmailAddress() {
 		return _emailAddress;
-	}
-
-	public void setEmailAddress(String emailAddress) {
-		_emailAddress = emailAddress;
 	}
 
 	public String getMobileCarrierSuffix() {
@@ -55,12 +41,28 @@ public class User {
 		return _mobileOperatingSystem;
 	}
 
+	public String getPassword() {
+		return _password;
+	}
+
 	public String getPhoneNumber() {
 		return _phoneNumber;
 	}
 
 	public String getPhoneNumberEmailAddress() {
 		return _phoneNumber + _mobileCarrierSuffix;
+	}
+
+	public String getSalt() {
+		return _salt;
+	}
+
+	public int getUserId() {
+		return _userId;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		_emailAddress = emailAddress;
 	}
 
 	public void setMobileCarrierSuffix(String mobileCarrierSuffix) {
@@ -71,32 +73,28 @@ public class User {
 		_mobileOperatingSystem = mobileOperatingSystem;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		_phoneNumber = phoneNumber;
-	}
-
-	public String getPassword() {
-		return _password;
-	}
-
 	public void setPassword(String password) {
 		_password = password;
 	}
 
-	public String getSalt() {
-		return _salt;
+	public void setPhoneNumber(String phoneNumber) {
+		_phoneNumber = phoneNumber;
 	}
 
 	public void setSalt(String salt) {
 		_salt = salt;
 	}
 
-	private int _userId;
+	public void setUserId(int userId) {
+		_userId = userId;
+	}
+
 	private String _emailAddress;
 	private String _mobileCarrierSuffix;
 	private String _mobileOperatingSystem;
-	private String _phoneNumber;
 	private String _password;
+	private String _phoneNumber;
 	private String _salt;
+	private int _userId;
 
 }

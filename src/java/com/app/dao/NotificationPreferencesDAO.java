@@ -47,7 +47,7 @@ public class NotificationPreferencesDAO {
 			PreparedStatement preparedStatement =
 				connection.prepareStatement(_ADD_NOTIFICATION_PREFERENCES)) {
 
-			populateAddNotificationPreferencesPreparedStatement(
+			_populateAddNotificationPreferencesPreparedStatement(
 				preparedStatement, notificationPreferences);
 
 			preparedStatement.executeUpdate();
@@ -75,8 +75,7 @@ public class NotificationPreferencesDAO {
 			int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug(
-			"Getting notification preferences for user ID: {}", userId);
+		_log.debug("Getting notification preferences for user ID: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement =
@@ -87,7 +86,7 @@ public class NotificationPreferencesDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
-				return createNotificationPreferencesFromResultSet(resultSet);
+				return _createNotificationPreferencesFromResultSet(resultSet);
 			}
 			else {
 				throw new SQLException(
@@ -110,14 +109,14 @@ public class NotificationPreferencesDAO {
 			PreparedStatement preparedStatement =
 				connection.prepareStatement(_UPDATE_NOTIFICATION_PREFERENCES)) {
 
-			populateUpdateNotificationPreferencesPreparedStatement(
+			_populateUpdateNotificationPreferencesPreparedStatement(
 				preparedStatement, notificationPreferences);
 
 			preparedStatement.executeUpdate();
 		}
 	}
 
-	private static NotificationPreferences createNotificationPreferencesFromResultSet(
+	private static NotificationPreferences _createNotificationPreferencesFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
 
@@ -154,10 +153,10 @@ public class NotificationPreferencesDAO {
 		return notificationPreferences;
 	}
 
-	private static void populateAddNotificationPreferencesPreparedStatement(
+	private static void _populateAddNotificationPreferencesPreparedStatement(
 			PreparedStatement preparedStatement,
 			NotificationPreferences notificationPreferences)
-		throws SQLException{
+		throws SQLException {
 
 		preparedStatement.setInt(1, notificationPreferences.getUserId());
 		preparedStatement.setBoolean(
@@ -187,10 +186,10 @@ public class NotificationPreferencesDAO {
 			15, notificationPreferences.isWeekendNightTextNotification());
 	}
 
-	private static void populateUpdateNotificationPreferencesPreparedStatement(
+	private static void _populateUpdateNotificationPreferencesPreparedStatement(
 			PreparedStatement preparedStatement,
 			NotificationPreferences notificationPreferences)
-		throws SQLException{
+		throws SQLException {
 
 		preparedStatement.setBoolean(
 			1, notificationPreferences.isEmailNotification());

@@ -40,20 +40,20 @@ public class ReleaseUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testAddRelease() throws Exception {
-		ReleaseUtil.addRelease("Test Release", "1.0");
-
-		Assert.assertEquals(
-			"1.0", ReleaseUtil.getReleaseVersion("Test Release"));
-	}
-
-	@Test
 	public void testAddDuplicateRelease() throws Exception {
 		ReleaseUtil.addRelease("Test Release", "1.0");
 		ReleaseUtil.addRelease("Test Release", "2.0");
 
 		Assert.assertEquals(
 			"2.0", ReleaseUtil.getReleaseVersion("Test Release"));
+	}
+
+	@Test
+	public void testAddRelease() throws Exception {
+		ReleaseUtil.addRelease("Test Release", "1.0");
+
+		Assert.assertEquals(
+			"1.0", ReleaseUtil.getReleaseVersion("Test Release"));
 	}
 
 }

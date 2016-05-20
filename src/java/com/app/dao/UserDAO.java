@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +40,7 @@ import org.springframework.cache.annotation.Caching;
 public class UserDAO {
 
 	@CacheEvict(value = "userIds", allEntries = true)
-	public User addUser(
-			String emailAddress, String password, String salt)
+	public User addUser(String emailAddress, String password, String salt)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Adding user with emailAddress: {}", emailAddress);
@@ -59,15 +59,16 @@ public class UserDAO {
 
 			resultSet.next();
 
-			return new User(
-				resultSet.getInt(1), emailAddress, password, salt);
+			return new User(resultSet.getInt(1), emailAddress, password, salt);
 		}
 	}
 
-	@Caching(evict = {
-		@CacheEvict(value = "userByUserId", key = "#userId"),
-		@CacheEvict(value = "userIds", allEntries = true)
-	})
+	@Caching(
+		evict = {
+			@CacheEvict(value = "userByUserId", key = "#userId"),
+			@CacheEvict(value = "userIds", allEntries = true)
+		}
+	)
 	public void deleteUserByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -97,7 +98,7 @@ public class UserDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
-				return createUserFromResultSet(resultSet);
+				return _createUserFromResultSet(resultSet);
 			}
 			else {
 				return null;
@@ -120,7 +121,7 @@ public class UserDAO {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
-				return createUserFromResultSet(resultSet);
+				return _createUserFromResultSet(resultSet);
 			}
 			else {
 				return null;
@@ -173,8 +174,8 @@ public class UserDAO {
 		}
 	}
 
-	private static User createUserFromResultSet(ResultSet resultSet)
-		throws SQLException{
+	private static User _createUserFromResultSet(ResultSet resultSet)
+		throws SQLException {
 
 		User user = new User();
 
@@ -183,8 +184,7 @@ public class UserDAO {
 		user.setPhoneNumber(resultSet.getString("phoneNumber"));
 		user.setMobileOperatingSystem(
 			resultSet.getString("mobileOperatingSystem"));
-		user.setMobileCarrierSuffix(
-			resultSet.getString("mobileCarrierSuffix"));
+		user.setMobileCarrierSuffix(resultSet.getString("mobileCarrierSuffix"));
 		user.setPassword(resultSet.getString("password"));
 		user.setSalt(resultSet.getString("salt"));
 
@@ -210,7 +210,6 @@ public class UserDAO {
 		"UPDATE User_ SET emailAddress = ?, phoneNumber = ?, " +
 			"mobileOperatingSystem = ?, mobileCarrierSuffix = ? WHERE userId = ?";
 
-	private static final Logger _log = LoggerFactory.getLogger(
-		UserDAO.class);
+	private static final Logger _log = LoggerFactory.getLogger(UserDAO.class);
 
 }

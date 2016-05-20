@@ -21,20 +21,20 @@ import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.InvalidPhoneNumberException;
 import com.app.model.User;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.crypto.RandomNumberGenerator;
-import org.apache.shiro.crypto.SecureRandomNumberGenerator;
-import org.apache.shiro.crypto.hash.Sha512Hash;
-
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Sha512Hash;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Jonathan McCann
@@ -42,15 +42,14 @@ import java.util.List;
 @Service
 public class UserUtil {
 
-	public static User addUser(
-			String emailAddress, String plainTextPassword)
-		throws
+	public static User addUser(String emailAddress, String plainTextPassword)
+				throws
 			DatabaseConnectionException, DuplicateEmailAddressException,
-				InvalidEmailAddressException, SQLException {
+		InvalidEmailAddressException, SQLException {
 
-		validateEmailAddress(0, emailAddress);
+		_validateEmailAddress(0, emailAddress);
 
-		List<String> passwordAndSalt = generatePasswordAndSalt(
+		List<String> passwordAndSalt = _generatePasswordAndSalt(
 			plainTextPassword);
 
 		return _userDAO.addUser(
@@ -61,6 +60,14 @@ public class UserUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		_userDAO.deleteUserByUserId(userId);
+	}
+
+	public static int getCurrentUserId() {
+		Subject subject = SecurityUtils.getSubject();
+
+		Session session = subject.getSession();
+
+		return (int)session.getAttribute("userId");
 	}
 
 	public static User getUserByEmailAddress(String emailAddress)
@@ -81,35 +88,34 @@ public class UserUtil {
 		return _userDAO.getUserIds();
 	}
 
-	public static int getCurrentUserId() {
-		Subject subject = SecurityUtils.getSubject();
-
-		Session session = subject.getSession();
-
-		return (int)session.getAttribute("userId");
-	}
-
 	public static void updateUser(User user)
 		throws
-			DatabaseConnectionException, DuplicateEmailAddressException,
-				InvalidEmailAddressException, InvalidPhoneNumberException,
+			DatabaseConnectionException,
+			DuplicateEmailAddressException,
+				InvalidEmailAddressException,
+				InvalidPhoneNumberException,
 					SQLException {
 
 		int userId = user.getUserId();
 
 		String emailAddress = user.getEmailAddress();
-		String phoneNumber = sanitizePhoneNumber(user.getPhoneNumber());
+		String phoneNumber = _sanitizePhoneNumber(user.getPhoneNumber());
 		String mobileOperatingSystem = user.getMobileOperatingSystem();
 		String mobileCarrierSuffix = user.getMobileCarrierSuffix();
 
-		validate(userId, emailAddress, phoneNumber);
+		_validate(userId, emailAddress, phoneNumber);
 
 		_userDAO.updateUser(
 			userId, emailAddress, phoneNumber, mobileOperatingSystem,
 			mobileCarrierSuffix);
 	}
 
-	private static List<String> generatePasswordAndSalt(
+	@Autowired
+	public void setUserDAO(UserDAO userDAO) {
+		_userDAO = userDAO;
+	}
+
+	private static List<String> _generatePasswordAndSalt(
 		String plainTextPassword) {
 
 		RandomNumberGenerator rng = new SecureRandomNumberGenerator();
@@ -127,12 +133,7 @@ public class UserUtil {
 		return passwordAndSalt;
 	}
 
-	@Autowired
-	public void setUserDAO(UserDAO userDAO) {
-		_userDAO = userDAO;
-	}
-
-	private static String sanitizePhoneNumber(String phoneNumber) {
+	private static String _sanitizePhoneNumber(String phoneNumber) {
 		if (ValidatorUtil.isNull(phoneNumber)) {
 			return "";
 		}
@@ -140,23 +141,24 @@ public class UserUtil {
 		return phoneNumber.replaceAll("[^\\d]", "");
 	}
 
-	private static void validate(
-			int userId, String emailAddress, String phoneNumber)
-		throws
-			DatabaseConnectionException, DuplicateEmailAddressException,
-				InvalidEmailAddressException, InvalidPhoneNumberException,
-					SQLException {
+	private static void _validate(
+		int userId, String emailAddress, String phoneNumber)
+			throws
+				DatabaseConnectionException,
+		DuplicateEmailAddressException, InvalidEmailAddressException,
+		InvalidPhoneNumberException, SQLException {
 
-		validateEmailAddress(userId, emailAddress);
+		_validateEmailAddress(userId, emailAddress);
 
 		if (ValidatorUtil.isNotNull(phoneNumber)) {
-			validatePhoneNumber(phoneNumber);
+			_validatePhoneNumber(phoneNumber);
 		}
 	}
 
-	private static void validateEmailAddress(int userId, String emailAddress)
+	private static void _validateEmailAddress(int userId, String emailAddress)
 		throws
-			DatabaseConnectionException, DuplicateEmailAddressException,
+			DatabaseConnectionException,
+			DuplicateEmailAddressException,
 				InvalidEmailAddressException, SQLException {
 
 		if (!ValidatorUtil.isValidEmailAddress(emailAddress)) {
@@ -170,7 +172,7 @@ public class UserUtil {
 		}
 	}
 
-	private static void validatePhoneNumber(String phoneNumber)
+	private static void _validatePhoneNumber(String phoneNumber)
 		throws InvalidPhoneNumberException {
 
 		if (!ValidatorUtil.isValidPhoneNumber(phoneNumber)) {

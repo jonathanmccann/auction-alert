@@ -32,7 +32,7 @@ import org.junit.Test;
 public class eBayAPIUtilTest extends BaseTestCase {
 
 	@BeforeClass
-	public static void setUpClass () {
+	public static void setUpClass() {
 		setUpApiContext();
 	}
 

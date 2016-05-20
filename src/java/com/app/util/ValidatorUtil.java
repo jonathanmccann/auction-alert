@@ -22,12 +22,12 @@ import java.util.regex.Pattern;
  */
 public class ValidatorUtil {
 
-	public static boolean isNotNull(String s) {
-		return !isNull(s);
-	}
-
 	public static boolean isNotNull(Object[] array) {
 		return !isNull(array);
+	}
+
+	public static boolean isNotNull(String s) {
+		return !isNull(s);
 	}
 
 	public static boolean isNull(Object[] array) {

@@ -19,6 +19,7 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
+import com.app.util.UserUtil;
 
 import java.sql.SQLException;
 
@@ -28,7 +29,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.app.util.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,14 +51,15 @@ public class SearchResultController {
 	}
 
 	@RequestMapping(
-		value = "view_search_query_results", method = RequestMethod.GET)
+		value = "view_search_query_results", method = RequestMethod.GET
+	)
 	public String viewSearchResults(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
 		Map<String, List<SearchResult>> searchResultMap = new HashMap<>();
 
-		List<SearchQuery> searchQueries =
-			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), true);
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			UserUtil.getCurrentUserId(), true);
 
 		_log.debug("Found {} search query results", searchQueries.size());
 
