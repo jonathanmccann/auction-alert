@@ -3,10 +3,6 @@
 	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
 	updateCheck="false">
 
-	<!-- CategoriesDAO -->
-
-	<cache eternal="false" maxEntriesLocalHeap="1" memoryStoreEvictionPolicy="LFU" name="categories" timeToIdleSeconds="300" timeToLiveSeconds="600" />
-
 	<!-- NotificationPreferencesDAO -->
 
 	<cache eternal="false" maxEntriesLocalHeap="100" memoryStoreEvictionPolicy="LFU" name="notificationPreferences" timeToIdleSeconds="300" timeToLiveSeconds="600" />
