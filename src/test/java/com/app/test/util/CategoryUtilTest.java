@@ -100,7 +100,7 @@ public class CategoryUtilTest extends BaseTestCase {
 		Assert.assertArrayEquals(
 			detailLevelCodeTypes, getCategoriesCall.getDetailLevel());
 		Assert.assertEquals(
-			_ROOT_CATEGORY_LEVEL_LIMIT, getCategoriesCall.getLevelLimit());
+			_SUB_CATEGORY_LEVEL_LIMIT, getCategoriesCall.getLevelLimit());
 		Assert.assertTrue(getCategoriesCall.getViewAllNodes());
 	}
 
@@ -192,7 +192,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	private static final String _CATEGORY_RELEASE_NAME = "category";
 
-	private static final int _ROOT_CATEGORY_LEVEL_LIMIT = 1;
+	private static final int _SUB_CATEGORY_LEVEL_LIMIT = 2;
 
 	private static Object _classInstance;
 	private static Class _clazz;

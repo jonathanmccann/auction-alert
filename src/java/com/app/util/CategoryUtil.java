@@ -79,7 +79,7 @@ public class CategoryUtil {
 
 		getCategoriesCall.setCategorySiteID(SiteCodeType.US);
 		getCategoriesCall.setDetailLevel(detailLevelCodeTypes);
-		getCategoriesCall.setLevelLimit(_ROOT_CATEGORY_LEVEL_LIMIT);
+		getCategoriesCall.setLevelLimit(_SUB_CATEGORY_LEVEL_LIMIT);
 		getCategoriesCall.setViewAllNodes(true);
 
 		return getCategoriesCall;
@@ -144,7 +144,7 @@ public class CategoryUtil {
 
 	private static final String _CATEGORY_RELEASE_NAME = "category";
 
-	private static final int _ROOT_CATEGORY_LEVEL_LIMIT = 1;
+	private static final int _SUB_CATEGORY_LEVEL_LIMIT = 2;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryUtil.class);
