@@ -53,10 +53,16 @@ public class CategoryUtil {
 		_categoryDAO.deleteCategories();
 	}
 
-	public static List<Category> getCategories()
+	public static List<Category> getParentCategories()
 		throws DatabaseConnectionException, SQLException {
 
-		return _categoryDAO.getCategories();
+		return _categoryDAO.getParentCategories();
+	}
+
+	public static List<Category> getSubcategories(String categoryParentId)
+		throws DatabaseConnectionException, SQLException {
+
+		return _categoryDAO.getSubcategories(categoryParentId);
 	}
 
 	public static void initializeCategories() throws Exception {

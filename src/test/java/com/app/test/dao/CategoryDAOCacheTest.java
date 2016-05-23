@@ -57,11 +57,11 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		_addCategory("1", "test1", "1", 1);
 		_addCategory("2", "test2", "2", 1);
 
-		List<Category> categories = _categoryDAO.getCategories();
+		List<Category> categories = _categoryDAO.getParentCategories();
 
 		_assertCategories(categories);
 
-		categories = _categoryDAO.getCategories();
+		categories = _categoryDAO.getParentCategories();
 
 		_assertCategories(categories);
 
@@ -70,11 +70,11 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 
 		_categoryDAO.deleteCategories();
 
-		categories = _categoryDAO.getCategories();
+		categories = _categoryDAO.getParentCategories();
 
 		Assert.assertTrue(categories.isEmpty());
 
-		categories = _categoryDAO.getCategories();
+		categories = _categoryDAO.getParentCategories();
 
 		Assert.assertTrue(categories.isEmpty());
 

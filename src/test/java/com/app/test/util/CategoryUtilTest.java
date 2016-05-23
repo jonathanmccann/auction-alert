@@ -67,7 +67,7 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testAddCategory() throws Exception {
 		_addCategory();
 
-		List<Category> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getParentCategories();
 
 		Assert.assertEquals(1, categories.size());
 
@@ -117,13 +117,13 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		CategoryUtil.deleteCategories();
 
-		List<Category> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getParentCategories();
 
 		Assert.assertEquals(0, categories.size());
 	}
 
 	@Test
-	public void testGetCategories() throws Exception {
+	public void testGetParentCategories() throws Exception {
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5),
@@ -133,16 +133,26 @@ public class CategoryUtilTest extends BaseTestCase {
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5), 1);
 
-		List<Category> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getParentCategories();
 
 		Assert.assertEquals(2, categories.size());
+	}
+
+	@Test
+	public void testGetSubcategories() throws Exception {
+		_addCategory("1", "parentCategory", "1", 1);
+		_addCategory("2", "subcategory", "1", 2);
+
+		List<Category> categories = CategoryUtil.getSubcategories("1");
+
+		Assert.assertEquals(1, categories.size());
 	}
 
 	@Test
 	public void testInitializeCategories() throws Exception {
 		CategoryUtil.initializeCategories();
 
-		List<Category> categories = CategoryUtil.getCategories();
+		List<Category> categories = CategoryUtil.getParentCategories();
 
 		Assert.assertFalse(categories.isEmpty());
 	}

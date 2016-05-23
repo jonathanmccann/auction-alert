@@ -79,14 +79,39 @@ public class CategoryDAO {
 	}
 
 	@Cacheable(value = "categories")
-	public List<Category> getCategories()
+	public List<Category> getParentCategories()
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Getting all categories");
+		_log.debug("Getting all parent categories");
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_CATEGORIES_SQL)) {
+				_GET_PARENT_CATEGORIES_SQL)) {
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			List<Category> categories = new ArrayList<>();
+
+			while (resultSet.next()) {
+				categories.add(_createCategoryFromResultSet(resultSet));
+			}
+
+			return categories;
+		}
+	}
+
+	public List<Category> getSubcategories(String categoryParentId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Getting all subcategories for category parent ID: {}",
+			categoryParentId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_SUBCATEGORIES_SQL)) {
+
+			preparedStatement.setString(1, categoryParentId);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -120,7 +145,12 @@ public class CategoryDAO {
 	private static final String _DELETE_CATEGORIES_SQL =
 		"TRUNCATE TABLE Category";
 
-	private static final String _GET_CATEGORIES_SQL = "SELECT * FROM Category";
+	private static final String _GET_PARENT_CATEGORIES_SQL =
+		"SELECT * FROM Category WHERE categoryLevel = 1";
+
+	private static final String _GET_SUBCATEGORIES_SQL =
+		"SELECT * FROM Category WHERE categoryParentId = ? AND " +
+			"categoryLevel = 2";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryDAO.class);

@@ -367,7 +367,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		categories.add(category);
 
-		category = new Category("200", "Category Name2", "200", 1);
+		category = new Category("200", "Category Name2", "100", 2);
 
 		categories.add(category);
 
@@ -380,6 +380,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeExists("isAdd"));
 	}
@@ -410,6 +411,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attribute("disabled", true))
 			.andExpect(model().attributeExists("isAdd"));
 	}
@@ -424,7 +426,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		categories.add(category);
 
-		category = new Category("200", "Category Name2", "200", 1);
+		category = new Category("200", "Category Name2", "100", 2);
 
 		categories.add(category);
 
@@ -449,6 +451,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(searchQueryId))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
@@ -463,7 +466,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		categories.add(category);
 
-		category = new Category("200", "Category Name2", "200", 1);
+		category = new Category("200", "Category Name2", "100", 2);
 
 		categories.add(category);
 
@@ -486,6 +489,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("add_search_query"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"))
 			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attributeExists("isAdd"))
 			.andExpect(model().attributeDoesNotExist("disabled"));
 	}
@@ -534,6 +538,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:add_search_query"))
 			.andExpect(model().attributeDoesNotExist("searchQueryCategories"))
+			.andExpect(model().attributeDoesNotExist("searchQuerySubcategories"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 

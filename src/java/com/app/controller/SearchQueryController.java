@@ -15,6 +15,7 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
@@ -25,6 +26,8 @@ import com.app.util.ValidatorUtil;
 
 import java.sql.SQLException;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -116,7 +119,7 @@ public class SearchQueryController {
 			model.put("disabled", true);
 		}
 
-		model.put("searchQueryCategories", CategoryUtil.getCategories());
+		populateCategories(model);
 
 		model.put("isAdd", true);
 
@@ -217,7 +220,8 @@ public class SearchQueryController {
 
 		if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
 			model.put("searchQuery", searchQuery);
-			model.put("searchQueryCategories", CategoryUtil.getCategories());
+
+			populateCategories(model);
 
 			return "add_search_query";
 		}
@@ -243,7 +247,31 @@ public class SearchQueryController {
 		return "view_search_queries";
 	}
 
+	private void populateCategories(Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		if (_CATEGORIES.isEmpty()) {
+			for (Category parentCategory : CategoryUtil.getParentCategories()) {
+				_CATEGORIES.put(
+					parentCategory.getCategoryId(),
+					parentCategory.getCategoryName());
+
+				_SUBCATEGORIES.put(
+					parentCategory.getCategoryId(),
+					CategoryUtil.getSubcategories(
+						parentCategory.getCategoryId()));
+			}
+		}
+
+		model.put("searchQueryCategories", _CATEGORIES);
+		model.put("searchQuerySubcategories", _SUBCATEGORIES);
+	}
+
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
+
+	private static final Map<String, String> _CATEGORIES = new LinkedHashMap<>();
+	private static final Map<String, List<Category>> _SUBCATEGORIES =
+		new LinkedHashMap<>();
 
 }
