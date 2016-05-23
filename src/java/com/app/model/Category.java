@@ -22,28 +22,52 @@ public class Category {
 	public Category() {
 	}
 
-	public Category(String categoryId, String categoryName) {
+	public Category(
+		String categoryId, String categoryName, String categoryParentId,
+		int categoryLevel) {
+
 		_categoryId = categoryId;
+		_categoryLevel = categoryLevel;
 		_categoryName = categoryName;
+		_categoryParentId = categoryParentId;
 	}
 
 	public String getCategoryId() {
 		return _categoryId;
 	}
 
+	public int getCategoryLevel() {
+		return _categoryLevel;
+	}
+
 	public String getCategoryName() {
 		return _categoryName;
+	}
+
+	public String getCategoryParentId() {
+		return _categoryParentId;
 	}
 
 	public void setCategoryId(String categoryId) {
 		_categoryId = categoryId;
 	}
 
+	public void setCategoryLevel(int categoryLevel) {
+		_categoryLevel = categoryLevel;
+	}
+
 	public void setCategoryName(String categoryName) {
 		_categoryName = categoryName;
 	}
 
+	public void setCategoryParentId(String categoryParentId) {
+		_categoryParentId = categoryParentId;
+	}
+
+	private int _categoryLevel;
+
 	private String _categoryId;
 	private String _categoryName;
+	private String _categoryParentId;
 
 }
