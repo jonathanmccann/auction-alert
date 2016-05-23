@@ -43,6 +43,8 @@ public class SearchResultRunnable implements Runnable {
 	@Override
 	public void run() {
 		try {
+			long startTime = System.nanoTime();
+
 			List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 				_userId, true);
 
@@ -76,6 +78,12 @@ public class SearchResultRunnable implements Runnable {
 				MailUtil.sendSearchResultsToRecipient(
 					_userId, searchQueryResultMap);
 			}
+
+			long endTime = System.nanoTime();
+
+			_log.debug(
+				"Performing searches for userId: {} took {} seconds", _userId,
+				(endTime - startTime) / 1000000000);
 		}
 		catch (DatabaseConnectionException | SQLException e) {
 			_log.error("Unable to perform search for userId: {}", _userId, e);

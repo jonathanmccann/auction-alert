@@ -90,6 +90,8 @@ public class SearchResultUtil {
 	public static void performSearch()
 		throws DatabaseConnectionException, SQLException {
 
+		long startTime = System.nanoTime();
+
 		ExecutorService executor = Executors.newFixedThreadPool(
 			_THREAD_POOL_SIZE);
 
@@ -111,6 +113,12 @@ public class SearchResultUtil {
 		catch (InterruptedException ie) {
 			_log.error("The executor encountered an exception", ie);
 		}
+
+		long endTime = System.nanoTime();
+
+		_log.debug(
+			"Performing searches for {} users took {} seconds", userIds.size(),
+			(endTime - startTime) / 1000000000);
 	}
 
 	@Autowired
