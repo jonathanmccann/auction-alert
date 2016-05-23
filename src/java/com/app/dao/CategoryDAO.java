@@ -52,6 +52,8 @@ public class CategoryDAO {
 			for (Category category : categories) {
 				preparedStatement.setString(1, category.getCategoryId());
 				preparedStatement.setString(2, category.getCategoryName());
+				preparedStatement.setString(3, category.getCategoryParentId());
+				preparedStatement.setInt(4, category.getCategoryLevel());
 
 				preparedStatement.addBatch();
 			}
@@ -105,12 +107,15 @@ public class CategoryDAO {
 
 		category.setCategoryId(resultSet.getString("categoryId"));
 		category.setCategoryName(resultSet.getString("categoryName"));
+		category.setCategoryParentId(resultSet.getString("categoryParentId"));
+		category.setCategoryLevel(resultSet.getInt("categoryLevel"));
 
 		return category;
 	}
 
 	private static final String _ADD_CATEGORY_SQL =
-		"INSERT INTO Category(categoryId, categoryName) VALUES(?, ?)";
+		"INSERT INTO Category(categoryId, categoryName, categoryParentId, " +
+			"categoryLevel) VALUES(?, ?, ?, ?)";
 
 	private static final String _DELETE_CATEGORIES_SQL =
 		"TRUNCATE TABLE Category";
