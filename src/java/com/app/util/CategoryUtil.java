@@ -129,7 +129,9 @@ public class CategoryUtil {
 			for (CategoryType categoryType : ebayCategories) {
 				Category category = new Category(
 					categoryType.getCategoryID(),
-					categoryType.getCategoryName());
+					categoryType.getCategoryName(),
+					categoryType.getCategoryParentID(0),
+					categoryType.getCategoryLevel());
 
 				categories.add(category);
 			}

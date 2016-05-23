@@ -75,6 +75,8 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
 		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
+		Assert.assertEquals(_CATEGORY_PARENT_ID, category.getCategoryParentId());
+		Assert.assertEquals(_CATEGORY_LEVEL, category.getCategoryLevel());
 	}
 
 	@Test
@@ -106,10 +108,12 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testDeleteCategories() throws Exception {
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5));
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5), 1);
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5));
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5), 1);
 
 		CategoryUtil.deleteCategories();
 
@@ -122,10 +126,12 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testGetCategories() throws Exception {
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5));
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5), 1);
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5));
+			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomAlphanumeric(5), 1);
 
 		List<Category> categories = CategoryUtil.getCategories();
 
@@ -157,24 +163,32 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	private static void _addCategory() throws Exception {
-		_addCategory(_CATEGORY_ID, _CATEGORY_NAME);
+		_addCategory(
+			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
 	}
 
-	private static void _addCategory(String categoryId, String categoryName)
+	private static void _addCategory(
+			String categoryId, String categoryName, String categoryParentId,
+			int categoryLevel)
 		throws Exception {
 
 		List<Category> categories = new ArrayList<>();
 
-		Category category = new Category(categoryId, categoryName);
+		Category category = new Category(
+			categoryId, categoryName, categoryParentId, categoryLevel);
 
 		categories.add(category);
 
 		CategoryUtil.addCategories(categories);
 	}
 
+	private static final int _CATEGORY_LEVEL = 1;
+
 	private static final String _CATEGORY_ID = "categoryId";
 
 	private static final String _CATEGORY_NAME = "categoryName";
+
+	private static final String _CATEGORY_PARENT_ID = "categoryParentId";
 
 	private static final String _CATEGORY_RELEASE_NAME = "category";
 

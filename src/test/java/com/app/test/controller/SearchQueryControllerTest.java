@@ -363,11 +363,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		List<Category> categories = new ArrayList<>();
 
-		Category category = new Category("100", "Category Name");
+		Category category = new Category("100", "Category Name", "100", 1);
 
 		categories.add(category);
 
-		category = new Category("200", "Category Name2");
+		category = new Category("200", "Category Name2", "200", 1);
 
 		categories.add(category);
 
@@ -420,11 +420,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		List<Category> categories = new ArrayList<>();
 
-		Category category = new Category("100", "Category Name");
+		Category category = new Category("100", "Category Name", "100", 1);
 
 		categories.add(category);
 
-		category = new Category("200", "Category Name2");
+		category = new Category("200", "Category Name2", "200", 1);
 
 		categories.add(category);
 
@@ -459,11 +459,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		List<Category> categories = new ArrayList<>();
 
-		Category category = new Category("100", "Category Name");
+		Category category = new Category("100", "Category Name", "100", 1);
 
 		categories.add(category);
 
-		category = new Category("200", "Category Name2");
+		category = new Category("200", "Category Name2", "200", 1);
 
 		categories.add(category);
 
