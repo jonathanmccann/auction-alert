@@ -39,8 +39,8 @@ public class SearchQuery {
 
 	public SearchQuery(
 		int searchQueryId, int userId, String keywords, String categoryId,
-		boolean searchDescription, boolean freeShippingOnly,
-		boolean newCondition, boolean usedCondition,
+		String subcategoryId, boolean searchDescription,
+		boolean freeShippingOnly, boolean newCondition, boolean usedCondition,
 		boolean unspecifiedCondition, boolean auctionListing,
 		boolean fixedPriceListing, double minPrice, double maxPrice,
 		boolean active) {
@@ -56,6 +56,7 @@ public class SearchQuery {
 		_newCondition = newCondition;
 		_searchDescription = searchDescription;
 		_searchQueryId = searchQueryId;
+		_subcategoryId = subcategoryId;
 		_unspecifiedCondition = unspecifiedCondition;
 		_usedCondition = usedCondition;
 		_userId = userId;

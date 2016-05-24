@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.app.controller.SearchQueryController;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
@@ -35,6 +36,7 @@ import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
@@ -97,8 +99,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -120,8 +122,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpInvalidUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -143,8 +145,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, true);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -166,8 +168,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpInvalidUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, true);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -380,7 +382,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
-			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeExists("isAdd"));
 	}
@@ -411,7 +412,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
-			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attribute("disabled", true))
 			.andExpect(model().attributeExists("isAdd"));
 	}
@@ -451,7 +451,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(searchQueryId))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
-			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
@@ -489,7 +488,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("add_search_query"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"))
 			.andExpect(model().attributeExists("searchQueryCategories"))
-			.andExpect(model().attributeExists("searchQuerySubcategories"))
 			.andExpect(model().attributeExists("isAdd"))
 			.andExpect(model().attributeDoesNotExist("disabled"));
 	}
@@ -538,7 +536,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:add_search_query"))
 			.andExpect(model().attributeDoesNotExist("searchQueryCategories"))
-			.andExpect(model().attributeDoesNotExist("searchQuerySubcategories"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
@@ -568,6 +565,40 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("", searchQuery.getCategoryId());
+	}
+
+	@Test
+	public void testPostAddSearchQueryWithDefaultSubcategoryId()
+		throws Exception {
+
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/add_search_query");
+
+		request.param("keywords", "First test keywords");
+		request.param("categoryId", "100");
+		request.param("subcategoryId", "All Subcategories");
+		request.param("active", "true");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"))
+			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("isAdd"));
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID, true);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		SearchQuery searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
 	}
 
 	@Test
@@ -591,6 +622,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
+		request.param("subcategoryId", "200");
 		request.param("searchDescription", "true");
 		request.param("freeShippingOnly", "true");
 		request.param("newCondition", "true");
@@ -616,6 +648,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -665,6 +698,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
+		request.param("subcategoryId", "200");
 		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -684,6 +718,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
 		Assert.assertFalse(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -700,8 +735,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpInvalidUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -715,6 +750,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
 		Assert.assertFalse(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -732,6 +768,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("searchQueryId", String.valueOf(searchQueryId));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "101");
+		request.param("subcategoryId", "201");
 		request.param("searchDescription", "true");
 		request.param("freeShippingOnly", "true");
 		request.param("newCondition", "true");
@@ -756,6 +793,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
 		Assert.assertFalse(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -773,8 +811,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -788,6 +826,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
 		Assert.assertFalse(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -805,6 +844,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("searchQueryId", String.valueOf(searchQueryId));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "101");
+		request.param("subcategoryId", "201");
 		request.param("searchDescription", "true");
 		request.param("freeShippingOnly", "true");
 		request.param("newCondition", "true");
@@ -829,6 +869,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("101", searchQuery.getCategoryId());
+		Assert.assertEquals("201", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -846,8 +887,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -857,6 +898,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("searchQueryId", String.valueOf(searchQueryId));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "All Categories");
+		request.param("subcategoryId", "200");
 		request.param("searchDescription", "true");
 		request.param("freeShippingOnly", "true");
 		request.param("newCondition", "true");
@@ -882,6 +924,62 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+		Assert.assertTrue(searchQuery.isSearchDescription());
+		Assert.assertTrue(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertFalse(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertTrue(searchQuery.isActive());
+	}
+
+	@Test
+	public void testPostUpdateWithDefaultSubcategoryId() throws Exception {
+		setUpUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/update_search_query");
+
+		request.param("searchQueryId", String.valueOf(searchQueryId));
+		request.param("keywords", "First test keywords");
+		request.param("categoryId", "100");
+		request.param("subcategoryId", "All Subcategories");
+		request.param("searchDescription", "true");
+		request.param("freeShippingOnly", "true");
+		request.param("newCondition", "true");
+		request.param("auctionListing", "true");
+		request.param("minPrice", "5.00");
+		request.param("maxPrice", "10.00");
+		request.param("active", "true");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isFound());
+		resultActions.andExpect(view().name("redirect:view_search_queries"));
+		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID, true);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -899,8 +997,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -910,6 +1008,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("searchQueryId", String.valueOf(searchQueryId));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "");
+		request.param("subcategoryId", "200");
 		request.param("searchDescription", "true");
 		request.param("freeShippingOnly", "true");
 		request.param("newCondition", "true");
@@ -935,6 +1034,62 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+		Assert.assertTrue(searchQuery.isSearchDescription());
+		Assert.assertTrue(searchQuery.isFreeShippingOnly());
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertFalse(searchQuery.isFixedPriceListing());
+		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertTrue(searchQuery.isActive());
+	}
+
+	@Test
+	public void testPostUpdateWithNullSubcategoryId() throws Exception {
+		setUpUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery(
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/update_search_query");
+
+		request.param("searchQueryId", String.valueOf(searchQueryId));
+		request.param("keywords", "First test keywords");
+		request.param("categoryId", "100");
+		request.param("subcategoryId", "");
+		request.param("searchDescription", "true");
+		request.param("freeShippingOnly", "true");
+		request.param("newCondition", "true");
+		request.param("auctionListing", "true");
+		request.param("minPrice", "5.00");
+		request.param("maxPrice", "10.00");
+		request.param("active", "true");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isFound());
+		resultActions.andExpect(view().name("redirect:view_search_queries"));
+		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+
+		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+			_USER_ID, true);
+
+		Assert.assertEquals(1, searchQueries.size());
+
+		searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
+		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -963,6 +1118,76 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+	}
+
+	@Test
+	public void testValidateCategoryId() throws Exception {
+		Class clazz = Class.forName(SearchQueryController.class.getName());
+
+		Object classInstance = clazz.newInstance();
+
+		Method method = clazz.getDeclaredMethod(
+			"validateCategoryId", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setCategoryId("");
+		searchQuery.setSubcategoryId("");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("All Categories");
+		searchQuery.setSubcategoryId("All Subcategories");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("All Subcategories");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("");
+		searchQuery.setSubcategoryId("200");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("All Categories");
+		searchQuery.setSubcategoryId("200");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
 	}
 
 	@Test

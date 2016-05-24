@@ -85,13 +85,7 @@ public class SearchQueryController {
 		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
 			searchQuery.setUserId(userId);
 
-			String categoryId = searchQuery.getCategoryId();
-
-			if (ValidatorUtil.isNull(categoryId) ||
-				categoryId.equalsIgnoreCase("All Categories")) {
-
-				searchQuery.setCategoryId("");
-			}
+			validateCategoryId(searchQuery);
 
 			SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -191,13 +185,7 @@ public class SearchQueryController {
 		throws DatabaseConnectionException, SQLException {
 
 		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
-			String categoryId = searchQuery.getCategoryId();
-
-			if (ValidatorUtil.isNull(categoryId) ||
-				categoryId.equalsIgnoreCase("All Categories")) {
-
-				searchQuery.setCategoryId("");
-			}
+			validateCategoryId(searchQuery);
 
 			SearchQueryUtil.updateSearchQuery(
 				UserUtil.getCurrentUserId(), searchQuery);
@@ -263,6 +251,24 @@ public class SearchQueryController {
 		}
 
 		return subcategories;
+	}
+
+	private void validateCategoryId(SearchQuery searchQuery) {
+		String categoryId = searchQuery.getCategoryId();
+		String subcategoryId = searchQuery.getSubcategoryId();
+
+		if (ValidatorUtil.isNull(categoryId) ||
+			categoryId.equalsIgnoreCase("All Categories")) {
+
+			searchQuery.setCategoryId("");
+			searchQuery.setSubcategoryId("");
+		}
+
+		if (ValidatorUtil.isNull(subcategoryId) ||
+			subcategoryId.equalsIgnoreCase("All Subcategories")) {
+
+			searchQuery.setSubcategoryId("");
+		}
 	}
 
 	private void populateCategories(Map<String, Object> model)

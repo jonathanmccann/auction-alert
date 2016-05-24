@@ -54,8 +54,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@Test
 	public void testActivateSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -69,8 +69,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@Test
 	public void testAddSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", true, true, true, true, true,
-			true, true, 5.00, 10.00, true);
+			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
+			true, true, true, 5.00, 10.00, true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -79,6 +79,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -125,8 +126,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@Test
 	public void testAddSearchQueryWithNormalizedValues() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", true, true, false, false,
-			false, false, false, 5.00, 10.00, true);
+			1, _USER_ID, "Test keywords", "100", "200", true, true, false,
+			false, false, false, false, 5.00, 10.00, true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -135,6 +136,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -150,8 +152,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@Test
 	public void testDeactivateSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, true);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -289,8 +291,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	@Test
 	public void testUpdateSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", false, false, false, false,
-			false, false, false, 0.00, 0.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
+			false, false, false, false, 0.00, 0.00, false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -299,6 +301,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
 		Assert.assertFalse(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -311,8 +314,8 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isActive());
 
 		searchQuery = new SearchQuery(
-			searchQueryId, _USER_ID, "New test keywords", "101", true, true,
-			true, false, false, true, false, 5.00, 10.00, true);
+			searchQueryId, _USER_ID, "New test keywords", "101", "201", true,
+			true, true, false, false, true, false, 5.00, 10.00, true);
 
 		SearchQueryUtil.updateSearchQuery(_USER_ID, searchQuery);
 
@@ -321,6 +324,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("New test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("101", searchQuery.getCategoryId());
+		Assert.assertEquals("201", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());

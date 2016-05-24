@@ -34,13 +34,14 @@ public class SearchQueryTest {
 	@Test
 	public void testAdvancedConstructor() {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", true, true, true, true, true,
-			true, true, 5.00, 10.00, false);
+			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
+			true, true, true, 5.00, 10.00, false);
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
