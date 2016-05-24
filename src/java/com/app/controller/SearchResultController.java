@@ -56,7 +56,7 @@ public class SearchResultController {
 	public String viewSearchResults(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		Map<String, List<SearchResult>> searchResultMap = new HashMap<>();
+		Map<SearchQuery, List<SearchResult>> searchResultMap = new HashMap<>();
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			UserUtil.getCurrentUserId(), true);
@@ -64,15 +64,12 @@ public class SearchResultController {
 		_log.debug("Found {} search query results", searchQueries.size());
 
 		for (SearchQuery searchQuery : searchQueries) {
-			int searchQueryId = searchQuery.getSearchQueryId();
-
-			String keywords = searchQuery.getKeywords();
-
 			List<SearchResult> searchResults =
-				SearchResultUtil.getSearchQueryResults(searchQueryId);
+				SearchResultUtil.getSearchQueryResults(
+					searchQuery.getSearchQueryId());
 
 			if (!searchResults.isEmpty()) {
-				searchResultMap.put(keywords, searchResults);
+				searchResultMap.put(searchQuery, searchResults);
 			}
 		}
 

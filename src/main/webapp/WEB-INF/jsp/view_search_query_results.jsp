@@ -39,7 +39,7 @@
 				<c:forEach items="${searchResultMap}" var="entry">
 					<div class="container">
 						<div align="left" class="header">
-							<h4><c:out value="Keywords: \"${entry.key}\"" /></h4>
+							<h4><c:out value="Keywords: \"${entry.key.keywords}\"" /></h4>
 						</div>
 						<div class="content">
 							<c:forEach items="${entry.value}" var="item">
