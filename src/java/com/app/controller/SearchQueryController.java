@@ -26,7 +26,7 @@ import com.app.util.ValidatorUtil;
 
 import java.sql.SQLException;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author Jonathan McCann
@@ -247,6 +248,23 @@ public class SearchQueryController {
 		return "view_search_queries";
 	}
 
+	@RequestMapping(value = "/subcategories", method = RequestMethod.GET)
+	public @ResponseBody Map<String, String> getParentSubcategories(
+			String categoryParentId)
+		throws DatabaseConnectionException, SQLException {
+
+		Map<String, String> subcategories = new HashMap<>();
+
+		for (Category subcategory :
+				CategoryUtil.getSubcategories(categoryParentId)) {
+
+			subcategories.put(
+				subcategory.getCategoryName(), subcategory.getCategoryId());
+		}
+
+		return subcategories;
+	}
+
 	private void populateCategories(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
@@ -255,23 +273,15 @@ public class SearchQueryController {
 				_CATEGORIES.put(
 					parentCategory.getCategoryId(),
 					parentCategory.getCategoryName());
-
-				_SUBCATEGORIES.put(
-					parentCategory.getCategoryId(),
-					CategoryUtil.getSubcategories(
-						parentCategory.getCategoryId()));
 			}
 		}
 
 		model.put("searchQueryCategories", _CATEGORIES);
-		model.put("searchQuerySubcategories", _SUBCATEGORIES);
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
 
 	private static final Map<String, String> _CATEGORIES = new LinkedHashMap<>();
-	private static final Map<String, List<Category>> _SUBCATEGORIES =
-		new LinkedHashMap<>();
 
 }

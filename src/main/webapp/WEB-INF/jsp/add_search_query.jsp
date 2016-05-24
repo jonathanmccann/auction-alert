@@ -69,6 +69,9 @@
 							<form:option value="All Categories"></form:option>
 							<form:options items="${searchQueryCategories}" />
 						</form:select>
+						<form:select id="subcategoryId" path="categoryId">
+							<form:option value="All Subcategories"></form:option>
+						</form:select>
 					</div>
 					<div>
 						<form:checkbox label="Search Description" path="searchDescription" value="${searchQuery.searchDescription}" />

@@ -23,6 +23,7 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.0'
 	compile group: 'org.apache.shiro', name: 'shiro-core', version:'1.2.4'
 	compile group: 'org.apache.shiro', name: 'shiro-spring', version:'1.2.4'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.4'
 	compile group: 'org.freemarker', name: 'freemarker', version:'2.3.21'
 	compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
 	compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'

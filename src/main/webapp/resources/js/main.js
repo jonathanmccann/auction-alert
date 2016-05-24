@@ -151,5 +151,33 @@ $(window).load(function() {
 		else {
 			$("#basedOnTimeOptions").hide();
 		}
+
+		$('#categoryId').change(
+			function doAjax() {
+				$.ajax({
+					url: '/subcategories',
+					data: ({categoryParentId : $(this).val()}),
+					success: function(data) {
+						var keys = [];
+
+						for (var key in data) {
+							keys.push(key);
+						}
+
+						keys.sort();
+
+						var html = '<option value="">All Subcategories</option>'
+
+						for (var i = 0; i < keys.length; i++) {
+							key = keys[i];
+
+							html += '<option value="' + data[key] + '">' + key + '</option>';
+						}
+
+						$('#subcategoryId').html(html);
+					}
+				});
+			}
+		)
 	});
 });
