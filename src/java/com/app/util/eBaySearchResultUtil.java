@@ -137,7 +137,10 @@ public class eBaySearchResultUtil {
 
 		request.setKeywords(searchQuery.getKeywords());
 
-		if (ValidatorUtil.isNotNull(searchQuery.getCategoryId())) {
+		if (ValidatorUtil.isNotNull(searchQuery.getSubcategoryId())) {
+			request.getCategoryId().add(searchQuery.getSubcategoryId());
+		}
+		else if (ValidatorUtil.isNotNull(searchQuery.getCategoryId())) {
 			request.getCategoryId().add(searchQuery.getCategoryId());
 		}
 
