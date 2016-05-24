@@ -46,6 +46,8 @@
 				<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
 				<form:input path="userId" type="hidden" value="${searchQuery.userId}" />
 
+				<input id="initialSubcategoryId" type="hidden" value="${searchQuery.subcategoryId}" />
+
 				<fmt:formatNumber pattern="0.00" value="${searchQuery.minPrice}" var="minPrice" />
 				<fmt:formatNumber pattern="0.00" value="${searchQuery.maxPrice}" var="maxPrice" />
 
