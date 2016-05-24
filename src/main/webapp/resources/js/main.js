@@ -168,6 +168,13 @@ $(window).load(function() {
 
 						var html = '<option value="">All Subcategories</option>'
 
+						if (keys.length == 0) {
+							$('#subcategoryId').prop('disabled', true);
+						}
+						else {
+							$('#subcategoryId').prop('disabled', false);
+						}
+
 						for (var i = 0; i < keys.length; i++) {
 							key = keys[i];
 

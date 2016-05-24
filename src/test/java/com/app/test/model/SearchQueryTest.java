@@ -137,10 +137,10 @@ public class SearchQueryTest {
 	}
 
 	@Test
-	public void testSetAndGetCategoryId() {
-		_searchQuery.setCategoryId("100");
+	public void testSetAndGetSubcategoryId() {
+		_searchQuery.setSubcategoryId("100");
 
-		Assert.assertEquals("100", _searchQuery.getCategoryId());
+		Assert.assertEquals("100", _searchQuery.getSubcategoryId());
 	}
 
 	@Test

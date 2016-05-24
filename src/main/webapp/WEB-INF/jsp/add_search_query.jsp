@@ -69,7 +69,7 @@
 							<form:option value="All Categories"></form:option>
 							<form:options items="${searchQueryCategories}" />
 						</form:select>
-						<form:select id="subcategoryId" path="categoryId">
+						<form:select disabled="true" id="subcategoryId" path="subcategoryId">
 							<form:option value="All Subcategories"></form:option>
 						</form:select>
 					</div>

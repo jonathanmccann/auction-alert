@@ -81,6 +81,10 @@ public class SearchQuery {
 		return _searchQueryId;
 	}
 
+	public String getSubcategoryId() {
+		return _subcategoryId;
+	}
+
 	public int getUserId() {
 		return _userId;
 	}
@@ -161,6 +165,10 @@ public class SearchQuery {
 		_searchQueryId = searchQueryId;
 	}
 
+	public void setSubcategoryId(String categoryId) {
+		_subcategoryId = categoryId;
+	}
+
 	public void setUnspecifiedCondition(boolean unspecifiedCondition) {
 		this._unspecifiedCondition = unspecifiedCondition;
 	}
@@ -184,6 +192,7 @@ public class SearchQuery {
 	private boolean _newCondition;
 	private boolean _searchDescription;
 	private int _searchQueryId;
+	private String _subcategoryId;
 	private boolean _unspecifiedCondition;
 	private boolean _usedCondition;
 	private int _userId;
