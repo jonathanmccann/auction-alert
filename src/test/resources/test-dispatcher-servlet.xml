@@ -18,6 +18,7 @@
 	</bean>
 
 	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
+	<bean id="mailSender" class="com.app.mail.SendGridMailSender" />
 	<bean id="notificationPreferencesDAO" class="com.app.dao.NotificationPreferencesDAO" />
 	<bean id="releaseDao" class="com.app.dao.ReleaseDAO" />
 	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />

@@ -68,6 +68,8 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals("smtp.gmail.com", PropertiesValues.MAIL_SMTP_HOST);
 		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
 		Assert.assertEquals(
+			"SendGrid API Key", PropertiesValues.SENDGRID_API_KEY);
+		Assert.assertEquals(
 			1, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}
 

@@ -66,6 +66,10 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 
+	public static final String SENDGRID_API_KEY =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.SENDGRID_API_KEY);
+
 	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		Integer.parseInt(
 			PropertiesUtil.getConfigurationProperty(

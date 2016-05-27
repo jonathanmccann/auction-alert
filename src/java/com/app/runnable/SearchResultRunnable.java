@@ -15,9 +15,10 @@
 package com.app.runnable;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.mail.MailSender;
+import com.app.mail.MailSenderFactory;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
-import com.app.util.MailUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.eBaySearchResultUtil;
@@ -75,7 +76,9 @@ public class SearchResultRunnable implements Runnable {
 			}
 
 			if (!searchQueryResultMap.isEmpty()) {
-				MailUtil.sendSearchResultsToRecipient(
+				MailSender mailSender = MailSenderFactory.getInstance();
+
+				mailSender.sendSearchResultsToRecipient(
 					_userId, searchQueryResultMap);
 			}
 
