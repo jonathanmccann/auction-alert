@@ -14,15 +14,10 @@
 
 package com.app.controller;
 
-import com.app.constant.AccountConstants;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
-import com.app.exception.InvalidPhoneNumberException;
-import com.app.model.NotificationPreferences;
 import com.app.model.User;
-import com.app.model.UserDetails;
-import com.app.util.NotificationPreferencesUtil;
 import com.app.util.UserUtil;
 
 import java.sql.SQLException;
@@ -40,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -78,14 +74,6 @@ public class UserController {
 
 			return "create_account";
 		}
-
-		NotificationPreferences notificationPreferences =
-			new NotificationPreferences();
-
-		notificationPreferences.setUserId(user.getUserId());
-
-		NotificationPreferencesUtil.addNotificationPreferences(
-			notificationPreferences);
 
 		return logIn(emailAddress, password, model);
 	}
@@ -149,10 +137,8 @@ public class UserController {
 
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
-			UserDetails userDetails, Map<String, Object> model)
+			@ModelAttribute("user")User user, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
-
-		User user = userDetails.getUser();
 
 		if (user.getUserId() != UserUtil.getCurrentUserId()) {
 			return viewMyAccount(model);
@@ -160,9 +146,6 @@ public class UserController {
 
 		try {
 			UserUtil.updateUser(user);
-
-			NotificationPreferencesUtil.updateNotificationPreferences(
-				userDetails.getNotificationPreferences());
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
@@ -174,22 +157,8 @@ public class UserController {
 				"invalidEmailAddressException",
 				"This email address is invalid. Please try again.");
 		}
-		catch (InvalidPhoneNumberException ipne) {
-			model.put(
-				"invalidPhoneNumberException",
-				"This phone number is invalid. Please try again.");
-		}
 
-		model.put("userDetails", userDetails);
-
-		model.put("hours", AccountConstants.getHours());
-		model.put(
-			"mobileCarrierSuffixes",
-			AccountConstants.getMobileCarrierSuffixes());
-		model.put(
-			"mobileOperatingSystems",
-			AccountConstants.getMobileOperatingSystems());
-		model.put("timeZones", AccountConstants.getTimeZones());
+		model.put("user", user);
 
 		return "my_account";
 	}
@@ -198,25 +167,7 @@ public class UserController {
 	public String viewMyAccount(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		User user = UserUtil.getUserByUserId(UserUtil.getCurrentUserId());
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				user.getUserId());
-
-		UserDetails userDetails = new UserDetails(
-			user, notificationPreferences);
-
-		model.put("userDetails", userDetails);
-
-		model.put("hours", AccountConstants.getHours());
-		model.put(
-			"mobileCarrierSuffixes",
-			AccountConstants.getMobileCarrierSuffixes());
-		model.put(
-			"mobileOperatingSystems",
-			AccountConstants.getMobileOperatingSystems());
-		model.put("timeZones", AccountConstants.getTimeZones());
+		model.put("user", UserUtil.getUserByUserId(UserUtil.getCurrentUserId()));
 
 		return "my_account";
 	}

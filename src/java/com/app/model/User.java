@@ -22,35 +22,23 @@ public class User {
 	public User() {
 	}
 
-	public User(int userId, String emailAddress, String password, String salt) {
+	public User(
+		int userId, String emailAddress, String password, String salt,
+		boolean emailNotification) {
+
 		_userId = userId;
 		_emailAddress = emailAddress;
 		_password = password;
 		_salt = salt;
+		_emailNotification = emailNotification;
 	}
 
 	public String getEmailAddress() {
 		return _emailAddress;
 	}
 
-	public String getMobileCarrierSuffix() {
-		return _mobileCarrierSuffix;
-	}
-
-	public String getMobileOperatingSystem() {
-		return _mobileOperatingSystem;
-	}
-
 	public String getPassword() {
 		return _password;
-	}
-
-	public String getPhoneNumber() {
-		return _phoneNumber;
-	}
-
-	public String getPhoneNumberEmailAddress() {
-		return _phoneNumber + _mobileCarrierSuffix;
 	}
 
 	public String getSalt() {
@@ -61,24 +49,20 @@ public class User {
 		return _userId;
 	}
 
+	public boolean isEmailNotification() {
+		return _emailNotification;
+	}
+
 	public void setEmailAddress(String emailAddress) {
 		_emailAddress = emailAddress;
 	}
 
-	public void setMobileCarrierSuffix(String mobileCarrierSuffix) {
-		_mobileCarrierSuffix = mobileCarrierSuffix;
-	}
-
-	public void setMobileOperatingSystem(String mobileOperatingSystem) {
-		_mobileOperatingSystem = mobileOperatingSystem;
+	public void setEmailNotification(boolean emailNotification) {
+		_emailNotification = emailNotification;
 	}
 
 	public void setPassword(String password) {
 		_password = password;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		_phoneNumber = phoneNumber;
 	}
 
 	public void setSalt(String salt) {
@@ -90,10 +74,8 @@ public class User {
 	}
 
 	private String _emailAddress;
-	private String _mobileCarrierSuffix;
-	private String _mobileOperatingSystem;
+	private boolean _emailNotification;
 	private String _password;
-	private String _phoneNumber;
 	private String _salt;
 	private int _userId;
 

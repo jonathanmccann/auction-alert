@@ -16,7 +16,6 @@ package com.app.test.util;
 
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
-import com.app.exception.InvalidPhoneNumberException;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
@@ -64,6 +63,7 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
+		Assert.assertTrue(user.isEmailNotification());
 	}
 
 	@Test(expected = DuplicateEmailAddressException.class)
@@ -110,49 +110,8 @@ public class UserUtilTest extends BaseTestCase {
 		List<Integer> userIds = UserUtil.getUserIds();
 
 		Assert.assertEquals(2, userIds.size());
-		Assert.assertEquals(firstUser.getUserId(), (int)userIds.get(0));
-		Assert.assertEquals(secondUser.getUserId(), (int)userIds.get(1));
-	}
-
-	@Test
-	public void testSanitizePhoneNumber() throws Exception {
-		Method sanitizePhoneNumber = _clazz.getDeclaredMethod(
-			"_sanitizePhoneNumber", String.class);
-
-		sanitizePhoneNumber.setAccessible(true);
-
-		String phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, "1234567890");
-
-		Assert.assertEquals("1234567890", phoneNumber);
-
-		phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, "123-456-7890");
-
-		Assert.assertEquals("1234567890", phoneNumber);
-
-		phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, "(123) 456-7890");
-
-		Assert.assertEquals("1234567890", phoneNumber);
-
-		phoneNumber = (String)sanitizePhoneNumber.invoke(_classInstance, "");
-
-		Assert.assertEquals("", phoneNumber);
-
-		phoneNumber = (String)sanitizePhoneNumber.invoke(_classInstance, " ");
-
-		Assert.assertEquals("", phoneNumber);
-
-		phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, "null");
-
-		Assert.assertEquals("", phoneNumber);
-
-		phoneNumber = (String)sanitizePhoneNumber.invoke(
-			_classInstance, new Object[] {null});
-
-		Assert.assertEquals("", phoneNumber);
+		Assert.assertEquals(firstUser.getUserId(), (int) userIds.get(0));
+		Assert.assertEquals(secondUser.getUserId(), (int) userIds.get(1));
 	}
 
 	@Test
@@ -161,12 +120,10 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
-		Assert.assertNull(user.getPhoneNumber());
+		Assert.assertTrue(user.isEmailNotification());
 
 		user.setEmailAddress("test@test.com");
-		user.setPhoneNumber("2345678901");
-		user.setMobileOperatingSystem("Android");
-		user.setMobileCarrierSuffix("@txt.att.net");
+		user.setEmailNotification(false);
 
 		UserUtil.updateUser(user);
 
@@ -174,23 +131,7 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
-		Assert.assertEquals("2345678901", user.getPhoneNumber());
-		Assert.assertEquals("Android", user.getMobileOperatingSystem());
-		Assert.assertEquals("@txt.att.net", user.getMobileCarrierSuffix());
-	}
-
-	@Test
-	public void testValidate() throws Exception {
-		Method validate = _clazz.getDeclaredMethod(
-			"_validate", int.class, String.class, String.class);
-
-		validate.setAccessible(true);
-
-		validate.invoke(
-			_classInstance, _USER_ID, "test@test.com", "1234567890");
-		validate.invoke(_classInstance, _USER_ID, "test@test.com", "");
-		validate.invoke(_classInstance, _USER_ID, "test@test.com", "null");
-		validate.invoke(_classInstance, _USER_ID, "test@test.com", null);
+		Assert.assertFalse(user.isEmailNotification());
 	}
 
 	@Test
@@ -243,106 +184,6 @@ public class UserUtilTest extends BaseTestCase {
 		catch (InvocationTargetException ite) {
 			Assert.assertTrue(
 				ite.getCause() instanceof InvalidEmailAddressException);
-		}
-	}
-
-	@Test
-	public void testValidatePhoneNumber() throws Exception {
-		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"_validatePhoneNumber", String.class);
-
-		validatePhoneNumber.setAccessible(true);
-
-		validatePhoneNumber.invoke(_classInstance, "1234567890");
-	}
-
-	@Test
-	public void testValidatePhoneNumberWithBlankNumber() throws Exception {
-		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"_validatePhoneNumber", String.class);
-
-		validatePhoneNumber.setAccessible(true);
-
-		try {
-			validatePhoneNumber.invoke(_classInstance, " ");
-
-			Assert.fail();
-		}
-		catch (InvocationTargetException ite) {
-			Assert.assertTrue(
-				ite.getCause() instanceof InvalidPhoneNumberException);
-		}
-	}
-
-	@Test
-	public void testValidatePhoneNumberWithEmptyNumber() throws Exception {
-		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"_validatePhoneNumber", String.class);
-
-		validatePhoneNumber.setAccessible(true);
-
-		try {
-			validatePhoneNumber.invoke(_classInstance, "");
-
-			Assert.fail();
-		}
-		catch (InvocationTargetException ite) {
-			Assert.assertTrue(
-				ite.getCause() instanceof InvalidPhoneNumberException);
-		}
-	}
-
-	@Test
-	public void testValidatePhoneNumberWithHyphenatedNumber() throws Exception {
-		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"_validatePhoneNumber", String.class);
-
-		validatePhoneNumber.setAccessible(true);
-
-		try {
-			validatePhoneNumber.invoke(_classInstance, "123-456-7890");
-
-			Assert.fail();
-		}
-		catch (InvocationTargetException ite) {
-			Assert.assertTrue(
-				ite.getCause() instanceof InvalidPhoneNumberException);
-		}
-	}
-
-	@Test
-	public void testValidatePhoneNumberWithNullNumber() throws Exception {
-		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"_validatePhoneNumber", String.class);
-
-		validatePhoneNumber.setAccessible(true);
-
-		try {
-			validatePhoneNumber.invoke(_classInstance, new Object[] {null});
-
-			Assert.fail();
-		}
-		catch (InvocationTargetException ite) {
-			Assert.assertTrue(
-				ite.getCause() instanceof InvalidPhoneNumberException);
-		}
-	}
-
-	@Test
-	public void testValidatePhoneNumberWithTextNumber() throws Exception {
-		Method validatePhoneNumber = _clazz.getDeclaredMethod(
-			"_validatePhoneNumber", String.class);
-
-		validatePhoneNumber.setAccessible(true);
-
-		try {
-			validatePhoneNumber.invoke(_classInstance, "phoneNumber");
-
-			Assert.fail();
-		}
-		catch (InvocationTargetException ite) {
-			Assert.assertTrue(
-				ite.getCause() instanceof InvalidPhoneNumberException);
 		}
 	}
 

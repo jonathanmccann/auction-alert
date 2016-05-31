@@ -18,7 +18,6 @@ import com.app.dao.UserDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
-import com.app.exception.InvalidPhoneNumberException;
 import com.app.model.User;
 
 import java.sql.SQLException;
@@ -92,22 +91,15 @@ public class UserUtil {
 		throws
 			DatabaseConnectionException,
 			DuplicateEmailAddressException,
-				InvalidEmailAddressException,
-				InvalidPhoneNumberException,
-					SQLException {
+				InvalidEmailAddressException, SQLException {
 
 		int userId = user.getUserId();
 
 		String emailAddress = user.getEmailAddress();
-		String phoneNumber = _sanitizePhoneNumber(user.getPhoneNumber());
-		String mobileOperatingSystem = user.getMobileOperatingSystem();
-		String mobileCarrierSuffix = user.getMobileCarrierSuffix();
 
-		_validate(userId, emailAddress, phoneNumber);
+		_validateEmailAddress(userId, emailAddress);
 
-		_userDAO.updateUser(
-			userId, emailAddress, phoneNumber, mobileOperatingSystem,
-			mobileCarrierSuffix);
+		_userDAO.updateUser(userId, emailAddress, user.isEmailNotification());
 	}
 
 	@Autowired
@@ -133,28 +125,6 @@ public class UserUtil {
 		return passwordAndSalt;
 	}
 
-	private static String _sanitizePhoneNumber(String phoneNumber) {
-		if (ValidatorUtil.isNull(phoneNumber)) {
-			return "";
-		}
-
-		return phoneNumber.replaceAll("[^\\d]", "");
-	}
-
-	private static void _validate(
-		int userId, String emailAddress, String phoneNumber)
-			throws
-				DatabaseConnectionException,
-		DuplicateEmailAddressException, InvalidEmailAddressException,
-		InvalidPhoneNumberException, SQLException {
-
-		_validateEmailAddress(userId, emailAddress);
-
-		if (ValidatorUtil.isNotNull(phoneNumber)) {
-			_validatePhoneNumber(phoneNumber);
-		}
-	}
-
 	private static void _validateEmailAddress(int userId, String emailAddress)
 		throws
 			DatabaseConnectionException,
@@ -169,14 +139,6 @@ public class UserUtil {
 
 		if ((user != null) && (userId != user.getUserId())) {
 			throw new DuplicateEmailAddressException();
-		}
-	}
-
-	private static void _validatePhoneNumber(String phoneNumber)
-		throws InvalidPhoneNumberException {
-
-		if (!ValidatorUtil.isValidPhoneNumber(phoneNumber)) {
-			throw new InvalidPhoneNumberException();
 		}
 	}
 

@@ -57,25 +57,24 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 		User user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test@test.com");
+		_assertUser(user, "test@test.com", true);
 
 		user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test@test.com");
+		_assertUser(user, "test@test.com", true);
 
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		_userDAO.updateUser(
-			1, "test2@test.com", "1234567890", "iOS", "@txt.att.net");
+		_userDAO.updateUser(1, "test2@test.com", false);
 
 		user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test2@test.com");
+		_assertUser(user, "test2@test.com", false);
 
 		user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test2@test.com");
+		_assertUser(user, "test2@test.com", false);
 
 		Assert.assertEquals(2, statistics.cacheMissCount());
 		Assert.assertEquals(2, statistics.cacheHitCount());
@@ -143,9 +142,12 @@ public class UserDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(3, statistics.cacheHitCount());
 	}
 
-	private static void _assertUser(User user, String emailAddress) {
+	private static void _assertUser(
+			User user, String emailAddress, boolean emailNotification) {
+
 		Assert.assertEquals(1, user.getUserId());
 		Assert.assertEquals(emailAddress, user.getEmailAddress());
+		Assert.assertEquals(emailNotification, user.isEmailNotification());
 	}
 
 	private static void _assertUserIds(

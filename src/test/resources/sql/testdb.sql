@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, NotificationPreferences, Release_;
+DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, Release_;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -46,29 +46,9 @@ CREATE TABLE IF NOT EXISTS Category(
 CREATE TABLE IF NOT EXISTS User_(
 	userId BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	emailAddress VARCHAR(100) NOT NULL UNIQUE,
-	phoneNumber VARCHAR(12),
-	mobileOperatingSystem VARCHAR(30),
-	mobileCarrierSuffix VARCHAR(50),
 	password VARCHAR(128),
-	salt VARCHAR(128)
-);
-
-CREATE TABLE IF NOT EXISTS NotificationPreferences(
-	userId INT NOT NULL PRIMARY KEY,
-	emailNotification BOOLEAN,
-	textNotification BOOLEAN,
-	basedOnTime BOOLEAN,
-	startOfDay INT,
-	endOfDay INT,
-	timeZone VARCHAR(30),
-	weekdayDayEmailNotification BOOLEAN,
-	weekdayDayTextNotification BOOLEAN,
-	weekdayNightEmailNotification BOOLEAN,
-	weekdayNightTextNotification BOOLEAN,
-	weekendDayEmailNotification BOOLEAN,
-	weekendDayTextNotification BOOLEAN,
-	weekendNightEmailNotification BOOLEAN,
-	weekendNightTextNotification BOOLEAN
+	salt VARCHAR(128),
+	emailNotification BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS Release_(

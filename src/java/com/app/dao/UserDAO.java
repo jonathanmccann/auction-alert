@@ -59,7 +59,8 @@ public class UserDAO {
 
 			resultSet.next();
 
-			return new User(resultSet.getInt(1), emailAddress, password, salt);
+			return new User(
+				resultSet.getInt(1), emailAddress, password, salt, true);
 		}
 	}
 
@@ -152,23 +153,20 @@ public class UserDAO {
 
 	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUser(
-			int userId, String emailAddress, String phoneNumber,
-			String mobileOperatingSystem, String mobileCarrierSuffix)
+			int userId, String emailAddress, boolean emailNotification)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Updating user ID: {} to email address: {} and phone number: {}",
-			userId, emailAddress, phoneNumber);
+			"Updating user ID: {} to email address: {}",
+			userId, emailAddress);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_UPDATE_USER_SQL)) {
 
 			preparedStatement.setString(1, emailAddress);
-			preparedStatement.setString(2, phoneNumber);
-			preparedStatement.setString(3, mobileOperatingSystem);
-			preparedStatement.setString(4, mobileCarrierSuffix);
-			preparedStatement.setInt(5, userId);
+			preparedStatement.setBoolean(2, emailNotification);
+			preparedStatement.setInt(3, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -181,12 +179,9 @@ public class UserDAO {
 
 		user.setEmailAddress(resultSet.getString("emailAddress"));
 		user.setUserId(resultSet.getInt("userId"));
-		user.setPhoneNumber(resultSet.getString("phoneNumber"));
-		user.setMobileOperatingSystem(
-			resultSet.getString("mobileOperatingSystem"));
-		user.setMobileCarrierSuffix(resultSet.getString("mobileCarrierSuffix"));
 		user.setPassword(resultSet.getString("password"));
 		user.setSalt(resultSet.getString("salt"));
+		user.setEmailNotification(resultSet.getBoolean("emailNotification"));
 
 		return user;
 	}
@@ -207,8 +202,8 @@ public class UserDAO {
 		"SELECT userId FROM User_ ORDER BY userId";
 
 	private static final String _UPDATE_USER_SQL =
-		"UPDATE User_ SET emailAddress = ?, phoneNumber = ?, " +
-			"mobileOperatingSystem = ?, mobileCarrierSuffix = ? WHERE userId = ?";
+		"UPDATE User_ SET emailAddress = ?, emailNotification = ? " +
+			"WHERE userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(UserDAO.class);
 

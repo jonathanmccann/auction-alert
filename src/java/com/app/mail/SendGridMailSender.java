@@ -15,14 +15,11 @@
 package com.app.mail;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.NotificationPreferences;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
-import com.app.util.NotificationPreferencesUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
-import com.app.util.ValidatorUtil;
 
 import com.sendgrid.SendGrid;
 
@@ -32,7 +29,6 @@ import java.io.StringWriter;
 
 import java.sql.SQLException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,18 +47,15 @@ public class SendGridMailSender implements MailSender {
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
 		throws DatabaseConnectionException, SQLException {
 
+		User user = UserUtil.getUserByUserId(userId);
+
+		if (!user.isEmailNotification()) {
+			return;
+		}
+
 		_log.info(
 			"Sending search results for {} queries for userId: {}",
 			searchQueryResultMap.size(), userId);
-
-		User user = UserUtil.getUserByUserId(userId);
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				userId);
-
-		boolean[] notificationDeliveryMethod =
-			MailUtil.getNotificationDeliveryMethods(notificationPreferences);
 
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
@@ -71,27 +64,11 @@ public class SendGridMailSender implements MailSender {
 				SendGrid sendgrid = new SendGrid(
 					PropertiesValues.SENDGRID_API_KEY);
 
-				if (notificationDeliveryMethod[0]) {
-					SendGrid.Email email = _populateEmailMessage(
-						mapEntry.getKey(), mapEntry.getValue(),
-						user.getEmailAddress());
+				SendGrid.Email email = _populateEmailMessage(
+					mapEntry.getKey(), mapEntry.getValue(),
+					user.getEmailAddress());
 
-					sendgrid.send(email);
-				}
-
-				if (notificationDeliveryMethod[1] &&
-					ValidatorUtil.isNotNull(user.getPhoneNumber())) {
-
-					List<SearchResult> searchResults = mapEntry.getValue();
-
-					for (SearchResult searchResult : searchResults) {
-						SendGrid.Email email = _populateTextMessage(
-							searchResult, user.getPhoneNumberEmailAddress(),
-							user.getMobileOperatingSystem());
-
-						sendgrid.send(email);
-					}
-				}
+				sendgrid.send(email);
 			}
 		}
 		catch (Exception e) {
@@ -111,16 +88,7 @@ public class SendGridMailSender implements MailSender {
 		email.setSubject(
 			"New Search Results - " + MailUtil.getCurrentDate());
 
-		_populateMessage(
-			searchQuery, searchResults, email, MailUtil.getEmailTemplate());
-
-		return email;
-	}
-
-	private void _populateMessage(
-			SearchQuery searchQuery, List<SearchResult> searchResults,
-			SendGrid.Email email, Template template)
-		throws Exception {
+		Template template = MailUtil.getEmailTemplate();
 
 		Map<String, Object> rootMap = new HashMap<>();
 
@@ -132,25 +100,6 @@ public class SendGridMailSender implements MailSender {
 		template.process(rootMap, stringWriter);
 
 		email.setText(stringWriter.toString());
-	}
-
-	private SendGrid.Email _populateTextMessage(
-			SearchResult searchResult, String recipientPhoneNumberEmailAddress,
-			String mobileOperatingSystem)
-		throws Exception {
-
-		List<SearchResult> searchResults = new ArrayList<>();
-
-		searchResults.add(searchResult);
-
-		SendGrid.Email email = new SendGrid.Email();
-
-		email.addTo(recipientPhoneNumberEmailAddress);
-		email.setFrom(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-
-		_populateMessage(
-			null, searchResults, email,
-			MailUtil.getTextTemplate(mobileOperatingSystem));
 
 		return email;
 	}

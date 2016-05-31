@@ -7,16 +7,10 @@ $(window).load(function() {
 		$content.slideToggle(500);
 	});
 
-	$("#emailAddress, #user\\.emailAddress, #user\\.phoneNumber, #keywords, #maxPrice, #minPrice, #password").tooltipster({
+	$("#emailAddress, #user\\.emailAddress, #keywords, #maxPrice, #minPrice, #password").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
-	});
-
-	$("#notificationPreferences\\.startOfDay").tooltipster({
-		trigger: 'custom',
-		onlyOne: false,
-		position: 'right'
 	});
 
 	$.validator.addMethod("decimalPlaces", function(value) {
@@ -40,30 +34,6 @@ $(window).load(function() {
 
 		return parseFloat(value) < parseFloat($min.val());
 	}, "Max price must be greater than min price");
-
-	$.validator.addMethod("phoneNumber", function(value) {
-		if (!value && !$('#textNotification').is(':checked')) {
-			return true;
-		}
-
-		value = value.replace(/\D/g, "");
-
-		var pattern = new RegExp("[0-9]{10,10}");
-
-		return pattern.test(value);
-	}, "Phone number must contain 10 digits");
-
-	$.validator.addMethod("startOfDay", function(value, element, param) {
-		var $endOfDay = $(param);
-
-		if (this.settings.onfocusout) {
-			$endOfDay.off(".validate-startOfDay").on("blur.validate-startOfDay", function() {
-				$(element).valid();
-			});
-		}
-
-		return parseFloat(value) < parseFloat($endOfDay.val());
-	}, "Start of day must be before end of day");
 
 	$('#addSearchQueryForm, #createAccountForm, #updateUserForm').validate({
 		errorPlacement: function(error, element) {
@@ -105,28 +75,7 @@ $(window).load(function() {
 				maxlength: 255,
 				required: true,
 				email: true
-			},
-			'user.phoneNumber': {
-				phoneNumber: true
-			},
-			'notificationPreferences.startOfDay': {
-				startOfDay: '#notificationPreferences\\.endOfDay'
 			}
-		}
-	});
-
-	$('#basedOnTime').click(function() {
-		if ($(this).is(':checked')) {
-			$("#notificationOptions").hide();
-
-			$("#basedOnTimeOptions").show();
-		}
-		else {
-			$("#notificationOptions").show();
-
-			$('#notificationPreferences\\.startOfDay').tooltipster('hide');
-
-			$("#basedOnTimeOptions").hide();
 		}
 	});
 
@@ -184,15 +133,6 @@ $(window).load(function() {
 	);
 
 	$(document).ready(function () {
-		var basedOnTime = $('#basedOnTime').is(':checked');
-
-		if (basedOnTime) {
-			$("#notificationOptions").hide();
-		}
-		else {
-			$("#basedOnTimeOptions").hide();
-		}
-
 		loadSubcategories(true);
 	});
 });

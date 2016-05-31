@@ -34,15 +34,14 @@
 	</head>
 	<body>
 		<div>
-			<form:form commandName="userDetails" id="updateUserForm" method="post">
-				<form:input path="user.userId" type="hidden" value="${user.userId}" />
-				<form:input path="notificationPreferences.userId" type="hidden" value="${user.userId}" />
+			<form:form commandName="user" id="updateUserForm" method="post">
+				<form:input path="userId" type="hidden" value="${userId}" />
 
 				<h2>My Account</h2>
 				<div>
 					<h3>My Details:</h3>
 
-					Email Address <form:input path="user.emailAddress" value="${user.emailAddress}" />
+					Email Address <form:input path="emailAddress" value="${emailAddress}" />
 
 					<c:if test="${not empty duplicateEmailAddressException}">
 						${duplicateEmailAddressException}
@@ -51,92 +50,11 @@
 					<c:if test="${not empty invalidEmailAddressException}">
 						${invalidEmailAddressException}
 					</c:if>
-				</div>
-				<hr>
-				<div>
-					<h3>Mobile Details:</h3>
 
-					<div style="display: table">
-						Phone Number <form:input path="user.phoneNumber" value="${user.phoneNumber}" />
+					</br>
 
-						<c:if test="${not empty invalidPhoneNumberException}">
-							${invalidPhoneNumberException}</br>
-						</c:if> <br> <br>
-
-						Mobile Operating System
-						<form:select path="user.mobileOperatingSystem" value="${user.mobileOperatingSystem}">
-							<form:options items="${mobileOperatingSystems}" />
-						</form:select> <br>
-						Mobile Carrier
-						<form:select path="user.mobileCarrierSuffix" value="${user.mobileCarrierSuffix}">
-							<form:options items="${mobileCarrierSuffixes}" />
-						</form:select>
-					</div>
-				</div>
-				<hr>
-				<div>
-					<h3>Notification Details:</h3>
-
-					<b>Customize notifications based on time:</b> <form:checkbox id="basedOnTime" path="notificationPreferences.basedOnTime" value="${notificationPreferences.basedOnTime}" /> <br>
-
-					<div id="notificationOptions">
-						<b>Receive notifications via:</b> <br>
-						<form:checkbox label="Email" path="notificationPreferences.emailNotification" value="${notificationPreferences.emailNotification}" /> <br>
-						<form:checkbox id="textNotification" label="Text" path="notificationPreferences.textNotification" value="${notificationPreferences.textNotification}" />
-					</div>
-
-					<div id="basedOnTimeOptions">
-						<b>Set your current time zone:</b> <br>
-						Time Zone
-						<form:select path="notificationPreferences.timeZone" value="${notificationPreferences.timeZone}">
-							<form:options items="${timeZones}" />
-						</form:select>
-
-						<br>
-						<br>
-
-						<b>Set times to specify day and night time frames:</b> <br>
-						Start of Day
-						<form:select path="notificationPreferences.startOfDay" value="${notificationPreferences.startOfDay}">
-							<form:options items="${hours}" />
-						</form:select> <br>
-						End of Day
-						<form:select path="notificationPreferences.endOfDay" value="${notificationPreferences.endOfDay}">
-							<form:options items="${hours}" />
-						</form:select>
-
-						<br>
-						<br>
-
-						<b>Delivery method during time frames:</b>
-						<table>
-							<tr>
-								<td></td>
-								<td>Email</td>
-								<td>Text</td>
-							</tr>
-							<tr>
-								<td>Weekday Day Notification</td>
-								<td><form:checkbox path="notificationPreferences.weekdayDayEmailNotification" value="${notificationPreferences.weekdayDayEmailNotification}" /></td>
-								<td><form:checkbox path="notificationPreferences.weekdayDayTextNotification" value="${notificationPreferences.weekdayDayTextNotification}" /></td>
-							</tr>
-							<tr>
-								<td>Weekday Night Notification</td>
-								<td><form:checkbox path="notificationPreferences.weekdayNightEmailNotification" value="${notificationPreferences.weekdayNightEmailNotification}" /></td>
-								<td><form:checkbox path="notificationPreferences.weekdayNightTextNotification" value="${notificationPreferences.weekdayNightTextNotification}" /></td>
-							</tr>
-							<tr>
-								<td>Weekend Day Notification</td>
-								<td><form:checkbox path="notificationPreferences.weekendDayEmailNotification" value="${notificationPreferences.weekendDayEmailNotification}" /></td>
-								<td><form:checkbox path="notificationPreferences.weekendDayTextNotification" value="${notificationPreferences.weekendDayTextNotification}" /></td>
-							</tr>
-							<tr>
-								<td>Weekend Night Notification</td>
-								<td><form:checkbox path="notificationPreferences.weekendNightEmailNotification" value="${notificationPreferences.weekendNightEmailNotification}" /></td>
-								<td><form:checkbox path="notificationPreferences.weekendNightTextNotification" value="${notificationPreferences.weekendNightTextNotification}" /></td>
-							</tr>
-						</table>
-					</div>
+					<label for="emailNotification">Send Email Notifications</label>
+					<form:checkbox id="emailNotification" path="emailNotification" value="${emailNotification}" />
 				</div>
 				<div>
 					<input id="updateUserSubmit" type="submit" value="Update User" />

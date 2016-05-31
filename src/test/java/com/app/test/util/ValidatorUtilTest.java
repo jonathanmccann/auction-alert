@@ -33,14 +33,6 @@ public class ValidatorUtilTest {
 	}
 
 	@Test
-	public void testInvalidPhoneNumber() {
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("1234"));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("123-456-7890"));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("12345678901"));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber("test"));
-	}
-
-	@Test
 	public void testNonNullArray() {
 		String[] stringArray = new String[1];
 		stringArray[0] = "test";
@@ -81,13 +73,6 @@ public class ValidatorUtilTest {
 	}
 
 	@Test
-	public void testNullPhoneNumber() {
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(null));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(""));
-		Assert.assertFalse(ValidatorUtil.isValidPhoneNumber(" "));
-	}
-
-	@Test
 	public void testNullString() {
 		Assert.assertTrue(ValidatorUtil.isNull((String)null));
 		Assert.assertTrue(ValidatorUtil.isNull(""));
@@ -105,12 +90,6 @@ public class ValidatorUtilTest {
 		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test@test"));
 		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test@test.com"));
 		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test2@test2.com"));
-	}
-
-	@Test
-	public void testValidPhoneNumbers() throws Exception {
-		Assert.assertTrue(ValidatorUtil.isValidPhoneNumber("1234567890"));
-		Assert.assertTrue(ValidatorUtil.isValidPhoneNumber("2345678901"));
 	}
 
 }

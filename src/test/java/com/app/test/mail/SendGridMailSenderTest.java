@@ -26,11 +26,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTimeUtils;
-
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -38,49 +34,15 @@ import org.junit.Test;
  */
 public class SendGridMailSenderTest extends BaseTestCase {
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-		_clazz = Class.forName(SendGridMailSender.class.getName());
-
-		_classInstance = _clazz.newInstance();
-
-		setUpProperties();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		DateTimeUtils.setCurrentMillisSystem();
-	}
-
-	@Test
-	public void testPopulateAndroidTextMessage() throws Exception {
-		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"_populateTextMessage", SearchResult.class, String.class,
-			String.class);
-
-		populateTextMessageMethod.setAccessible(true);
-
-		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg");
-
-		SendGrid.Email email = (SendGrid.Email)populateTextMessageMethod.invoke(
-			_classInstance, searchResult, "1234567890@txt.att.net", "Android");
-
-		Assert.assertEquals("test@test.com", email.getFrom());
-		Assert.assertEquals(
-			"itemTitle\neBay://item/view?id=1234\n", email.getText());
-
-		String[] recipientAddresses = new String[1];
-
-		recipientAddresses[0] = "1234567890@txt.att.net";
-
-		Assert.assertArrayEquals(recipientAddresses, email.getTos());
-	}
-
 	@Test
 	public void testPopulateEmailMessage() throws Exception {
-		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
+		setUpProperties();
+
+		Class clazz = Class.forName(SendGridMailSender.class.getName());
+
+		Object classInstance = clazz.newInstance();
+
+		Method populateEmailMessageMethod = clazz.getDeclaredMethod(
 			"_populateEmailMessage", SearchQuery.class, List.class, String.class);
 
 		populateEmailMessageMethod.setAccessible(true);
@@ -97,7 +59,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		SendGrid.Email email =
 			(SendGrid.Email)populateEmailMessageMethod.invoke(
-				_classInstance, searchQuery, searchResults, "test@test.com");
+				classInstance, searchQuery, searchResults, "test@test.com");
 
 		Assert.assertEquals("test@test.com", email.getFrom());
 		Assert.assertTrue(
@@ -114,62 +76,5 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Assert.assertArrayEquals(recipientAddresses, email.getTos());
 	}
-
-	@Test
-	public void testPopulateiOSTextMessage() throws Exception {
-		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"_populateTextMessage", SearchResult.class, String.class,
-			String.class);
-
-		populateTextMessageMethod.setAccessible(true);
-
-		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg");
-
-		SendGrid.Email email =
-			(SendGrid.Email)populateTextMessageMethod.invoke(
-				_classInstance, searchResult, "1234567890@txt.att.net", "iOS");
-
-		Assert.assertEquals("test@test.com", email.getFrom());
-		Assert.assertEquals(
-			"itemTitle\nebay://launch?itm=1234\n", email.getText());
-
-		String[] recipientAddresses = new String[1];
-
-		recipientAddresses[0] = "1234567890@txt.att.net";
-
-		Assert.assertArrayEquals(recipientAddresses, email.getTos());
-	}
-
-	@Test
-	public void testPopulateTextMessage() throws Exception {
-		Method populateTextMessageMethod = _clazz.getDeclaredMethod(
-			"_populateTextMessage", SearchResult.class, String.class,
-			String.class);
-
-		populateTextMessageMethod.setAccessible(true);
-
-		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg");
-
-		SendGrid.Email email =
-			(SendGrid.Email)populateTextMessageMethod.invoke(
-				_classInstance, searchResult, "1234567890@txt.att.net", "Other");
-
-		Assert.assertEquals("test@test.com", email.getFrom());
-		Assert.assertEquals(
-			"itemTitle\nm.ebay.com/itm/1234\n", email.getText());
-
-		String[] recipientAddresses = new String[1];
-
-		recipientAddresses[0] = "1234567890@txt.att.net";
-
-		Assert.assertArrayEquals(recipientAddresses, email.getTos());
-	}
-
-	private static Object _classInstance;
-	private static Class _clazz;
 
 }

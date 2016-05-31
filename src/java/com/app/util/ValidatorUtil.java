@@ -62,21 +62,9 @@ public class ValidatorUtil {
 		return matcher.matches();
 	}
 
-	public static boolean isValidPhoneNumber(String phoneNumber) {
-		if (isNull(phoneNumber)) {
-			return false;
-		}
-
-		Matcher matcher = _phoneNumberPattern.matcher(phoneNumber);
-
-		return matcher.matches();
-	}
-
 	private static final Pattern _emailAddressPattern = Pattern.compile(
 		"^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}" +
 			"[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}" +
 				"[a-zA-Z0-9])?)*$");
-	private static final Pattern _phoneNumberPattern = Pattern.compile(
-		"[0-9]{10,10}");
 
 }

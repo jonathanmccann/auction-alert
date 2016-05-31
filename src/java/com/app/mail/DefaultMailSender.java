@@ -15,11 +15,9 @@
 package com.app.mail;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.NotificationPreferences;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
-import com.app.util.NotificationPreferencesUtil;
 import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
@@ -59,49 +57,30 @@ public class DefaultMailSender implements MailSender {
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
 		throws DatabaseConnectionException, SQLException {
 
+		User user = UserUtil.getUserByUserId(userId);
+
+		if (!user.isEmailNotification()) {
+			return;
+		}
+
 		_log.info(
 			"Sending search results for {} queries for userId: {}",
 			searchQueryResultMap.size(), userId);
 
 		Session session = _authenticateOutboundEmailAddress();
 
-		User user = UserUtil.getUserByUserId(userId);
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				userId);
-
-		boolean[] notificationDeliveryMethod =
-			MailUtil.getNotificationDeliveryMethods(notificationPreferences);
-
 		try {
 			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
 					searchQueryResultMap.entrySet()) {
 
-				if (notificationDeliveryMethod[0]) {
-					Message emailMessage = _populateEmailMessage(
-						mapEntry.getKey(), mapEntry.getValue(),
-						user.getEmailAddress(),
-						session.getProperty(
-							PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
-						session);
+				Message emailMessage = _populateEmailMessage(
+					mapEntry.getKey(), mapEntry.getValue(),
+					user.getEmailAddress(),
+					session.getProperty(
+						PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
+					session);
 
-					Transport.send(emailMessage);
-				}
-
-				if (notificationDeliveryMethod[1] &&
-					ValidatorUtil.isNotNull(user.getPhoneNumber())) {
-
-					List<SearchResult> searchResults = mapEntry.getValue();
-
-					for (SearchResult searchResult : searchResults) {
-						Message textMessage = _populateTextMessage(
-							searchResult, user.getPhoneNumberEmailAddress(),
-							user.getMobileOperatingSystem(), session);
-
-						Transport.send(textMessage);
-					}
-				}
+				Transport.send(emailMessage);
 			}
 		}
 		catch (Exception e) {
@@ -139,8 +118,18 @@ public class DefaultMailSender implements MailSender {
 		message.setSubject(
 			"New Search Results - " + MailUtil.getCurrentDate());
 
-		_populateMessage(
-			searchQuery, searchResults, message, MailUtil.getEmailTemplate());
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("searchQuery", searchQuery);
+		rootMap.put("searchResults", searchResults);
+
+		StringWriter stringWriter = new StringWriter();
+
+		Template template = MailUtil.getEmailTemplate();
+
+		template.process(rootMap, stringWriter);
+
+		message.setText(stringWriter.toString());
 
 		return message;
 	}
@@ -150,38 +139,7 @@ public class DefaultMailSender implements MailSender {
 			Message message, Template template)
 		throws Exception {
 
-		Map<String, Object> rootMap = new HashMap<>();
 
-		rootMap.put("searchQuery", searchQuery);
-		rootMap.put("searchResults", searchResults);
-
-		StringWriter stringWriter = new StringWriter();
-
-		template.process(rootMap, stringWriter);
-
-		message.setText(stringWriter.toString());
-	}
-
-	private static Message _populateTextMessage(
-			SearchResult searchResult, String recipientPhoneNumberEmailAddress,
-			String mobileOperatingSystem, Session session)
-		throws Exception {
-
-		List<SearchResult> searchResults = new ArrayList<>();
-
-		searchResults.add(searchResult);
-
-		Message message = new MimeMessage(session);
-
-		message.addRecipient(
-			Message.RecipientType.TO,
-			new InternetAddress(recipientPhoneNumberEmailAddress));
-
-		_populateMessage(
-			null, searchResults, message,
-			MailUtil.getTextTemplate(mobileOperatingSystem));
-
-		return message;
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(

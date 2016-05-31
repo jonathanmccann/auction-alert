@@ -20,10 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.app.model.NotificationPreferences;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
-import com.app.util.NotificationPreferencesUtil;
 import com.app.util.UserUtil;
 
 import org.junit.Assert;
@@ -65,9 +63,6 @@ public class UserControllerTest extends BaseTestCase {
 		setUpDatabase();
 
 		_USER = UserUtil.addUser("test@test.com", "password");
-
-		NotificationPreferencesUtil.addNotificationPreferences(
-			new NotificationPreferences(_USER.getUserId()));
 	}
 
 	@Test
@@ -80,19 +75,11 @@ public class UserControllerTest extends BaseTestCase {
 
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("userDetails"));
-		resultActions.andExpect(model().attributeExists("hours"));
-		resultActions.andExpect(
-			model().attributeExists("mobileCarrierSuffixes"));
-		resultActions.andExpect(
-			model().attributeExists("mobileOperatingSystems"));
-		resultActions.andExpect(model().attributeExists("timeZones"));
+		resultActions.andExpect(model().attributeExists("user"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("duplicateEmailAddressException"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidPhoneNumberException"));
 
 		_assertUpdatedUser();
 	}
@@ -111,19 +98,11 @@ public class UserControllerTest extends BaseTestCase {
 
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("userDetails"));
-		resultActions.andExpect(model().attributeExists("hours"));
-		resultActions.andExpect(
-			model().attributeExists("mobileCarrierSuffixes"));
-		resultActions.andExpect(
-			model().attributeExists("mobileOperatingSystems"));
-		resultActions.andExpect(model().attributeExists("timeZones"));
+		resultActions.andExpect(model().attributeExists("user"));
 		resultActions.andExpect(
 			model().attributeExists("duplicateEmailAddressException"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidPhoneNumberException"));
 
 		_assertNotUpdatedUser();
 	}
@@ -134,54 +113,17 @@ public class UserControllerTest extends BaseTestCase {
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
-		request.param("user.emailAddress", "test");
+		request.param("emailAddress", "test");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("userDetails"));
-		resultActions.andExpect(model().attributeExists("hours"));
-		resultActions.andExpect(
-			model().attributeExists("mobileCarrierSuffixes"));
-		resultActions.andExpect(
-			model().attributeExists("mobileOperatingSystems"));
-		resultActions.andExpect(model().attributeExists("timeZones"));
+		resultActions.andExpect(model().attributeExists("user"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("duplicateEmailAddressException"));
 		resultActions.andExpect(
 			model().attributeExists("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidPhoneNumberException"));
-
-		_assertNotUpdatedUser();
-	}
-
-	@Test
-	public void testUpdateMyAccountWithInvalidPhoneNumber() throws Exception {
-		setUpUserUtil();
-
-		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
-
-		request.param("user.phoneNumber", "1");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("userDetails"));
-		resultActions.andExpect(model().attributeExists("hours"));
-		resultActions.andExpect(
-			model().attributeExists("mobileCarrierSuffixes"));
-		resultActions.andExpect(
-			model().attributeExists("mobileOperatingSystems"));
-		resultActions.andExpect(model().attributeExists("timeZones"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("duplicateEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeExists("invalidPhoneNumberException"));
 
 		_assertNotUpdatedUser();
 	}
@@ -192,28 +134,17 @@ public class UserControllerTest extends BaseTestCase {
 
 		UserUtil.addUser("test2@test.com", "password");
 
-		NotificationPreferencesUtil.addNotificationPreferences(
-			new NotificationPreferences(_INVALID_USER_ID));
-
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("userDetails"));
-		resultActions.andExpect(model().attributeExists("hours"));
-		resultActions.andExpect(
-			model().attributeExists("mobileCarrierSuffixes"));
-		resultActions.andExpect(
-			model().attributeExists("mobileOperatingSystems"));
-		resultActions.andExpect(model().attributeExists("timeZones"));
+		resultActions.andExpect(model().attributeExists("user"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("duplicateEmailAddressException"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidPhoneNumberException"));
 
 		_assertNotUpdatedUser();
 	}
@@ -226,118 +157,30 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(status().isOk())
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
-			.andExpect(model().attributeExists("userDetails"))
-			.andExpect(model().attributeExists("hours"))
-			.andExpect(model().attributeExists("mobileCarrierSuffixes"))
-			.andExpect(model().attributeExists("mobileOperatingSystems"))
-			.andExpect(model().attributeExists("timeZones"));
+			.andExpect(model().attributeExists("user"));
 	}
 
 	private void _assertNotUpdatedUser() throws Exception {
 		User user = UserUtil.getUserByUserId(_USER.getUserId());
 
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
-		Assert.assertNull(user.getPhoneNumber());
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				_USER.getUserId());
-
-		Assert.assertEquals(
-			_USER.getUserId(), notificationPreferences.getUserId());
-		Assert.assertFalse(notificationPreferences.isEmailNotification());
-		Assert.assertFalse(notificationPreferences.isTextNotification());
-		Assert.assertFalse(notificationPreferences.isBasedOnTime());
-		Assert.assertEquals(0, notificationPreferences.getStartOfDay());
-		Assert.assertEquals(0, notificationPreferences.getEndOfDay());
-		Assert.assertNull(notificationPreferences.getTimeZone());
-		Assert.assertFalse(
-			notificationPreferences.isWeekdayDayEmailNotification());
-		Assert.assertFalse(
-			notificationPreferences.isWeekdayDayTextNotification());
-		Assert.assertFalse(
-			notificationPreferences.isWeekdayNightEmailNotification());
-		Assert.assertFalse(
-			notificationPreferences.isWeekdayNightTextNotification());
-		Assert.assertFalse(
-			notificationPreferences.isWeekendDayEmailNotification());
-		Assert.assertFalse(
-			notificationPreferences.isWeekendDayTextNotification());
-		Assert.assertFalse(
-			notificationPreferences.isWeekendNightEmailNotification());
-		Assert.assertFalse(
-			notificationPreferences.isWeekendNightTextNotification());
+		Assert.assertTrue(user.isEmailNotification());
 	}
 
 	private void _assertUpdatedUser() throws Exception {
 		User user = UserUtil.getUserByUserId(_USER.getUserId());
 
 		Assert.assertEquals("test2@test.com", user.getEmailAddress());
-		Assert.assertEquals("2345678901", user.getPhoneNumber());
-
-		NotificationPreferences notificationPreferences =
-			NotificationPreferencesUtil.getNotificationPreferencesByUserId(
-				_USER.getUserId());
-
-		Assert.assertEquals(
-			_USER.getUserId(), notificationPreferences.getUserId());
-		Assert.assertTrue(notificationPreferences.isEmailNotification());
-		Assert.assertTrue(notificationPreferences.isTextNotification());
-		Assert.assertTrue(notificationPreferences.isBasedOnTime());
-		Assert.assertEquals(1, notificationPreferences.getStartOfDay());
-		Assert.assertEquals(2, notificationPreferences.getEndOfDay());
-		Assert.assertEquals("PST", notificationPreferences.getTimeZone());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayDayEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayDayTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayNightEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekdayNightTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendDayEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendDayTextNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendNightEmailNotification());
-		Assert.assertTrue(
-			notificationPreferences.isWeekendNightTextNotification());
+		Assert.assertFalse(user.isEmailNotification());
 	}
 
 	private MockHttpServletRequestBuilder _buildUpdateMyAccountRequest() {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/my_account");
 
-		request.param("user.userId", String.valueOf(_USER.getUserId()));
-		request.param("user.emailAddress", "test2@test.com");
-		request.param("user.phoneNumber", "2345678901");
-
-		request.param(
-			"notificationPreferences.userId",
-			String.valueOf(_USER.getUserId()));
-		request.param("notificationPreferences.emailNotification", "true");
-		request.param("notificationPreferences.textNotification", "true");
-		request.param("notificationPreferences.basedOnTime", "true");
-		request.param("notificationPreferences.startOfDay", "1");
-		request.param("notificationPreferences.endOfDay", "2");
-		request.param("notificationPreferences.timeZone", "PST");
-		request.param(
-			"notificationPreferences.weekdayDayEmailNotification", "true");
-		request.param(
-			"notificationPreferences.weekdayDayTextNotification", "true");
-		request.param(
-			"notificationPreferences.weekdayNightEmailNotification", "true");
-		request.param(
-			"notificationPreferences.weekdayNightTextNotification", "true");
-		request.param(
-			"notificationPreferences.weekendDayEmailNotification", "true");
-		request.param(
-			"notificationPreferences.weekendDayTextNotification", "true");
-		request.param(
-			"notificationPreferences.weekendNightEmailNotification", "true");
-		request.param(
-			"notificationPreferences.weekendNightTextNotification", "true");
+		request.param("userId", String.valueOf(_USER.getUserId()));
+		request.param("emailAddress", "test2@test.com");
+		request.param("emailNotification", "false");
 
 		return request;
 	}
