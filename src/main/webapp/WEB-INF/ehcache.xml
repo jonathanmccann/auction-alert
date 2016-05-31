@@ -3,6 +3,11 @@
 	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
 	updateCheck="false">
 
+	<!-- CategoriesDAO -->
+
+	<cache eternal="true" maxEntriesLocalHeap="1000" name="parentCategories" />
+	<cache eternal="true" maxEntriesLocalHeap="1000" name="subcategories" />
+
 	<!-- SearchQueryDAO -->
 
 	<cache eternal="false" maxEntriesLocalHeap="100" memoryStoreEvictionPolicy="LFU" name="searchQueries" timeToIdleSeconds="300" timeToLiveSeconds="600" />
