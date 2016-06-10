@@ -22,14 +22,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.app.model.User;
 import com.app.test.BaseTestCase;
+import com.app.util.CustomerUtil;
 import com.app.util.UserUtil;
 
+import com.stripe.model.Customer;
+
+import com.stripe.model.CustomerSubscriptionCollection;
+import com.stripe.model.Subscription;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +52,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@PrepareForTest(Customer.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 public class UserControllerTest extends BaseTestCase {
@@ -63,6 +75,126 @@ public class UserControllerTest extends BaseTestCase {
 		setUpDatabase();
 
 		_USER = UserUtil.addUser("test@test.com", "password");
+	}
+
+	@Test
+	public void testCreateSubscription()
+		throws Exception {
+
+		setUpCustomer();
+		setUpUserUtil();
+		setUpProperties();
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/create_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
+
+		com.app.model.Customer customer = CustomerUtil.getCustomer(_USER_ID);
+
+		Assert.assertEquals(_USER_ID, customer.getUserId());
+		Assert.assertEquals("customerId", customer.getCustomerId());
+		Assert.assertEquals("subscriptionId", customer.getSubscriptionId());
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertTrue(user.isActive());
+	}
+
+	@Test
+	public void testCreateSubscriptionWithActiveUser()
+		throws Exception {
+
+		setUpUserUtil();
+
+		_USER.setActive(true);
+
+		UserUtil.updateUser(_USER);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/create_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("userActiveException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+	}
+
+	@Test
+	public void testCreateSubscriptionWithInvalidEmailAddress()
+		throws Exception {
+
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/create_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test2@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
+	}
+
+	@Test
+	public void testCreateSubscriptionWithInvalidStripeToken()
+		throws Exception {
+
+		setUpUserUtil();
+		setUpProperties();
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/create_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(model().attributeExists("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
 	}
 
 	@Test
@@ -160,6 +292,34 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("user"));
 	}
 
+	protected static void setUpCustomer() throws Exception {
+		Customer customer = new Customer();
+
+		customer.setId("customerId");
+
+		CustomerSubscriptionCollection customerSubscriptionCollection =
+			new CustomerSubscriptionCollection();
+
+		List<Subscription> subscriptions = new ArrayList<>();
+
+		Subscription subscription = new Subscription();
+
+		subscription.setId("subscriptionId");
+
+		subscriptions.add(subscription);
+
+		customerSubscriptionCollection.setData(subscriptions);
+
+		customer.setSubscriptions(customerSubscriptionCollection);
+
+		PowerMockito.spy(Customer.class);
+
+		PowerMockito.doReturn(
+			customer
+		).when(
+			Customer.class, "create", Mockito.anyMap()
+		);
+	}
 	private void _assertNotUpdatedUser() throws Exception {
 		User user = UserUtil.getUserByUserId(_USER.getUserId());
 

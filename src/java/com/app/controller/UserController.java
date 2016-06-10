@@ -18,10 +18,16 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
 import com.app.model.User;
+import com.app.util.CustomerUtil;
+import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
+
+import com.stripe.model.Customer;
+import com.stripe.model.Subscription;
 
 import java.sql.SQLException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
@@ -76,6 +82,63 @@ public class UserController {
 		}
 
 		return logIn(emailAddress, password, model);
+	}
+
+	@RequestMapping(value = "/create_subscription", method = RequestMethod.POST)
+	public String createSubscription(
+			String stripeToken, String stripeEmail, Map<String, Object> model)
+		throws Exception {
+
+		User currentUser = UserUtil.getUserByUserId(UserUtil.getCurrentUserId());
+
+		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
+			model.put(
+				"invalidEmailAddressException",
+				"Please confirm your email address and the one submitted to " +
+					"Stripe are the same."
+			);
+
+			return viewMyAccount(model);
+		}
+
+		if (currentUser.isActive()) {
+			model.put(
+				"userActiveException", "You are already an active user.");
+
+			return viewMyAccount(model);
+		}
+
+		Map<String, Object> customerParams = new HashMap<>();
+
+		customerParams.put("email", stripeEmail);
+		customerParams.put("plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
+		customerParams.put("source", stripeToken);
+
+		Customer customer = null;
+
+		try {
+			customer = Customer.create(customerParams);
+		}
+		catch (Exception e) {
+			model.put(
+				"paymentException",
+				"Please check your payment information and try again. If the " +
+					"issue persists, please contact the administrator.");
+		}
+
+		if (customer != null) {
+			Subscription subscription =
+				customer.getSubscriptions().getData().get(0);
+
+			CustomerUtil.addCustomer(
+				currentUser.getUserId(), customer.getId(), subscription.getId());
+
+			currentUser.setActive(true);
+
+			UserUtil.updateUser(currentUser);
+		}
+
+		return viewMyAccount(model);
 	}
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
