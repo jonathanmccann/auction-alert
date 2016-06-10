@@ -120,6 +120,8 @@ public class UserController {
 			customer = Customer.create(customerParams);
 		}
 		catch (Exception e) {
+			_log.error(e.getMessage());
+
 			model.put(
 				"paymentException",
 				"Please check your payment information and try again. If the " +
