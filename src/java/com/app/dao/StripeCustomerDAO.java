@@ -120,17 +120,18 @@ public class StripeCustomerDAO {
 	}
 
 	private static final String _ADD_CUSTOMER_SQL =
-		"INSERT INTO Customer(userId, customerId, subscriptionId) " +
+		"INSERT INTO StripeCustomer(userId, customerId, subscriptionId) " +
 			"VALUES(?, ?, ?)";
 
 	private static final String _DELETE_CUSTOMER_SQL =
-		"DELETE FROM Customer WHERE userId = ?";
+		"DELETE FROM StripeCustomer WHERE userId = ?";
 
 	private static final String _GET_CUSTOMER_SQL =
-		"SELECT * FROM Customer WHERE userId = ?";
+		"SELECT * FROM StripeCustomer WHERE userId = ?";
 
 	private static final String _UPDATE_CUSTOMER_SQL =
-		"UPDATE Customer SET customerId = ?, subscriptionId = ? WHERE userId = ?";
+		"UPDATE StripeCustomer SET customerId = ?, subscriptionId = ? WHERE " +
+			"userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		StripeCustomerDAO.class);
