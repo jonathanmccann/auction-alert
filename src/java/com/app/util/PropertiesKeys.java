@@ -57,6 +57,9 @@ public class PropertiesKeys {
 
 	public static final String STRIPE_SECRET_KEY = "stripe.secret.key";
 
+	public static final String STRIPE_SUBSCRIPTION_PLAN_ID =
+		"stripe.subscription.plan.id";
+
 	public static final String TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		"total.number.of.previous.search.result.ids";
 

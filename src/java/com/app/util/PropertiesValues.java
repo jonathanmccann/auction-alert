@@ -78,6 +78,10 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.STRIPE_SECRET_KEY);
 
+	public static final String STRIPE_SUBSCRIPTION_PLAN_ID =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.STRIPE_SUBSCRIPTION_PLAN_ID);
+
 	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		Integer.parseInt(
 			PropertiesUtil.getConfigurationProperty(

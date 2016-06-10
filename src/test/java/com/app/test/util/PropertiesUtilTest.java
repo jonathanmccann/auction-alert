@@ -74,6 +74,9 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Stripe Secret Key", PropertiesValues.STRIPE_SECRET_KEY);
 		Assert.assertEquals(
+			"Stripe Subscription Plan ID",
+			PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
+		Assert.assertEquals(
 			1, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}
 
