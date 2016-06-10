@@ -70,6 +70,14 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.SENDGRID_API_KEY);
 
+	public static final String STRIPE_PUBLISHABLE_KEY =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.STRIPE_PUBLISHABLE_KEY);
+
+	public static final String STRIPE_SECRET_KEY =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.STRIPE_SECRET_KEY);
+
 	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		Integer.parseInt(
 			PropertiesUtil.getConfigurationProperty(

@@ -52,6 +52,11 @@ public class PropertiesKeys {
 
 	public static final String SENDGRID_API_KEY = "sendgrid.api.key";
 
+	public static final String STRIPE_PUBLISHABLE_KEY =
+		"stripe.publishable.key";
+
+	public static final String STRIPE_SECRET_KEY = "stripe.secret.key";
+
 	public static final String TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		"total.number.of.previous.search.result.ids";
 
