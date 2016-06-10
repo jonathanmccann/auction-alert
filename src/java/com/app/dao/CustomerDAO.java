@@ -36,8 +36,7 @@ public class CustomerDAO {
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug(
-			"Adding customer with user ID: {} and customer ID: {}", userId,
-			customerId);
+			"Adding customer for user ID: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -69,7 +68,7 @@ public class CustomerDAO {
 	public Customer getCustomer(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Getting customer with user IDL {}", userId);
+		_log.debug("Getting customer with user ID: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
