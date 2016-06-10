@@ -36,6 +36,7 @@
 	</bean>
 
 	<bean class="com.app.dao.CategoryDAO" id="categoryDAO" />
+	<bean class="com.app.dao.CustomerDAO" id="customerDAO" />
 	<bean class="com.app.dao.ReleaseDAO" id="releaseDAO" />
 	<bean class="com.app.dao.SearchQueryDAO" id="searchQueryDAO" />
 	<bean class="com.app.dao.SearchQueryPreviousResultDAO" id="searchQueryPreviousResultDAO" />
