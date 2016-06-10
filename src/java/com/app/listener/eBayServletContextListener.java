@@ -22,6 +22,8 @@ import com.app.util.eBayAPIUtil;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
+import com.stripe.Stripe;
+
 import java.sql.Driver;
 import java.sql.DriverManager;
 
@@ -83,6 +85,10 @@ public class eBayServletContextListener implements ServletContextListener {
 			_log.info("Initializing categories");
 
 			CategoryUtil.initializeCategories();
+
+			_log.info("Setting up Stripe");
+
+			Stripe.apiKey = PropertiesValues.STRIPE_SECRET_KEY;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
