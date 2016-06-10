@@ -61,37 +61,48 @@
 				</div>
 			</form:form>
 
-			<c:if test="${not user.active}">
-				<form:form action="/create_subscription" method="POST">
-					<script
-						src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-						data-key="${stripePublishableKey}"
-						data-image="images/marketplace.png"
-						data-name="eBay Searcher"
-						data-description="Subscription ($9.99 per month)"
-						data-amount="999"
-						data-label="Subscribe"
-						data-allow-remember-me="false"
-						data-email="${user.emailAddress}" >
-					</script>
+			<c:choose>
+				<c:when test="${not user.active}">
+					<form:form action="/create_subscription" method="POST">
+						<script
+							src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+							data-key="${stripePublishableKey}"
+							data-image="images/marketplace.png"
+							data-name="eBay Searcher"
+							data-description="Subscription ($9.99 per month)"
+							data-amount="999"
+							data-label="Subscribe"
+							data-allow-remember-me="false"
+							data-email="${user.emailAddress}" >
+						</script>
 
-					<c:if test="${not empty existingSubscriptionException}">
-						${existingSubscriptionException}
-					</c:if>
+						<c:if test="${not empty existingSubscriptionException}">
+							${existingSubscriptionException}
+						</c:if>
 
-					<c:if test="${not empty invalidEmailAddressException}">
-						${invalidEmailAddressException}
-					</c:if>
+						<c:if test="${not empty invalidEmailAddressException}">
+							${invalidEmailAddressException}
+						</c:if>
 
-					<c:if test="${not empty userActiveException}">
-						${userActiveException}
-					</c:if>
+						<c:if test="${not empty paymentException}">
+							${paymentException}
+						</c:if>
 
-					<c:if test="${not empty paymentException}">
-						${paymentException}
-					</c:if>
-				</form:form>
-			</c:if>
+						<c:if test="${not empty userActiveException}">
+							${userActiveException}
+						</c:if>
+					</form:form>
+				</c:when>
+				<c:otherwise>
+					<form:form action="/delete_subscription" method="POST">
+						<input id="cancelSubscription" type="submit" value="Cancel Subscription" />
+
+						<c:if test="${not empty subscriptionCancellationException}">
+							${subscriptionCancellationException}
+						</c:if>
+					</form:form>
+				</c:otherwise>
+			</c:choose>
 
 			<div align="center">
 				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>

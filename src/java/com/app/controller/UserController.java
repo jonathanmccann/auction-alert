@@ -157,6 +157,37 @@ public class UserController {
 		return viewMyAccount(model);
 	}
 
+	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
+	public String deleteSubscription(Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(
+			UserUtil.getCurrentUserId());
+
+		Subscription subscription = null;
+
+		try {
+			subscription = Subscription.retrieve(
+				stripeCustomer.getSubscriptionId());
+
+			Map<String, Object> parameters = new HashMap<>();
+
+			parameters.put("at_period_end", true);
+
+			subscription.cancel(parameters);
+		}
+		catch (Exception e) {
+			_log.error(e.getMessage());
+
+			model.put(
+				"subscriptionCancellationException",
+				"We are unable to cancel your subscription. Please contact " +
+					"the administrator.");
+		}
+
+		return viewMyAccount(model);
+	}
+
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
 	public String logIn(
 		String emailAddress, String password, Map<String, Object> model) {
