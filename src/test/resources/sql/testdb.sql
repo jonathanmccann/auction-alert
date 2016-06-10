@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, Release_;
+DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, Customer, Release_;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -51,6 +51,12 @@ CREATE TABLE IF NOT EXISTS User_(
 	emailNotification BOOLEAN DEFAULT TRUE
 );
 
+CREATE TABLE IF NOT EXISTS Customer(
+	userId INT NOT NULL PRIMARY KEY,
+	customerId VARCHAR(100),
+	subscriptionId VARCHAR(100)
+);
+
 CREATE TABLE IF NOT EXISTS Release_(
 	uuid INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	releaseName VARCHAR(50) NOT NULL UNIQUE,
@@ -61,3 +67,4 @@ CREATE UNIQUE INDEX CATEGORY_ID ON Category(categoryId);
 CREATE INDEX USER_ID ON SearchQuery(userId);
 CREATE INDEX SEARCH_QUERY_ID ON SearchResult(searchQueryId);
 CREATE UNIQUE INDEX EMAIL_ADDRESS ON User_(emailAddress);
+CREATE UNIQUE INDEX CUSTOMER_ID ON Customer(customerId);
