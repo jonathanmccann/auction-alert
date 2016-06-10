@@ -231,6 +231,8 @@ public class UserController {
 		throws DatabaseConnectionException, SQLException {
 
 		model.put("user", UserUtil.getUserByUserId(UserUtil.getCurrentUserId()));
+		model.put(
+			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
 		return "my_account";
 	}

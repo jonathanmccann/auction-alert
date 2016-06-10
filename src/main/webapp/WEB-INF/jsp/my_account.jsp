@@ -34,7 +34,7 @@
 	</head>
 	<body>
 		<div>
-			<form:form commandName="user" id="updateUserForm" method="post">
+			<form:form action="/my_account" commandName="user" id="updateUserForm" method="post">
 				<form:input path="userId" type="hidden" value="${userId}" />
 
 				<h2>My Account</h2>
@@ -60,6 +60,22 @@
 					<input id="updateUserSubmit" type="submit" value="Update User" />
 				</div>
 			</form:form>
+
+			<c:if test="${not user.active}">
+				<form:form action="/create_subscription" method="POST">
+					<script
+						src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+						data-key="${stripePublishableKey}"
+						data-image="images/marketplace.png"
+						data-name="eBay Searcher"
+						data-description="Subscription ($9.99 per month)"
+						data-amount="999"
+						data-label="Subscribe"
+						data-allow-remember-me="false"
+						data-email="${user.emailAddress}" >
+					</script>
+				</form:form>
+			</c:if>
 
 			<div align="center">
 				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
