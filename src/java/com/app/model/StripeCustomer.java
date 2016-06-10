@@ -17,12 +17,12 @@ package com.app.model;
 /**
  * @author Jonathan McCann
  */
-public class Customer {
+public class StripeCustomer {
 
-	public Customer() {
+	public StripeCustomer() {
 	}
 
-	public Customer(
+	public StripeCustomer(
 		int userId, String customerId, String subscriptionId) {
 
 		_userId = userId;

@@ -18,7 +18,7 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
 import com.app.model.User;
-import com.app.util.CustomerUtil;
+import com.app.util.StripeCustomerUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 
@@ -132,7 +132,7 @@ public class UserController {
 			Subscription subscription =
 				customer.getSubscriptions().getData().get(0);
 
-			CustomerUtil.addCustomer(
+			StripeCustomerUtil.addCustomer(
 				currentUser.getUserId(), customer.getId(), subscription.getId());
 
 			currentUser.setActive(true);

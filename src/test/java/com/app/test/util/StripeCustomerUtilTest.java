@@ -14,9 +14,9 @@
 
 package com.app.test.util;
 
-import com.app.model.Customer;
+import com.app.model.StripeCustomer;
 import com.app.test.BaseTestCase;
-import com.app.util.CustomerUtil;
+import com.app.util.StripeCustomerUtil;
 
 import java.sql.SQLException;
 
@@ -35,7 +35,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CustomerUtilTest extends BaseTestCase {
+public class StripeCustomerUtilTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
@@ -44,42 +44,42 @@ public class CustomerUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddCustomer() throws Exception {
-		CustomerUtil.addCustomer(_USER_ID, "customerId", "subscriptionId");
+		StripeCustomerUtil.addCustomer(_USER_ID, "customerId", "subscriptionId");
 
-		Customer customer = CustomerUtil.getCustomer(_USER_ID);
+		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(_USER_ID);
 
-		Assert.assertEquals(_USER_ID, customer.getUserId());
-		Assert.assertEquals("customerId", customer.getCustomerId());
-		Assert.assertEquals("subscriptionId", customer.getSubscriptionId());
+		Assert.assertEquals(_USER_ID, stripeCustomer.getUserId());
+		Assert.assertEquals("customerId", stripeCustomer.getCustomerId());
+		Assert.assertEquals("subscriptionId", stripeCustomer.getSubscriptionId());
 	}
 
 	@Test(expected = SQLException.class)
 	public void testDeleteCustomer() throws Exception {
-		CustomerUtil.addCustomer(_USER_ID, "customerId", "subscriptionId");
+		StripeCustomerUtil.addCustomer(_USER_ID, "customerId", "subscriptionId");
 
-		CustomerUtil.deleteCustomer(_USER_ID);
+		StripeCustomerUtil.deleteCustomer(_USER_ID);
 
-		CustomerUtil.getCustomer(_USER_ID);
+		StripeCustomerUtil.getCustomer(_USER_ID);
 	}
 
 	@Test
 	public void testUpdateCustomer() throws Exception {
-		CustomerUtil.addCustomer(_USER_ID, "customerId", "subscriptionId");
+		StripeCustomerUtil.addCustomer(_USER_ID, "customerId", "subscriptionId");
 
-		Customer customer = CustomerUtil.getCustomer(_USER_ID);
+		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(_USER_ID);
 
-		Assert.assertEquals(_USER_ID, customer.getUserId());
-		Assert.assertEquals("customerId", customer.getCustomerId());
-		Assert.assertEquals("subscriptionId", customer.getSubscriptionId());
+		Assert.assertEquals(_USER_ID, stripeCustomer.getUserId());
+		Assert.assertEquals("customerId", stripeCustomer.getCustomerId());
+		Assert.assertEquals("subscriptionId", stripeCustomer.getSubscriptionId());
 
-		CustomerUtil.updateCustomer(
+		StripeCustomerUtil.updateCustomer(
 			_USER_ID, "newCustomerId", "newSubscriptionId");
 
-		customer = CustomerUtil.getCustomer(_USER_ID);
+		stripeCustomer = StripeCustomerUtil.getCustomer(_USER_ID);
 
-		Assert.assertEquals(_USER_ID, customer.getUserId());
-		Assert.assertEquals("newCustomerId", customer.getCustomerId());
-		Assert.assertEquals("newSubscriptionId", customer.getSubscriptionId());
+		Assert.assertEquals(_USER_ID, stripeCustomer.getUserId());
+		Assert.assertEquals("newCustomerId", stripeCustomer.getCustomerId());
+		Assert.assertEquals("newSubscriptionId", stripeCustomer.getSubscriptionId());
 	}
 
 }

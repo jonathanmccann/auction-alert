@@ -15,7 +15,7 @@
 package com.app.dao;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.Customer;
+import com.app.model.StripeCustomer;
 import com.app.util.DatabaseUtil;
 
 import java.sql.Connection;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jonathan McCann
  */
-public class CustomerDAO {
+public class StripeCustomerDAO {
 
 	public void addCustomer(
 			int userId, String customerId, String subscriptionId)
@@ -65,7 +65,7 @@ public class CustomerDAO {
 		}
 	}
 
-	public Customer getCustomer(int userId)
+	public StripeCustomer getCustomer(int userId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting customer with user ID: {}", userId);
@@ -107,16 +107,16 @@ public class CustomerDAO {
 		}
 	}
 
-	private static Customer _createCustomerFromResultSet(ResultSet resultSet)
+	private static StripeCustomer _createCustomerFromResultSet(ResultSet resultSet)
 		throws SQLException {
 
-		Customer customer = new Customer();
+		StripeCustomer stripeCustomer = new StripeCustomer();
 
-		customer.setUserId(resultSet.getInt("userId"));
-		customer.setCustomerId(resultSet.getString("customerId"));
-		customer.setSubscriptionId(resultSet.getString("subscriptionId"));
+		stripeCustomer.setUserId(resultSet.getInt("userId"));
+		stripeCustomer.setCustomerId(resultSet.getString("customerId"));
+		stripeCustomer.setSubscriptionId(resultSet.getString("subscriptionId"));
 
-		return customer;
+		return stripeCustomer;
 	}
 
 	private static final String _ADD_CUSTOMER_SQL =
@@ -133,6 +133,6 @@ public class CustomerDAO {
 		"UPDATE Customer SET customerId = ?, subscriptionId = ? WHERE userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		CustomerDAO.class);
+		StripeCustomerDAO.class);
 
 }

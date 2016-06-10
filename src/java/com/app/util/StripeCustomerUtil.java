@@ -14,24 +14,11 @@
 
 package com.app.util;
 
-import com.app.dao.CustomerDAO;
+import com.app.dao.StripeCustomerDAO;
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.Category;
-
-import com.app.model.Customer;
-import com.ebay.sdk.ApiContext;
-import com.ebay.sdk.call.GetCategoriesCall;
-import com.ebay.soap.eBLBaseComponents.CategoryType;
-import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
-import com.ebay.soap.eBLBaseComponents.SiteCodeType;
+import com.app.model.StripeCustomer;
 
 import java.sql.SQLException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,39 +27,39 @@ import org.springframework.stereotype.Service;
  * @author Jonathan McCann
  */
 @Service
-public class CustomerUtil {
+public class StripeCustomerUtil {
 
 	public static void addCustomer(
 			int userId, String customerId, String subscriptionId)
 		throws DatabaseConnectionException, SQLException {
 
-		_customerDAO.addCustomer(userId, customerId, subscriptionId);
+		_stripeCustomerDAO.addCustomer(userId, customerId, subscriptionId);
 	}
 
 	public static void deleteCustomer(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_customerDAO.deleteCustomer(userId);
+		_stripeCustomerDAO.deleteCustomer(userId);
 	}
 
-	public static Customer getCustomer(int userId)
+	public static StripeCustomer getCustomer(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		return _customerDAO.getCustomer(userId);
+		return _stripeCustomerDAO.getCustomer(userId);
 	}
 
 	public static void updateCustomer(
 			int userId, String customerId, String subscriptionId)
 		throws DatabaseConnectionException, SQLException {
 
-		_customerDAO.updateCustomer(userId, customerId, subscriptionId);
+		_stripeCustomerDAO.updateCustomer(userId, customerId, subscriptionId);
 	}
 
 	@Autowired
-	public void setCustomerDAO(CustomerDAO customerDAO) {
-		_customerDAO = customerDAO;
+	public void setCustomerDAO(StripeCustomerDAO stripeCustomerDAO) {
+		_stripeCustomerDAO = stripeCustomerDAO;
 	}
 
-	private static CustomerDAO _customerDAO;
+	private static StripeCustomerDAO _stripeCustomerDAO;
 
 }
