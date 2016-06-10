@@ -75,6 +75,10 @@
 						data-email="${user.emailAddress}" >
 					</script>
 
+					<c:if test="${not empty existingSubscriptionException}">
+						${existingSubscriptionException}
+					</c:if>
+
 					<c:if test="${not empty invalidEmailAddressException}">
 						${invalidEmailAddressException}
 					</c:if>

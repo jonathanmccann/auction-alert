@@ -17,6 +17,7 @@ package com.app.controller;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
+import com.app.model.StripeCustomer;
 import com.app.model.User;
 import com.app.util.StripeCustomerUtil;
 import com.app.util.PropertiesValues;
@@ -89,7 +90,9 @@ public class UserController {
 			String stripeToken, String stripeEmail, Map<String, Object> model)
 		throws Exception {
 
-		User currentUser = UserUtil.getUserByUserId(UserUtil.getCurrentUserId());
+		int userId = UserUtil.getCurrentUserId();
+
+		User currentUser = UserUtil.getUserByUserId(userId);
 
 		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
 			model.put(
@@ -104,6 +107,17 @@ public class UserController {
 		if (currentUser.isActive()) {
 			model.put(
 				"userActiveException", "You are already an active user.");
+
+			return viewMyAccount(model);
+		}
+
+		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(userId);
+
+		if (stripeCustomer != null) {
+			model.put(
+				"existingSubscriptionException",
+				"You currently have a cancelled subscription. Please renew " +
+					"your subscription instead of registering again.");
 
 			return viewMyAccount(model);
 		}

@@ -53,13 +53,16 @@ public class StripeCustomerUtilTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", stripeCustomer.getSubscriptionId());
 	}
 
-	@Test(expected = SQLException.class)
+	@Test
 	public void testDeleteCustomer() throws Exception {
 		StripeCustomerUtil.addCustomer(_USER_ID, "customerId", "subscriptionId");
 
 		StripeCustomerUtil.deleteCustomer(_USER_ID);
 
-		StripeCustomerUtil.getCustomer(_USER_ID);
+		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(
+			_USER_ID);
+
+		Assert.assertNull(stripeCustomer);
 	}
 
 	@Test

@@ -82,8 +82,7 @@ public class StripeCustomerDAO {
 				return _createCustomerFromResultSet(resultSet);
 			}
 			else {
-				throw new SQLException(
-					"There is no customer for user ID: " + userId);
+				return null;
 			}
 		}
 	}
