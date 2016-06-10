@@ -131,15 +131,18 @@ public class UserDAO {
 	}
 
 	@Cacheable(value = "userIds")
-	public List<Integer> getUserIds()
+	public List<Integer> getUserIds(boolean active)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Getting all of the user IDs");
+		_log.debug("Getting all of the user IDs where active is: {}", active);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_USER_IDS);
-			ResultSet resultSet = preparedStatement.executeQuery()) {
+				_GET_USER_IDS)) {
+
+			preparedStatement.setBoolean(1, active);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			List<Integer> userIds = new ArrayList<>();
 
@@ -202,7 +205,7 @@ public class UserDAO {
 		"SELECT * FROM User_ WHERE userId = ?";
 
 	private static final String _GET_USER_IDS =
-		"SELECT userId FROM User_ ORDER BY userId";
+		"SELECT userId FROM User_ WHERE active = ? ORDER BY userId";
 
 	private static final String _UPDATE_USER_SQL =
 		"UPDATE User_ SET emailAddress = ?, emailNotification = ?, active = ? " +

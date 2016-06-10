@@ -104,11 +104,11 @@ public class UserDAOCacheTest extends BaseTestCase {
 		_userDAO.addUser("test@test.com", "password", "salt");
 		_userDAO.addUser("test2@test.com", "password", "salt");
 
-		List<Integer> userIds = _userDAO.getUserIds();
+		List<Integer> userIds = _userDAO.getUserIds(false);
 
 		_assertUserIds(userIds, 2);
 
-		userIds = _userDAO.getUserIds();
+		userIds = _userDAO.getUserIds(false);
 
 		_assertUserIds(userIds, 2);
 
@@ -117,11 +117,11 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 		_userDAO.addUser("test3@test.com", "password", "salt");
 
-		userIds = _userDAO.getUserIds();
+		userIds = _userDAO.getUserIds(false);
 
 		_assertUserIds(userIds, 3);
 
-		userIds = _userDAO.getUserIds();
+		userIds = _userDAO.getUserIds(false);
 
 		_assertUserIds(userIds, 3);
 
@@ -130,11 +130,11 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 		_userDAO.deleteUserByUserId(3);
 
-		userIds = _userDAO.getUserIds();
+		userIds = _userDAO.getUserIds(false);
 
 		_assertUserIds(userIds, 2);
 
-		userIds = _userDAO.getUserIds();
+		userIds = _userDAO.getUserIds(false);
 
 		_assertUserIds(userIds, 2);
 

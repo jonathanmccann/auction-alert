@@ -95,7 +95,7 @@ public class SearchResultUtil {
 		ExecutorService executor = Executors.newFixedThreadPool(
 			_THREAD_POOL_SIZE);
 
-		List<Integer> userIds = UserUtil.getUserIds();
+		List<Integer> userIds = UserUtil.getUserIds(true);
 
 		for (int userId : userIds) {
 			SearchResultRunnable searchResultRunnable =

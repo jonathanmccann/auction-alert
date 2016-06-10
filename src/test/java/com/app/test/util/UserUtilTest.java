@@ -107,11 +107,19 @@ public class UserUtilTest extends BaseTestCase {
 		User firstUser = UserUtil.addUser("test@test.com", "password");
 		User secondUser = UserUtil.addUser("test2@test.com", "password");
 
-		List<Integer> userIds = UserUtil.getUserIds();
+		secondUser.setActive(true);
 
-		Assert.assertEquals(2, userIds.size());
-		Assert.assertEquals(firstUser.getUserId(), (int) userIds.get(0));
-		Assert.assertEquals(secondUser.getUserId(), (int) userIds.get(1));
+		UserUtil.updateUser(secondUser);
+
+		List<Integer> inactiveUserIds = UserUtil.getUserIds(false);
+
+		Assert.assertEquals(1, inactiveUserIds.size());
+		Assert.assertEquals(firstUser.getUserId(), (int)inactiveUserIds.get(0));
+
+		List<Integer> activeUserIds = UserUtil.getUserIds(true);
+
+		Assert.assertEquals(1, activeUserIds.size());
+		Assert.assertEquals(secondUser.getUserId(), (int)activeUserIds.get(0));
 	}
 
 	@Test

@@ -81,10 +81,10 @@ public class UserUtil {
 		return _userDAO.getUserByUserId(userId);
 	}
 
-	public static List<Integer> getUserIds()
+	public static List<Integer> getUserIds(boolean active)
 		throws DatabaseConnectionException, SQLException {
 
-		return _userDAO.getUserIds();
+		return _userDAO.getUserIds(active);
 	}
 
 	public static void updateUser(User user)
