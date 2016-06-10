@@ -74,6 +74,18 @@
 						data-allow-remember-me="false"
 						data-email="${user.emailAddress}" >
 					</script>
+
+					<c:if test="${not empty invalidEmailAddressException}">
+						${invalidEmailAddressException}
+					</c:if>
+
+					<c:if test="${not empty userActiveException}">
+						${userActiveException}
+					</c:if>
+
+					<c:if test="${not empty paymentException}">
+						${paymentException}
+					</c:if>
 				</form:form>
 			</c:if>
 
