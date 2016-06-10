@@ -15,6 +15,7 @@ dependencies {
 	compile files('lib/ebaysdkcore.jar')
 	compile files('lib/finding.jar')
 	compile group: 'com.sendgrid', name: 'sendgrid-java', version:'2.2.2'
+	compile group: 'com.stripe', name: 'stripe-java', version:'2.6.0'
 	compile group: 'javax.mail', name: 'mail', version:'1.4.7'
 	compile group: 'javax.validation', name: 'validation-api', version:'1.1.0.Final'
 	compile group: 'joda-time', name: 'joda-time', version:'2.7'
