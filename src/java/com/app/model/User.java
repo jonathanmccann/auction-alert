@@ -49,8 +49,16 @@ public class User {
 		return _userId;
 	}
 
+	public boolean isActive() {
+		return _active;
+	}
+
 	public boolean isEmailNotification() {
 		return _emailNotification;
+	}
+
+	public void setActive(boolean active) {
+		_active = active;
 	}
 
 	public void setEmailAddress(String emailAddress) {
@@ -73,6 +81,7 @@ public class User {
 		_userId = userId;
 	}
 
+	private boolean _active;
 	private String _emailAddress;
 	private boolean _emailNotification;
 	private String _password;

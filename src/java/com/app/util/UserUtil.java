@@ -99,7 +99,8 @@ public class UserUtil {
 
 		_validateEmailAddress(userId, emailAddress);
 
-		_userDAO.updateUser(userId, emailAddress, user.isEmailNotification());
+		_userDAO.updateUser(
+			userId, emailAddress, user.isEmailNotification(), user.isActive());
 	}
 
 	@Autowired

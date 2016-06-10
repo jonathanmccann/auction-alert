@@ -121,9 +121,11 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
 		Assert.assertTrue(user.isEmailNotification());
+		Assert.assertFalse(user.isActive());
 
 		user.setEmailAddress("test@test.com");
 		user.setEmailNotification(false);
+		user.setActive(true);
 
 		UserUtil.updateUser(user);
 
@@ -132,6 +134,7 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertFalse(user.isEmailNotification());
+		Assert.assertTrue(user.isActive());
 	}
 
 	@Test

@@ -57,24 +57,24 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 		User user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test@test.com", true);
+		_assertUser(user, "test@test.com", true, false);
 
 		user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test@test.com", true);
+		_assertUser(user, "test@test.com", true, false);
 
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		_userDAO.updateUser(1, "test2@test.com", false);
+		_userDAO.updateUser(1, "test2@test.com", false, true);
 
 		user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test2@test.com", false);
+		_assertUser(user, "test2@test.com", false, true);
 
 		user = _userDAO.getUserByUserId(1);
 
-		_assertUser(user, "test2@test.com", false);
+		_assertUser(user, "test2@test.com", false, true);
 
 		Assert.assertEquals(2, statistics.cacheMissCount());
 		Assert.assertEquals(2, statistics.cacheHitCount());
@@ -143,11 +143,13 @@ public class UserDAOCacheTest extends BaseTestCase {
 	}
 
 	private static void _assertUser(
-			User user, String emailAddress, boolean emailNotification) {
+			User user, String emailAddress, boolean emailNotification,
+			boolean active) {
 
 		Assert.assertEquals(1, user.getUserId());
 		Assert.assertEquals(emailAddress, user.getEmailAddress());
 		Assert.assertEquals(emailNotification, user.isEmailNotification());
+		Assert.assertEquals(active, user.isActive());
 	}
 
 	private static void _assertUserIds(
