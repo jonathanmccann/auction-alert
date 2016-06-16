@@ -25,9 +25,12 @@ import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
 
 import com.stripe.model.Customer;
-
 import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -51,15 +54,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@PrepareForTest(Customer.class)
+@PrepareForTest({Customer.class, Subscription.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 public class UserControllerTest extends BaseTestCase {
@@ -118,8 +118,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		setUpUserUtil();
 
-		_USER.setActive(true);
-
 		UserUtil.updateUserSubscription(
 			_USER.getCustomerId(), _USER.getSubscriptionId(), true,
 			_USER.isPendingCancellation());
@@ -142,6 +140,40 @@ public class UserControllerTest extends BaseTestCase {
 			model().attributeDoesNotExist("paymentException"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("existingSubscriptionException"));
+	}
+
+	@Test
+	public void testCreateSubscriptionWithExistingSubscription()
+		throws Exception {
+
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", _USER.getSubscriptionId(), false,
+			_USER.isPendingCancellation());
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/create_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("existingSubscriptionException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
 	}
 
 	@Test
@@ -193,6 +225,211 @@ public class UserControllerTest extends BaseTestCase {
 			model().attributeDoesNotExist("invalidEmailAddressException"));
 		resultActions.andExpect(
 			model().attributeDoesNotExist("userActiveException"));
+	}
+
+	@Test
+	public void testDeleteSubscription() throws Exception {
+		setUpUserUtil();
+		setUpSubscription();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", true, false);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/delete_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("subscriptionCancellationException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("existingSubscriptionException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
+
+		User user = UserUtil.getCurrentUser();
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertTrue(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testDeleteSubscriptionWithNullSubscriptionId()
+		throws Exception {
+
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", _USER.getSubscriptionId(), true, false);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/delete_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("subscriptionCancellationException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("existingSubscriptionException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
+
+		User user = UserUtil.getCurrentUser();
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertNull(user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testDeleteSubscriptionWithInactiveUser() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", false, false);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/delete_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("subscriptionCancellationException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("existingSubscriptionException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
+
+		User user = UserUtil.getCurrentUser();
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertFalse(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testDeleteSubscriptionWithPendingCancellation()
+		throws Exception {
+
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", true, true);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/delete_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("subscriptionCancellationException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("existingSubscriptionException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
+
+		User user = UserUtil.getCurrentUser();
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertTrue(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testDeleteSubscriptionWithCancellationException()
+		throws Exception {
+
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", true, false);
+
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+			"/delete_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("subscriptionCancellationException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("existingSubscriptionException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("paymentException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(
+			model().attributeDoesNotExist("userActiveException"));
+
+		User user = UserUtil.getCurrentUser();
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testGetCreateAccount() throws Exception {
+		this.mockMvc.perform(get("/create_account"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("create_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/create_account.jsp"));
 	}
 
 	@Test
@@ -318,6 +555,25 @@ public class UserControllerTest extends BaseTestCase {
 			Customer.class, "create", Mockito.anyMap()
 		);
 	}
+
+	protected static void setUpSubscription() throws Exception {
+		Subscription subscription = Mockito.mock(Subscription.class);
+
+		PowerMockito.spy(Subscription.class);
+
+		PowerMockito.doReturn(
+			subscription
+		).when(
+			Subscription.class, "retrieve", Mockito.anyString()
+		);
+
+		Mockito.when(
+			subscription.cancel(Mockito.anyMap())
+		).thenReturn(
+			subscription
+		);
+	}
+
 	private void _assertNotUpdatedUser() throws Exception {
 		User user = UserUtil.getUserByUserId(_USER.getUserId());
 

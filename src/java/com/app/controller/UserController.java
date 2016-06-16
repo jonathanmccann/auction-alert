@@ -156,7 +156,9 @@ public class UserController {
 
 		String subscriptionId = currentUser.getSubscriptionId();
 
-		if (ValidatorUtil.isNotNull(subscriptionId)) {
+		if (ValidatorUtil.isNotNull(subscriptionId) &&
+			currentUser.isActive() && !currentUser.isPendingCancellation()) {
+
 			Subscription subscription = null;
 
 			try {
