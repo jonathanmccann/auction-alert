@@ -18,6 +18,7 @@ import com.app.model.SearchQuery;
 import com.app.test.BaseTestCase;
 import com.app.util.SearchQueryUtil;
 
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 
 import java.util.List;
@@ -286,6 +287,136 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(
 			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
 				_USER_ID));
+	}
+
+	@Test
+	public void testNormalizeSearchQueryCondition() throws Exception {
+		Class clazz = Class.forName(SearchQueryUtil.class.getName());
+
+		Object classInstance = clazz.newInstance();
+
+		Method method = clazz.getDeclaredMethod(
+			"_normalizeSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setNewCondition(false);
+		searchQuery.setUsedCondition(false);
+		searchQuery.setUnspecifiedCondition(false);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+
+		searchQuery.setNewCondition(true);
+		searchQuery.setUsedCondition(false);
+		searchQuery.setUnspecifiedCondition(false);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+
+		searchQuery.setNewCondition(true);
+		searchQuery.setUsedCondition(true);
+		searchQuery.setUnspecifiedCondition(false);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+
+		searchQuery.setNewCondition(true);
+		searchQuery.setUsedCondition(true);
+		searchQuery.setUnspecifiedCondition(true);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+
+		searchQuery.setNewCondition(true);
+		searchQuery.setUsedCondition(false);
+		searchQuery.setUnspecifiedCondition(true);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+
+		searchQuery.setNewCondition(false);
+		searchQuery.setUsedCondition(true);
+		searchQuery.setUnspecifiedCondition(false);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertFalse(searchQuery.isNewCondition());
+		Assert.assertTrue(searchQuery.isUsedCondition());
+		Assert.assertFalse(searchQuery.isUnspecifiedCondition());
+
+		searchQuery.setNewCondition(false);
+		searchQuery.setUsedCondition(false);
+		searchQuery.setUnspecifiedCondition(true);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertFalse(searchQuery.isNewCondition());
+		Assert.assertFalse(searchQuery.isUsedCondition());
+		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
+	}
+
+	@Test
+	public void testNormalizeSearchQueryListingType() throws Exception {
+		Class clazz = Class.forName(SearchQueryUtil.class.getName());
+
+		Object classInstance = clazz.newInstance();
+
+		Method method = clazz.getDeclaredMethod(
+			"_normalizeSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setAuctionListing(false);
+		searchQuery.setFixedPriceListing(false);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+
+		searchQuery.setAuctionListing(true);
+		searchQuery.setFixedPriceListing(false);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertFalse(searchQuery.isFixedPriceListing());
+
+		searchQuery.setAuctionListing(false);
+		searchQuery.setFixedPriceListing(true);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertFalse(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
+
+		searchQuery.setAuctionListing(true);
+		searchQuery.setFixedPriceListing(true);
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertTrue(searchQuery.isAuctionListing());
+		Assert.assertTrue(searchQuery.isFixedPriceListing());
 	}
 
 	@Test
