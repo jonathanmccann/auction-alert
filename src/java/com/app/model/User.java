@@ -33,6 +33,10 @@ public class User {
 		_emailNotification = emailNotification;
 	}
 
+	public String getCustomerId() {
+		return _customerId;
+	}
+
 	public String getEmailAddress() {
 		return _emailAddress;
 	}
@@ -43,6 +47,10 @@ public class User {
 
 	public String getSalt() {
 		return _salt;
+	}
+
+	public String getSubscriptionId() {
+		return _subscriptionId;
 	}
 
 	public int getUserId() {
@@ -57,8 +65,16 @@ public class User {
 		return _emailNotification;
 	}
 
+	public boolean isPendingCancellation() {
+		return _pendingCancellation;
+	}
+
 	public void setActive(boolean active) {
 		_active = active;
+	}
+
+	public void setCustomerId(String customerId) {
+		_customerId = customerId;
 	}
 
 	public void setEmailAddress(String emailAddress) {
@@ -73,8 +89,16 @@ public class User {
 		_password = password;
 	}
 
+	public void setPendingCancellation(boolean pendingCancellation) {
+		_pendingCancellation = pendingCancellation;
+	}
+
 	public void setSalt(String salt) {
 		_salt = salt;
+	}
+
+	public void setSubscriptionId(String subscriptionId) {
+		_subscriptionId = subscriptionId;
 	}
 
 	public void setUserId(int userId) {
@@ -82,10 +106,13 @@ public class User {
 	}
 
 	private boolean _active;
+	private String _customerId;
 	private String _emailAddress;
 	private boolean _emailNotification;
 	private String _password;
+	private boolean _pendingCancellation;
 	private String _salt;
+	private String _subscriptionId;
 	private int _userId;
 
 }

@@ -106,7 +106,9 @@ public class UserUtil {
 		_validateEmailAddress(userId, emailAddress);
 
 		_userDAO.updateUser(
-			userId, emailAddress, user.isEmailNotification(), user.isActive());
+			userId, emailAddress, user.isEmailNotification(),
+			user.getCustomerId(), user.getSubscriptionId(), user.isActive(),
+			user.isPendingCancellation());
 	}
 
 	@Autowired

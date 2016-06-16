@@ -66,7 +66,9 @@ public class UserDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		_userDAO.updateUser(1, "test2@test.com", false, true);
+		_userDAO.updateUser(
+			1, "test2@test.com", false, "customerId", "subscriptionId", true,
+			true);
 
 		user = _userDAO.getUserByUserId(1);
 

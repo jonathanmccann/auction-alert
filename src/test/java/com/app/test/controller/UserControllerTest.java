@@ -20,10 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.app.model.StripeCustomer;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
-import com.app.util.StripeCustomerUtil;
 import com.app.util.UserUtil;
 
 import com.stripe.model.Customer;
@@ -105,15 +103,12 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(
 			model().attributeDoesNotExist("userActiveException"));
 
-		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(_USER_ID);
-
-		Assert.assertEquals(_USER_ID, stripeCustomer.getUserId());
-		Assert.assertEquals("customerId", stripeCustomer.getCustomerId());
-		Assert.assertEquals("subscriptionId", stripeCustomer.getSubscriptionId());
-
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
 	}
 
 	@Test

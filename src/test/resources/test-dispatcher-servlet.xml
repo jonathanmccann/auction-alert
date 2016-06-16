@@ -23,7 +23,6 @@
 	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
 	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
 	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
-	<bean id="stripeCustomerDAO" class="com.app.dao.StripeCustomerDAO" />
 	<bean id="userDAO" class="com.app.dao.UserDAO" />
 
 	<cache:annotation-driven/>

@@ -129,11 +129,17 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
 		Assert.assertTrue(user.isEmailNotification());
+		Assert.assertNull(user.getCustomerId());
+		Assert.assertNull(user.getSubscriptionId());
 		Assert.assertFalse(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
 
 		user.setEmailAddress("test@test.com");
 		user.setEmailNotification(false);
+		user.setCustomerId("customerId");
+		user.setSubscriptionId("subscriptionId");
 		user.setActive(true);
+		user.setPendingCancellation(true);
 
 		UserUtil.updateUser(user);
 
@@ -142,7 +148,10 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertFalse(user.isEmailNotification());
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
+		Assert.assertTrue(user.isPendingCancellation());
 	}
 
 	@Test

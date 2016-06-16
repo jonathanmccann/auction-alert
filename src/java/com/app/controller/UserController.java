@@ -17,11 +17,10 @@ package com.app.controller;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
-import com.app.model.StripeCustomer;
 import com.app.model.User;
-import com.app.util.StripeCustomerUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
+import com.app.util.ValidatorUtil;
 
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
@@ -111,9 +110,7 @@ public class UserController {
 			return viewMyAccount(model);
 		}
 
-		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(userId);
-
-		if (stripeCustomer != null) {
+		if (ValidatorUtil.isNotNull(currentUser.getCustomerId())) {
 			model.put(
 				"existingSubscriptionException",
 				"You currently have a cancelled subscription. Please renew " +
@@ -146,10 +143,10 @@ public class UserController {
 			Subscription subscription =
 				customer.getSubscriptions().getData().get(0);
 
-			StripeCustomerUtil.addCustomer(
-				currentUser.getUserId(), customer.getId(), subscription.getId());
-
+			currentUser.setCustomerId(customer.getId());
+			currentUser.setSubscriptionId(subscription.getId());
 			currentUser.setActive(true);
+			currentUser.setPendingCancellation(false);
 
 			UserUtil.updateUser(currentUser);
 		}
@@ -161,28 +158,34 @@ public class UserController {
 	public String deleteSubscription(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		StripeCustomer stripeCustomer = StripeCustomerUtil.getCustomer(
-			UserUtil.getCurrentUserId());
+		User currentUser = UserUtil.getCurrentUser();
 
-		Subscription subscription = null;
+		String subscriptionId = currentUser.getSubscriptionId();
 
-		try {
-			subscription = Subscription.retrieve(
-				stripeCustomer.getSubscriptionId());
+		if (ValidatorUtil.isNotNull(subscriptionId)) {
+			Subscription subscription = null;
 
-			Map<String, Object> parameters = new HashMap<>();
+			try {
+				subscription = Subscription.retrieve(subscriptionId);
 
-			parameters.put("at_period_end", true);
+				Map<String, Object> parameters = new HashMap<>();
 
-			subscription.cancel(parameters);
-		}
-		catch (Exception e) {
-			_log.error(e.getMessage());
+				parameters.put("at_period_end", true);
 
-			model.put(
-				"subscriptionCancellationException",
-				"We are unable to cancel your subscription. Please contact " +
-					"the administrator.");
+				subscription.cancel(parameters);
+
+				currentUser.setPendingCancellation(true);
+
+				UserUtil.updateUser(currentUser);
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+
+				model.put(
+					"subscriptionCancellationException",
+					"We are unable to cancel your subscription. Please " +
+						"contact the administrator.");
+			}
 		}
 
 		return viewMyAccount(model);

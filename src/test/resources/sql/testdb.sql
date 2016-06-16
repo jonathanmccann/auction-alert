@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, StripeCustomer, Release_;
+DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, Release_;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -44,18 +44,15 @@ CREATE TABLE IF NOT EXISTS Category(
 );
 
 CREATE TABLE IF NOT EXISTS User_(
-	userId BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	userId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	emailAddress VARCHAR(100) NOT NULL UNIQUE,
 	password VARCHAR(128),
 	salt VARCHAR(128),
 	emailNotification BOOLEAN DEFAULT TRUE,
-	active BOOLEAN DEFAULT FALSE
-);
-
-CREATE TABLE IF NOT EXISTS StripeCustomer(
-	userId INT NOT NULL PRIMARY KEY,
 	customerId VARCHAR(100),
-	subscriptionId VARCHAR(100)
+	subscriptionId VARCHAR(100),
+	active BOOLEAN DEFAULT FALSE,
+	pendingCancellation BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS Release_(
@@ -68,4 +65,3 @@ CREATE UNIQUE INDEX CATEGORY_ID ON Category(categoryId);
 CREATE INDEX USER_ID ON SearchQuery(userId);
 CREATE INDEX SEARCH_QUERY_ID ON SearchResult(searchQueryId);
 CREATE UNIQUE INDEX EMAIL_ADDRESS ON User_(emailAddress);
-CREATE UNIQUE INDEX CUSTOMER_ID ON StripeCustomer(customerId);
