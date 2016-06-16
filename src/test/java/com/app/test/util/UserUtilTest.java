@@ -31,6 +31,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -104,50 +107,63 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserIds() throws Exception {
+		setUpUserUtil();
+
 		User firstUser = UserUtil.addUser("test@test.com", "password");
 		User secondUser = UserUtil.addUser("test2@test.com", "password");
 
-		secondUser.setActive(true);
-
-		UserUtil.updateUser(secondUser);
-
-		List<Integer> inactiveUserIds = UserUtil.getUserIds(false);
-
-		Assert.assertEquals(1, inactiveUserIds.size());
-		Assert.assertEquals(firstUser.getUserId(), (int)inactiveUserIds.get(0));
+		UserUtil.updateUserSubscription(
+			firstUser.getCustomerId(), firstUser.getSubscriptionId(), true,
+			firstUser.isPendingCancellation());
 
 		List<Integer> activeUserIds = UserUtil.getUserIds(true);
 
 		Assert.assertEquals(1, activeUserIds.size());
-		Assert.assertEquals(secondUser.getUserId(), (int)activeUserIds.get(0));
+		Assert.assertEquals(firstUser.getUserId(), (int) activeUserIds.get(0));
+
+		List<Integer> inactiveUserIds = UserUtil.getUserIds(false);
+
+		Assert.assertEquals(1, inactiveUserIds.size());
+		Assert.assertEquals(secondUser.getUserId(), (int)inactiveUserIds.get(0));
 	}
 
 	@Test
-	public void testUpdateUser() throws Exception {
+	public void testUpdateUserDetails() throws Exception {
+		setUpUserUtil();
+
 		User user = UserUtil.addUser("update@test.com", "password");
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
 		Assert.assertTrue(user.isEmailNotification());
-		Assert.assertNull(user.getCustomerId());
-		Assert.assertNull(user.getSubscriptionId());
-		Assert.assertFalse(user.isActive());
-		Assert.assertFalse(user.isPendingCancellation());
 
-		user.setEmailAddress("test@test.com");
-		user.setEmailNotification(false);
-		user.setCustomerId("customerId");
-		user.setSubscriptionId("subscriptionId");
-		user.setActive(true);
-		user.setPendingCancellation(true);
-
-		UserUtil.updateUser(user);
+		UserUtil.updateUserDetails("test@test.com", false);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertFalse(user.isEmailNotification());
+	}
+
+	@Test
+	public void testUpdateUserSubscription() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.addUser("update@test.com", "password");
+
+		Assert.assertNotNull(user);
+		Assert.assertNull(user.getCustomerId());
+		Assert.assertNull(user.getSubscriptionId());
+		Assert.assertFalse(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", true, true);
+
+		user = UserUtil.getUserByUserId(user.getUserId());
+
+		Assert.assertNotNull(user);
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());

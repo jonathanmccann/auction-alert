@@ -120,7 +120,9 @@ public class UserControllerTest extends BaseTestCase {
 
 		_USER.setActive(true);
 
-		UserUtil.updateUser(_USER);
+		UserUtil.updateUserSubscription(
+			_USER.getCustomerId(), _USER.getSubscriptionId(), true,
+			_USER.isPendingCancellation());
 
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/create_subscription");

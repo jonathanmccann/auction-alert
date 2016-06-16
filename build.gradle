@@ -74,6 +74,7 @@ test {
 	systemProperties System.getProperties()
 
 	jvmArgs '-XX:-UseSplitVerifier'
+	jvmArgs '-XX:MaxPermSize=512m'
 
 	jacoco {
 		append = false

@@ -93,22 +93,26 @@ public class UserUtil {
 		return _userDAO.getUserIds(active);
 	}
 
-	public static void updateUser(User user)
+	public static void updateUserDetails(
+			String emailAddress, boolean emailNotification)
 		throws
-			DatabaseConnectionException,
-			DuplicateEmailAddressException,
-				InvalidEmailAddressException, SQLException {
+			DatabaseConnectionException, DuplicateEmailAddressException,
+			InvalidEmailAddressException, SQLException {
 
-		int userId = user.getUserId();
+		_validateEmailAddress(getCurrentUserId(), emailAddress);
 
-		String emailAddress = user.getEmailAddress();
+		_userDAO.updateUserDetails(
+			getCurrentUserId(), emailAddress, emailNotification);
+	}
 
-		_validateEmailAddress(userId, emailAddress);
+	public static void updateUserSubscription(
+			String customerId, String subscriptionId, boolean active,
+			boolean pendingCancellation)
+		throws DatabaseConnectionException, SQLException {
 
-		_userDAO.updateUser(
-			userId, emailAddress, user.isEmailNotification(),
-			user.getCustomerId(), user.getSubscriptionId(), user.isActive(),
-			user.isPendingCancellation());
+		_userDAO.updateUserSubscription(
+			getCurrentUserId(), customerId, subscriptionId, active,
+			pendingCancellation);
 	}
 
 	@Autowired

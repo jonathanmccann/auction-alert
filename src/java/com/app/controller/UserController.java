@@ -129,6 +129,12 @@ public class UserController {
 
 		try {
 			customer = Customer.create(customerParams);
+
+			Subscription subscription =
+				customer.getSubscriptions().getData().get(0);
+
+			UserUtil.updateUserSubscription(
+				customer.getId(), subscription.getId(), true, false);
 		}
 		catch (Exception e) {
 			_log.error(e.getMessage());
@@ -137,18 +143,6 @@ public class UserController {
 				"paymentException",
 				"Please check your payment information and try again. If the " +
 					"issue persists, please contact the administrator.");
-		}
-
-		if (customer != null) {
-			Subscription subscription =
-				customer.getSubscriptions().getData().get(0);
-
-			currentUser.setCustomerId(customer.getId());
-			currentUser.setSubscriptionId(subscription.getId());
-			currentUser.setActive(true);
-			currentUser.setPendingCancellation(false);
-
-			UserUtil.updateUser(currentUser);
 		}
 
 		return viewMyAccount(model);
@@ -174,9 +168,9 @@ public class UserController {
 
 				subscription.cancel(parameters);
 
-				currentUser.setPendingCancellation(true);
-
-				UserUtil.updateUser(currentUser);
+				UserUtil.updateUserSubscription(
+					currentUser.getCustomerId(),
+					currentUser.getSubscriptionId(), true, true);
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -253,13 +247,9 @@ public class UserController {
 			@ModelAttribute("user")User user, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		User currentUser = UserUtil.getCurrentUser();
-
-		currentUser.setEmailAddress(user.getEmailAddress());
-		currentUser.setEmailNotification(user.isEmailNotification());
-
 		try {
-			UserUtil.updateUser(currentUser);
+			UserUtil.updateUserDetails(
+				user.getEmailAddress(), user.isEmailNotification());
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
