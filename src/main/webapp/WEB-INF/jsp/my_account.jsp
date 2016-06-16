@@ -35,8 +35,6 @@
 	<body>
 		<div>
 			<form:form action="/my_account" commandName="user" id="updateUserForm" method="post">
-				<form:input path="userId" type="hidden" value="${userId}" />
-
 				<h2>My Account</h2>
 				<div>
 					<h3>My Details:</h3>

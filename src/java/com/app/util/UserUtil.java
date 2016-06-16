@@ -61,6 +61,12 @@ public class UserUtil {
 		_userDAO.deleteUserByUserId(userId);
 	}
 
+	public static User getCurrentUser()
+		throws DatabaseConnectionException, SQLException {
+
+		return getUserByUserId(getCurrentUserId());
+	}
+
 	public static int getCurrentUserId() {
 		Subject subject = SecurityUtils.getSubject();
 

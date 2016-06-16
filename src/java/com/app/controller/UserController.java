@@ -250,12 +250,13 @@ public class UserController {
 			@ModelAttribute("user")User user, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		if (user.getUserId() != UserUtil.getCurrentUserId()) {
-			return viewMyAccount(model);
-		}
+		User currentUser = UserUtil.getCurrentUser();
+
+		currentUser.setEmailAddress(user.getEmailAddress());
+		currentUser.setEmailNotification(user.isEmailNotification());
 
 		try {
-			UserUtil.updateUser(user);
+			UserUtil.updateUser(currentUser);
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
@@ -277,7 +278,7 @@ public class UserController {
 	public String viewMyAccount(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		model.put("user", UserUtil.getUserByUserId(UserUtil.getCurrentUserId()));
+		model.put("user", UserUtil.getCurrentUser());
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
