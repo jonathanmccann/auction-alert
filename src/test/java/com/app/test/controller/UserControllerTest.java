@@ -72,6 +72,7 @@ public class UserControllerTest extends BaseTestCase {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
 		setUpDatabase();
+		setUpProperties();
 
 		_USER = UserUtil.addUser("test@test.com", "password");
 	}
@@ -172,7 +173,6 @@ public class UserControllerTest extends BaseTestCase {
 		throws Exception {
 
 		setUpUserUtil();
-		setUpProperties();
 
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/create_subscription");
