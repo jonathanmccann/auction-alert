@@ -134,14 +134,6 @@ public class DefaultMailSender implements MailSender {
 		return message;
 	}
 
-	private static void _populateMessage(
-			SearchQuery searchQuery, List<SearchResult> searchResults,
-			Message message, Template template)
-		throws Exception {
-
-
-	}
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		DefaultMailSender.class);
 
