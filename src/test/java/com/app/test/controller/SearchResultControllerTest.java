@@ -107,6 +107,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("First test keywords");
+		searchQuery.setActive(true);
 
 		SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -126,6 +127,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("First test keywords");
+		searchQuery.setActive(true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
