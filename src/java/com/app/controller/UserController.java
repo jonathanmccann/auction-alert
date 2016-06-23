@@ -318,9 +318,7 @@ public class UserController {
 				"error", LanguageUtil.getMessage("invalid-email-address"));
 		}
 
-		model.put("user", user);
-
-		return "my_account";
+		return viewMyAccount(model);
 	}
 
 	@RequestMapping(value = "/my_account", method = RequestMethod.GET)

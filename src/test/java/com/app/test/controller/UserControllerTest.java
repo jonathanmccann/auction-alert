@@ -94,6 +94,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
@@ -124,6 +126,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 	}
 
@@ -148,6 +152,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 	}
 
@@ -168,6 +174,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 	}
 
@@ -188,6 +196,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 	}
 
@@ -210,6 +220,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		User user = UserUtil.getCurrentUser();
@@ -240,6 +252,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
@@ -268,6 +282,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
@@ -298,6 +314,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
@@ -328,6 +346,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
@@ -358,6 +378,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("stripePublishableKey"))
 			.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
@@ -382,6 +403,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("stripePublishableKey"))
 			.andExpect(model().attributeDoesNotExist("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
@@ -406,6 +428,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("stripePublishableKey"))
 			.andExpect(model().attributeDoesNotExist("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
@@ -428,6 +451,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("stripePublishableKey"))
 			.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
@@ -449,6 +473,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		_assertUpdatedUser();
@@ -469,6 +495,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 
 		_assertNotUpdatedUser();
@@ -487,6 +515,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeExists("error"));
 
 		_assertNotUpdatedUser();
@@ -505,6 +535,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
 		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		_assertNotUpdatedUser();
@@ -518,7 +550,8 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(status().isOk())
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
-			.andExpect(model().attributeExists("user"));
+			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("stripePublishableKey"));
 	}
 
 	protected static void setUpCustomer() throws Exception {
