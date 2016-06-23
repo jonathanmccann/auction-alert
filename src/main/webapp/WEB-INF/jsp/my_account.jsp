@@ -56,6 +56,11 @@
 			</form:form>
 
 			<c:choose>
+				<c:when test="${(not empty user.customerId) && (not empty user.subscriptionId) && ((not user.active) || (user.pendingCancellation))}">
+					<form:form action="/resubscribe" method="POST">
+						<input id="resubscribe" type="submit" value="Resubscribe" />
+					</form:form>
+				</c:when>
 				<c:when test="${not user.active}">
 					<form:form action="/create_subscription" method="POST">
 						<script

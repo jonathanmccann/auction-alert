@@ -15,6 +15,7 @@
 package com.app.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,7 +51,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -78,15 +78,12 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testCreateSubscription()
-		throws Exception {
-
+	public void testCreateSubscription() throws Exception {
 		setUpCustomer();
-		setUpUserUtil();
 		setUpProperties();
+		setUpUserUtil();
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/create_subscription");
+		MockHttpServletRequestBuilder request = post("/create_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -108,8 +105,7 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testCreateSubscriptionWithActiveUser()
-		throws Exception {
+	public void testCreateSubscriptionWithActiveUser() throws Exception {
 
 		setUpUserUtil();
 
@@ -117,8 +113,7 @@ public class UserControllerTest extends BaseTestCase {
 			_USER.getCustomerId(), _USER.getSubscriptionId(), true,
 			_USER.isPendingCancellation());
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/create_subscription");
+		MockHttpServletRequestBuilder request = post("/create_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -142,8 +137,7 @@ public class UserControllerTest extends BaseTestCase {
 			"customerId", _USER.getSubscriptionId(), false,
 			_USER.isPendingCancellation());
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/create_subscription");
+		MockHttpServletRequestBuilder request = post("/create_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -163,8 +157,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		setUpUserUtil();
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/create_subscription");
+		MockHttpServletRequestBuilder request = post("/create_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test2@test.com");
@@ -184,8 +177,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		setUpUserUtil();
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/create_subscription");
+		MockHttpServletRequestBuilder request = post("/create_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -207,8 +199,7 @@ public class UserControllerTest extends BaseTestCase {
 		UserUtil.updateUserSubscription(
 			"customerId", "subscriptionId", true, false);
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/delete_subscription");
+		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -238,8 +229,7 @@ public class UserControllerTest extends BaseTestCase {
 		UserUtil.updateUserSubscription(
 			"customerId", _USER.getSubscriptionId(), true, false);
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/delete_subscription");
+		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -267,8 +257,7 @@ public class UserControllerTest extends BaseTestCase {
 		UserUtil.updateUserSubscription(
 			"customerId", "subscriptionId", false, false);
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/delete_subscription");
+		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -298,8 +287,7 @@ public class UserControllerTest extends BaseTestCase {
 		UserUtil.updateUserSubscription(
 			"customerId", "subscriptionId", true, true);
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/delete_subscription");
+		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -329,8 +317,7 @@ public class UserControllerTest extends BaseTestCase {
 		UserUtil.updateUserSubscription(
 			"customerId", "subscriptionId", true, false);
 
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
-			"/delete_subscription");
+		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -357,6 +344,98 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(status().isOk())
 			.andExpect(view().name("create_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/create_account.jsp"));
+	}
+
+	@Test
+	public void testResubscribeWithActiveUser() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", true, false);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("my_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
+			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("error"));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testResubscribeWithNullSubscription() throws Exception {
+		setUpNullSubscription();
+		setUpProperties();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", false, true);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("my_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
+			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeDoesNotExist("error"));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("updatedSubscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testResubscribeWithPreviousSubscription() throws Exception {
+		setUpProperties();
+		setUpSubscription();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", false, true);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("my_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
+			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeDoesNotExist("error"));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testResubscribeWithResubscribeException() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", false, true);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("my_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
+			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("error"));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertFalse(user.isActive());
+		Assert.assertTrue(user.isPendingCancellation());
 	}
 
 	@Test
@@ -471,6 +550,30 @@ public class UserControllerTest extends BaseTestCase {
 		);
 	}
 
+	protected static void setUpNullSubscription() throws Exception {
+		Subscription subscription = Mockito.mock(Subscription.class);
+
+		Mockito.when(
+			subscription.getId()
+		).thenReturn(
+			"updatedSubscriptionId"
+		);
+
+		PowerMockito.spy(Subscription.class);
+
+		PowerMockito.doReturn(
+			null
+		).when(
+			Subscription.class, "retrieve", Mockito.anyString()
+		);
+
+		PowerMockito.doReturn(
+			subscription
+		).when(
+			Subscription.class, "create", Mockito.anyMap()
+		);
+	}
+
 	protected static void setUpSubscription() throws Exception {
 		Subscription subscription = Mockito.mock(Subscription.class);
 
@@ -504,7 +607,7 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	private MockHttpServletRequestBuilder _buildUpdateMyAccountRequest() {
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
+		MockHttpServletRequestBuilder request = post(
 			"/my_account");
 
 		request.param("userId", String.valueOf(_USER.getUserId()));

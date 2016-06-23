@@ -241,6 +241,65 @@ public class UserController {
 		return "home";
 	}
 
+	@RequestMapping(value = "/resubscribe", method = RequestMethod.POST)
+	public String resubscribe(Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		User currentUser = UserUtil.getCurrentUser();
+
+		String customerId = currentUser.getCustomerId();
+		String subscriptionId = currentUser.getSubscriptionId();
+
+		if (ValidatorUtil.isNotNull(customerId) &&
+			ValidatorUtil.isNotNull(subscriptionId) &&
+			(!currentUser.isActive() || currentUser.isPendingCancellation())) {
+
+			try {
+				Subscription subscription = Subscription.retrieve(
+					subscriptionId);
+
+				if (subscription == null) {
+					Map<String, Object> parameters = new HashMap<>();
+
+					parameters.put("customer", customerId);
+					parameters.put(
+						"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
+
+					subscription = Subscription.create(parameters);
+
+					UserUtil.updateUserSubscription(
+						customerId, subscription.getId(), true, false);
+				}
+				else {
+					Map<String, Object> parameters = new HashMap<>();
+
+					parameters.put(
+						"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
+
+					subscription.update(parameters);
+
+					UserUtil.updateUserSubscription(
+						customerId, subscriptionId, true, false);
+				}
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+
+				model.put(
+					"error",
+					LanguageUtil.getMessage(
+						"subscription-resubscribe-failure"));
+			}
+		}
+		else {
+			model.put(
+				"error",
+				LanguageUtil.getMessage("subscription-resubscribe-failure"));
+		}
+
+		return viewMyAccount(model);
+	}
+
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
 			@ModelAttribute("user")User user, Map<String, Object> model)
