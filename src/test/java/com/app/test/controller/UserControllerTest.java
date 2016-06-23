@@ -97,12 +97,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -134,14 +129,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("userActiveException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("existingSubscriptionException"));
+		resultActions.andExpect(model().attributeExists("error"));
 	}
 
 	@Test
@@ -166,14 +154,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("existingSubscriptionException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeExists("error"));
 	}
 
 	@Test
@@ -194,12 +175,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeExists("error"));
 	}
 
 	@Test
@@ -220,11 +196,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(model().attributeExists("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeExists("error"));
 	}
 
 	@Test
@@ -247,16 +219,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("subscriptionCancellationException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("existingSubscriptionException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -287,16 +250,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("subscriptionCancellationException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("existingSubscriptionException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -325,16 +279,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("subscriptionCancellationException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("existingSubscriptionException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -365,16 +310,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("subscriptionCancellationException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("existingSubscriptionException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -405,16 +341,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("subscriptionCancellationException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("existingSubscriptionException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("paymentException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("userActiveException"));
+		resultActions.andExpect(model().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -443,10 +370,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("duplicateEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		_assertUpdatedUser();
 	}
@@ -466,10 +390,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("duplicateEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(model().attributeExists("error"));
 
 		_assertNotUpdatedUser();
 	}
@@ -487,10 +408,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("duplicateEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeExists("invalidEmailAddressException"));
+		resultActions.andExpect(model().attributeExists("error"));
 
 		_assertNotUpdatedUser();
 	}
@@ -508,10 +426,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isOk());
 		resultActions.andExpect(view().name("my_account"));
 		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("duplicateEmailAddressException"));
-		resultActions.andExpect(
-			model().attributeDoesNotExist("invalidEmailAddressException"));
+		resultActions.andExpect(model().attributeDoesNotExist("error"));
 
 		_assertNotUpdatedUser();
 	}

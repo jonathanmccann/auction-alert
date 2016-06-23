@@ -17,6 +17,7 @@ package com.app.controller;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
+import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
@@ -68,15 +69,13 @@ public class UserController {
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
-				"duplicateEmailAddressException",
-				"This email address already exists. Please try again.");
+				"error", LanguageUtil.getMessage("duplicate-email-address"));
 
 			return "create_account";
 		}
 		catch (InvalidEmailAddressException ieae) {
 			model.put(
-				"invalidEmailAddressException",
-				"This email address is invalid. Please try again.");
+				"error", LanguageUtil.getMessage("invalid-email-address"));
 
 			return "create_account";
 		}
@@ -95,26 +94,22 @@ public class UserController {
 
 		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
 			model.put(
-				"invalidEmailAddressException",
-				"Please confirm your email address and the one submitted to " +
-					"Stripe are the same."
-			);
+				"error",
+				LanguageUtil.getMessage("invalid-stripe-email-address"));
 
 			return viewMyAccount(model);
 		}
 
 		if (currentUser.isActive()) {
 			model.put(
-				"userActiveException", "You are already an active user.");
+				"error", LanguageUtil.getMessage("user-already-active"));
 
 			return viewMyAccount(model);
 		}
 
 		if (ValidatorUtil.isNotNull(currentUser.getCustomerId())) {
 			model.put(
-				"existingSubscriptionException",
-				"You currently have a cancelled subscription. Please renew " +
-					"your subscription instead of registering again.");
+				"error", LanguageUtil.getMessage("existing-subscription"));
 
 			return viewMyAccount(model);
 		}
@@ -140,9 +135,8 @@ public class UserController {
 			_log.error(e.getMessage());
 
 			model.put(
-				"paymentException",
-				"Please check your payment information and try again. If the " +
-					"issue persists, please contact the administrator.");
+				"error",
+				LanguageUtil.getMessage("incorrect-payment-information"));
 		}
 
 		return viewMyAccount(model);
@@ -178,10 +172,14 @@ public class UserController {
 				_log.error(e.getMessage());
 
 				model.put(
-					"subscriptionCancellationException",
-					"We are unable to cancel your subscription. Please " +
-						"contact the administrator.");
+					"error",
+					LanguageUtil.getMessage("subscription-cancellation"));
 			}
+		}
+		else {
+			model.put(
+				"error",
+				LanguageUtil.getMessage("subscription-already-cancelled"));
 		}
 
 		return viewMyAccount(model);
@@ -211,8 +209,7 @@ public class UserController {
 			}
 			catch (Exception e) {
 				model.put(
-					"authenticationError",
-					"Authentication failed. Please try again.");
+					"error", LanguageUtil.getMessage("authentication-failure"));
 
 				if (e instanceof UnknownAccountException) {
 					_log.error(
@@ -255,13 +252,11 @@ public class UserController {
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
-				"duplicateEmailAddressException",
-				"This email address already exists. Please try again.");
+				"error", LanguageUtil.getMessage("duplicate-email-address"));
 		}
 		catch (InvalidEmailAddressException ieae) {
 			model.put(
-				"invalidEmailAddressException",
-				"This email address is invalid. Please try again.");
+				"error", LanguageUtil.getMessage("invalid-email-address"));
 		}
 
 		model.put("user", user);

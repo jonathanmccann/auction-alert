@@ -36,19 +36,15 @@
 		<div>
 			<form:form action="/my_account" commandName="user" id="updateUserForm" method="post">
 				<h2>My Account</h2>
+
+				<c:if test="${not empty error}">
+					${error}
+				</c:if>
+
 				<div>
 					<h3>My Details:</h3>
 
 					Email Address <form:input path="emailAddress" value="${emailAddress}" />
-
-					<c:if test="${not empty duplicateEmailAddressException}">
-						${duplicateEmailAddressException}
-					</c:if>
-
-					<c:if test="${not empty invalidEmailAddressException}">
-						${invalidEmailAddressException}
-					</c:if>
-
 					</br>
 
 					<label for="emailNotification">Send Email Notifications</label>
@@ -73,31 +69,11 @@
 							data-allow-remember-me="false"
 							data-email="${user.emailAddress}" >
 						</script>
-
-						<c:if test="${not empty existingSubscriptionException}">
-							${existingSubscriptionException}
-						</c:if>
-
-						<c:if test="${not empty invalidEmailAddressException}">
-							${invalidEmailAddressException}
-						</c:if>
-
-						<c:if test="${not empty paymentException}">
-							${paymentException}
-						</c:if>
-
-						<c:if test="${not empty userActiveException}">
-							${userActiveException}
-						</c:if>
 					</form:form>
 				</c:when>
 				<c:otherwise>
 					<form:form action="/delete_subscription" method="POST">
 						<input id="cancelSubscription" type="submit" value="Cancel Subscription" />
-
-						<c:if test="${not empty subscriptionCancellationException}">
-							${subscriptionCancellationException}
-						</c:if>
 					</form:form>
 				</c:otherwise>
 			</c:choose>
