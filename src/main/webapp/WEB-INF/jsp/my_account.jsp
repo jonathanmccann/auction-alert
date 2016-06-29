@@ -72,7 +72,8 @@
 							data-amount="999"
 							data-label="Subscribe"
 							data-allow-remember-me="false"
-							data-email="${user.emailAddress}" >
+							data-email="${user.emailAddress}"
+							data-zip-code="true">
 						</script>
 					</form:form>
 				</c:when>
@@ -86,7 +87,8 @@
 							data-panel-label="Update Card Details"
 							data-label="Update Card Details"
 							data-allow-remember-me="false"
-							data-email="${user.emailAddress}" >
+							data-email="${user.emailAddress}"
+							data-zip-code="true">
 						</script>
 					</form:form>
 					<form:form action="/delete_subscription" method="POST">
