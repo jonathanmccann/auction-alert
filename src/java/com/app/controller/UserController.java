@@ -300,6 +300,47 @@ public class UserController {
 		return viewMyAccount(model);
 	}
 
+	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)
+	public String updateSubscription(
+			String stripeToken, String stripeEmail, Map<String, Object> model)
+		throws Exception {
+
+		int userId = UserUtil.getCurrentUserId();
+
+		User currentUser = UserUtil.getUserByUserId(userId);
+
+		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
+			model.put(
+				"error",
+				LanguageUtil.getMessage("invalid-stripe-email-address"));
+		}
+		else if (ValidatorUtil.isNull(currentUser.getCustomerId())) {
+			model.put(
+				"error", LanguageUtil.getMessage("no-existing-subscription"));
+		}
+		else {
+			Map<String, Object> customerParams = new HashMap<>();
+
+			customerParams.put("source", stripeToken);
+
+			try {
+				Customer customer = Customer.retrieve(
+					currentUser.getCustomerId());
+
+				customer.update(customerParams);
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+
+				model.put(
+					"error",
+					LanguageUtil.getMessage("incorrect-payment-information"));
+			}
+		}
+
+		return viewMyAccount(model);
+	}
+
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
 			@ModelAttribute("user")User user, Map<String, Object> model)

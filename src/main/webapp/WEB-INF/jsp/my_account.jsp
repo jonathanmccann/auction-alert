@@ -77,6 +77,18 @@
 					</form:form>
 				</c:when>
 				<c:otherwise>
+					<form:form action="/update_subscription" method="POST">
+						<script
+							src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+							data-key="${stripePublishableKey}"
+							data-image="images/marketplace.png"
+							data-name="eBay Searcher"
+							data-panel-label="Update Card Details"
+							data-label="Update Card Details"
+							data-allow-remember-me="false"
+							data-email="${user.emailAddress}" >
+						</script>
+					</form:form>
 					<form:form action="/delete_subscription" method="POST">
 						<input id="cancelSubscription" type="submit" value="Cancel Subscription" />
 					</form:form>

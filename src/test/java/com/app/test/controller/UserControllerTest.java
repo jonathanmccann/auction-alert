@@ -543,6 +543,74 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testUpdateSubscriptionWithInvalidEmailAddress()
+		throws Exception {
+
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = post("/update_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test2@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
+		resultActions.andExpect(model().attributeExists("error"));
+	}
+
+	@Test
+	public void testUpdateSubscriptionWithStripeException() throws Exception {
+		setUpProperties();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			"customerId", "subscriptionId", true, false);
+
+		MockHttpServletRequestBuilder request = post("/update_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
+		resultActions.andExpect(model().attributeExists("error"));
+	}
+
+	@Test
+	public void testUpdateSubscriptionWithoutCurrentSubscription()
+		throws Exception {
+
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = post("/update_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(view().name("my_account"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
+		resultActions.andExpect(model().attributeExists("user"));
+		resultActions.andExpect(
+			model().attributeExists("stripePublishableKey"));
+		resultActions.andExpect(model().attributeExists("error"));
+	}
+
+	@Test
 	public void testViewMyAccount() throws Exception {
 		setUpUserUtil();
 
