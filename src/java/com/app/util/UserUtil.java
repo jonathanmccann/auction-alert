@@ -21,6 +21,7 @@ import com.app.exception.InvalidEmailAddressException;
 import com.app.model.User;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,14 @@ public class UserUtil {
 
 		_userDAO.updateUserDetails(
 			getCurrentUserId(), emailAddress, emailNotification);
+	}
+
+	public static void updateUserLoginDetails(
+			Timestamp lastLoginDate, String lastLoginIpAddress)
+		throws DatabaseConnectionException, SQLException {
+
+		_userDAO.updateUserLoginDetails(
+			getCurrentUserId(), lastLoginDate, lastLoginIpAddress);
 	}
 
 	public static void updateUserSubscription(

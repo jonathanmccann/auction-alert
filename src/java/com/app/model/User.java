@@ -14,6 +14,8 @@
 
 package com.app.model;
 
+import java.sql.Timestamp;
+
 /**
  * @author Jonathan McCann
  */
@@ -39,6 +41,14 @@ public class User {
 
 	public String getEmailAddress() {
 		return _emailAddress;
+	}
+
+	public Timestamp getLastLoginDate() {
+		return _lastLoginDate;
+	}
+
+	public String getLastLoginIpAddress() {
+		return _lastLoginIpAddress;
 	}
 
 	public String getPassword() {
@@ -85,6 +95,14 @@ public class User {
 		_emailNotification = emailNotification;
 	}
 
+	public void setLastLoginDate(Timestamp lastLoginDate) {
+		_lastLoginDate = lastLoginDate;
+	}
+
+	public void setLastLoginIpAddress(String lastLoginIpAddress) {
+		_lastLoginIpAddress = lastLoginIpAddress;
+	}
+
 	public void setPassword(String password) {
 		_password = password;
 	}
@@ -109,6 +127,8 @@ public class User {
 	private String _customerId;
 	private String _emailAddress;
 	private boolean _emailNotification;
+	private Timestamp _lastLoginDate;
+	private String _lastLoginIpAddress;
 	private String _password;
 	private boolean _pendingCancellation;
 	private String _salt;

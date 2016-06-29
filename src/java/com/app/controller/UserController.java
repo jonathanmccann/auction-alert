@@ -27,9 +27,12 @@ import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -59,7 +62,8 @@ public class UserController {
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.POST)
 	public String createAccount(
-			String emailAddress, String password, Map<String, Object> model)
+			String emailAddress, String password, HttpServletRequest request,
+			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
 		User user = null;
@@ -80,7 +84,7 @@ public class UserController {
 			return "create_account";
 		}
 
-		return logIn(emailAddress, password, model);
+		return logIn(emailAddress, password, request, model);
 	}
 
 	@RequestMapping(value = "/create_subscription", method = RequestMethod.POST)
@@ -187,7 +191,8 @@ public class UserController {
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
 	public String logIn(
-		String emailAddress, String password, Map<String, Object> model) {
+		String emailAddress, String password, HttpServletRequest request,
+		Map<String, Object> model) {
 
 		Subject currentUser = SecurityUtils.getSubject();
 
@@ -206,6 +211,10 @@ public class UserController {
 
 				currentUser.getSession().setAttribute(
 					"userId", user.getUserId());
+
+				UserUtil.updateUserLoginDetails(
+					new Timestamp(System.currentTimeMillis()),
+					request.getRemoteAddr());
 			}
 			catch (Exception e) {
 				model.put(

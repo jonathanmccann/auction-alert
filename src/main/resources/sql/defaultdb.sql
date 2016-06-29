@@ -50,7 +50,9 @@ CREATE TABLE IF NOT EXISTS User_(
 	customerId VARCHAR(100),
 	subscriptionId VARCHAR(100),
 	active BOOLEAN DEFAULT FALSE,
-	pendingCancellation BOOLEAN DEFAULT FALSE
+	pendingCancellation BOOLEAN DEFAULT FALSE,
+	lastLoginDate TIMESTAMP,
+	lastLoginIpAddress VARCHAR(20)
 );
 
 CREATE TABLE IF NOT EXISTS Release_(

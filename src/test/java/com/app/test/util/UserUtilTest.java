@@ -23,6 +23,7 @@ import com.app.util.UserUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.junit.Assert;
@@ -144,6 +145,25 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertFalse(user.isEmailNotification());
+	}
+
+	@Test
+	public void testUpdateUserLoginDetails() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		Assert.assertNull(user.getLastLoginDate());
+		Assert.assertNull(user.getLastLoginIpAddress());
+
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+
+		UserUtil.updateUserLoginDetails(date, "127.0.0.1");
+
+		user = UserUtil.getUserByUserId(user.getUserId());
+
+		Assert.assertNotNull(user.getLastLoginDate());
+		Assert.assertEquals("127.0.0.1", user.getLastLoginIpAddress());
 	}
 
 	@Test

@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -199,6 +200,25 @@ public class UserDAO {
 	}
 
 	@CacheEvict(value = "userByUserId", key = "#userId")
+	public void updateUserLoginDetails(
+			int userId, Timestamp lastLoginDate, String lastLoginIpAddress)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Updating login details for user ID: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_UPDATE_USER_LOGIN_DETAILS_SQL)) {
+
+			preparedStatement.setTimestamp(1, lastLoginDate);
+			preparedStatement.setString(2, lastLoginIpAddress);
+			preparedStatement.setInt(3, userId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUserSubscription(
 			int userId, String customerId, String subscriptionId,
 			boolean active, boolean pendingCancellation)
@@ -234,6 +254,8 @@ public class UserDAO {
 		user.setSubscriptionId(resultSet.getString("subscriptionId"));
 		user.setActive(resultSet.getBoolean("active"));
 		user.setPendingCancellation(resultSet.getBoolean("pendingCancellation"));
+		user.setLastLoginDate(resultSet.getTimestamp("lastLoginDate"));
+		user.setLastLoginIpAddress(resultSet.getString("lastLoginIpAddress"));
 
 		return user;
 	}
@@ -260,6 +282,10 @@ public class UserDAO {
 
 	private static final String _UPDATE_USER_DETAILS_SQL =
 		"UPDATE User_ SET emailAddress = ?, emailNotification = ? WHERE " +
+			"userId = ?";
+
+	public static final String _UPDATE_USER_LOGIN_DETAILS_SQL =
+		"UPDATE User_ SET lastLoginDate = ?, lastLoginIpAddress = ? WHERE " +
 			"userId = ?";
 
 	private static final String _UPDATE_USER_SUBSCRIPTION_SQL =
