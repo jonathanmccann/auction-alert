@@ -22,7 +22,6 @@ import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
-import com.app.util.ValidatorUtil;
 
 import freemarker.template.Template;
 
@@ -30,7 +29,6 @@ import java.io.StringWriter;
 
 import java.sql.SQLException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

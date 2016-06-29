@@ -56,7 +56,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.GET)
-	public String createAccount() throws Exception {
+	public String createAccount() {
 		return "create_account";
 	}
 
@@ -66,10 +66,8 @@ public class UserController {
 			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		User user = null;
-
 		try {
-			user = UserUtil.addUser(emailAddress, password);
+			UserUtil.addUser(emailAddress, password);
 		}
 		catch (DuplicateEmailAddressException deae) {
 			model.put(
@@ -100,47 +98,41 @@ public class UserController {
 			model.put(
 				"error",
 				LanguageUtil.getMessage("invalid-stripe-email-address"));
-
-			return viewMyAccount(model);
 		}
-
-		if (currentUser.isActive()) {
+		else if (currentUser.isActive()) {
 			model.put(
 				"error", LanguageUtil.getMessage("user-already-active"));
-
-			return viewMyAccount(model);
 		}
-
-		if (ValidatorUtil.isNotNull(currentUser.getCustomerId())) {
+		else if (ValidatorUtil.isNotNull(currentUser.getCustomerId())) {
 			model.put(
 				"error", LanguageUtil.getMessage("existing-subscription"));
-
-			return viewMyAccount(model);
 		}
+		else {
+			Map<String, Object> customerParams = new HashMap<>();
 
-		Map<String, Object> customerParams = new HashMap<>();
+			customerParams.put("email", stripeEmail);
+			customerParams.put(
+				"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
+			customerParams.put("source", stripeToken);
 
-		customerParams.put("email", stripeEmail);
-		customerParams.put("plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-		customerParams.put("source", stripeToken);
+			Customer customer = null;
 
-		Customer customer = null;
+			try {
+				customer = Customer.create(customerParams);
 
-		try {
-			customer = Customer.create(customerParams);
+				Subscription subscription =
+					customer.getSubscriptions().getData().get(0);
 
-			Subscription subscription =
-				customer.getSubscriptions().getData().get(0);
+				UserUtil.updateUserSubscription(
+					customer.getId(), subscription.getId(), true, false);
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
 
-			UserUtil.updateUserSubscription(
-				customer.getId(), subscription.getId(), true, false);
-		}
-		catch (Exception e) {
-			_log.error(e.getMessage());
-
-			model.put(
-				"error",
-				LanguageUtil.getMessage("incorrect-payment-information"));
+				model.put(
+					"error",
+					LanguageUtil.getMessage("incorrect-payment-information"));
+			}
 		}
 
 		return viewMyAccount(model);
