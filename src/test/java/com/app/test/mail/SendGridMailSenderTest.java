@@ -43,7 +43,8 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		Object classInstance = clazz.newInstance();
 
 		Method populateEmailMessageMethod = clazz.getDeclaredMethod(
-			"_populateEmailMessage", SearchQuery.class, List.class, String.class);
+			"_populateEmailMessage", SearchQuery.class, List.class,
+			String.class, String.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -59,7 +60,8 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		SendGrid.Email email =
 			(SendGrid.Email)populateEmailMessageMethod.invoke(
-				classInstance, searchQuery, searchResults, "test@test.com");
+				classInstance, searchQuery, searchResults, "test@test.com",
+				"unsubscribeToken");
 
 		Assert.assertEquals("test@test.com", email.getFrom());
 		Assert.assertTrue(
@@ -67,7 +69,9 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Keywords: Test keywords\n\nItem: itemTitle\n" +
 				"Auction Price: $14.99\nFixed Price: $29.99\n" +
-				"URL: http://www.ebay.com/itm/1234\n\n",
+					"URL: http://www.ebay.com/itm/1234\n\n" +
+						"<a href=\"/unsubscribe?emailAddress=test@test.com&" +
+							"unsubscribeToken=unsubscribeToken\">Unsubscribe</a>",
 			email.getText());
 
 		String[] recipientAddresses = new String[1];

@@ -117,7 +117,8 @@ public class UserUtilTest extends BaseTestCase {
 		User secondUser = UserUtil.addUser("test2@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			firstUser.getCustomerId(), firstUser.getSubscriptionId(), true,
+			firstUser.getUnsubscribeToken(), firstUser.getCustomerId(),
+			firstUser.getSubscriptionId(), true,
 			firstUser.isPendingCancellation());
 
 		List<Integer> activeUserIds = UserUtil.getUserIds(true);
@@ -129,6 +130,19 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(1, inactiveUserIds.size());
 		Assert.assertEquals(secondUser.getUserId(), (int)inactiveUserIds.get(0));
+	}
+
+	@Test
+	public void testUnsubscribeUserFromEmailNotifications() throws Exception {
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		Assert.assertTrue(user.isEmailNotification());
+
+		UserUtil.unsubscribeUserFromEmailNotifications(user.getEmailAddress());
+
+		user = UserUtil.getUserByUserId(user.getUserId());
+
+		Assert.assertFalse(user.isEmailNotification());
 	}
 
 	@Test
@@ -182,11 +196,12 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertFalse(user.isPendingCancellation());
 
 		UserUtil.updateUserSubscription(
-			"customerId", "subscriptionId", true, true);
+			"unsubscribeToken", "customerId", "subscriptionId", true, true);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
+		Assert.assertEquals("unsubscribeToken", user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());

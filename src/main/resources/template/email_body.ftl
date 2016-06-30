@@ -12,3 +12,4 @@ Fixed Price: ${searchResult.getFixedPrice()?string.currency}
 URL: ${searchResult.getItemURL()}
 
 </#list>
+<a href="/unsubscribe?emailAddress=${emailAddress}&unsubscribeToken=${unsubscribeToken}">Unsubscribe</a>

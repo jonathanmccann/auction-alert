@@ -45,7 +45,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		Method populateEmailMessageMethod = clazz.getDeclaredMethod(
 			"_populateEmailMessage", SearchQuery.class, List.class, String.class,
-			String.class, Session.class);
+			String.class, String.class, Session.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -70,7 +70,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		Message message = (Message)populateEmailMessageMethod.invoke(
 			classInstance, searchQuery, searchResults, "test@test.com",
-			"test@test.com", session);
+			"test@test.com", "unsubscribeToken", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertTrue(
@@ -78,7 +78,9 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Keywords: Test keywords\n\nItem: itemTitle\n" +
 				"Auction Price: $14.99\nFixed Price: $29.99\n" +
-				"URL: http://www.ebay.com/itm/1234\n\n",
+				"URL: http://www.ebay.com/itm/1234\n\n" +
+				"<a href=\"/unsubscribe?emailAddress=test@test.com&" +
+				"unsubscribeToken=unsubscribeToken\">Unsubscribe</a>",
 			message.getContent());
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];

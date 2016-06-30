@@ -123,8 +123,11 @@ public class UserController {
 				Subscription subscription =
 					customer.getSubscriptions().getData().get(0);
 
+				String customerId = customer.getId();
+
 				UserUtil.updateUserSubscription(
-					customer.getId(), subscription.getId(), true, false);
+					UserUtil.generateUnsubscribeToken(customerId), customerId,
+					subscription.getId(), true, false);
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -161,6 +164,7 @@ public class UserController {
 				subscription.cancel(parameters);
 
 				UserUtil.updateUserSubscription(
+					currentUser.getUnsubscribeToken(),
 					currentUser.getCustomerId(),
 					currentUser.getSubscriptionId(), true, true);
 			}
@@ -269,7 +273,8 @@ public class UserController {
 					subscription = Subscription.create(parameters);
 
 					UserUtil.updateUserSubscription(
-						customerId, subscription.getId(), true, false);
+						currentUser.getUnsubscribeToken(),customerId,
+						subscription.getId(), true, false);
 				}
 				else {
 					Map<String, Object> parameters = new HashMap<>();
@@ -280,7 +285,8 @@ public class UserController {
 					subscription.update(parameters);
 
 					UserUtil.updateUserSubscription(
-						customerId, subscriptionId, true, false);
+						currentUser.getUnsubscribeToken(), customerId,
+						subscriptionId, true, false);
 				}
 			}
 			catch (Exception e) {
@@ -299,6 +305,32 @@ public class UserController {
 		}
 
 		return viewMyAccount(model);
+	}
+
+	@RequestMapping(value = "/unsubscribe", method = RequestMethod.GET)
+	public String unsubscribeFromEmailNotifications(
+			String emailAddress, String unsubscribeToken,
+			Map<String, Object> model)
+		throws Exception {
+
+		User user = UserUtil.getUserByEmailAddress(emailAddress);
+
+		String userUnsubscribeToken = user.getUnsubscribeToken();
+
+		if (userUnsubscribeToken.equals(unsubscribeToken)) {
+			UserUtil.unsubscribeUserFromEmailNotifications(emailAddress);
+
+			model.put(
+				"unsubscribeMessage",
+				LanguageUtil.getMessage("unsubscribe-successful"));
+		}
+		else {
+			model.put(
+				"unsubscribeMessage",
+				LanguageUtil.getMessage("unsubscribe-failure"));
+		}
+
+		return "unsubscribe";
 	}
 
 	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)

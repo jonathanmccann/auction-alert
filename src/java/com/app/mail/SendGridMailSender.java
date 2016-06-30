@@ -66,7 +66,7 @@ public class SendGridMailSender implements MailSender {
 
 				SendGrid.Email email = _populateEmailMessage(
 					mapEntry.getKey(), mapEntry.getValue(),
-					user.getEmailAddress());
+					user.getEmailAddress(), user.getUnsubscribeToken());
 
 				sendgrid.send(email);
 			}
@@ -78,7 +78,7 @@ public class SendGridMailSender implements MailSender {
 
 	private SendGrid.Email _populateEmailMessage(
 			SearchQuery searchQuery, List<SearchResult> searchResults,
-			String recipientEmailAddress)
+			String recipientEmailAddress, String unsubscribeToken)
 		throws Exception {
 
 		SendGrid.Email email = new SendGrid.Email();
@@ -92,8 +92,10 @@ public class SendGridMailSender implements MailSender {
 
 		Map<String, Object> rootMap = new HashMap<>();
 
+		rootMap.put("emailAddress", recipientEmailAddress);
 		rootMap.put("searchQuery", searchQuery);
 		rootMap.put("searchResults", searchResults);
+		rootMap.put("unsubscribeToken", unsubscribeToken);
 
 		StringWriter stringWriter = new StringWriter();
 

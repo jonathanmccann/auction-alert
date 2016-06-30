@@ -73,7 +73,7 @@ public class DefaultMailSender implements MailSender {
 
 				Message emailMessage = _populateEmailMessage(
 					mapEntry.getKey(), mapEntry.getValue(),
-					user.getEmailAddress(),
+					user.getEmailAddress(), user.getUnsubscribeToken(),
 					session.getProperty(
 						PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
 					session);
@@ -102,7 +102,8 @@ public class DefaultMailSender implements MailSender {
 
 	private static Message _populateEmailMessage(
 			SearchQuery searchQuery, List<SearchResult> searchResults,
-			String recipientEmailAddress, String emailFrom, Session session)
+			String recipientEmailAddress, String emailFrom,
+			String unsubscribeToken, Session session)
 		throws Exception {
 
 		Message message = new MimeMessage(session);
@@ -118,8 +119,10 @@ public class DefaultMailSender implements MailSender {
 
 		Map<String, Object> rootMap = new HashMap<>();
 
+		rootMap.put("emailAddress", recipientEmailAddress);
 		rootMap.put("searchQuery", searchQuery);
 		rootMap.put("searchResults", searchResults);
+		rootMap.put("unsubscribeToken", unsubscribeToken);
 
 		StringWriter stringWriter = new StringWriter();
 

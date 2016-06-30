@@ -63,6 +63,10 @@ public class User {
 		return _subscriptionId;
 	}
 
+	public String getUnsubscribeToken() {
+		return _unsubscribeToken;
+	}
+
 	public int getUserId() {
 		return _userId;
 	}
@@ -119,6 +123,10 @@ public class User {
 		_subscriptionId = subscriptionId;
 	}
 
+	public void setUnsubscribeToken(String unsubscribeToken) {
+		_unsubscribeToken = unsubscribeToken;
+	}
+
 	public void setUserId(int userId) {
 		_userId = userId;
 	}
@@ -133,6 +141,7 @@ public class User {
 	private boolean _pendingCancellation;
 	private String _salt;
 	private String _subscriptionId;
+	private String _unsubscribeToken;
 	private int _userId;
 
 }
