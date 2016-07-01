@@ -59,6 +59,7 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"JDBC Default Username", PropertiesValues.JDBC_DEFAULT_USERNAME);
 		Assert.assertEquals(5, PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
+		Assert.assertEquals(30, PropertiesValues.NUMBER_OF_EMAILS_PER_DAY);
 		Assert.assertEquals(
 			"test@test.com", PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 		Assert.assertEquals(

@@ -41,6 +41,9 @@ public class PropertiesKeys {
 	public static final String MAIL_SMTP_STARTTLS_ENABLE =
 		"mail.smtp.starttls.enable";
 
+	public static final String NUMBER_OF_EMAILS_PER_DAY =
+		"number.of.emails.per.day";
+
 	public static final String NUMBER_OF_SEARCH_RESULTS =
 		"number.of.search.results";
 
