@@ -68,28 +68,16 @@ public class SendGridMailSender implements MailSender {
 			searchQueryResultMap.size(), userId);
 
 		try {
-			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
-					searchQueryResultMap.entrySet()) {
+			SendGrid sendgrid = new SendGrid(
+				PropertiesValues.SENDGRID_API_KEY);
 
-				SendGrid sendgrid = new SendGrid(
-					PropertiesValues.SENDGRID_API_KEY);
+			SendGrid.Email email = _populateEmailMessage(
+				searchQueryResultMap, user.getEmailAddress(),
+				user.getUnsubscribeToken());
 
-				SendGrid.Email email = _populateEmailMessage(
-					mapEntry.getKey(), mapEntry.getValue(),
-					user.getEmailAddress(), user.getUnsubscribeToken());
+			sendgrid.send(email);
 
-				sendgrid.send(email);
-
-				emailsSent++;
-
-				if (emailsSent >= PropertiesValues.NUMBER_OF_EMAILS_PER_DAY) {
-					_log.info(
-						"User ID: {} has reached their email limit for the day",
-						user.getUserId());
-
-					return;
-				}
-			}
+			emailsSent++;
 		}
 		catch (Exception e) {
 			_log.error("Unable to send search results to userId: {}", userId, e);
@@ -99,7 +87,7 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	private SendGrid.Email _populateEmailMessage(
-			SearchQuery searchQuery, List<SearchResult> searchResults,
+			Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
 			String recipientEmailAddress, String unsubscribeToken)
 		throws Exception {
 
@@ -115,8 +103,7 @@ public class SendGridMailSender implements MailSender {
 		Map<String, Object> rootMap = new HashMap<>();
 
 		rootMap.put("emailAddress", recipientEmailAddress);
-		rootMap.put("searchQuery", searchQuery);
-		rootMap.put("searchResults", searchResults);
+		rootMap.put("searchQueryResultMap", searchQueryResultMap);
 		rootMap.put("unsubscribeToken", unsubscribeToken);
 
 		StringWriter stringWriter = new StringWriter();

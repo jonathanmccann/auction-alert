@@ -21,7 +21,9 @@ import com.app.test.BaseTestCase;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -44,8 +46,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		Object classInstance = clazz.newInstance();
 
 		Method populateEmailMessageMethod = clazz.getDeclaredMethod(
-			"_populateEmailMessage", SearchQuery.class, List.class, String.class,
-			String.class, String.class, Session.class);
+			"_populateEmailMessage", Map.class, String.class, String.class,
+			String.class, Session.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -59,6 +61,11 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+			new HashMap<>();
+
+		searchQueryResultMap.put(searchQuery, searchResults);
+
 		Method _authenticateOutboundEmailAddressMethod =
 			clazz.getDeclaredMethod("_authenticateOutboundEmailAddress");
 
@@ -69,7 +76,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 				classInstance);
 
 		Message message = (Message)populateEmailMessageMethod.invoke(
-			classInstance, searchQuery, searchResults, "test@test.com",
+			classInstance, searchQueryResultMap, "test@test.com",
 			"test@test.com", "unsubscribeToken", session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());

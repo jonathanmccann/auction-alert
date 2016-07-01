@@ -46,6 +46,7 @@ public class MailUtil {
 		Resource resource = new ClassPathResource("/template");
 
 		_configuration.setDirectoryForTemplateLoading(resource.getFile());
+		_configuration.setAPIBuiltinEnabled(true);
 
 		_emailTemplate = _configuration.getTemplate("/email_body.ftl");
 
@@ -63,7 +64,7 @@ public class MailUtil {
 		};
 
 	private static final Configuration _configuration = new Configuration(
-		Configuration.VERSION_2_3_21);
+		Configuration.VERSION_2_3_24);
 
 	private static Template _emailTemplate;
 

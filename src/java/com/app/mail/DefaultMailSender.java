@@ -78,28 +78,15 @@ public class DefaultMailSender implements MailSender {
 		Session session = _authenticateOutboundEmailAddress();
 
 		try {
-			for (Map.Entry<SearchQuery, List<SearchResult>> mapEntry :
-					searchQueryResultMap.entrySet()) {
+			Message emailMessage = _populateEmailMessage(
+				searchQueryResultMap, user.getEmailAddress(),
+				user.getUnsubscribeToken(), session.getProperty(
+					PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
+				session);
 
-				Message emailMessage = _populateEmailMessage(
-					mapEntry.getKey(), mapEntry.getValue(),
-					user.getEmailAddress(), user.getUnsubscribeToken(),
-					session.getProperty(
-						PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
-					session);
+			Transport.send(emailMessage);
 
-				Transport.send(emailMessage);
-
-				emailsSent++;
-
-				if (emailsSent >= PropertiesValues.NUMBER_OF_EMAILS_PER_DAY) {
-					_log.info(
-						"User ID: {} has reached their email limit for the day",
-						user.getUserId());
-
-					return;
-				}
-			}
+			emailsSent++;
 		}
 		catch (Exception e) {
 			_log.error("Unable to send search results to userId: {}", userId, e);
@@ -123,7 +110,7 @@ public class DefaultMailSender implements MailSender {
 	}
 
 	private static Message _populateEmailMessage(
-			SearchQuery searchQuery, List<SearchResult> searchResults,
+			Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
 			String recipientEmailAddress, String emailFrom,
 			String unsubscribeToken, Session session)
 		throws Exception {
@@ -142,8 +129,7 @@ public class DefaultMailSender implements MailSender {
 		Map<String, Object> rootMap = new HashMap<>();
 
 		rootMap.put("emailAddress", recipientEmailAddress);
-		rootMap.put("searchQuery", searchQuery);
-		rootMap.put("searchResults", searchResults);
+		rootMap.put("searchQueryResultMap", searchQueryResultMap);
 		rootMap.put("unsubscribeToken", unsubscribeToken);
 
 		StringWriter stringWriter = new StringWriter();

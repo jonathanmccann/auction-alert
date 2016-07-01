@@ -24,7 +24,9 @@ import com.sendgrid.SendGrid;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,8 +45,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		Object classInstance = clazz.newInstance();
 
 		Method populateEmailMessageMethod = clazz.getDeclaredMethod(
-			"_populateEmailMessage", SearchQuery.class, List.class,
-			String.class, String.class);
+			"_populateEmailMessage", Map.class,	String.class, String.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -58,9 +59,14 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+			new HashMap<>();
+
+		searchQueryResultMap.put(searchQuery, searchResults);
+
 		SendGrid.Email email =
 			(SendGrid.Email)populateEmailMessageMethod.invoke(
-				classInstance, searchQuery, searchResults, "test@test.com",
+				classInstance, searchQueryResultMap, "test@test.com",
 				"unsubscribeToken");
 
 		Assert.assertEquals("test@test.com", email.getFrom());
