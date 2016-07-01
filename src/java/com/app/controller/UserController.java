@@ -57,7 +57,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserController {
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.GET)
-	public String createAccount() {
+	public String createAccount(Map<String, Object> model) {
+		model.put(
+			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
+
 		return "create_account";
 	}
 

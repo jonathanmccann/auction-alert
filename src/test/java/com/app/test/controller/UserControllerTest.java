@@ -335,7 +335,8 @@ public class UserControllerTest extends BaseTestCase {
 		this.mockMvc.perform(get("/create_account"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("create_account"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/create_account.jsp"));
+			.andExpect(forwardedUrl("/WEB-INF/jsp/create_account.jsp"))
+			.andExpect(model().attributeExists("stripePublishableKey"));
 	}
 
 	@Test

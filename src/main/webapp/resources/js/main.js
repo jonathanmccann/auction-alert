@@ -7,7 +7,7 @@ $(window).load(function() {
 		$content.slideToggle(500);
 	});
 
-	$("#emailAddress, #user\\.emailAddress, #keywords, #maxPrice, #minPrice, #password").tooltipster({
+	$("#user\\.emailAddress, #keywords, #maxPrice, #minPrice").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
@@ -35,7 +35,7 @@ $(window).load(function() {
 		return parseFloat(value) < parseFloat($min.val());
 	}, "Max price must be greater than min price");
 
-	$('#addSearchQueryForm, #createAccountForm, #updateUserForm').validate({
+	$('#addSearchQueryForm, #updateUserForm').validate({
 		errorPlacement: function(error, element) {
 			var lastError = $(element).data('lastError');
 			var newError = $(error).text();
@@ -51,12 +51,6 @@ $(window).load(function() {
 			$(element).tooltipster('hide');
 		},
 		rules: {
-			emailAddress: {
-				minlength: 3,
-				maxlength: 255,
-				required: true,
-				email: true
-			},
 			keywords: {
 				required: true
 			},
@@ -67,9 +61,6 @@ $(window).load(function() {
 			maxPrice: {
 				decimalPlaces: true
 			},
-			password: {
-				required: true
-			},
 			'user.emailAddress': {
 				minlength: 3,
 				maxlength: 255,
@@ -77,10 +68,6 @@ $(window).load(function() {
 				email: true
 			}
 		}
-	});
-
-	$('#createAccountSubmit').click(function() {
-		$('#createAccountForm').valid();
 	});
 
 	$('#updateSearchQuerySubmit').click(function() {

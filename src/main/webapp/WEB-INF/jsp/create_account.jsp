@@ -30,7 +30,8 @@
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/stripe.js" />" type="text/javascript"></script>
+		<script src="https://checkout.stripe.com/checkout.js" type="text/javascript"></script>
 	</head>
 	<body>
 		<div>
@@ -38,6 +39,8 @@
 			<h3>My Details:</h3>
 
 			<shiro:guest>
+				<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
+
 				<form:form action="create_account" commandName="createAccount" id="createAccountForm" method="post">
 					<div>
 						<b>Email Address: </b><input id="emailAddress" name="emailAddress" />
@@ -53,9 +56,10 @@
 						<br>
 
 						<b>Password: </b><input id="password" name="password" type="password" />
-					</div>
-					<div>
-						<input id="createAccountSubmit" type="submit" value="Create Account" />
+
+						<br>
+
+						<input id="createAccountSubmit" type="submit" value="Subscribe" />
 					</div>
 				</form:form>
 			</shiro:guest>
