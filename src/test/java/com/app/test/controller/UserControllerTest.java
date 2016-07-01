@@ -497,7 +497,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		Assert.assertTrue(user.isEmailNotification());
 
-		request = post("/unsubscribe");
+		request = get("/unsubscribe");
 
 		request.param("emailAddress", _USER.getEmailAddress());
 		request.param("unsubscribeToken", "unsubscribeToken");
