@@ -43,6 +43,10 @@ public class User {
 		return _emailAddress;
 	}
 
+	public int getEmailsSent() {
+		return _emailsSent;
+	}
+
 	public Timestamp getLastLoginDate() {
 		return _lastLoginDate;
 	}
@@ -99,6 +103,10 @@ public class User {
 		_emailNotification = emailNotification;
 	}
 
+	public void setEmailsSent(int emailsSent) {
+		_emailsSent = emailsSent;
+	}
+
 	public void setLastLoginDate(Timestamp lastLoginDate) {
 		_lastLoginDate = lastLoginDate;
 	}
@@ -134,6 +142,7 @@ public class User {
 	private boolean _active;
 	private String _customerId;
 	private String _emailAddress;
+	private int _emailsSent;
 	private boolean _emailNotification;
 	private Timestamp _lastLoginDate;
 	private String _lastLoginIpAddress;

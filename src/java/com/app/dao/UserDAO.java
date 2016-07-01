@@ -172,6 +172,23 @@ public class UserDAO {
 	}
 
 	@CacheEvict(value = "userByUserId", key = "#userId")
+	public void updateEmailsSent(int userId, int emailsSent)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Updating emails sent for user ID: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_UPDATE_EMAILS_SENT_SQL)) {
+
+			preparedStatement.setInt(1, emailsSent);
+			preparedStatement.setInt(2, userId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUser(
 			int userId, String emailAddress, boolean emailNotification,
 			String customerId, String subscriptionId, boolean active,
@@ -268,6 +285,7 @@ public class UserDAO {
 		user.setSalt(resultSet.getString("salt"));
 		user.setEmailNotification(resultSet.getBoolean("emailNotification"));
 		user.setUnsubscribeToken(resultSet.getString("unsubscribeToken"));
+		user.setEmailsSent(resultSet.getInt("emailsSent"));
 		user.setCustomerId(resultSet.getString("customerId"));
 		user.setSubscriptionId(resultSet.getString("subscriptionId"));
 		user.setActive(resultSet.getBoolean("active"));
@@ -295,6 +313,9 @@ public class UserDAO {
 
 	public static final String _UNSUBSCRIBE_USER_FROM_EMAIL_NOTIFICATIONS_SQL =
 		"UPDATE User_ SET emailNotification = false WHERE emailAddress = ?";
+
+	public static final String _UPDATE_EMAILS_SENT_SQL =
+		"UPDATE User_ SET emailsSent = ? where userId = ?";
 
 	private static final String _UPDATE_USER_SQL =
 		"UPDATE User_ SET emailAddress = ?, emailNotification = ?, " +

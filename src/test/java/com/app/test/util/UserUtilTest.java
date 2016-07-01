@@ -129,9 +129,21 @@ public class UserUtilTest extends BaseTestCase {
 		List<Integer> inactiveUserIds = UserUtil.getUserIds(false);
 
 		Assert.assertEquals(1, inactiveUserIds.size());
-		Assert.assertEquals(secondUser.getUserId(), (int)inactiveUserIds.get(0));
+		Assert.assertEquals(secondUser.getUserId(), (int) inactiveUserIds.get(0));
 	}
 
+	@Test
+	public void testUpdateEmailsSent() throws Exception {
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		Assert.assertEquals(0, user.getEmailsSent());
+
+		UserUtil.updateEmailsSent(user.getUserId(), 5);
+
+		user = UserUtil.getUserByUserId(user.getUserId());
+
+		Assert.assertEquals(5, user.getEmailsSent());
+	}
 	@Test
 	public void testUnsubscribeUserFromEmailNotifications() throws Exception {
 		User user = UserUtil.addUser("test@test.com", "password");

@@ -109,6 +109,12 @@ public class UserUtil {
 		_userDAO.unsubscribeUserFromEmailNotifications(emailAddress);
 	}
 
+	public static void updateEmailsSent(int userId, int emailsSent)
+		throws DatabaseConnectionException, SQLException {
+
+		_userDAO.updateEmailsSent(userId, emailsSent);
+	}
+
 	public static void updateUserDetails(
 			String emailAddress, boolean emailNotification)
 		throws
