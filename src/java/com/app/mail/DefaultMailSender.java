@@ -61,6 +61,16 @@ public class DefaultMailSender implements MailSender {
 			return;
 		}
 
+		int emailsSent = user.getEmailsSent();
+
+		if (emailsSent >= PropertiesValues.NUMBER_OF_EMAILS_PER_DAY) {
+			_log.info(
+				"User ID: {} has reached their email limit for the day",
+				user.getUserId());
+
+			return;
+		}
+
 		_log.info(
 			"Sending search results for {} queries for userId: {}",
 			searchQueryResultMap.size(), userId);
@@ -79,11 +89,23 @@ public class DefaultMailSender implements MailSender {
 					session);
 
 				Transport.send(emailMessage);
+
+				emailsSent++;
+
+				if (emailsSent >= PropertiesValues.NUMBER_OF_EMAILS_PER_DAY) {
+					_log.info(
+						"User ID: {} has reached their email limit for the day",
+						user.getUserId());
+
+					return;
+				}
 			}
 		}
 		catch (Exception e) {
 			_log.error("Unable to send search results to userId: {}", userId, e);
 		}
+
+		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
 	}
 
 	private static Session _authenticateOutboundEmailAddress() {
