@@ -71,12 +71,16 @@ public class UserController {
 			UserUtil.addUser(emailAddress, password);
 		}
 		catch (DuplicateEmailAddressException deae) {
+			_log.error(deae.getMessage());
+
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("duplicate-email-address"));
 
 			return "create_account";
 		}
 		catch (InvalidEmailAddressException ieae) {
+			_log.error(ieae.getMessage());
+
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-email-address"));
 
