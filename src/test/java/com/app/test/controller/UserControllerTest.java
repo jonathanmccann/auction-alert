@@ -16,10 +16,7 @@ package com.app.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.app.model.User;
 import com.app.test.BaseTestCase;
@@ -90,13 +87,9 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeDoesNotExist("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -123,13 +116,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
@@ -139,7 +129,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER.getUnsubscribeToken(),  "customerId",
+			_USER.getUnsubscribeToken(), "customerId",
 			_USER.getSubscriptionId(), false, _USER.isPendingCancellation());
 
 		MockHttpServletRequestBuilder request = post("/create_subscription");
@@ -149,13 +139,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
@@ -171,13 +158,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
@@ -193,13 +177,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
@@ -217,13 +198,9 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeDoesNotExist("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -251,13 +228,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -282,13 +256,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -315,13 +286,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -348,13 +316,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -381,12 +346,10 @@ public class UserControllerTest extends BaseTestCase {
 			"unsubscribeToken", "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/resubscribe"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("my_account"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
-			.andExpect(model().attributeExists("user"))
-			.andExpect(model().attributeExists("stripePublishableKey"))
-			.andExpect(model().attributeExists("error"));
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"))
+			.andExpect(flash().attributeExists("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -407,12 +370,9 @@ public class UserControllerTest extends BaseTestCase {
 			"unsubscribeToken", "customerId", "subscriptionId", false, true);
 
 		this.mockMvc.perform(post("/resubscribe"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("my_account"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
-			.andExpect(model().attributeExists("user"))
-			.andExpect(model().attributeExists("stripePublishableKey"))
-			.andExpect(model().attributeDoesNotExist("error"));
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -433,12 +393,9 @@ public class UserControllerTest extends BaseTestCase {
 			"unsubscribeToken", "customerId", "subscriptionId", false, true);
 
 		this.mockMvc.perform(post("/resubscribe"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("my_account"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
-			.andExpect(model().attributeExists("user"))
-			.andExpect(model().attributeExists("stripePublishableKey"))
-			.andExpect(model().attributeDoesNotExist("error"));
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -457,12 +414,10 @@ public class UserControllerTest extends BaseTestCase {
 			"unsubscribeToken", "customerId", "subscriptionId", false, true);
 
 		this.mockMvc.perform(post("/resubscribe"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("my_account"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
-			.andExpect(model().attributeExists("user"))
-			.andExpect(model().attributeExists("stripePublishableKey"))
-			.andExpect(model().attributeExists("error"));
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"))
+			.andExpect(flash().attributeExists("error"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -522,12 +477,9 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeDoesNotExist("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
 
 		_assertUpdatedUser();
 	}
@@ -544,12 +496,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 
 		_assertNotUpdatedUser();
 	}
@@ -564,12 +514,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 
 		_assertNotUpdatedUser();
 	}
@@ -584,12 +532,9 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeDoesNotExist("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
 
 		_assertNotUpdatedUser();
 	}
@@ -607,13 +552,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
@@ -632,13 +574,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
@@ -654,13 +593,10 @@ public class UserControllerTest extends BaseTestCase {
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("my_account"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"));
-		resultActions.andExpect(model().attributeExists("user"));
-		resultActions.andExpect(
-			model().attributeExists("stripePublishableKey"));
-		resultActions.andExpect(model().attributeExists("error"));
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test

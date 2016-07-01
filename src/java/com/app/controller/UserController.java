@@ -48,6 +48,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * @author Jonathan McCann
@@ -63,31 +64,32 @@ public class UserController {
 	@RequestMapping(value = "/create_account", method = RequestMethod.POST)
 	public String createAccount(
 			String emailAddress, String password, HttpServletRequest request,
-			Map<String, Object> model)
+			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		try {
 			UserUtil.addUser(emailAddress, password);
 		}
 		catch (DuplicateEmailAddressException deae) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("duplicate-email-address"));
 
 			return "create_account";
 		}
 		catch (InvalidEmailAddressException ieae) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-email-address"));
 
 			return "create_account";
 		}
 
-		return logIn(emailAddress, password, request, model);
+		return logIn(emailAddress, password, request, redirectAttributes);
 	}
 
 	@RequestMapping(value = "/create_subscription", method = RequestMethod.POST)
 	public String createSubscription(
-			String stripeToken, String stripeEmail, Map<String, Object> model)
+			String stripeToken, String stripeEmail,
+			RedirectAttributes redirectAttributes)
 		throws Exception {
 
 		int userId = UserUtil.getCurrentUserId();
@@ -95,16 +97,16 @@ public class UserController {
 		User currentUser = UserUtil.getUserByUserId(userId);
 
 		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error",
 				LanguageUtil.getMessage("invalid-stripe-email-address"));
 		}
 		else if (currentUser.isActive()) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("user-already-active"));
 		}
 		else if (ValidatorUtil.isNotNull(currentUser.getCustomerId())) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("existing-subscription"));
 		}
 		else {
@@ -132,17 +134,17 @@ public class UserController {
 			catch (Exception e) {
 				_log.error(e.getMessage());
 
-				model.put(
+				redirectAttributes.addFlashAttribute(
 					"error",
 					LanguageUtil.getMessage("incorrect-payment-information"));
 			}
 		}
 
-		return viewMyAccount(model);
+		return "redirect:my_account";
 	}
 
 	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
-	public String deleteSubscription(Map<String, Object> model)
+	public String deleteSubscription(RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		User currentUser = UserUtil.getCurrentUser();
@@ -171,24 +173,33 @@ public class UserController {
 			catch (Exception e) {
 				_log.error(e.getMessage());
 
-				model.put(
+				redirectAttributes.addFlashAttribute(
 					"error",
 					LanguageUtil.getMessage("subscription-cancellation"));
 			}
 		}
 		else {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error",
 				LanguageUtil.getMessage("subscription-already-cancelled"));
 		}
 
-		return viewMyAccount(model);
+		return "redirect:my_account";
+	}
+
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	public String home(
+		@ModelAttribute("error")String error, Map<String, Object> model) {
+
+		model.put("error", error);
+
+		return "home";
 	}
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
 	public String logIn(
 		String emailAddress, String password, HttpServletRequest request,
-		Map<String, Object> model) {
+		RedirectAttributes redirectAttributes) {
 
 		Subject currentUser = SecurityUtils.getSubject();
 
@@ -213,7 +224,7 @@ public class UserController {
 					request.getRemoteAddr());
 			}
 			catch (Exception e) {
-				model.put(
+				redirectAttributes.addFlashAttribute(
 					"error", LanguageUtil.getMessage("authentication-failure"));
 
 				if (e instanceof UnknownAccountException) {
@@ -234,7 +245,7 @@ public class UserController {
 			}
 		}
 
-		return "home";
+		return "redirect:home";
 	}
 
 	@RequestMapping(value = "/log_out", method = RequestMethod.GET)
@@ -243,11 +254,11 @@ public class UserController {
 
 		currentUser.logout();
 
-		return "home";
+		return "redirect:home";
 	}
 
 	@RequestMapping(value = "/resubscribe", method = RequestMethod.POST)
-	public String resubscribe(Map<String, Object> model)
+	public String resubscribe(RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		User currentUser = UserUtil.getCurrentUser();
@@ -292,19 +303,19 @@ public class UserController {
 			catch (Exception e) {
 				_log.error(e.getMessage());
 
-				model.put(
+				redirectAttributes.addFlashAttribute(
 					"error",
 					LanguageUtil.getMessage(
 						"subscription-resubscribe-failure"));
 			}
 		}
 		else {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error",
 				LanguageUtil.getMessage("subscription-resubscribe-failure"));
 		}
 
-		return viewMyAccount(model);
+		return "redirect:my_account";
 	}
 
 	@RequestMapping(value = "/unsubscribe", method = RequestMethod.GET)
@@ -335,7 +346,8 @@ public class UserController {
 
 	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)
 	public String updateSubscription(
-			String stripeToken, String stripeEmail, Map<String, Object> model)
+			String stripeToken, String stripeEmail,
+			RedirectAttributes redirectAttributes)
 		throws Exception {
 
 		int userId = UserUtil.getCurrentUserId();
@@ -343,12 +355,12 @@ public class UserController {
 		User currentUser = UserUtil.getUserByUserId(userId);
 
 		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error",
 				LanguageUtil.getMessage("invalid-stripe-email-address"));
 		}
 		else if (ValidatorUtil.isNull(currentUser.getCustomerId())) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("no-existing-subscription"));
 		}
 		else {
@@ -365,18 +377,19 @@ public class UserController {
 			catch (Exception e) {
 				_log.error(e.getMessage());
 
-				model.put(
+				redirectAttributes.addFlashAttribute(
 					"error",
 					LanguageUtil.getMessage("incorrect-payment-information"));
 			}
 		}
 
-		return viewMyAccount(model);
+		return "redirect:my_account";
 	}
 
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
-			@ModelAttribute("user")User user, Map<String, Object> model)
+			@ModelAttribute("user")User user,
+			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		try {
@@ -384,21 +397,23 @@ public class UserController {
 				user.getEmailAddress(), user.isEmailNotification());
 		}
 		catch (DuplicateEmailAddressException deae) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("duplicate-email-address"));
 		}
 		catch (InvalidEmailAddressException ieae) {
-			model.put(
+			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-email-address"));
 		}
 
-		return viewMyAccount(model);
+		return "redirect:my_account";
 	}
 
 	@RequestMapping(value = "/my_account", method = RequestMethod.GET)
-	public String viewMyAccount(Map<String, Object> model)
+	public String viewMyAccount(
+			@ModelAttribute("error")String error, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
+		model.put("error", error);
 		model.put("user", UserUtil.getCurrentUser());
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);

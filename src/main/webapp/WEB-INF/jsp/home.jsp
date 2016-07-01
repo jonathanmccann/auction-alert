@@ -34,8 +34,8 @@
 				<div style="float: left; width: 50%">
 					<h3>Returning Users</h3>
 
-					<c:if test="${not empty authenticationError}">
-						${authenticationError}</br>
+					<c:if test="${not empty error}">
+						${error}</br>
 					</c:if>
 
 					<form:form action="log_in" commandName="logIn" method="post">
