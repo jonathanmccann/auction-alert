@@ -20,16 +20,13 @@ import com.app.exception.InvalidEmailAddressException;
 import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
+import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
-
-import com.stripe.model.Customer;
-import com.stripe.model.Subscription;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,24 +92,9 @@ public class UserController {
 			return "redirect:create_account";
 		}
 
-		Map<String, Object> customerParams = new HashMap<>();
-
-		customerParams.put("email", emailAddress);
-		customerParams.put(
-			"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-		customerParams.put("source", stripeToken);
-
 		try {
-			Customer customer = Customer.create(customerParams);
-
-			Subscription subscription =
-				customer.getSubscriptions().getData().get(0);
-
-			String customerId = customer.getId();
-
-			UserUtil.updateUserSubscription(
-				user.getUserId(), UserUtil.generateUnsubscribeToken(customerId),
-				customerId, subscription.getId(), true, false);
+			StripeUtil.createSubscription(
+				user.getUserId(), emailAddress, stripeToken);
 		}
 		catch (Exception e) {
 			_log.error(e.getMessage());
@@ -140,21 +122,8 @@ public class UserController {
 		if (ValidatorUtil.isNotNull(subscriptionId) &&
 			currentUser.isActive() && !currentUser.isPendingCancellation()) {
 
-			Subscription subscription = null;
-
 			try {
-				subscription = Subscription.retrieve(subscriptionId);
-
-				Map<String, Object> parameters = new HashMap<>();
-
-				parameters.put("at_period_end", true);
-
-				subscription.cancel(parameters);
-
-				UserUtil.updateUserSubscription(
-					currentUser.getUserId(), currentUser.getUnsubscribeToken(),
-					currentUser.getCustomerId(),
-					currentUser.getSubscriptionId(), true, true);
+				StripeUtil.deleteSubscription(subscriptionId);
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -255,38 +224,8 @@ public class UserController {
 			(!currentUser.isActive() || currentUser.isPendingCancellation())) {
 
 			try {
-				String customerId = currentUser.getCustomerId();
-
-				Subscription subscription = Subscription.retrieve(
-					subscriptionId);
-
-				if (subscription == null) {
-					Map<String, Object> parameters = new HashMap<>();
-
-					parameters.put("customer", customerId);
-					parameters.put(
-						"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-
-					subscription = Subscription.create(parameters);
-
-					UserUtil.updateUserSubscription(
-						currentUser.getUserId(),
-						currentUser.getUnsubscribeToken(), customerId,
-						subscription.getId(), true, false);
-				}
-				else {
-					Map<String, Object> parameters = new HashMap<>();
-
-					parameters.put(
-						"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-
-					subscription.update(parameters);
-
-					UserUtil.updateUserSubscription(
-						currentUser.getUserId(),
-						currentUser.getUnsubscribeToken(), customerId,
-						subscriptionId, true, false);
-				}
+				StripeUtil.resubscribe(
+					currentUser.getCustomerId(), subscriptionId);
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -348,15 +287,8 @@ public class UserController {
 				LanguageUtil.getMessage("invalid-stripe-email-address"));
 		}
 		else {
-			Map<String, Object> customerParams = new HashMap<>();
-
-			customerParams.put("source", stripeToken);
-
 			try {
-				Customer customer = Customer.retrieve(
-					currentUser.getCustomerId());
-
-				customer.update(customerParams);
+				StripeUtil.updateSubscription(stripeToken);
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
