@@ -45,12 +45,8 @@
 					<div>
 						<b>Email Address: </b><input id="emailAddress" name="emailAddress" />
 
-						<c:if test="${not empty duplicateEmailAddressException}">
-							${duplicateEmailAddressException}
-						</c:if>
-
-						<c:if test="${not empty invalidEmailAddressException}">
-							${invalidEmailAddressException}
+						<c:if test="${not empty error}">
+							${error}
 						</c:if>
 
 						<br>

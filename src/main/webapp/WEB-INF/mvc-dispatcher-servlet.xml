@@ -22,7 +22,6 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/activate_search_query" />
 			<mvc:mapping path="/add_search_query" />
-			<mvc:mapping path="/create_subscription" />
 			<mvc:mapping path="/delete_search_query" />
 			<mvc:mapping path="/delete_subscription" />
 			<mvc:mapping path="/deactivate_search_query" />

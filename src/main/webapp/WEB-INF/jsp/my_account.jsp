@@ -56,25 +56,9 @@
 			</form:form>
 
 			<c:choose>
-				<c:when test="${(not empty user.customerId) && (not empty user.subscriptionId) && ((not user.active) || (user.pendingCancellation))}">
+				<c:when test="${(not empty user.subscriptionId) && ((not user.active) || (user.pendingCancellation))}">
 					<form:form action="/resubscribe" method="POST">
 						<input id="resubscribe" type="submit" value="Resubscribe" />
-					</form:form>
-				</c:when>
-				<c:when test="${not user.active}">
-					<form:form action="/create_subscription" method="POST">
-						<script
-							src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-							data-key="${stripePublishableKey}"
-							data-image="images/marketplace.png"
-							data-name="eBay Searcher"
-							data-description="Subscription ($9.99 per month)"
-							data-amount="999"
-							data-label="Subscribe"
-							data-allow-remember-me="false"
-							data-email="${user.emailAddress}"
-							data-zip-code="true">
-						</script>
 					</form:form>
 				</c:when>
 				<c:otherwise>

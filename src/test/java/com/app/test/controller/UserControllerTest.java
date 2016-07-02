@@ -75,64 +75,40 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testCreateSubscription() throws Exception {
-		setUpCustomer();
-		setUpProperties();
-		setUpUserUtil();
+	public void testCreateAccountWithDuplicateEmailAddress() throws Exception {
+		MockHttpServletRequestBuilder request = post("/create_account");
 
-		MockHttpServletRequestBuilder request = post("/create_subscription");
-
-		request.param("stripeToken", "test");
-		request.param("stripeEmail", "test@test.com");
+		request.param("emailAddress", "test@test.com");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
-
-		User user = UserUtil.getUserByUserId(_USER_ID);
-
-		Assert.assertNotNull(user.getUnsubscribeToken());
-		Assert.assertEquals("customerId", user.getCustomerId());
-		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
-		Assert.assertTrue(user.isActive());
-		Assert.assertFalse(user.isPendingCancellation());
-	}
-
-	@Test
-	public void testCreateSubscriptionWithActiveUser() throws Exception {
-
-		setUpUserUtil();
-
-		UserUtil.updateUserSubscription(
-			_USER.getUnsubscribeToken(), _USER.getCustomerId(),
-			_USER.getSubscriptionId(), true, _USER.isPendingCancellation());
-
-		MockHttpServletRequestBuilder request = post("/create_subscription");
-
-		request.param("stripeToken", "test");
-		request.param("stripeEmail", "test@test.com");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(view().name("redirect:create_account"));
+		resultActions.andExpect(redirectedUrl("create_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
-	public void testCreateSubscriptionWithExistingSubscription()
+	public void testCreateAccountWithInvalidEmailAddress() throws Exception {
+		MockHttpServletRequestBuilder request = post("/create_account");
+
+		request.param("emailAddress", "test");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:create_account"));
+		resultActions.andExpect(redirectedUrl("create_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
+	}
+
+	@Test
+	public void testCreateAccountWithInvalidStripeToken()
 		throws Exception {
 
 		setUpUserUtil();
 
-		UserUtil.updateUserSubscription(
-			_USER.getUnsubscribeToken(), "customerId",
-			_USER.getSubscriptionId(), false, _USER.isPendingCancellation());
-
-		MockHttpServletRequestBuilder request = post("/create_subscription");
+		MockHttpServletRequestBuilder request = post("/create_account");
 
 		request.param("stripeToken", "test");
 		request.param("stripeEmail", "test@test.com");
@@ -140,46 +116,8 @@ public class UserControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
-		resultActions.andExpect(flash().attributeExists("error"));
-	}
-
-	@Test
-	public void testCreateSubscriptionWithInvalidEmailAddress()
-		throws Exception {
-
-		setUpUserUtil();
-
-		MockHttpServletRequestBuilder request = post("/create_subscription");
-
-		request.param("stripeToken", "test");
-		request.param("stripeEmail", "test2@test.com");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
-		resultActions.andExpect(flash().attributeExists("error"));
-	}
-
-	@Test
-	public void testCreateSubscriptionWithInvalidStripeToken()
-		throws Exception {
-
-		setUpUserUtil();
-
-		MockHttpServletRequestBuilder request = post("/create_subscription");
-
-		request.param("stripeToken", "test");
-		request.param("stripeEmail", "test@test.com");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(view().name("redirect:create_account"));
+		resultActions.andExpect(redirectedUrl("create_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
@@ -189,7 +127,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpSubscription();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", true, false);
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
+			false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -218,8 +157,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", _USER.getSubscriptionId(), true,
-			false);
+			_USER_ID, "unsubscribeToken", "customerId",
+			_USER.getSubscriptionId(), true, false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -247,7 +186,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", false, false);
+			_USER_ID,  "unsubscribeToken", "customerId", "subscriptionId",
+			false, false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -277,7 +217,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", true, true);
+			_USER_ID,  "unsubscribeToken", "customerId", "subscriptionId", true,
+			true);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -307,7 +248,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", true, false);
+			_USER_ID,  "unsubscribeToken", "customerId", "subscriptionId", true,
+			false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -344,7 +286,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", true, false);
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
+			false);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -368,7 +311,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", false, true);
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
+			true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -391,7 +335,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", false, true);
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
+			true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -412,7 +357,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", false, true);
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
+			true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -434,7 +380,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", _USER.getCustomerId(),
+			_USER_ID, "unsubscribeToken", _USER.getCustomerId(),
 			_USER.getSubscriptionId(), _USER.isActive(), true);
 
 		MockHttpServletRequestBuilder request = get("/unsubscribe");
@@ -565,8 +511,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER.getUnsubscribeToken(), "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, _USER.getUnsubscribeToken(), "customerId",
+			"subscriptionId", true, false);
 
 		MockHttpServletRequestBuilder request = post("/update_subscription");
 

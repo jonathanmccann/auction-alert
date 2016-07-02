@@ -136,12 +136,12 @@ public class UserUtil {
 	}
 
 	public static void updateUserSubscription(
-			String unsubscribeToken, String customerId, String subscriptionId,
-			boolean active, boolean pendingCancellation)
+			int userId, String unsubscribeToken, String customerId,
+			String subscriptionId, boolean active, boolean pendingCancellation)
 		throws DatabaseConnectionException, SQLException {
 
 		_userDAO.updateUserSubscription(
-			getCurrentUserId(), unsubscribeToken, customerId, subscriptionId,
+			userId, unsubscribeToken, customerId, subscriptionId,
 			active, pendingCancellation);
 	}
 

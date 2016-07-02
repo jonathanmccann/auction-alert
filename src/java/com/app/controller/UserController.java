@@ -57,7 +57,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserController {
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.GET)
-	public String createAccount(Map<String, Object> model) {
+	public String createAccount(
+		@ModelAttribute("error")String error, Map<String, Object> model) {
+
+		model.put("error", error);
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
@@ -66,12 +69,14 @@ public class UserController {
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.POST)
 	public String createAccount(
-			String emailAddress, String password, HttpServletRequest request,
-			RedirectAttributes redirectAttributes)
+			String emailAddress, String password, String stripeToken,
+			HttpServletRequest request, RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
+		User user = null;
+
 		try {
-			UserUtil.addUser(emailAddress, password);
+			user = UserUtil.addUser(emailAddress, password);
 		}
 		catch (DuplicateEmailAddressException deae) {
 			_log.error(deae.getMessage());
@@ -79,7 +84,7 @@ public class UserController {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("duplicate-email-address"));
 
-			return "create_account";
+			return "redirect:create_account";
 		}
 		catch (InvalidEmailAddressException ieae) {
 			_log.error(ieae.getMessage());
@@ -87,67 +92,41 @@ public class UserController {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-email-address"));
 
-			return "create_account";
+			return "redirect:create_account";
+		}
+
+		Map<String, Object> customerParams = new HashMap<>();
+
+		customerParams.put("email", emailAddress);
+		customerParams.put(
+			"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
+		customerParams.put("source", stripeToken);
+
+		try {
+			Customer customer = Customer.create(customerParams);
+
+			Subscription subscription =
+				customer.getSubscriptions().getData().get(0);
+
+			String customerId = customer.getId();
+
+			UserUtil.updateUserSubscription(
+				user.getUserId(), UserUtil.generateUnsubscribeToken(customerId),
+				customerId, subscription.getId(), true, false);
+		}
+		catch (Exception e) {
+			_log.error(e.getMessage());
+
+			redirectAttributes.addFlashAttribute(
+				"error",
+				LanguageUtil.getMessage("incorrect-payment-information"));
+
+			UserUtil.deleteUserByUserId(user.getUserId());
+
+			return "redirect:create_account";
 		}
 
 		return logIn(emailAddress, password, request, redirectAttributes);
-	}
-
-	@RequestMapping(value = "/create_subscription", method = RequestMethod.POST)
-	public String createSubscription(
-			String stripeToken, String stripeEmail,
-			RedirectAttributes redirectAttributes)
-		throws Exception {
-
-		int userId = UserUtil.getCurrentUserId();
-
-		User currentUser = UserUtil.getUserByUserId(userId);
-
-		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
-			redirectAttributes.addFlashAttribute(
-				"error",
-				LanguageUtil.getMessage("invalid-stripe-email-address"));
-		}
-		else if (currentUser.isActive()) {
-			redirectAttributes.addFlashAttribute(
-				"error", LanguageUtil.getMessage("user-already-active"));
-		}
-		else if (ValidatorUtil.isNotNull(currentUser.getCustomerId())) {
-			redirectAttributes.addFlashAttribute(
-				"error", LanguageUtil.getMessage("existing-subscription"));
-		}
-		else {
-			Map<String, Object> customerParams = new HashMap<>();
-
-			customerParams.put("email", stripeEmail);
-			customerParams.put(
-				"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-			customerParams.put("source", stripeToken);
-
-			Customer customer = null;
-
-			try {
-				customer = Customer.create(customerParams);
-
-				Subscription subscription =
-					customer.getSubscriptions().getData().get(0);
-
-				String customerId = customer.getId();
-
-				UserUtil.updateUserSubscription(
-					UserUtil.generateUnsubscribeToken(customerId), customerId,
-					subscription.getId(), true, false);
-			}
-			catch (Exception e) {
-				_log.error(e.getMessage());
-
-				redirectAttributes.addFlashAttribute(
-					"error",
-					LanguageUtil.getMessage("incorrect-payment-information"));
-			}
-		}
-
-		return "redirect:my_account";
 	}
 
 	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
@@ -173,7 +152,7 @@ public class UserController {
 				subscription.cancel(parameters);
 
 				UserUtil.updateUserSubscription(
-					currentUser.getUnsubscribeToken(),
+					currentUser.getUserId(), currentUser.getUnsubscribeToken(),
 					currentUser.getCustomerId(),
 					currentUser.getSubscriptionId(), true, true);
 			}
@@ -270,14 +249,14 @@ public class UserController {
 
 		User currentUser = UserUtil.getCurrentUser();
 
-		String customerId = currentUser.getCustomerId();
 		String subscriptionId = currentUser.getSubscriptionId();
 
-		if (ValidatorUtil.isNotNull(customerId) &&
-			ValidatorUtil.isNotNull(subscriptionId) &&
+		if (ValidatorUtil.isNotNull(subscriptionId) &&
 			(!currentUser.isActive() || currentUser.isPendingCancellation())) {
 
 			try {
+				String customerId = currentUser.getCustomerId();
+
 				Subscription subscription = Subscription.retrieve(
 					subscriptionId);
 
@@ -291,7 +270,8 @@ public class UserController {
 					subscription = Subscription.create(parameters);
 
 					UserUtil.updateUserSubscription(
-						currentUser.getUnsubscribeToken(),customerId,
+						currentUser.getUserId(),
+						currentUser.getUnsubscribeToken(), customerId,
 						subscription.getId(), true, false);
 				}
 				else {
@@ -303,6 +283,7 @@ public class UserController {
 					subscription.update(parameters);
 
 					UserUtil.updateUserSubscription(
+						currentUser.getUserId(),
 						currentUser.getUnsubscribeToken(), customerId,
 						subscriptionId, true, false);
 				}
@@ -365,10 +346,6 @@ public class UserController {
 			redirectAttributes.addFlashAttribute(
 				"error",
 				LanguageUtil.getMessage("invalid-stripe-email-address"));
-		}
-		else if (ValidatorUtil.isNull(currentUser.getCustomerId())) {
-			redirectAttributes.addFlashAttribute(
-				"error", LanguageUtil.getMessage("no-existing-subscription"));
 		}
 		else {
 			Map<String, Object> customerParams = new HashMap<>();

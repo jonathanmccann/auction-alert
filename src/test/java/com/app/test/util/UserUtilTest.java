@@ -117,8 +117,8 @@ public class UserUtilTest extends BaseTestCase {
 		User secondUser = UserUtil.addUser("test2@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			firstUser.getUnsubscribeToken(), firstUser.getCustomerId(),
-			firstUser.getSubscriptionId(), true,
+			firstUser.getUserId(), firstUser.getUnsubscribeToken(),
+			firstUser.getCustomerId(), firstUser.getSubscriptionId(), true,
 			firstUser.isPendingCancellation());
 
 		List<Integer> activeUserIds = UserUtil.getUserIds(true);
@@ -208,7 +208,8 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertFalse(user.isPendingCancellation());
 
 		UserUtil.updateUserSubscription(
-			"unsubscribeToken", "customerId", "subscriptionId", true, true);
+			user.getUserId(), "unsubscribeToken", "customerId",
+			"subscriptionId", true, true);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
