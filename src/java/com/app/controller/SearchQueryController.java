@@ -253,6 +253,11 @@ public class SearchQueryController {
 		return subcategories;
 	}
 
+	@RequestMapping(value = "/monitor", method = RequestMethod.GET)
+	public String monitor() {
+		return "monitor";
+	}
+
 	private void validateCategoryId(SearchQuery searchQuery) {
 		String categoryId = searchQuery.getCategoryId();
 		String subcategoryId = searchQuery.getSubcategoryId();
