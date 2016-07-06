@@ -35,7 +35,7 @@ $(window).load(function() {
 		return parseFloat(value) < parseFloat($min.val());
 	}, "Max price must be greater than min price");
 
-	$('#addSearchQueryForm, #updateUserForm').validate({
+	$('#addSearchQueryForm, #monitorForm, #updateUserForm').validate({
 		errorPlacement: function(error, element) {
 			var lastError = $(element).data('lastError');
 			var newError = $(error).text();

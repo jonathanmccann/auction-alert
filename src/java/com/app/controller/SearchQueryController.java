@@ -254,7 +254,11 @@ public class SearchQueryController {
 	}
 
 	@RequestMapping(value = "/monitor", method = RequestMethod.GET)
-	public String monitor() {
+	public String monitor(Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		populateCategories(model);
+
 		return "monitor";
 	}
 
