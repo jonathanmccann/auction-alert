@@ -92,7 +92,8 @@
 			<div>
 				<button id="startMonitoring">Start Monitoring</button>
 				<button id="stopMonitoring">Stop Monitoring</button>
-				<button id="clearResults">Clear Results</button>
+				<button id="clearResults">Clear Results</button> <br>
+				<input id="desktopNotifications" type="checkbox">Receive Desktop Notifications
 			</div>
 			<div id="content">
 			</div>

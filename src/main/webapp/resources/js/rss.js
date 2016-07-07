@@ -20,6 +20,8 @@ $(window).load(function() {
 						if (itemIds.indexOf(itemId) < 0) {
 							contentDiv.innerHTML = '<div id="' + itemId + '"> <a href="' + e.link + '" target="_blank">' + e.title + '</a> </div>' + contentDiv.innerHTML;
 
+							sendNotification(e.title);
+
 							itemIds.unshift(itemId);
 						}
 						else if (itemIds.length > 30) {
@@ -32,6 +34,20 @@ $(window).load(function() {
 					});
 				}
 			}
+		});
+	}
+
+	function sendNotification(title) {
+		if (!$("#desktopNotifications").is(":checked")) {
+			return;
+		}
+
+		Notification.requestPermission().then(function(result) {
+			if ((result === 'denied') || (result === 'default')) {
+				return;
+			}
+
+			new Notification(title);
 		});
 	}
 
