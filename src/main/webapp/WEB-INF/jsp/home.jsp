@@ -25,49 +25,157 @@
 <html>
 	<head>
 		<title>Home</title>
-		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
+		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
+		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
+		<script src="/resources/js/init.js" type="text/javascript"></script>
+		<noscript>
+			<link rel="stylesheet" href="/resources/css/skel.css" />
+			<link rel="stylesheet" href="/resources/css/style.css" />
+			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+		</noscript>
 	</head>
 	<body>
-		<div>
-			<h1>eBay Searcher</h1>
-			<shiro:guest>
-				<div style="float: left; width: 50%">
-					<h3>Returning Users</h3>
+		<header id="header" class="skel-layers-fixed">
+			<h1><a href="#">eBay Searcher</a></h1>
+			<nav id="nav">
+				<ul>
+					<shiro:guest>
+						<li><a href="log_in">Log In</a></li>
+						<li><a href="create_account" class="button special">Sign Up</a></li>
+					</shiro:guest>
+					<shiro:user>
+						<li><a href="add_search_query">Add Search Query</a></li>
+						<li><a href="view_search_queries">View Search Queries</a></li>
+						<li><a href="view_search_query_results">View Search Query Results</a></li>
+						<li><a href="my_account">My Account</a></li>
+						<li><a href="log_out" class="button special">Log Out</a></li>
+					</shiro:user>
+				</ul>
+			</nav>
+		</header>
 
-					<c:if test="${not empty error}">
-						${error}</br>
-					</c:if>
+		<shiro:guest>
+			<div>
+				<section id="banner">
+					<div class="inner">
+						<h2>This is eBay Searcher</h2>
+						<p>A simple way to stay alerted</p>
+						<ul class="actions">
+							<li><a href="create_account" class="button big special">Sign Up</a></li>
+							<li><a href="#about" class="button big alt">Learn More</a></li>
+						</ul>
+					</div>
+				</section>
 
-					<form:form action="log_in" commandName="logIn" method="post">
-						<div>
-							<b>Email Address: </b><input id="emailAddress" name="emailAddress" /></br>
-							<b>Password: </b><input id="password" name="password" type="password" />
+				<section id="about" class="wrapper style1">
+					<div class="container">
+						<div class="row">
+							<div class="4u">
+								<section class="special box">
+									<i class="icon fa-save major"></i>
+									<h3>Save</h3>
+									<p>Search queries are stored.</p>
+								</section>
+							</div>
+							<div class="4u">
+								<section class="special box">
+									<i class="icon fa-search major"></i>
+									<h3>Search</h3>
+									<p>Each search query is performed every minute.</p>
+								</section>
+							</div>
+							<div class="4u">
+								<section class="special box">
+									<i class="icon fa-send major"></i>
+									<h3>Send</h3>
+									<p>New results are sent directly to your email.</p>
+								</section>
+							</div>
 						</div>
-						<div>
-							<input type="submit" value="Log In" />
+					</div>
+				</section>
+
+				<section id="pricing" class="wrapper style2">
+					<div class="container">
+						<section class="special">
+							<i class="icon fa-dollar major"></i>
+							<h3>Pricing</h3>
+							<p>$10 per month</p>
+						</section>
+					</div>
+				</section>
+			</div>
+		</shiro:guest>
+
+		<shiro:user>
+			<div>
+				<section id="banner" class="minor">
+					<div class="inner">
+						<h2>Welcome</h2>
+					</div>
+				</section>
+
+				<section id="user" class="wrapper style1">
+					<div class="container">
+						<div class="row">
+							<div class="6u">
+								<section class="special box">
+									<i class="icon fa-line-chart major"></i>
+									<h3>Number of Search Queries</h3>
+								</section>
+							</div>
+							<div class="6u">
+								<section class="special box">
+									<i class="icon fa-calendar major"></i>
+									<h3>Time Before Next Charge</h3>
+								</section>
+							</div>
 						</div>
-					</form:form>
-				</div>
-				<div style="margin-left: 55%">
-					<h3>New Users</h3>
+					</div>
+				</section>
 
-					<form:form action="create_account" commandName="createAccount" method="get">
-						Register now
-						<div>
-							<input type="submit" value="Create Account" />
+				<section id="action" class="wrapper style2">
+					<div class="container">
+						<div class="row">
+							<div class="4u">
+								<section class="special box">
+									<i class="icon fa-search major"></i>
+									<h3><a href="view_search_queries">Manage Search Queries</a></h3>
+								</section>
+							</div>
+							<div class="4u">
+								<section class="special box">
+									<i class="icon fa-archive major"></i>
+									<h3><a href="view_search_query_results">View Results</a></h3>
+								</section>
+							</div>
+							<div class="4u">
+								<section class="special box">
+									<i class="icon fa-gear major"></i>
+									<h3><a href="my_account">Manage Account</a></h3>
+								</section>
+							</div>
 						</div>
-					</form:form>
-				</div>
-			</shiro:guest>
+					</div>
+				</section>
+			</div>
+		</shiro:user>
 
-			<shiro:user>
-				<h3>View and update search queries and results</h3>
-
-				<div align="center">
-					<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
-					<a href="my_account">My Account</a> | <a href="log_out">Log Out</a>
+		<footer id="footer">
+			<div class="align-center">
+				<div class="row">
+					<div class="6u">
+						<h2>Contact</h2>
+					</div>
+					<div class="6u">
+						<h2>FAQ</h2>
+					</div>
 				</div>
-			</shiro:user>
-		</div>
+				<ul class="copyright">
+					<li>&copy; eBay Searcher. All rights reserved.</li>
+				</ul>
+			</div>
+		</footer>
 	</body>
 </html>
