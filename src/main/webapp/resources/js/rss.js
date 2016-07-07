@@ -13,7 +13,7 @@ $(window).load(function() {
 			dataType: 'json',
 			cache: false,
 			success: function (data) {
-				if (data.responseData.feed && data.responseData.feed.entries) {
+				if (data.responseData && data.responseData.feed && data.responseData.feed.entries) {
 					$.each(data.responseData.feed.entries, function (i, e) {
 						var itemId = e.link.match(itemIdRegex)[1];
 
