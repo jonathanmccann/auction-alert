@@ -36,6 +36,21 @@
 		</noscript>
 	</head>
 	<body>
+		<div id="login" class="3u">
+			<a href="#" class="icon fa-close"></a>
+
+			<form:form action="log_in" commandName="logIn" method="post">
+				<div>
+					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
+				</div>
+				<div>
+					<b>Password: </b><input id="password" name="password" type="password" />
+				</div>
+				<div>
+					<input class="button special" type="submit" value="Log In" />
+				</div>
+			</form:form>
+		</div>
 		<header id="header" class="skel-layers-fixed">
 			<h1><a href="#">eBay Searcher</a></h1>
 			<nav id="nav">
