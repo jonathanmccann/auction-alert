@@ -21,6 +21,8 @@ public class PropertiesKeys {
 
 	public static final String APPLICATION_ID = "application.id";
 
+	public static final String EBAY_CAMPAIGN_ID = "ebay.campaign.id";
+
 	public static final String EBAY_TOKEN = "ebay.token";
 
 	public static final String JDBC_DEFAULT_DRIVER_CLASS_NAME =

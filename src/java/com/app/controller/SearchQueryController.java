@@ -18,6 +18,7 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
+import com.app.util.PropertiesValues;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
@@ -258,6 +259,8 @@ public class SearchQueryController {
 		throws DatabaseConnectionException, SQLException {
 
 		populateCategories(model);
+
+		model.put("campaignId", PropertiesValues.EBAY_CAMPAIGN_ID);
 
 		return "monitor";
 	}

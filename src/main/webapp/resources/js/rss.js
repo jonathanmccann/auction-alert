@@ -1,24 +1,26 @@
 $(window).load(function() {
 	var itemIds = [];
 
-	var itemIdRegex = new RegExp('-/([0-9]*)?');
+	var campaignId = $("#campaignId").val();
 
 	var contentDiv = document.getElementById('content');
 
 	var intervalId;
 
+	var itemUrl = "http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&toolid=10001&campid=" + campaignId + "&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=";
+
+	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?programid=1&toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&campaignid=" + campaignId + "&keyword=";
+
 	function fetchRss(url) {
 		$.ajax({
-			url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=5&callback=?&q=' + url,
-			dataType: 'json',
-			cache: false,
+			url: "https://query.yahooapis.com/v1/public/yql?q=select%20title%2C%20guid%20from%20rss(0%2C10)%20where%20url%20%3D%20%22" + url + "%22&format=json",
 			success: function (data) {
-				if (data.responseData && data.responseData.feed && data.responseData.feed.entries) {
-					$.each(data.responseData.feed.entries, function (i, e) {
-						var itemId = e.link.match(itemIdRegex)[1];
+				if (data.query && data.query.results && data.query.results.item) {
+					$.each(data.query.results.item, function (i, e) {
+						var itemId = e.guid;
 
 						if (itemIds.indexOf(itemId) < 0) {
-							contentDiv.innerHTML = '<div id="' + itemId + '"> <a href="' + e.link + '" target="_blank">' + e.title + '</a> </div>' + contentDiv.innerHTML;
+							contentDiv.innerHTML = '<div id="' + itemId + '"> <a href="' + itemUrl + itemId + '" target="_blank">' + e.title + '</a> </div>' + contentDiv.innerHTML;
 
 							sendNotification(e.title);
 
@@ -66,62 +68,60 @@ $(window).load(function() {
 			clearInterval(intervalId);
 		}
 
-		var url = "http://www.ebay.com/sch/i.html?&_sop=10&_nkw=" + $("#keywords").val();
+		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 
 		var subcategoryId = $('#subcategoryId').val();
 		var categoryId = $('#categoryId').val();
 
 		if (subcategoryId && (subcategoryId != "All Subcategories")) {
-			url += "&_sacat=" + subcategoryId
+			url += "&categoryId1=" + subcategoryId
 		}
 		else if (categoryId && (categoryId != "All Categories")) {
-			url += "&_sacat=" + categoryId
+			url += "&categoryId1=" + categoryId
 		}
 
 		if ($("#searchDescription").is(":checked")) {
-			url += "&LH_TitleDesc=1";
+			url += "&descriptionSearch=true";
 		}
 
 		if ($("#freeShippingOnly").is(":checked")) {
-			url += "&LH_FS=1";
+			url += "&freeShipping=true";
 		}
 
 		if ($("#newCondition").is(":checked")) {
-			url += "&LH_ItemCondition=11";
+			url += "&condition1=New";
 		}
 
 		if ($("#usedCondition").is(":checked")) {
-			url += "&LH_ItemCondition=12";
+			url += "&condition1=Used";
 		}
 
 		if ($("#unspecifiedCondition").is(":checked")) {
-			url += "&LH_ItemCondition=10";
+			url += "&condition1=Unspecified";
 		}
 
 		if ($("#auctionListing").is(":checked")) {
-			url += "&LH_Auction=1";
+			url += "&listingType1=AuctionWithBIN&listingType2=Auction";
 		}
 
 		if ($("#fixedPriceListing").is(":checked")) {
-			url += "&LH_BIN=1";
+			url += "&listingType1=AuctionWithBIN&listingType2=FixedPrice";
 		}
 
 		var minPrice = $("#minPrice").val();
 		var maxPrice = $("#maxPrice").val();
 
 		if (minPrice && (minPrice > 0)) {
-			url += "&_udlo=" + minPrice;
+			url += "&minPrice=" + minPrice;
 		}
 
 		if (maxPrice && (maxPrice > 0)) {
-			url += "&_udhi=" + maxPrice;
+			url += "&maxPrice=" + maxPrice;
 		}
 
-		url = encodeURIComponent(url + "&_rss=1");
-
 		intervalId = setInterval(function() {
-			fetchRss(url + new Date().getTime());
-		}, 3000);
+			fetchRss(encodeURIComponent(url + "&" + new Date().getTime()));
+		}, 5000);
 	});
 
 	$("#stopMonitoring").click(function() {

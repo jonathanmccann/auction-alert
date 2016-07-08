@@ -22,6 +22,10 @@ public class PropertiesValues {
 	public static final String APPLICATION_ID =
 		PropertiesUtil.getConfigurationProperty(PropertiesKeys.APPLICATION_ID);
 
+	public static final String EBAY_CAMPAIGN_ID =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.EBAY_CAMPAIGN_ID);
+
 	public static final String EBAY_TOKEN =
 		PropertiesUtil.getConfigurationProperty(PropertiesKeys.EBAY_TOKEN);
 

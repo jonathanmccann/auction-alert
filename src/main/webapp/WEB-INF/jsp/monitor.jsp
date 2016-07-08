@@ -35,6 +35,8 @@
 	</head>
 	<body>
 		<div>
+			<input id="campaignId" type="hidden" value="${campaignId}">
+
 			<form id="monitorForm" name="monitorForm">
 				<h2>Monitor</h2>
 

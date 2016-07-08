@@ -50,6 +50,8 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals("Application ID", PropertiesValues.APPLICATION_ID);
 		Assert.assertEquals("eBay Token", PropertiesValues.EBAY_TOKEN);
 		Assert.assertEquals(
+			"eBay Campaign Id", PropertiesValues.EBAY_CAMPAIGN_ID);
+		Assert.assertEquals(
 			"JDBC Default Driver Class Name",
 			PropertiesValues.JDBC_DEFAULT_DRIVER_CLASS_NAME);
 		Assert.assertEquals(
