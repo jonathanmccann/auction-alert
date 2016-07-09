@@ -72,7 +72,7 @@
 
 		<shiro:guest>
 			<div>
-				<section id="banner">
+				<section id="banner" class="major">
 					<div class="inner">
 						<h2>This is eBay Searcher</h2>
 						<p>A simple way to stay alerted</p>

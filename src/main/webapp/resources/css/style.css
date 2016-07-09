@@ -983,7 +983,6 @@
 		background-position: center center;
 		background-repeat: no-repeat;
 		color: #d8d8d8;
-		padding: 14em 0;
 		text-align: center;
 		position: relative;
 	}
@@ -1030,10 +1029,6 @@
 
 		#banner .button {
 			min-width: 12em;
-		}
-
-		#banner .minor {
-			padding: 5em 2em 4em 2em;
 		}
 
 		#banner h2 {
@@ -1089,6 +1084,18 @@
 		#footer .icons a {
 			color: #bbb;
 		}
+
+/* Custom CSS */
+
+/* Banner */
+
+	#banner.major {
+		padding: 14em 0
+	}
+
+	#banner.minor {
+		padding: 5em 2em 4em 2em;
+	}
 
 /* Modal Login */
 
