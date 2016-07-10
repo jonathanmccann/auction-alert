@@ -29,6 +29,7 @@
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
+		<script src="/resources/js/login.js" type="text/javascript"></script>
 		<noscript>
 			<link rel="stylesheet" href="/resources/css/skel.css" />
 			<link rel="stylesheet" href="/resources/css/style.css" />
@@ -36,27 +37,33 @@
 		</noscript>
 	</head>
 	<body>
-		<div id="login" class="3u">
-			<a href="#" class="icon fa-close"></a>
-
-			<form:form action="log_in" commandName="logIn" method="post">
-				<div>
-					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
+		<div id="login">
+			<div class="login-content">
+				<div class="login-header">
+					<span id="close">X</span>
+					<h2>Log In</h2>
 				</div>
-				<div>
-					<b>Password: </b><input id="password" name="password" type="password" />
+				<div class="login-body">
+					<form:form action="log_in" commandName="logIn" method="post">
+						<div>
+							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
+						</div>
+						<div>
+							<b>Password: </b><input id="password" name="password" type="password" />
+						</div>
+						<div class="padding-top">
+							<input class="button special" type="submit" value="Log In" />
+						</div>
+					</form:form>
 				</div>
-				<div>
-					<input class="button special" type="submit" value="Log In" />
-				</div>
-			</form:form>
+			</div>
 		</div>
 		<header id="header" class="skel-layers-fixed">
 			<h1><a href="#">eBay Searcher</a></h1>
 			<nav id="nav">
 				<ul>
 					<shiro:guest>
-						<li><a href="log_in">Log In</a></li>
+						<li><a href="log_in" id="loginLink">Log In</a></li>
 						<li><a href="create_account" class="button special">Sign Up</a></li>
 					</shiro:guest>
 					<shiro:user>

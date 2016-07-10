@@ -1,20 +1,20 @@
 $(document).ready(function() {
-	$('a.login').click(function() {
-		//Fade in the Popup
-		$("#login").fadeIn(300);
+	var login = document.getElementById('login');
+	var close = document.getElementById("close");
 
-		$('body').append('<div id="mask"></div>');
-		$('#mask').fadeIn(300);
+	$("#loginLink").click(function(e) {
+		e.preventDefault();
 
-		return false;
+		login.style.display = "block";
 	});
 
-	// When clicking on the button close or the mask layer the popup closed
-	$('a.close, #mask').live('click', function() {
-		$('#mask, .login-popup').fadeOut(300, function() {
-			$('#mask').remove();
-		});
+	close.onclick = function() {
+		login.style.display = "none";
+	};
 
-		return false;
-	});
+	window.onclick = function(event) {
+		if (event.target == login) {
+			login.style.display = "none";
+		}
+	}
 });
