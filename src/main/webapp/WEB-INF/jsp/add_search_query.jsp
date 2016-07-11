@@ -49,18 +49,7 @@
 		</noscript>
 	</head>
 	<body>
-		<header id="header" class="skel-layers-fixed">
-			<h1><a href="/home">eBay Searcher</a></h1>
-			<nav id="nav">
-				<ul>
-					<li><a href="add_search_query">Add Search Query</a></li>
-					<li><a href="view_search_queries">View Search Queries</a></li>
-					<li><a href="view_search_query_results">View Search Query Results</a></li>
-					<li><a href="my_account">My Account</a></li>
-					<li><a href="log_out" class="button special">Log Out</a></li>
-				</ul>
-			</nav>
-		</header>
+		<%@ include file="header.jspf" %>
 
 		<section id="banner" class="minor">
 			<c:choose>

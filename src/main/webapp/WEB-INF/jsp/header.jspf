@@ -1,0 +1,28 @@
+<%--
+/**
+ * Copyright (c) 2014-present Jonathan McCann
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ */
+--%>
+
+<header id="header" class="skel-layers-fixed">
+	<h1><a href="/home">eBay Searcher</a></h1>
+	<nav id="nav">
+		<ul>
+			<li><a href="add_search_query">Add Search Query</a></li>
+			<li><a href="view_search_queries">View Search Queries</a></li>
+			<li><a href="view_search_query_results">View Search Query Results</a></li>
+			<li><a href="my_account">My Account</a></li>
+			<li><a href="log_out" class="button special">Log Out</a></li>
+		</ul>
+	</nav>
+</header>
