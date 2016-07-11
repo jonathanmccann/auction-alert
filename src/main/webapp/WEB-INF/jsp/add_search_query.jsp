@@ -157,20 +157,6 @@
 		</div>
 		</section>
 
-		<footer id="footer">
-			<div class="align-center">
-				<div class="row">
-					<div class="6u">
-						<h2>Contact</h2>
-					</div>
-					<div class="6u">
-						<h2>FAQ</h2>
-					</div>
-				</div>
-				<ul class="copyright">
-					<li>&copy; eBay Searcher. All rights reserved.</li>
-				</ul>
-			</div>
-		</footer>
+		<%@ include file="footer.jspf" %>
 	</body>
 </html>
