@@ -1140,6 +1140,15 @@
 		animation-duration: 0.4s
 	}
 
+	#login-page {
+		margin: 0 auto;
+	}
+
+	.login-page-content {
+		padding: 20px;
+		width: 30%;
+	}
+
 	.login-header {
 		padding: 0px 16px;
 	}
@@ -1193,4 +1202,15 @@
 	#addSearchQueryForm select:-moz-focusring {
 		color: transparent;
 		text-shadow: 0 0 0 #000;
+	}
+
+/* Message */
+
+	#error {
+		border: 1px solid;
+		margin: 10px 0px;
+		padding:15px 10px 15px 25px;
+		background-color: #FFCCBA;
+		color: #DF323C;
+		border-radius:.5em;
 	}

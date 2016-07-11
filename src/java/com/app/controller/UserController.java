@@ -143,12 +143,17 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String home(
+	public String home() {
+		return "home";
+	}
+
+	@RequestMapping(value = "/log_in", method = RequestMethod.GET)
+	public String logIn(
 		@ModelAttribute("error")String error, Map<String, Object> model) {
 
 		model.put("error", error);
 
-		return "home";
+		return "log_in";
 	}
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
@@ -180,7 +185,7 @@ public class UserController {
 			}
 			catch (Exception e) {
 				redirectAttributes.addFlashAttribute(
-					"error", LanguageUtil.getMessage("authentication-failure"));
+					"error", LanguageUtil.getMessage("log-in-failure"));
 
 				if (e instanceof UnknownAccountException) {
 					_log.error(
@@ -197,6 +202,8 @@ public class UserController {
 						"The account associated with emailAddress {} is locked",
 						token.getPrincipal());
 				}
+
+				return "redirect:log_in";
 			}
 		}
 
