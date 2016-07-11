@@ -45,32 +45,32 @@
 			</nav>
 		</header>
 
-			<section id="banner" class="minor">
-				<div class="inner">
-					<h2>Log In</h2>
-				</div>
-			</section>
-
-			<div id="login-page" class="login-page-content">
-				<c:if test="${not empty error}">
-					<div id="error">
-						<i class="icon fa-times-circle"></i>
-						${error}
-					</div>
-				</c:if>
-
-				<form:form action="log_in" commandName="logIn" method="post">
-					<div>
-						<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
-					</div>
-					<div>
-						<b>Password: </b><input id="password" name="password" type="password" />
-					</div>
-					<div class="padding-top">
-						<input class="button special" type="submit" value="Log In" />
-					</div>
-				</form:form>
+		<section id="banner" class="minor">
+			<div class="inner">
+				<h2>Log In</h2>
 			</div>
+		</section>
+
+		<div id="login-page" class="login-page-content">
+			<c:if test="${not empty error}">
+				<div id="error">
+					<i class="icon fa-times-circle"></i>
+					${error}
+				</div>
+			</c:if>
+
+			<form:form action="log_in" commandName="logIn" method="post">
+				<div>
+					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
+				</div>
+				<div>
+					<b>Password: </b><input id="password" name="password" type="password" />
+				</div>
+				<div class="padding-top">
+					<input class="button special" type="submit" value="Log In" />
+				</div>
+			</form:form>
+		</div>
 
 		<%@ include file="footer.jspf" %>
 	</body>
