@@ -30,6 +30,7 @@
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
 		<script src="/resources/js/login.js" type="text/javascript"></script>
+		<script src="/resources/js/scroll.js" type="text/javascript"></script>
 		<noscript>
 			<link rel="stylesheet" href="/resources/css/skel.css" />
 			<link rel="stylesheet" href="/resources/css/style.css" />
@@ -85,7 +86,7 @@
 						<p>A simple way to stay alerted</p>
 						<ul class="actions">
 							<li><a href="create_account" class="button big special">Sign Up</a></li>
-							<li><a href="#about" class="button big alt">Learn More</a></li>
+							<li><a href="#about" id="learn-more" class="button big alt">Learn More</a></li>
 						</ul>
 					</div>
 				</section>
