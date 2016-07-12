@@ -14,13 +14,18 @@
 
 package com.app.util;
 
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.User;
 
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Jonathan McCann
@@ -68,6 +73,22 @@ public class StripeUtil {
 			user.getSubscriptionId(), true, true);
 	}
 
+	public static String getNextChargeDate() throws Exception {
+		User user = UserUtil.getCurrentUser();
+
+		String subscriptionId = user.getSubscriptionId();
+
+		if (ValidatorUtil.isNotNull(subscriptionId)) {
+			Subscription subscription = Subscription.retrieve(subscriptionId);
+
+			return _NEXT_CHARGE_DATE_FORMAT.format(
+				new Date(subscription.getCurrentPeriodEnd() * 1000));
+		}
+		else {
+			return "";
+		}
+	}
+
 	public static void resubscribe(String customerId, String subscriptionId)
 		throws Exception {
 
@@ -108,5 +129,8 @@ public class StripeUtil {
 
 		customer.update(customerParams);
 	}
+
+	private static final SimpleDateFormat _NEXT_CHARGE_DATE_FORMAT =
+		new SimpleDateFormat("MMMM d");
 
 }

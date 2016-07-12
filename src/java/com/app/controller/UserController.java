@@ -143,7 +143,13 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String home() {
+	public String home(Map<String, Object> model) throws Exception {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (currentUser.isAuthenticated()) {
+			model.put("nextChargeDate", StripeUtil.getNextChargeDate());
+		}
+
 		return "home";
 	}
 
