@@ -21,7 +21,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.util.WebUtils;
 
 /**
  * @author Jonathan McCann
@@ -38,7 +40,12 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 		Subject currentUser = SecurityUtils.getSubject();
 
 		if (!currentUser.isAuthenticated()) {
-			response.sendRedirect("/");
+			String originalUrl = (String)request.getAttribute(
+				HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+
+			WebUtils.setSessionAttribute(request, "redirect", originalUrl);
+
+			response.sendRedirect("log_in");
 
 			return false;
 		}

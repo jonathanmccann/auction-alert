@@ -30,6 +30,7 @@ import java.sql.Timestamp;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 /**
  * @author Jonathan McCann
@@ -108,7 +110,8 @@ public class UserController {
 			return "redirect:create_account";
 		}
 
-		return logIn(emailAddress, password, request, redirectAttributes);
+		return logIn(
+			emailAddress, password, "home", request, redirectAttributes);
 	}
 
 	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
@@ -155,7 +158,11 @@ public class UserController {
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.GET)
 	public String logIn(
-		@ModelAttribute("error")String error, Map<String, Object> model) {
+		@ModelAttribute("error")String error, Map<String, Object> model,
+		HttpServletRequest request) {
+
+		model.put(
+			"redirect", WebUtils.getSessionAttribute(request, "redirect"));
 
 		model.put("error", error);
 
@@ -164,8 +171,8 @@ public class UserController {
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
 	public String logIn(
-		String emailAddress, String password, HttpServletRequest request,
-		RedirectAttributes redirectAttributes) {
+		String emailAddress, String password, String redirect,
+		HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
 		Subject currentUser = SecurityUtils.getSubject();
 
@@ -213,7 +220,12 @@ public class UserController {
 			}
 		}
 
-		return "redirect:home";
+		if (ValidatorUtil.isNull(redirect)) {
+			return "redirect:home";
+		}
+		else {
+			return "redirect:" + redirect;
+		}
 	}
 
 	@RequestMapping(value = "/log_out", method = RequestMethod.GET)

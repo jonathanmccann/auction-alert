@@ -60,6 +60,8 @@
 			</c:if>
 
 			<form:form action="log_in" commandName="logIn" method="post">
+				<input id="redirect" name="redirect" type="hidden" value="${redirect}" />
+
 				<div>
 					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
 				</div>
