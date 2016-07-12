@@ -103,6 +103,21 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testCreateAccountWithInvalidPassword() throws Exception {
+		MockHttpServletRequestBuilder request = post("/create_account");
+
+		request.param("emailAddress", "test2@test.com");
+		request.param("password", "");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:create_account"));
+		resultActions.andExpect(redirectedUrl("create_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
+	}
+
+	@Test
 	public void testCreateAccountWithInvalidStripeToken()
 		throws Exception {
 

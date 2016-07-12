@@ -17,6 +17,7 @@ package com.app.controller;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
+import com.app.exception.PasswordLengthException;
 import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
@@ -90,6 +91,14 @@ public class UserController {
 
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-email-address"));
+
+			return "redirect:create_account";
+		}
+		catch (PasswordLengthException ple) {
+			_log.error(ple.getMessage());
+
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("invalid-password-length"));
 
 			return "redirect:create_account";
 		}

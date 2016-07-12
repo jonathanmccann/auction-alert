@@ -30,7 +30,8 @@ $(window).load(function() {
 				email: true
 			},
 			password: {
-				required: true
+				required: true,
+				minlength: 6
 			}
 		}
 	});

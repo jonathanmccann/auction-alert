@@ -18,6 +18,7 @@ import com.app.dao.UserDAO;
 import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
+import com.app.exception.PasswordLengthException;
 import com.app.model.User;
 
 import java.sql.SQLException;
@@ -43,11 +44,13 @@ import org.springframework.stereotype.Service;
 public class UserUtil {
 
 	public static User addUser(String emailAddress, String plainTextPassword)
-				throws
+		throws
 			DatabaseConnectionException, DuplicateEmailAddressException,
-		InvalidEmailAddressException, SQLException {
+			InvalidEmailAddressException, PasswordLengthException,
+			SQLException {
 
 		_validateEmailAddress(0, emailAddress);
+		_validatePassword(plainTextPassword);
 
 		List<String> passwordAndSalt = _generatePasswordAndSalt(
 			plainTextPassword);
@@ -182,6 +185,14 @@ public class UserUtil {
 
 		if ((user != null) && (userId != user.getUserId())) {
 			throw new DuplicateEmailAddressException();
+		}
+	}
+
+	private static void _validatePassword(String password)
+		throws PasswordLengthException {
+
+		if (ValidatorUtil.isNull(password) || (password.length() < 6)) {
+			throw new PasswordLengthException();
 		}
 	}
 

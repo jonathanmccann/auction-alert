@@ -16,6 +16,7 @@ package com.app.test.util;
 
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
+import com.app.exception.PasswordLengthException;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
@@ -271,6 +272,52 @@ public class UserUtilTest extends BaseTestCase {
 		catch (InvocationTargetException ite) {
 			Assert.assertTrue(
 				ite.getCause() instanceof InvalidEmailAddressException);
+		}
+	}
+
+	@Test
+	public void testValidatePassword() throws Exception {
+		Method validatePassword = _clazz.getDeclaredMethod(
+			"_validatePassword", String.class);
+
+		validatePassword.setAccessible(true);
+
+		validatePassword.invoke(_classInstance, "password");
+	}
+
+	@Test
+	public void testValidatePasswordWithNullPassword() throws Exception {
+		Method validatePassword = _clazz.getDeclaredMethod(
+			"_validatePassword", String.class);
+
+		validatePassword.setAccessible(true);
+
+		try {
+			validatePassword.invoke(_classInstance, "");
+
+			Assert.fail();
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(
+				ite.getCause() instanceof PasswordLengthException);
+		}
+	}
+
+	@Test
+	public void testValidatePasswordWithShortPassword() throws Exception {
+		Method validatePassword = _clazz.getDeclaredMethod(
+			"_validatePassword", String.class);
+
+		validatePassword.setAccessible(true);
+
+		try {
+			validatePassword.invoke(_classInstance, "short");
+
+			Assert.fail();
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(
+				ite.getCause() instanceof PasswordLengthException);
 		}
 	}
 
