@@ -73,17 +73,17 @@
 			<c:choose>
 				<c:when test="${(not empty user.subscriptionId) && ((not user.active) || (user.pendingCancellation))}">
 					<form:form action="/resubscribe" method="POST">
-						<input class="button special" id="resubscribe" type="submit" value="Resubscribe" />
+						<input class="button special" id="resubscribe" title="Your previous billing information will be used to resubscribe. If your current billing period has ended, you will be billed immediately." type="submit" value="Resubscribe" />
 					</form:form>
 				</c:when>
 				<c:otherwise>
 					<form:form action="/update_subscription" class="inline-form" id="updateBillingForm" method="POST">
 						<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
 
-						<input class="button special" id="updateBillingSubmit" type="submit" value="Update Billing Details" />
+						<input class="button special" id="updateBillingSubmit" title="Change the credit card used for subscription billing." type="submit" value="Update Billing Details" />
 					</form:form>
 					<form:form action="/delete_subscription" class="inline-form" method="POST">
-						<input class="button special" id="cancelSubscription" type="submit" value="Cancel Subscription" />
+						<input class="button special" id="cancelSubscription" title="Your subscription will be cancelled and no further billing will occur. You will be able to use the site for the remainder of your current billing period." type="submit" value="Cancel Subscription" />
 					</form:form>
 				</c:otherwise>
 			</c:choose>
