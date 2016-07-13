@@ -25,66 +25,70 @@
 <html>
 	<head>
 		<title>My Account</title>
-		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
 		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
+		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
+		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
+		<script src="/resources/js/init.js" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
+		<script src="https://checkout.stripe.com/checkout.js" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/update-billing.js" />" type="text/javascript"></script>
+		<noscript>
+			<link rel="stylesheet" href="/resources/css/skel.css" />
+			<link rel="stylesheet" href="/resources/css/style.css" />
+			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+		</noscript>
 	</head>
 	<body>
-		<div>
-			<form:form action="/my_account" commandName="user" id="updateUserForm" method="post">
-				<h2>My Account</h2>
+		<%@ include file="header.jspf" %>
 
+		<section id="banner" class="minor">
+			<div class="inner">
+				<h2>My Account</h2>
+			</div>
+		</section>
+
+		<div id="user-details">
+			<form:form action="/my_account" commandName="user" id="updateUserForm" method="post">
 				<c:if test="${not empty error}">
-					${error}
+					<div id="error">
+						<i class="icon fa-times-circle"></i>
+						${error}
+					</div>
 				</c:if>
 
 				<div>
-					<h3>My Details:</h3>
-
-					Email Address <form:input path="emailAddress" value="${emailAddress}" />
-					</br>
-
-					<label for="emailNotification">Send Email Notifications</label>
-					<form:checkbox id="emailNotification" path="emailNotification" value="${emailNotification}" />
+					<b>Email Address: </b><form:input path="emailAddress" value="${emailAddress}" />
 				</div>
-				<div>
-					<input id="updateUserSubmit" type="submit" value="Update User" />
+				<div class="padding-top">
+					<form:checkbox id="emailNotification" label="Send Email Notifications" path="emailNotification" value="${emailNotification}" />
+				</div>
+				<div class="padding-top">
+					<input class="button special" id="updateUserSubmit" type="submit" value="Update User" />
 				</div>
 			</form:form>
 
 			<c:choose>
 				<c:when test="${(not empty user.subscriptionId) && ((not user.active) || (user.pendingCancellation))}">
 					<form:form action="/resubscribe" method="POST">
-						<input id="resubscribe" type="submit" value="Resubscribe" />
+						<input class="button special" id="resubscribe" type="submit" value="Resubscribe" />
 					</form:form>
 				</c:when>
 				<c:otherwise>
-					<form:form action="/update_subscription" method="POST">
-						<script
-							src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-							data-key="${stripePublishableKey}"
-							data-image="images/marketplace.png"
-							data-name="eBay Searcher"
-							data-panel-label="Update Card Details"
-							data-label="Update Card Details"
-							data-allow-remember-me="false"
-							data-email="${user.emailAddress}"
-							data-zip-code="true">
-						</script>
+					<form:form action="/update_subscription" class="inline-form" id="updateBillingForm" method="POST">
+						<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
+
+						<input class="button special" id="updateBillingSubmit" type="submit" value="Update Billing Details" />
 					</form:form>
-					<form:form action="/delete_subscription" method="POST">
-						<input id="cancelSubscription" type="submit" value="Cancel Subscription" />
+					<form:form action="/delete_subscription" class="inline-form" method="POST">
+						<input class="button special" id="cancelSubscription" type="submit" value="Cancel Subscription" />
 					</form:form>
 				</c:otherwise>
 			</c:choose>
-
-			<div align="center">
-				<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
-				My Account | <a href="log_out">Log Out</a>
-			</div>
 		</div>
+
+		<%@ include file="footer.jspf" %>
 	</body>
 </html>

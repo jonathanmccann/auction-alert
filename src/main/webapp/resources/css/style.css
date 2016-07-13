@@ -1211,5 +1211,11 @@
 	#user-details {
 		margin: 0 auto;
 		padding: 20px;
-		width: 30%;
+		width: 35%;
+	}
+
+/* Form */
+
+	.inline-form {
+		display: inline;
 	}
