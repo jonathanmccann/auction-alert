@@ -1217,5 +1217,5 @@
 /* Form */
 
 	.inline-form {
-		display: inline;
+		display: inline-block;
 	}
