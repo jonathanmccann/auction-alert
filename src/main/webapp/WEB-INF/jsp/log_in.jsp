@@ -53,7 +53,7 @@
 			</div>
 		</section>
 
-		<div id="login-page" class="login-page-content">
+		<div id="user-details">
 			<c:if test="${not empty error}">
 				<div id="error">
 					<i class="icon fa-times-circle"></i>

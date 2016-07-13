@@ -24,41 +24,64 @@
 
 <html>
 	<head>
-		<title>My Account</title>
-		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+		<title>Create Account</title>
 		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
+		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
+		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
+		<script src="/resources/js/init.js" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/stripe.js" />" type="text/javascript"></script>
 		<script src="https://checkout.stripe.com/checkout.js" type="text/javascript"></script>
+		<noscript>
+			<link rel="stylesheet" href="/resources/css/skel.css" />
+			<link rel="stylesheet" href="/resources/css/style.css" />
+			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+		</noscript>
 	</head>
 	<body>
-		<div>
-			<h2>Create Account</h2>
-			<h3>My Details:</h3>
+		<header id="header" class="skel-layers-fixed">
+			<h1><a href="home">eBay Searcher</a></h1>
+			<nav id="nav">
+				<ul>
+					<li><a href="log_in" id="loginLink">Log In</a></li>
+					<li><a href="create_account" class="button special">Sign Up</a></li>
+				</ul>
+			</nav>
+		</header>
 
-			<shiro:guest>
+		<section id="banner" class="minor">
+			<div class="inner">
+				<h2>Create Account</h2>
+			</div>
+		</section>
+
+		<div id="user-details">
+			<c:if test="${not empty error}">
+				<div id="error">
+					<i class="icon fa-times-circle"></i>
+					${error}
+				</div>
+			</c:if>
+
+			<form:form action="create_account" commandName="createAccount" id="createAccountForm" method="post">
 				<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
 
-				<form:form action="create_account" commandName="createAccount" id="createAccountForm" method="post">
-					<div>
-						<b>Email Address: </b><input id="emailAddress" name="emailAddress" />
+				<input id="redirect" name="redirect" type="hidden" value="${redirect}" />
 
-						<c:if test="${not empty error}">
-							${error}
-						</c:if>
-
-						<br>
-
-						<b>Password: </b><input id="password" name="password" type="password" />
-
-						<br>
-
-						<input id="createAccountSubmit" type="submit" value="Subscribe" />
-					</div>
-				</form:form>
-			</shiro:guest>
+				<div>
+					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
+				</div>
+				<div>
+					<b>Password: </b><input id="password" name="password" type="password" />
+				</div>
+				<div class="padding-top">
+					<input class="button special" id="createAccountSubmit" type="submit" value="Create Account" />
+				</div>
+			</form:form>
 		</div>
+
+		<%@ include file="footer.jspf" %>
 	</body>
 </html>

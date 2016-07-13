@@ -1140,15 +1140,6 @@
 		animation-duration: 0.4s
 	}
 
-	#login-page {
-		margin: 0 auto;
-	}
-
-	.login-page-content {
-		padding: 20px;
-		width: 30%;
-	}
-
 	.login-header {
 		padding: 0px 16px;
 	}
@@ -1213,4 +1204,12 @@
 		background-color: #FFCCBA;
 		color: #DF323C;
 		border-radius:.5em;
+	}
+
+/* User Details */
+
+	#user-details {
+		margin: 0 auto;
+		padding: 20px;
+		width: 30%;
 	}
