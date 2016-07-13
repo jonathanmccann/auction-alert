@@ -149,15 +149,6 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testInitializeCategories() throws Exception {
-		CategoryUtil.initializeCategories();
-
-		List<Category> categories = CategoryUtil.getParentCategories();
-
-		Assert.assertFalse(categories.isEmpty());
-	}
-
-	@Test
 	public void testIsNewerCategoryVersion() throws Exception {
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
