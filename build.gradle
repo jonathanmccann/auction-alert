@@ -14,6 +14,7 @@ dependencies {
 	compile files('lib/ebaycalls.jar')
 	compile files('lib/ebaysdkcore.jar')
 	compile files('lib/finding.jar')
+	compile group: 'com.google.code.gson', name: 'gson', version:'2.7'
 	compile group: 'com.sendgrid', name: 'sendgrid-java', version:'2.2.2'
 	compile group: 'com.stripe', name: 'stripe-java', version:'2.6.0'
 	compile group: 'javax.mail', name: 'mail', version:'1.4.7'

@@ -60,6 +60,7 @@ public class PropertiesUtilTest extends BaseTestCase {
 			"JDBC Default URL", PropertiesValues.JDBC_DEFAULT_URL);
 		Assert.assertEquals(
 			"JDBC Default Username", PropertiesValues.JDBC_DEFAULT_USERNAME);
+		Assert.assertEquals(5, PropertiesValues.LOGIN_ATTEMPT_LIMIT);
 		Assert.assertEquals(5, PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
 		Assert.assertEquals(30, PropertiesValues.NUMBER_OF_EMAILS_PER_DAY);
 		Assert.assertEquals(
@@ -70,6 +71,10 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals("true", PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
 		Assert.assertEquals("smtp.gmail.com", PropertiesValues.MAIL_SMTP_HOST);
 		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
+		Assert.assertEquals(
+			"Recaptcha Site Key", PropertiesValues.RECAPTCHA_SITE_KEY);
+		Assert.assertEquals(
+			"Recaptcha Secret Key", PropertiesValues.RECAPTCHA_SECRET_KEY);
 		Assert.assertEquals(
 			"SendGrid API Key", PropertiesValues.SENDGRID_API_KEY);
 		Assert.assertEquals(

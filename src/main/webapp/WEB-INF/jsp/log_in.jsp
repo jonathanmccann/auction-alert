@@ -29,6 +29,7 @@
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
+		<script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script>
 		<noscript>
 			<link rel="stylesheet" href="/resources/css/skel.css" />
 			<link rel="stylesheet" href="/resources/css/style.css" />
@@ -68,6 +69,9 @@
 				<div>
 					<b>Password: </b><input id="password" name="password" type="password" />
 				</div>
+				<c:if test="${not empty recaptchaSiteKey}">
+					<div class="padding-top g-recaptcha" data-sitekey="${recaptchaSiteKey}"></div>
+				</c:if>
 				<div class="padding-top">
 					<input class="button special" type="submit" value="Log In" />
 				</div>

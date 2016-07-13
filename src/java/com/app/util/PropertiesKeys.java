@@ -34,6 +34,8 @@ public class PropertiesKeys {
 
 	public static final String JDBC_DEFAULT_USERNAME = "jdbc.default.username";
 
+	public static final String LOGIN_ATTEMPT_LIMIT = "login.attempt.limit";
+
 	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 
 	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
@@ -54,6 +56,10 @@ public class PropertiesKeys {
 
 	public static final String OUTBOUND_EMAIL_ADDRESS_PASSWORD =
 		"outbound.email.address.password";
+
+	public static final String RECAPTCHA_SECRET_KEY = "recaptcha.secret.key";
+
+	public static final String RECAPTCHA_SITE_KEY = "recaptcha.site.key";
 
 	public static final String SENDGRID_API_KEY = "sendgrid.api.key";
 

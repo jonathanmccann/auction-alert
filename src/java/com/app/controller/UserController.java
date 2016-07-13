@@ -18,9 +18,11 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.PasswordLengthException;
+import com.app.exception.RecaptchaException;
 import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
+import com.app.util.RecaptchaUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
@@ -31,13 +33,13 @@ import java.sql.Timestamp;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
@@ -47,6 +49,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
@@ -120,7 +123,7 @@ public class UserController {
 		}
 
 		return logIn(
-			emailAddress, password, "home", request, redirectAttributes);
+			emailAddress, password, "home", "", request, redirectAttributes);
 	}
 
 	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
@@ -170,10 +173,15 @@ public class UserController {
 		@ModelAttribute("error")String error, Map<String, Object> model,
 		HttpServletRequest request) {
 
+		model.put("error", error);
 		model.put(
 			"redirect", WebUtils.getSessionAttribute(request, "redirect"));
 
-		model.put("error", error);
+		int loginAttempts = getLoginAttempts();
+
+		if (loginAttempts >= PropertiesValues.LOGIN_ATTEMPT_LIMIT) {
+			model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
+		}
 
 		return "log_in";
 	}
@@ -181,15 +189,32 @@ public class UserController {
 	@RequestMapping(value = "/log_in", method = RequestMethod.POST)
 	public String logIn(
 		String emailAddress, String password, String redirect,
+		@RequestParam(value = "g-recaptcha-response", required = false)
+			String recaptchaResponse,
 		HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
 		Subject currentUser = SecurityUtils.getSubject();
 
 		if (!currentUser.isAuthenticated()) {
-			UsernamePasswordToken token = new UsernamePasswordToken(
-				emailAddress, password);
+			Session session = currentUser.getSession();
+
+			int loginAttempts = getLoginAttempts(session);
+
+			session.setAttribute("loginAttempts", loginAttempts + 1);
 
 			try {
+				if (loginAttempts >= PropertiesValues.LOGIN_ATTEMPT_LIMIT) {
+					boolean valid = RecaptchaUtil.verifyRecaptchaResponse(
+						recaptchaResponse);
+
+					if (!valid) {
+						throw new RecaptchaException();
+					}
+				}
+
+				UsernamePasswordToken token = new UsernamePasswordToken(
+					emailAddress, password);
+
 				currentUser.login(token);
 
 				_log.debug(
@@ -206,23 +231,30 @@ public class UserController {
 					request.getRemoteAddr());
 			}
 			catch (Exception e) {
-				redirectAttributes.addFlashAttribute(
-					"error", LanguageUtil.getMessage("log-in-failure"));
+				if (e instanceof RecaptchaException) {
+					redirectAttributes.addFlashAttribute(
+						"error", LanguageUtil.getMessage("recaptcha-failure"));
+				}
+				else {
+					redirectAttributes.addFlashAttribute(
+						"error", LanguageUtil.getMessage("log-in-failure"));
 
-				if (e instanceof UnknownAccountException) {
-					_log.error(
-						"There is no user with emailAddress {}",
-						token.getPrincipal());
-				}
-				else if (e instanceof IncorrectCredentialsException) {
-					_log.error(
-						"Password for emailAddress {} is incorrect",
-						token.getPrincipal());
-				}
-				else if (e instanceof LockedAccountException) {
-					_log.error(
-						"The account associated with emailAddress {} is locked",
-						token.getPrincipal());
+					if (e instanceof UnknownAccountException) {
+						_log.error(
+							"There is no user with emailAddress {}",
+							emailAddress);
+					}
+					else if (e instanceof IncorrectCredentialsException) {
+						_log.error(
+							"Password for emailAddress {} is incorrect",
+							emailAddress);
+					}
+					else if (e instanceof LockedAccountException) {
+						_log.error(
+							"The account associated with emailAddress {} is " +
+								"locked",
+							emailAddress);
+					}
 				}
 
 				return "redirect:log_in";
@@ -369,6 +401,23 @@ public class UserController {
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
 		return "my_account";
+	}
+
+	private static int getLoginAttempts() {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		Session session = currentUser.getSession();
+
+		return getLoginAttempts(session);
+	}
+
+	private static int getLoginAttempts(Session session) {
+		try {
+			return (int)session.getAttribute("loginAttempts");
+		}
+		catch (Exception e) {
+			return 0;
+		}
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(

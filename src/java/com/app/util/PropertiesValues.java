@@ -45,6 +45,10 @@ public class PropertiesValues {
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.JDBC_DEFAULT_USERNAME);
 
+	public static final int LOGIN_ATTEMPT_LIMIT =
+		Integer.parseInt(PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.LOGIN_ATTEMPT_LIMIT));
+
 	public static final String MAIL_SMTP_AUTH =
 		PropertiesUtil.getConfigurationProperty(PropertiesKeys.MAIL_SMTP_AUTH);
 
@@ -73,6 +77,14 @@ public class PropertiesValues {
 	public static final String OUTBOUND_EMAIL_ADDRESS_PASSWORD =
 		PropertiesUtil.getConfigurationProperty(
 			PropertiesKeys.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
+
+	public static final String RECAPTCHA_SECRET_KEY =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.RECAPTCHA_SECRET_KEY);
+
+	public static final String RECAPTCHA_SITE_KEY =
+		PropertiesUtil.getConfigurationProperty(
+			PropertiesKeys.RECAPTCHA_SITE_KEY);
 
 	public static final String SENDGRID_API_KEY =
 		PropertiesUtil.getConfigurationProperty(
