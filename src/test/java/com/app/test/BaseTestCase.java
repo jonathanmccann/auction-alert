@@ -15,7 +15,6 @@
 package com.app.test;
 
 import com.app.util.DatabaseUtil;
-import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.UserUtil;
 import com.app.util.eBayAPIUtil;
@@ -42,17 +41,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public abstract class BaseTestCase {
 
 	protected static void setUpApiContext() {
-		eBayAPIUtil.loadApiContext(
-			System.getProperty(PropertiesKeys.EBAY_TOKEN));
+		eBayAPIUtil.loadApiContext("ebay.token");
 	}
 
 	protected static void setUpDatabase() throws Exception {
-		String databasePassword = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
-		String databaseURL = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+		String databasePassword = System.getProperty("jdbc.default.password");
+		String databaseURL = System.getProperty("jdbc.default.url");
+		String databaseUsername = System.getProperty("jdbc.default.username");
 
 		DatabaseUtil.setDatabaseProperties(
 			databaseURL, databaseUsername, databasePassword);
@@ -82,8 +77,7 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpServiceClient() {
-		eBayAPIUtil.loadeBayServiceClient(
-			System.getProperty(PropertiesKeys.APPLICATION_ID));
+		eBayAPIUtil.loadeBayServiceClient(System.getProperty("application.id"));
 	}
 
 	protected static void setUpUserUtil() throws Exception {

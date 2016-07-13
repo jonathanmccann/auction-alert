@@ -15,7 +15,6 @@
 package com.app.test.util;
 
 import com.app.test.BaseTestCase;
-import com.app.util.PropertiesKeys;
 import com.app.util.eBayAPIUtil;
 
 import com.ebay.sdk.ApiContext;
@@ -42,9 +41,7 @@ public class eBayAPIUtilTest extends BaseTestCase {
 
 		ApiCredential apiCredential = apiContext.getApiCredential();
 
-		Assert.assertEquals(
-			System.getProperty(PropertiesKeys.EBAY_TOKEN),
-			apiCredential.geteBayToken());
+		Assert.assertEquals("ebay.token", apiCredential.geteBayToken());
 		Assert.assertEquals(_API_SERVER_URL, apiContext.getApiServerUrl());
 		Assert.assertEquals(SiteCodeType.US, apiContext.getSite());
 	}

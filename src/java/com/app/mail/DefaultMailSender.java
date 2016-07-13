@@ -18,7 +18,6 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
-import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
@@ -80,9 +79,8 @@ public class DefaultMailSender implements MailSender {
 		try {
 			Message emailMessage = _populateEmailMessage(
 				searchQueryResultMap, user.getEmailAddress(),
-				user.getUnsubscribeToken(), session.getProperty(
-					PropertiesKeys.OUTBOUND_EMAIL_ADDRESS),
-				session);
+				user.getUnsubscribeToken(),
+				PropertiesValues.OUTBOUND_EMAIL_ADDRESS, session);
 
 			Transport.send(emailMessage);
 

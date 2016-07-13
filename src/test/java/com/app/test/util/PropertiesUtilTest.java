@@ -15,7 +15,6 @@
 package com.app.test.util;
 
 import com.app.test.BaseTestCase;
-import com.app.util.PropertiesKeys;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 
@@ -97,15 +96,13 @@ public class PropertiesUtilTest extends BaseTestCase {
 	public void testSetConfigurationProperties() throws IOException {
 		Properties properties = new Properties();
 
+		properties.setProperty("application.id", "Updated Application ID");
 		properties.setProperty(
-			PropertiesKeys.APPLICATION_ID, "Updated Application ID");
+			"jdbc.default.password", "Updated JDBC Default Password");
 		properties.setProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD,
-			"Updated JDBC Default Password");
+			"jdbc.default.url", "Updated JDBC Default URL");
 		properties.setProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL, "Updated JDBC Default URL");
-		properties.setProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME,
+			"jdbc.default.username",
 			"Updated JDBC Default Username");
 
 		PropertiesUtil.setConfigurationProperties(properties);
@@ -113,17 +110,16 @@ public class PropertiesUtilTest extends BaseTestCase {
 		properties = PropertiesUtil.getConfigurationProperties();
 
 		Assert.assertEquals(
-			"Updated Application ID",
-			properties.getProperty(PropertiesKeys.APPLICATION_ID));
+			"Updated Application ID", properties.getProperty("application.id"));
 		Assert.assertEquals(
 			"Updated JDBC Default Password",
-			properties.getProperty(PropertiesKeys.JDBC_DEFAULT_PASSWORD));
+			properties.getProperty("jdbc.default.password"));
 		Assert.assertEquals(
 			"Updated JDBC Default URL",
-			properties.getProperty(PropertiesKeys.JDBC_DEFAULT_URL));
+			properties.getProperty("jdbc.default.url"));
 		Assert.assertEquals(
 			"Updated JDBC Default Username",
-			properties.getProperty(PropertiesKeys.JDBC_DEFAULT_USERNAME));
+			properties.getProperty("jdbc.default.username"));
 	}
 
 }

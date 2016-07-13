@@ -20,96 +20,81 @@ package com.app.util;
 public class PropertiesValues {
 
 	public static final String APPLICATION_ID =
-		PropertiesUtil.getConfigurationProperty(PropertiesKeys.APPLICATION_ID);
+		PropertiesUtil.getConfigurationProperty("application.id");
 
 	public static final String EBAY_CAMPAIGN_ID =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.EBAY_CAMPAIGN_ID);
+		PropertiesUtil.getConfigurationProperty("ebay.campaign.id");
 
 	public static final String EBAY_TOKEN =
-		PropertiesUtil.getConfigurationProperty(PropertiesKeys.EBAY_TOKEN);
+		PropertiesUtil.getConfigurationProperty("ebay.token");
 
 	public static final String JDBC_DEFAULT_DRIVER_CLASS_NAME =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.JDBC_DEFAULT_DRIVER_CLASS_NAME);
+		PropertiesUtil.getConfigurationProperty("jdbc.default.driverClassName");
 
 	public static final String JDBC_DEFAULT_PASSWORD =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
+		PropertiesUtil.getConfigurationProperty("jdbc.default.password");
 
 	public static final String JDBC_DEFAULT_URL =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL);
+		PropertiesUtil.getConfigurationProperty("jdbc.default.url");
 
 	public static final String JDBC_DEFAULT_USERNAME =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME);
+		PropertiesUtil.getConfigurationProperty("jdbc.default.username");
 
 	public static final int LOGIN_ATTEMPT_LIMIT =
 		Integer.parseInt(PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.LOGIN_ATTEMPT_LIMIT));
+			"login.attempt.limit"));
 
 	public static final String MAIL_SMTP_AUTH =
-		PropertiesUtil.getConfigurationProperty(PropertiesKeys.MAIL_SMTP_AUTH);
+		PropertiesUtil.getConfigurationProperty("mail.smtp.auth");
 
 	public static final String MAIL_SMTP_HOST =
-		PropertiesUtil.getConfigurationProperty(PropertiesKeys.MAIL_SMTP_HOST);
+		PropertiesUtil.getConfigurationProperty("mail.smtp.host");
 
 	public static final String MAIL_SMTP_PORT =
-		PropertiesUtil.getConfigurationProperty(PropertiesKeys.MAIL_SMTP_PORT);
+		PropertiesUtil.getConfigurationProperty("mail.smtp.port");
 
 	public static final String MAIL_SMTP_STARTTLS_ENABLE =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.MAIL_SMTP_STARTTLS_ENABLE);
+		PropertiesUtil.getConfigurationProperty("mail.smtp.starttls.enable");
 
 	public static final int NUMBER_OF_EMAILS_PER_DAY = Integer.parseInt(
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.NUMBER_OF_EMAILS_PER_DAY));
+		PropertiesUtil.getConfigurationProperty("number.of.emails.per.day"));
 
 	public static final int NUMBER_OF_SEARCH_RESULTS = Integer.parseInt(
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.NUMBER_OF_SEARCH_RESULTS));
+		PropertiesUtil.getConfigurationProperty("number.of.search.results"));
 
 	public static final String OUTBOUND_EMAIL_ADDRESS =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.OUTBOUND_EMAIL_ADDRESS);
+		PropertiesUtil.getConfigurationProperty("outbound.email.address");
 
 	public static final String OUTBOUND_EMAIL_ADDRESS_PASSWORD =
 		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
+			"outbound.email.address.password");
 
 	public static final String RECAPTCHA_SECRET_KEY =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.RECAPTCHA_SECRET_KEY);
+		PropertiesUtil.getConfigurationProperty("recaptcha.secret.key");
 
 	public static final String RECAPTCHA_SITE_KEY =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.RECAPTCHA_SITE_KEY);
+		PropertiesUtil.getConfigurationProperty("recaptcha.site.key");
 
 	public static final String SENDGRID_API_KEY =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.SENDGRID_API_KEY);
+		PropertiesUtil.getConfigurationProperty("sendgrid.api.key");
 
 	public static final String STRIPE_PUBLISHABLE_KEY =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.STRIPE_PUBLISHABLE_KEY);
+		PropertiesUtil.getConfigurationProperty("stripe.publishable.key");
 
 	public static final String STRIPE_SECRET_KEY =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.STRIPE_SECRET_KEY);
+		PropertiesUtil.getConfigurationProperty("stripe.secret.key");
 
 	public static final String STRIPE_SUBSCRIPTION_PLAN_ID =
-		PropertiesUtil.getConfigurationProperty(
-			PropertiesKeys.STRIPE_SUBSCRIPTION_PLAN_ID);
+		PropertiesUtil.getConfigurationProperty("stripe.subscription.plan.id");
 
 	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
 		Integer.parseInt(
 			PropertiesUtil.getConfigurationProperty(
-				PropertiesKeys.TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS));
+				"total.number.of.previous.search.result.ids"));
 
 	public static final int TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
 		Integer.parseInt(
 			PropertiesUtil.getConfigurationProperty(
-				PropertiesKeys.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED));
+				"total.number.of.search.queries.allowed"));
 
 }

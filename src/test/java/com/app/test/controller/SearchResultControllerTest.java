@@ -24,11 +24,9 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.DatabaseUtil;
-import com.app.util.PropertiesKeys;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,13 +63,6 @@ public class SearchResultControllerTest extends BaseTestCase {
 		setUpUserUtil();
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		SearchQueryUtil.deleteSearchQueries(_USER_ID);
-
-		SearchResultUtil.deleteSearchResult(1);
-	}
-
 	@Test
 	public void testHandleError() throws Exception {
 		DatabaseUtil.setDatabaseProperties("test", "test", "test");
@@ -79,16 +70,6 @@ public class SearchResultControllerTest extends BaseTestCase {
 		this.mockMvc.perform(get("/view_search_query_results"))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:error.jsp"));
-
-		String databasePassword = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
-		String databaseURL = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME);
-
-		DatabaseUtil.setDatabaseProperties(
-			databaseURL, databaseUsername, databasePassword);
 	}
 
 	@Test

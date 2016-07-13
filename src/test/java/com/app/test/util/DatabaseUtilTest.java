@@ -15,43 +15,23 @@
 package com.app.test.util;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.test.BaseTestCase;
 import com.app.util.DatabaseUtil;
-import com.app.util.PropertiesKeys;
 
 import java.lang.reflect.Field;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import org.junit.After;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * @author Jonathan McCann
  */
-public class DatabaseUtilTest {
+public class DatabaseUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		_clazz = Class.forName(DatabaseUtil.class.getName());
-	}
-
-	@After
-	public void tearDown() {
-		_setDatabaseProperties();
-	}
-
-	@Test
-	public void testGetDatabaseConnection()
-		throws DatabaseConnectionException, SQLException {
-
-		_setDatabaseProperties();
-
-		Connection connection = DatabaseUtil.getDatabaseConnection();
-
-		Assert.assertNotNull(connection);
 	}
 
 	@Test(expected = DatabaseConnectionException.class)
@@ -74,18 +54,6 @@ public class DatabaseUtilTest {
 		DatabaseUtil.setDatabaseProperties("test", "test", "test");
 
 		DatabaseUtil.getDatabaseConnection();
-	}
-
-	private static void _setDatabaseProperties() {
-		String databasePassword = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_PASSWORD);
-		String databaseURL = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_URL);
-		String databaseUsername = System.getProperty(
-			PropertiesKeys.JDBC_DEFAULT_USERNAME);
-
-		DatabaseUtil.setDatabaseProperties(
-			databaseURL, databaseUsername, databasePassword);
 	}
 
 	private static Class _clazz;
