@@ -41,6 +41,7 @@
 			<h1><a href="home">eBay Searcher</a></h1>
 			<nav id="nav">
 				<ul>
+					<li><a href="log_in" id="loginLink">Log In</a></li>
 					<li><a href="create_account" class="button special">Sign Up</a></li>
 				</ul>
 			</nav>
