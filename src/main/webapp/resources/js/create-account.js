@@ -59,6 +59,7 @@ $(window).load(function() {
 			handler.open({
 				email: $('#emailAddress').val()
 			});
+
 			e.preventDefault();
 		}
 	});
