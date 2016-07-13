@@ -502,25 +502,6 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testUpdateSubscriptionWithInvalidEmailAddress()
-		throws Exception {
-
-		setUpUserUtil();
-
-		MockHttpServletRequestBuilder request = post("/update_subscription");
-
-		request.param("stripeToken", "test");
-		request.param("stripeEmail", "test2@test.com");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
-		resultActions.andExpect(flash().attributeExists("error"));
-	}
-
-	@Test
 	public void testUpdateSubscriptionWithStripeException() throws Exception {
 		setUpProperties();
 		setUpUserUtil();

@@ -347,30 +347,18 @@ public class UserController {
 
 	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)
 	public String updateSubscription(
-			String stripeToken, String stripeEmail,
-			RedirectAttributes redirectAttributes)
+			String stripeToken, RedirectAttributes redirectAttributes)
 		throws Exception {
 
-		int userId = UserUtil.getCurrentUserId();
+		try {
+			StripeUtil.updateSubscription(stripeToken);
+		}
+		catch (Exception e) {
+			_log.error(e.getMessage());
 
-		User currentUser = UserUtil.getUserByUserId(userId);
-
-		if (!currentUser.getEmailAddress().equalsIgnoreCase(stripeEmail)) {
 			redirectAttributes.addFlashAttribute(
 				"error",
-				LanguageUtil.getMessage("invalid-stripe-email-address"));
-		}
-		else {
-			try {
-				StripeUtil.updateSubscription(stripeToken);
-			}
-			catch (Exception e) {
-				_log.error(e.getMessage());
-
-				redirectAttributes.addFlashAttribute(
-					"error",
-					LanguageUtil.getMessage("incorrect-payment-information"));
-			}
+				LanguageUtil.getMessage("incorrect-payment-information"));
 		}
 
 		return "redirect:my_account";
