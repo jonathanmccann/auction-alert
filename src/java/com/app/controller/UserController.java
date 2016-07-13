@@ -170,8 +170,15 @@ public class UserController {
 
 	@RequestMapping(value = "/log_in", method = RequestMethod.GET)
 	public String logIn(
-		@ModelAttribute("error")String error, Map<String, Object> model,
-		HttpServletRequest request) {
+			@ModelAttribute("error")String error, Map<String, Object> model,
+			HttpServletRequest request)
+		throws Exception {
+
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (currentUser.isAuthenticated()) {
+			return home(model);
+		}
 
 		model.put("error", error);
 		model.put(
@@ -180,7 +187,8 @@ public class UserController {
 		int loginAttempts = getLoginAttempts();
 
 		if (loginAttempts >= PropertiesValues.LOGIN_ATTEMPT_LIMIT) {
-			model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
+			model.put(
+				"recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
 		}
 
 		return "log_in";
