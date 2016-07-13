@@ -157,7 +157,7 @@ public class UserController {
 		return "redirect:my_account";
 	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	@RequestMapping(value = { "", "/", "/home" }, method = RequestMethod.GET)
 	public String home(Map<String, Object> model) throws Exception {
 		Subject currentUser = SecurityUtils.getSubject();
 
