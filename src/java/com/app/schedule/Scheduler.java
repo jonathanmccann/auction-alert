@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.app;
+package com.app.schedule;
 
 import com.app.exception.DatabaseConnectionException;
 import com.app.util.SearchResultUtil;
+import com.app.util.UserUtil;
 
 import java.sql.SQLException;
 
@@ -29,10 +30,10 @@ import org.springframework.scheduling.annotation.Scheduled;
  * @author Jonathan McCann
  */
 @EnableScheduling
-public class eBaySearch {
+public class Scheduler {
 
 	@Scheduled(fixedRate = 300000)
-	public static void main() {
+	public static void performEbaySearch() {
 		try {
 			SearchResultUtil.performSearch();
 		}
@@ -41,7 +42,17 @@ public class eBaySearch {
 		}
 	}
 
+	@Scheduled(cron = "0 0 0 * * *")
+	public static void resetEmailsSent() {
+		try {
+			UserUtil.resetEmailsSent();
+		}
+		catch (DatabaseConnectionException | SQLException e) {
+			_log.error("Unable to perform eBay search", e);
+		}
+	}
+
 	private static final Logger _log = LoggerFactory.getLogger(
-		eBaySearch.class);
+		Scheduler.class);
 
 }

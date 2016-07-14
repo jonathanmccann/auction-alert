@@ -156,6 +156,20 @@ public class UserDAO {
 	}
 
 	@CacheEvict(value = "userByUserId", allEntries = true)
+	public void resetEmailsSent()
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Resetting emails sent for all users");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_RESET_EMAILS_SENT_SQL)) {
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@CacheEvict(value = "userByUserId", allEntries = true)
 	public void unsubscribeUserFromEmailNotifications(String emailAddress)
 		throws DatabaseConnectionException, SQLException {
 
@@ -310,6 +324,9 @@ public class UserDAO {
 
 	private static final String _GET_USER_IDS =
 		"SELECT userId FROM User_ WHERE active = ? ORDER BY userId";
+
+	public static final String _RESET_EMAILS_SENT_SQL =
+		"UPDATE User_ SET emailsSent = 0";
 
 	public static final String _UNSUBSCRIBE_USER_FROM_EMAIL_NOTIFICATIONS_SQL =
 		"UPDATE User_ SET emailNotification = false WHERE emailAddress = ?";

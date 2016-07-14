@@ -105,6 +105,12 @@ public class UserUtil {
 		return _userDAO.getUserIds(active);
 	}
 
+	public static void resetEmailsSent()
+		throws DatabaseConnectionException, SQLException {
+
+		_userDAO.resetEmailsSent();
+	}
+
 	public static void unsubscribeUserFromEmailNotifications(
 			String emailAddress)
 		throws DatabaseConnectionException, SQLException {
