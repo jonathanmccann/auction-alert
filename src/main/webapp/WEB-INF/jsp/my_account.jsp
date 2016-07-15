@@ -80,6 +80,13 @@
 					</div>
 				</c:if>
 
+				<c:if test="${not empty success}">
+					<div id="success">
+						<i class="icon fa-check-circle"></i>
+						${success}
+					</div>
+				</c:if>
+
 				<div>
 					<b>Email Address: </b><form:input path="emailAddress" value="${emailAddress}" />
 				</div>

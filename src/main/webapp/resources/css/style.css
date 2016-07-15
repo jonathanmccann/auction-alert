@@ -1217,6 +1217,15 @@
 		width: 40%;
 	}
 
+	#success {
+		border: 1px solid;
+		margin: auto;
+		padding:15px 10px 15px 25px;
+		background-color: #DFF2BF;
+		color: #4F8A10;
+		border-radius:.5em;
+	}
+
 /* User Details */
 
 	#user-details {

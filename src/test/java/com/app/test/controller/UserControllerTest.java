@@ -155,6 +155,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().is3xxRedirection());
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("success"));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -285,15 +286,6 @@ public class UserControllerTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
 		Assert.assertFalse(user.isPendingCancellation());
-	}
-
-	@Test
-	public void testGetCreateAccount() throws Exception {
-		this.mockMvc.perform(get("/create_account"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("create_account"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/create_account.jsp"))
-			.andExpect(model().attributeExists("stripePublishableKey"));
 	}
 
 	@Test
@@ -442,6 +434,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().is3xxRedirection());
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("success"));
 
 		_assertUpdatedUser();
 	}

@@ -146,6 +146,9 @@ public class UserController {
 
 			try {
 				StripeUtil.deleteSubscription(subscriptionId);
+
+				redirectAttributes.addFlashAttribute(
+					"success", LanguageUtil.getMessage("subscription-updated"));
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -329,6 +332,9 @@ public class UserController {
 			try {
 				StripeUtil.resubscribe(
 					currentUser.getCustomerId(), subscriptionId);
+
+				redirectAttributes.addFlashAttribute(
+					"success", LanguageUtil.getMessage("subscription-updated"));
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -381,6 +387,9 @@ public class UserController {
 
 		try {
 			StripeUtil.updateSubscription(stripeToken);
+
+			redirectAttributes.addFlashAttribute(
+				"success", LanguageUtil.getMessage("subscription-updated"));
 		}
 		catch (Exception e) {
 			_log.error(e.getMessage());
@@ -402,6 +411,9 @@ public class UserController {
 		try {
 			UserUtil.updateUserDetails(
 				user.getEmailAddress(), user.isEmailNotification());
+
+			redirectAttributes.addFlashAttribute(
+				"success", LanguageUtil.getMessage("account-updated"));
 		}
 		catch (DuplicateEmailAddressException deae) {
 			redirectAttributes.addFlashAttribute(
@@ -417,7 +429,8 @@ public class UserController {
 
 	@RequestMapping(value = "/my_account", method = RequestMethod.GET)
 	public String viewMyAccount(
-			@ModelAttribute("error")String error, Map<String, Object> model,
+			@ModelAttribute("error")String error,
+			@ModelAttribute("success")String success, Map<String, Object> model,
 			HttpServletRequest request)
 		throws DatabaseConnectionException, SQLException {
 
@@ -425,6 +438,7 @@ public class UserController {
 		model.put(
 			"info", WebUtils.getSessionAttribute(request, "info"));
 		model.put("isActive", UserUtil.getCurrentUser().isActive());
+		model.put("success", success);
 		model.put("user", UserUtil.getCurrentUser());
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
