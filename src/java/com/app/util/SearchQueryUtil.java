@@ -75,13 +75,13 @@ public class SearchQueryUtil {
 		return _searchQueryDAO.getSearchQuery(searchQueryId);
 	}
 
-	public static boolean isExceedsTotalNumberOfSearchQueriesAllowed(int userId)
+	public static boolean exceedsMaximumNumberOfSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
 		int searchQueryCount = _searchQueryDAO.getSearchQueryCount(userId);
 
 		if ((searchQueryCount + 1) >
-				PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED) {
+				PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES) {
 
 			return true;
 		}

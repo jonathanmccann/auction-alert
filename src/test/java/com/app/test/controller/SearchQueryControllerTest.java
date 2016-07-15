@@ -370,6 +370,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("info"))
 			.andExpect(model().attributeExists("isAdd"));
 	}
 
@@ -400,6 +401,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 				"searchQuery", hasProperty("searchQueryId", is(0))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attribute("disabled", true))
+			.andExpect(model().attributeExists("info"))
 			.andExpect(model().attributeExists("isAdd"));
 	}
 
@@ -439,6 +441,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 				"searchQuery", hasProperty("searchQueryId", is(searchQueryId))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("info"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
@@ -476,7 +479,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"))
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attributeExists("isAdd"))
-			.andExpect(model().attributeDoesNotExist("disabled"));
+			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("info"));
 	}
 
 	@Test
@@ -531,6 +535,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("info"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -563,6 +568,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("info"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -587,6 +593,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:error.jsp"))
 			.andExpect(model().attributeDoesNotExist("searchQueries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("info"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 
@@ -613,6 +620,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -651,6 +659,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
+			.andExpect(model().attributeDoesNotExist("info"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -683,6 +692,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -759,6 +769,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, false);
@@ -835,6 +846,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, true);
@@ -889,6 +901,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -944,6 +957,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -999,6 +1013,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -1054,6 +1069,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().isFound());
 		resultActions.andExpect(view().name("redirect:view_search_queries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
@@ -1094,6 +1110,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:error.jsp"));
 		resultActions.andExpect(model().attributeDoesNotExist("searchQueries"));
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
+		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
 	}
 

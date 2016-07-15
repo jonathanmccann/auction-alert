@@ -71,6 +71,8 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals("smtp.gmail.com", PropertiesValues.MAIL_SMTP_HOST);
 		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
 		Assert.assertEquals(
+			1, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES);
+		Assert.assertEquals(
 			"Recaptcha Site Key", PropertiesValues.RECAPTCHA_SITE_KEY);
 		Assert.assertEquals(
 			"Recaptcha Secret Key", PropertiesValues.RECAPTCHA_SECRET_KEY);
@@ -83,8 +85,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Stripe Subscription Plan ID",
 			PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-		Assert.assertEquals(
-			1, PropertiesValues.TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED);
 	}
 
 	@Test(expected = IOException.class)

@@ -1206,6 +1206,16 @@
 		border-radius:.5em;
 	}
 
+	#info {
+		border: 1px solid;
+		margin: auto;
+		padding:15px 10px 15px 25px;
+		background-color: #BDE5F8;
+		color: #00529B;
+		border-radius:.5em;
+		width: 40%;
+	}
+
 /* User Details */
 
 	#user-details {

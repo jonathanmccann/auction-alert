@@ -15,6 +15,7 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.language.LanguageUtil;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
@@ -44,7 +45,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * @author Jonathan McCann
@@ -72,14 +75,13 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
 	public String addSearchQuery(
-			@ModelAttribute("searchQuery")SearchQuery searchQuery)
+			@ModelAttribute("searchQuery")SearchQuery searchQuery,
+			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		int userId = UserUtil.getCurrentUserId();
 
-		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
-				userId)) {
-
+		if (SearchQueryUtil.exceedsMaximumNumberOfSearchQueries(userId)) {
 			return "redirect:add_search_query";
 		}
 
@@ -105,7 +107,7 @@ public class SearchQueryController {
 
 		model.put("searchQuery", searchQuery);
 
-		if (SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
+		if (SearchQueryUtil.exceedsMaximumNumberOfSearchQueries(
 				UserUtil.getCurrentUserId())) {
 
 			_log.debug(
@@ -113,6 +115,9 @@ public class SearchQueryController {
 					"total number of search queries allowed");
 
 			model.put("disabled", true);
+			model.put(
+				"info",
+				LanguageUtil.getMessage("reached-maximum-search-queries"));
 		}
 
 		populateCategories(model);

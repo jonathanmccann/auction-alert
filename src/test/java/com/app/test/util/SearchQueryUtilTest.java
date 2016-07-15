@@ -268,7 +268,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		throws Exception {
 
 		Assert.assertFalse(
-			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
+			SearchQueryUtil.exceedsMaximumNumberOfSearchQueries(
 				_USER_ID));
 
 		SearchQuery firstSearchQuery = new SearchQuery();
@@ -285,7 +285,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		SearchQueryUtil.addSearchQuery(secondSearchQuery);
 
 		Assert.assertTrue(
-			SearchQueryUtil.isExceedsTotalNumberOfSearchQueriesAllowed(
+			SearchQueryUtil.exceedsMaximumNumberOfSearchQueries(
 				_USER_ID));
 	}
 

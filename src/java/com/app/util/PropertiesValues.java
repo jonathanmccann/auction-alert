@@ -56,6 +56,11 @@ public class PropertiesValues {
 	public static final String MAIL_SMTP_STARTTLS_ENABLE =
 		PropertiesUtil.getConfigurationProperty("mail.smtp.starttls.enable");
 
+	public static final int MAXIMUM_NUMBER_OF_SEARCH_QUERIES =
+		Integer.parseInt(
+			PropertiesUtil.getConfigurationProperty(
+				"maximum.number.of.search.queries"));
+
 	public static final int NUMBER_OF_EMAILS_PER_DAY = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty("number.of.emails.per.day"));
 
@@ -91,10 +96,5 @@ public class PropertiesValues {
 		Integer.parseInt(
 			PropertiesUtil.getConfigurationProperty(
 				"total.number.of.previous.search.result.ids"));
-
-	public static final int TOTAL_NUMBER_OF_SEARCH_QUERIES_ALLOWED =
-		Integer.parseInt(
-			PropertiesUtil.getConfigurationProperty(
-				"total.number.of.search.queries.allowed"));
 
 }
