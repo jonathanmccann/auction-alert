@@ -162,7 +162,26 @@ public class UserController {
 		Subject currentUser = SecurityUtils.getSubject();
 
 		if (currentUser.isAuthenticated()) {
-			model.put("nextChargeDate", StripeUtil.getNextChargeDate());
+			User user = UserUtil.getCurrentUser();
+
+			if (user.isPendingCancellation()) {
+				model.put(
+					"nextChargeDate",
+					LanguageUtil.formatMessage(
+						"subscription-will-end-on",
+						StripeUtil.getNextChargeDate()));
+			}
+			else if (user.isActive()) {
+				model.put(
+					"nextChargeDate",
+					LanguageUtil.formatMessage(
+						"next-charge-date", StripeUtil.getNextChargeDate()));
+			}
+			else {
+				model.put(
+					"nextChargeDate",
+					LanguageUtil.getMessage("inactive-account"));
+			}
 		}
 
 		return "home";

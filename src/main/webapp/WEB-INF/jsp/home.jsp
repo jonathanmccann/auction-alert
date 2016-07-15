@@ -180,12 +180,14 @@
 								</section>
 							</div>
 							<div class="6u">
-								<section class="special box">
-									<i class="icon fa-calendar major"></i>
-									<h3>
-										Next charge will occur on ${nextChargeDate}
-									</h3>
-								</section>
+								<a href="my_account">
+									<section class="special box">
+										<i class="icon fa-calendar major"></i>
+										<h3>
+											${nextChargeDate}
+										</h3>
+									</section>
+								</a>
 							</div>
 						</div>
 					</div>
