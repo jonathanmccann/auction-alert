@@ -35,8 +35,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,17 +56,12 @@ public class SearchQueryController {
 	@RequestMapping(
 		value = "/activate_search_query", method = RequestMethod.POST
 	)
-	public String activateSearchQuery(String[] inactiveSearchQueryIds)
+	public String activateSearchQuery(
+			@RequestParam("searchQueryId")int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		if (ValidatorUtil.isNotNull(inactiveSearchQueryIds)) {
-			for (String searchQueryId : inactiveSearchQueryIds) {
-				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
-
-				SearchQueryUtil.activateSearchQuery(
-					UserUtil.getCurrentUserId(), searchQueryIdInteger);
-			}
-		}
+		SearchQueryUtil.activateSearchQuery(
+			UserUtil.getCurrentUserId(), searchQueryId);
 
 		return "redirect:view_search_queries";
 	}
@@ -130,49 +123,32 @@ public class SearchQueryController {
 	@RequestMapping(
 		value = "/deactivate_search_query", method = RequestMethod.POST
 	)
-	public String deactivateSearchQuery(String[] activeSearchQueryIds)
+	public String deactivateSearchQuery(
+			@RequestParam("searchQueryId")int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		if (ValidatorUtil.isNotNull(activeSearchQueryIds)) {
-			for (String searchQueryId : activeSearchQueryIds) {
-				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
-
-				SearchQueryUtil.deactivateSearchQuery(
-					UserUtil.getCurrentUserId(), searchQueryIdInteger);
-			}
-		}
+		SearchQueryUtil.deactivateSearchQuery(
+			UserUtil.getCurrentUserId(), searchQueryId);
 
 		return "redirect:view_search_queries";
 	}
 
 	@RequestMapping(value = "/delete_search_query", method = RequestMethod.POST)
 	public String deleteSearchQuery(
-			String[] activeSearchQueryIds, String[] inactiveSearchQueryIds)
+			@RequestParam("searchQueryId")int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		String[] searchQueryIds = ArrayUtils.addAll(
-			activeSearchQueryIds, inactiveSearchQueryIds);
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		if (ValidatorUtil.isNotNull(searchQueryIds)) {
-			for (String searchQueryId : searchQueryIds) {
-				int searchQueryIdInteger = Integer.parseInt(searchQueryId);
+		int userId = UserUtil.getCurrentUserId();
 
-				SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
-					searchQueryIdInteger);
+		if (searchQuery.getUserId() == userId) {
+			SearchQueryUtil.deleteSearchQuery(userId, searchQueryId);
 
-				int userId = UserUtil.getCurrentUserId();
+			SearchResultUtil.deleteSearchQueryResults(searchQueryId);
 
-				if (searchQuery.getUserId() == userId) {
-					SearchQueryUtil.deleteSearchQuery(
-						userId, searchQueryIdInteger);
-
-					SearchResultUtil.deleteSearchQueryResults(
-						searchQueryIdInteger);
-
-					SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
-						searchQueryIdInteger);
-				}
-			}
+			SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
+				searchQueryId);
 		}
 
 		return "redirect:view_search_queries";
@@ -205,11 +181,9 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
 	public String updateSearchQuery(
-			HttpServletRequest request, Map<String, Object> model)
+			@RequestParam("searchQueryId")int searchQueryId,
+			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
-
-		int searchQueryId = Integer.parseInt(
-			request.getParameter("searchQueryId"));
 
 		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 

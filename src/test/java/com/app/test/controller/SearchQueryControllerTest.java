@@ -91,11 +91,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		String[] inactiveSearchQueryIds =
-			new String[] {String.valueOf(searchQueryId)};
-
 		this.mockMvc.perform(post("/activate_search_query")
-			.param("inactiveSearchQueryIds", inactiveSearchQueryIds))
+			.param("searchQueryId", String.valueOf(searchQueryId)))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
@@ -114,11 +111,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		String[] inactiveSearchQueryIds =
-			new String[] {String.valueOf(searchQueryId)};
-
 		this.mockMvc.perform(post("/activate_search_query")
-			.param("inactiveSearchQueryIds", inactiveSearchQueryIds))
+			.param("searchQueryId", String.valueOf(searchQueryId)))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
@@ -137,11 +131,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		String[] activeSearchQueryIds =
-			new String[] {String.valueOf(searchQueryId)};
-
 		this.mockMvc.perform(post("/deactivate_search_query")
-			.param("activeSearchQueryIds", activeSearchQueryIds))
+			.param("searchQueryId", String.valueOf(searchQueryId)))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
@@ -160,11 +151,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		String[] activeSearchQueryIds =
-			new String[] {String.valueOf(searchQueryId)};
-
 		this.mockMvc.perform(post("/deactivate_search_query")
-			.param("activeSearchQueryIds", activeSearchQueryIds))
+			.param("searchQueryId", String.valueOf(searchQueryId)))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
@@ -213,15 +201,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			inactiveSearchQuery.getSearchQueryId(), "200");
 
-		String[] activeSearchQueryIds =
-			new String[] {String.valueOf(activeSearchQueryId)};
-
-		String[] inactiveSearchQueryIds =
-			new String[] {String.valueOf(inactiveSearchQueryId)};
-
 		this.mockMvc.perform(post("/delete_search_query")
-			.param("activeSearchQueryIds", activeSearchQueryIds)
-			.param("inactiveSearchQueryIds", inactiveSearchQueryIds))
+			.param("searchQueryId", String.valueOf(activeSearchQueryId)))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 
@@ -232,6 +213,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		catch (SQLException sqle) {
 			Assert.assertEquals(SQLException.class, sqle.getClass());
 		}
+
+		this.mockMvc.perform(post("/delete_search_query")
+			.param("searchQueryId", String.valueOf(inactiveSearchQueryId)))
+			.andExpect(status().isFound())
+			.andExpect(view().name("redirect:view_search_queries"));
 
 		try {
 			SearchQueryUtil.getSearchQuery(
@@ -283,51 +269,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
 			searchQueryId, "100");
 
-		String[] activeSearchQueryIds =
-			new String[] {String.valueOf(searchQueryId)};
-
 		this.mockMvc.perform(post("/delete_search_query")
-			.param("activeSearchQueryIds", activeSearchQueryIds))
-			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:view_search_queries"));
-
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			_USER_ID, true);
-
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(searchQueryId);
-
-		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				searchQueryId);
-
-		Assert.assertEquals(1, searchQueries.size());
-		Assert.assertEquals(1, searchResults.size());
-		Assert.assertEquals(1, searchQueryPreviousResults.size());
-	}
-
-	@Test
-	public void testDeleteSearchQueryWithNullSearchQueryIds() throws Exception {
-		setUpUserUtil();
-
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setKeywords("First test keywords");
-		searchQuery.setActive(true);
-
-		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
-
-		SearchResult searchResult = new SearchResult(
-			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
-
-		SearchResultUtil.addSearchResult(searchResult);
-
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			searchQueryId, "100");
-
-		this.mockMvc.perform(post("/delete_search_query"))
+			.param("searchQueryId", String.valueOf(searchQueryId)))
 			.andExpect(status().isFound())
 			.andExpect(view().name("redirect:view_search_queries"));
 

@@ -23,66 +23,65 @@
 
 <html>
 	<head>
-		<title>View Search Queries</title>
-		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+		<title>Search Queries and Results</title>
+		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/skel.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/skel-layers.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/init.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/search-query.js" />" type="text/javascript"></script>
+		<noscript>
+			<link rel="stylesheet" href="/resources/css/skel.css" />
+			<link rel="stylesheet" href="/resources/css/style.css" />
+			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+		</noscript>
 	</head>
 	<body>
-		<div>
-			<form:form commandName="searchQueryCheckboxes" method="post">
-				<div>
-					<h2>Current Search Queries</h2>
-					<div>
-						<b>Active Search Queries</b>
-						<c:choose>
-							<c:when test="${empty activeSearchQueries}">
-								<div>
-									There are currently no active search queries.
-								</div>
-							</c:when>
-							<c:otherwise>
-								<c:forEach items="${activeSearchQueries}" var="activeSearchQuery">
-									<div>
-										<input id="activeCheckboxes" name="activeSearchQueryIds" type="checkbox" value="${activeSearchQuery.searchQueryId}" /><label><a href="update_search_query?searchQueryId=${activeSearchQuery.searchQueryId}">${activeSearchQuery.keywords}</a></label>
-									</div>
-								</c:forEach>
-							</c:otherwise>
-						</c:choose>
-					</div>
-					<hr>
-					<div>
-						<b>Inactive Search Queries</b>
-						<c:choose>
-							<c:when test="${empty inactiveSearchQueries}">
-								<div>
-									There are currently no inactive search queries.
-								</div>
-							</c:when>
-							<c:otherwise>
-								<c:forEach items="${inactiveSearchQueries}" var="inactiveSearchQuery">
-									<div>
-										<input id="inactiveCheckboxes" name="inactiveSearchQueryIds" type="checkbox" value="${inactiveSearchQuery.searchQueryId}" /><label><a href="update_search_query?searchQueryId=${inactiveSearchQuery.searchQueryId}">${inactiveSearchQuery.keywords}</a></label>
-									</div>
-								</c:forEach>
-							</c:otherwise>
-						</c:choose>
-					</div>
-					<c:if test="${(not empty activeSearchQueries) || (not empty inactiveSearchQueries)}">
-						<hr>
-						<div>
-							<div>
-								<input formaction="activate_search_query" type="submit" value="Activate Search Query" />
-								<input formaction="deactivate_search_query" type="submit" value="Deactivate Search Query" />
-								<input formaction="delete_search_query" type="submit" value="Delete Search Query" />
-							</div>
-						</div>
-					</c:if>
-				</div>
-			</form:form>
-			</br>
-			<div align="center">
-				<a href="add_search_query">Add a Search Query</a> | View Search Queries | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
-				<a href="my_account">My Account</a> | <a href="log_out">Log Out</a>
+		<%@ include file="header.jspf" %>
+
+		<section id="banner" class="minor">
+			<div class="inner">
+				<h2>Search Queries and Results</h2>
 			</div>
-		</div>
+		</section>
+
+		<section class="wrapper style1">
+			<div class="container">
+				<div class="row">
+					<div class="4u">
+						<section class="special box">
+							<h2 class="align-left">Active</h2>
+							<c:forEach items="${activeSearchQueries}" var="activeSearchQuery">
+								<div>
+									<a href="javascript:void(0)" onclick="getSearchQueryResults(${activeSearchQuery.searchQueryId}, true);">${activeSearchQuery.keywords}</a>
+								</div>
+							</c:forEach>
+							<h2 class="align-left">Inactive</h2>
+							<c:forEach items="${inactiveSearchQueries}" var="inactiveSearchQuery">
+								<div>
+									<a href="javascript:void(0)" onclick="getSearchQueryResults(${inactiveSearchQuery.searchQueryId}, false);">${inactiveSearchQuery.keywords}</a>
+								</div>
+							</c:forEach>
+						</section>
+					</div>
+					<div class="8u">
+						<form:form class="hidden" commandName="searchQuery" id="searchQueryForm">
+							<input id="searchQueryId" name="searchQueryId" type="hidden" />
+
+							<input class="button special" formaction="activate_search_query" formmethod="post" id="activateButton" type="submit" value="Activate" />
+							<input class="button special" formaction="deactivate_search_query" formmethod="post" id="deactivateButton" type="submit" value="Deactivate" />
+							<input class="button special" formaction="update_search_query" formmethod="get" id="editButton" type="submit" value="Edit" />
+							<input class="button special" formaction="delete_search_query" formmethod="post" id="deleteButton" type="submit" value="Delete" />
+						</form:form>
+						<section class="special box">
+							<h2 class="align-left">Results</h2>
+
+							<div id="results">
+								<h5>Please select a search query.</h5>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</section>
 	</body>
 </html>

@@ -48,8 +48,7 @@
 				<ul>
 					<c:if test="${isActive}">
 						<li><a href="add_search_query">Add Search Query</a></li>
-						<li><a href="view_search_queries">View Search Queries</a></li>
-						<li><a href="view_search_query_results">View Search Query Results</a></li>
+						<li><a href="view_search_queries">Search Queries and Results</a></li>
 					</c:if>
 
 					<li><a href="my_account">My Account</a></li>

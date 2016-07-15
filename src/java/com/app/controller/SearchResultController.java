@@ -15,27 +15,17 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
-import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
-import com.app.util.UserUtil;
 
 import java.sql.SQLException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author Jonathan McCann
@@ -43,42 +33,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class SearchResultController {
 
-	@ExceptionHandler(Exception.class)
-	public String handleError(HttpServletRequest request, Exception exception) {
-		_log.error("Request: {}", request.getRequestURL(), exception);
-
-		return "redirect:error.jsp";
-	}
-
 	@RequestMapping(
-		value = "view_search_query_results", method = RequestMethod.GET
+		value = "/search_query_results", method = RequestMethod.GET,
+		produces = "application/json"
 	)
-	public String viewSearchResults(Map<String, Object> model)
+	public @ResponseBody List<SearchResult> getSearchQueryResults(
+			int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		Map<SearchQuery, List<SearchResult>> searchResultMap = new HashMap<>();
-
-		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-			UserUtil.getCurrentUserId(), true);
-
-		_log.debug("Found {} search query results", searchQueries.size());
-
-		for (SearchQuery searchQuery : searchQueries) {
-			List<SearchResult> searchResults =
-				SearchResultUtil.getSearchQueryResults(
-					searchQuery.getSearchQueryId());
-
-			if (!searchResults.isEmpty()) {
-				searchResultMap.put(searchQuery, searchResults);
-			}
-		}
-
-		model.put("searchResultMap", searchResultMap);
-
-		return "view_search_query_results";
+		return SearchResultUtil.getSearchQueryResults(searchQueryId);
 	}
-
-	private static final Logger _log = LoggerFactory.getLogger(
-		SearchResultController.class);
 
 }
