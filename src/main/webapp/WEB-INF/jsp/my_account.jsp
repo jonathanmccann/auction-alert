@@ -42,7 +42,21 @@
 		</noscript>
 	</head>
 	<body>
-		<%@ include file="header.jspf" %>
+		<header id="header" class="skel-layers-fixed">
+			<h1><a href="/home">eBay Searcher</a></h1>
+			<nav id="nav">
+				<ul>
+					<c:if test="${isActive}">
+						<li><a href="add_search_query">Add Search Query</a></li>
+						<li><a href="view_search_queries">View Search Queries</a></li>
+						<li><a href="view_search_query_results">View Search Query Results</a></li>
+					</c:if>
+
+					<li><a href="my_account">My Account</a></li>
+					<li><a href="log_out" class="button special">Log Out</a></li>
+				</ul>
+			</nav>
+		</header>
 
 		<section id="banner" class="minor">
 			<div class="inner">
@@ -56,6 +70,13 @@
 					<div id="error">
 						<i class="icon fa-times-circle"></i>
 						${error}
+					</div>
+				</c:if>
+
+				<c:if test="${not empty info}">
+					<div id="info">
+						<i class="icon fa-info-circle"></i>
+						${info}
 					</div>
 				</c:if>
 

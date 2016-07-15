@@ -178,6 +178,7 @@ public class UserController {
 						"next-charge-date", StripeUtil.getNextChargeDate()));
 			}
 			else {
+				model.put("isActive", false);
 				model.put(
 					"nextChargeDate",
 					LanguageUtil.getMessage("inactive-account"));
@@ -407,10 +408,14 @@ public class UserController {
 
 	@RequestMapping(value = "/my_account", method = RequestMethod.GET)
 	public String viewMyAccount(
-			@ModelAttribute("error")String error, Map<String, Object> model)
+			@ModelAttribute("error")String error, Map<String, Object> model,
+			HttpServletRequest request)
 		throws DatabaseConnectionException, SQLException {
 
 		model.put("error", error);
+		model.put(
+			"info", WebUtils.getSessionAttribute(request, "info"));
+		model.put("isActive", UserUtil.getCurrentUser().isActive());
 		model.put("user", UserUtil.getCurrentUser());
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);

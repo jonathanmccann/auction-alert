@@ -68,9 +68,12 @@
 						<li><a href="create_account" class="button special">Sign Up</a></li>
 					</shiro:guest>
 					<shiro:user>
-						<li><a href="add_search_query">Add Search Query</a></li>
-						<li><a href="view_search_queries">View Search Queries</a></li>
-						<li><a href="view_search_query_results">View Search Query Results</a></li>
+						<c:if test="${isActive}">
+							<li><a href="add_search_query">Add Search Query</a></li>
+							<li><a href="view_search_queries">View Search Queries</a></li>
+							<li><a href="view_search_query_results">View Search Query Results</a></li>
+						</c:if>
+
 						<li><a href="my_account">My Account</a></li>
 						<li><a href="log_out" class="button special">Log Out</a></li>
 					</shiro:user>

@@ -35,6 +35,20 @@
 
 			<bean class="com.app.controller.interceptor.AuthenticationInterceptor" />
 		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/activate_search_query" />
+			<mvc:mapping path="/add_search_query" />
+			<mvc:mapping path="/delete_search_query" />
+			<mvc:mapping path="/delete_subscription" />
+			<mvc:mapping path="/deactivate_search_query" />
+			<mvc:mapping path="/update_search_query" />
+			<mvc:mapping path="/update_subscription" />
+			<mvc:mapping path="/view_search_queries" />
+			<mvc:mapping path="/view_search_query_results" />
+
+			<bean class="com.app.controller.interceptor.ActiveInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
