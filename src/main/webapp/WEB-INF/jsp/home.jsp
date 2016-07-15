@@ -142,6 +142,37 @@
 				<section id="user" class="wrapper style1">
 					<div class="container">
 						<div class="row">
+							<div class="4u">
+								<a href="view_search_queries">
+									<section class="special box">
+										<i class="icon fa-search major"></i>
+										<h3>Manage Search Queries</h3>
+									</section>
+								</a>
+							</div>
+							<div class="4u">
+								<a href="view_search_query_results">
+									<section class="special box">
+										<i class="icon fa-archive major"></i>
+										<h3>View Results</h3>
+									</section>
+								</a>
+							</div>
+							<div class="4u">
+								<a href="my_account">
+									<section class="special box">
+										<i class="icon fa-gear major"></i>
+										<h3>Manage Account</h3>
+									</section>
+								</a>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section id="action" class="wrapper style2">
+					<div class="container">
+						<div class="row">
 							<div class="6u">
 								<section class="special box">
 									<i class="icon fa-line-chart major"></i>
@@ -154,31 +185,6 @@
 									<h3>
 										Next charge will occur on ${nextChargeDate}
 									</h3>
-								</section>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section id="action" class="wrapper style2">
-					<div class="container">
-						<div class="row">
-							<div class="4u">
-								<section class="special box">
-									<i class="icon fa-search major"></i>
-									<h3><a href="view_search_queries">Manage Search Queries</a></h3>
-								</section>
-							</div>
-							<div class="4u">
-								<section class="special box">
-									<i class="icon fa-archive major"></i>
-									<h3><a href="view_search_query_results">View Results</a></h3>
-								</section>
-							</div>
-							<div class="4u">
-								<section class="special box">
-									<i class="icon fa-gear major"></i>
-									<h3><a href="my_account">Manage Account</a></h3>
 								</section>
 							</div>
 						</div>
