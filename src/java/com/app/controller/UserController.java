@@ -172,6 +172,7 @@ public class UserController {
 			User user = UserUtil.getCurrentUser();
 
 			if (user.isPendingCancellation()) {
+				model.put("isActive", true);
 				model.put(
 					"nextChargeDate",
 					LanguageUtil.formatMessage(
@@ -179,6 +180,7 @@ public class UserController {
 						StripeUtil.getNextChargeDate()));
 			}
 			else if (user.isActive()) {
+				model.put("isActive", true);
 				model.put(
 					"nextChargeDate",
 					LanguageUtil.formatMessage(

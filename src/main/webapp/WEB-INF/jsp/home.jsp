@@ -142,59 +142,72 @@
 					</div>
 				</section>
 
-				<section id="user" class="wrapper style1">
-					<div class="container">
-						<div class="row">
-							<div class="4u">
-								<a href="view_search_queries">
-									<section class="special box">
-										<i class="icon fa-search major"></i>
-										<h3>Manage Search Queries</h3>
-									</section>
-								</a>
+				<c:choose>
+					<c:when test="${isActive}">
+						<section id="user" class="wrapper style1">
+							<div class="container">
+								<div class="row">
+									<div class="4u">
+										<a href="view_search_queries">
+											<section class="special box">
+												<i class="icon fa-search major"></i>
+												<h3>Manage Search Queries</h3>
+											</section>
+										</a>
+									</div>
+									<div class="4u">
+										<a href="view_search_query_results">
+											<section class="special box">
+												<i class="icon fa-archive major"></i>
+												<h3>View Results</h3>
+											</section>
+										</a>
+									</div>
+									<div class="4u">
+										<a href="my_account">
+											<section class="special box">
+												<i class="icon fa-gear major"></i>
+												<h3>Manage Account</h3>
+											</section>
+										</a>
+									</div>
+								</div>
 							</div>
-							<div class="4u">
-								<a href="view_search_query_results">
-									<section class="special box">
-										<i class="icon fa-archive major"></i>
-										<h3>View Results</h3>
-									</section>
-								</a>
-							</div>
-							<div class="4u">
-								<a href="my_account">
-									<section class="special box">
-										<i class="icon fa-gear major"></i>
-										<h3>Manage Account</h3>
-									</section>
-								</a>
-							</div>
-						</div>
-					</div>
-				</section>
+						</section>
 
-				<section id="action" class="wrapper style2">
-					<div class="container">
-						<div class="row">
-							<div class="6u">
+						<section id="action" class="wrapper style2">
+							<div class="container">
+								<div class="row">
+									<div class="6u">
+										<section class="special box">
+											<i class="icon fa-line-chart major"></i>
+											<h3>Number of Search Queries</h3>
+										</section>
+									</div>
+									<div class="6u">
+										<a href="my_account">
+											<section class="special box">
+												<i class="icon fa-calendar major"></i>
+												<h3>${nextChargeDate}</h3>
+											</section>
+										</a>
+									</div>
+								</div>
+							</div>
+						</section>
+					</c:when>
+					<c:otherwise>
+						<div class="container padding-top">
+							<a href="my_account">
 								<section class="special box">
-									<i class="icon fa-line-chart major"></i>
-									<h3>Number of Search Queries</h3>
+									<i class="icon fa-calendar major"></i>
+									<h3>${nextChargeDate}</h3>
+									<h5>Please resubscribe to access these features</h5>
 								</section>
-							</div>
-							<div class="6u">
-								<a href="my_account">
-									<section class="special box">
-										<i class="icon fa-calendar major"></i>
-										<h3>
-											${nextChargeDate}
-										</h3>
-									</section>
-								</a>
-							</div>
+							</a>
 						</div>
-					</div>
-				</section>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</shiro:user>
 
