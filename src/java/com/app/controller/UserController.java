@@ -63,11 +63,18 @@ public class UserController {
 	public String createAccount(
 		@ModelAttribute("error")String error, Map<String, Object> model) {
 
-		model.put("error", error);
-		model.put(
-			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
+		Subject currentUser = SecurityUtils.getSubject();
 
-		return "create_account";
+		if (currentUser.isAuthenticated()) {
+			return "redirect:my_account";
+		}
+		else {
+			model.put("error", error);
+			model.put(
+				"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
+
+			return "create_account";
+		}
 	}
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.POST)
