@@ -147,18 +147,18 @@
 							<div class="container">
 								<div class="row">
 									<div class="4u">
-										<a href="view_search_queries">
+										<a href="add_search_query">
 											<section class="special box">
 												<i class="icon fa-search major"></i>
-												<h3>Manage Search Queries</h3>
+												<h3>Add New Query</h3>
 											</section>
 										</a>
 									</div>
 									<div class="4u">
-										<a href="view_search_query_results">
+										<a href="view_search_queries">
 											<section class="special box">
 												<i class="icon fa-archive major"></i>
-												<h3>View Results</h3>
+												<h3>Queries and Results</h3>
 											</section>
 										</a>
 									</div>
@@ -166,7 +166,7 @@
 										<a href="my_account">
 											<section class="special box">
 												<i class="icon fa-gear major"></i>
-												<h3>Manage Account</h3>
+												<h3>My Account</h3>
 											</section>
 										</a>
 									</div>
