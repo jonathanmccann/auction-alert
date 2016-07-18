@@ -61,12 +61,24 @@ $(window).load(function() {
 		var valid = $("#monitorForm").valid();
 
 		if (!valid) {
+			$('html, body').animate({
+				scrollTop: $('#search').offset().top - $('#header').height()
+			}, 500);
+
 			return;
 		}
 
 		if (intervalId) {
 			clearInterval(intervalId);
 		}
+
+		if ($("#searchQuery").is(':visible')) {
+			$("#searchQuery").slideToggle(500);
+
+			$(this).toggleClass("fa-angle-down fa-angle-right")
+		}
+
+		$(header).find('i').toggleClass('fa-angle-down fa-angle-right')
 
 		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 

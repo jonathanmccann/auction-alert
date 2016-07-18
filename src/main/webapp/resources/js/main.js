@@ -1,10 +1,8 @@
 $(window).load(function() {
-	$(".header").click(function() {
-		$header = $(this);
+	$("#search").click(function() {
+		$("#searchQuery").slideToggle(500);
 
-		$content = $header.next();
-
-		$content.slideToggle(500);
+		$(this).toggleClass("fa-angle-down fa-angle-right")
 	});
 
 	$("#user\\.emailAddress, #keywords, #maxPrice, #minPrice").tooltipster({
