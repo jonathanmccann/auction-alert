@@ -14,18 +14,10 @@
 
 package com.app.mail;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
-import java.io.IOException;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Jonathan McCann
@@ -38,21 +30,6 @@ public class MailUtil {
 		return dateFormat.format(new Date());
 	}
 
-	protected static Template getEmailTemplate() throws IOException {
-		if (null != _emailTemplate) {
-			return _emailTemplate;
-		}
-
-		Resource resource = new ClassPathResource("/template");
-
-		_configuration.setDirectoryForTemplateLoading(resource.getFile());
-		_configuration.setAPIBuiltinEnabled(true);
-
-		_emailTemplate = _configuration.getTemplate("/email_body.ftl");
-
-		return _emailTemplate;
-	}
-
 	private static final ThreadLocal<DateFormat> _DATE_FORMAT =
 		new ThreadLocal<DateFormat>() {
 
@@ -62,10 +39,5 @@ public class MailUtil {
 			}
 
 		};
-
-	private static final Configuration _configuration = new Configuration(
-		Configuration.VERSION_2_3_24);
-
-	private static Template _emailTemplate;
 
 }

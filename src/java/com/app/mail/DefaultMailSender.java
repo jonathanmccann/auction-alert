@@ -22,11 +22,6 @@ import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 
-import com.sendgrid.SendGrid;
-import freemarker.template.Template;
-
-import java.io.StringWriter;
-
 import java.sql.SQLException;
 
 import java.util.HashMap;
@@ -41,8 +36,13 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.tools.generic.NumberTool;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 /**
  * @author Jonathan McCann
@@ -139,7 +139,7 @@ public class DefaultMailSender implements MailSender {
 		return message;
 	}
 
-	private static Message _populateEmailMessage(
+	private Message _populateEmailMessage(
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
 			String recipientEmailAddress, String emailFrom,
 			String unsubscribeToken, Session session)
@@ -161,17 +161,18 @@ public class DefaultMailSender implements MailSender {
 		rootMap.put("emailAddress", recipientEmailAddress);
 		rootMap.put("searchQueryResultMap", searchQueryResultMap);
 		rootMap.put("unsubscribeToken", unsubscribeToken);
+		rootMap.put("numberTool", new NumberTool());
 
-		StringWriter stringWriter = new StringWriter();
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
 
-		Template template = MailUtil.getEmailTemplate();
-
-		template.process(rootMap, stringWriter);
-
-		message.setText(stringWriter.toString());
+		message.setContent(messageBody, "text/html");
 
 		return message;
 	}
+
+	@Autowired
+	private VelocityEngine velocityEngine;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		DefaultMailSender.class);

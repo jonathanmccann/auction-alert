@@ -43,6 +43,15 @@
 	<bean class="com.app.dao.UserDAO" id="userDAO" />
 	<bean class="com.app.mail.SendGridMailSender" id="mailSender" />
 
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<value>
+				resource.loader=class
+				class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+			</value>
+		</property>
+	</bean>
+
 	<bean class="org.apache.shiro.spring.LifecycleBeanPostProcessor" id="lifecycleBeanPostProcessor" />
 
 	<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher" id="sha512Matcher">

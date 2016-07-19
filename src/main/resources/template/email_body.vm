@@ -1,0 +1,45 @@
+<html>
+	<body>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size: 16px">
+			<tr>
+				<td align="center">
+					<h2 style="color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;">eBay Searcher</h2>
+
+					#foreach ($mapEntry in $searchQueryResultMap.entrySet())
+						<table>
+							#set ($searchQuery = $mapEntry.key)
+							#set ($searchResults = $mapEntry.value)
+
+							<h3 style="color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.25em; line-height: 1.5em; text-align: center;">$searchQuery.keywords</h3>
+
+							#foreach ($searchResult in $searchResults)
+								<tr>
+									<td>
+										<div style="display: inline-block; padding: 10px; width: 140px;">
+											<img alt="$searchResult.galleryURL" src="$searchResult.galleryURL">
+										</div>
+
+										<div style="display: inline-block; text-align: left; vertical-align: top;">
+											<a href="$searchResult.itemURL">$searchResult.itemTitle</a> <br> <br>
+
+											#if ($searchResult.auctionPrice > 0)
+												Auction Price: $$numberTool.format("#0.00", $searchResult.auctionPrice)
+											#end
+
+											#if ($searchResult.fixedPrice > 0)
+												Fixed Price: $$numberTool.format("#0.00", $searchResult.fixedPrice)
+											#end
+										</div>
+									</td>
+								</tr>
+							#end
+						</table>
+					#end
+				</td>
+			</tr>
+		</table>
+		<footer style="background: #f8f8f8; padding: 4em 0 6em 0;">
+			<a style="display: block; text-align: center" href="/unsubscribe?emailAddress=${emailAddress}&unsubscribeToken=${unsubscribeToken}">Unsubscribe</a>
+		</footer>
+	</body>
+</html>

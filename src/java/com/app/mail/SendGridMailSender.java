@@ -21,11 +21,12 @@ import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 
+import com.sendgrid.Content;
+import com.sendgrid.Email;
+import com.sendgrid.Mail;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
 import com.sendgrid.SendGrid;
-
-import freemarker.template.Template;
-
-import java.io.StringWriter;
 
 import java.sql.SQLException;
 
@@ -33,8 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 /**
  * @author Jonathan McCann
@@ -45,13 +50,9 @@ public class SendGridMailSender implements MailSender {
 	public void sendContactMessage(String emailAddress, String message)
 		throws Exception {
 
-		SendGrid sendgrid = new SendGrid(
-			PropertiesValues.SENDGRID_API_KEY);
+		Mail mail = _populateContactMessage(emailAddress, message);
 
-		SendGrid.Email email = _populateContactMessage(
-			emailAddress, message);
-
-		sendgrid.send(email);
+		_sendEmail(mail);
 	}
 
 	@Override
@@ -81,14 +82,11 @@ public class SendGridMailSender implements MailSender {
 			searchQueryResultMap.size(), userId);
 
 		try {
-			SendGrid sendgrid = new SendGrid(
-				PropertiesValues.SENDGRID_API_KEY);
-
-			SendGrid.Email email = _populateEmailMessage(
+			Mail mail = _populateEmailMessage(
 				searchQueryResultMap, user.getEmailAddress(),
 				user.getUnsubscribeToken());
 
-			sendgrid.send(email);
+			_sendEmail(mail);
 
 			emailsSent++;
 		}
@@ -99,48 +97,56 @@ public class SendGridMailSender implements MailSender {
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
 	}
 
-	private SendGrid.Email _populateContactMessage(
+	private Mail _populateContactMessage(
 			String emailAddress, String message)
 		throws Exception {
 
-		SendGrid.Email email = new SendGrid.Email();
+		Email emailTo = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		String subject = "You Have A New Message From " + emailAddress;
+		Content content = new Content("text/html", message);
 
-		email.addTo(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		email.setFrom(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		email.setSubject("You Have A New Message From " + emailAddress);
-		email.setText(message);
-
-		return email;
+		return new Mail(emailFrom, subject, emailTo, content);
 	}
 
-	private SendGrid.Email _populateEmailMessage(
+	private Mail _populateEmailMessage(
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
 			String recipientEmailAddress, String unsubscribeToken)
 		throws Exception {
 
-		SendGrid.Email email = new SendGrid.Email();
-
-		email.addTo(recipientEmailAddress);
-		email.setFrom(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		email.setSubject(
-			"New Search Results - " + MailUtil.getCurrentDate());
-
-		Template template = MailUtil.getEmailTemplate();
+		Email emailTo = new Email(recipientEmailAddress);
+		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		String subject = "New Search Results - " + MailUtil.getCurrentDate();
 
 		Map<String, Object> rootMap = new HashMap<>();
 
 		rootMap.put("emailAddress", recipientEmailAddress);
 		rootMap.put("searchQueryResultMap", searchQueryResultMap);
 		rootMap.put("unsubscribeToken", unsubscribeToken);
+		rootMap.put("numberTool", new NumberTool());
 
-		StringWriter stringWriter = new StringWriter();
+		String message = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
 
-		template.process(rootMap, stringWriter);
+		Content content = new Content("text/html", message);
 
-		email.setText(stringWriter.toString());
-
-		return email;
+		return new Mail(emailFrom, subject, emailTo, content);
 	}
+
+	private void _sendEmail(Mail mail) throws Exception {
+		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
+
+		Request request = new Request();
+
+		request.method = Method.POST;
+		request.endpoint = "mail/send";
+		request.body = mail.build();
+
+		sendgrid.api(request);
+	}
+
+	@Autowired
+	private VelocityEngine velocityEngine;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SendGridMailSender.class);

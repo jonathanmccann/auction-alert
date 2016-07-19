@@ -15,7 +15,7 @@ dependencies {
 	compile files('lib/ebaysdkcore.jar')
 	compile files('lib/finding.jar')
 	compile group: 'com.google.code.gson', name: 'gson', version:'2.7'
-	compile group: 'com.sendgrid', name: 'sendgrid-java', version:'2.2.2'
+	compile group: 'com.sendgrid', name: 'sendgrid-java', version:'3.0.3'
 	compile group: 'com.stripe', name: 'stripe-java', version:'2.6.0'
 	compile group: 'javax.mail', name: 'mail', version:'1.4.7'
 	compile group: 'jstl', name: 'jstl', version:'1.2'
@@ -24,7 +24,8 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.0'
 	compile group: 'org.apache.shiro', name: 'shiro-core', version:'1.2.4'
 	compile group: 'org.apache.shiro', name: 'shiro-spring', version:'1.2.4'
-	compile group: 'org.freemarker', name: 'freemarker', version:'2.3.24-incubating'
+	compile group: 'org.apache.velocity', name: 'velocity', version:'1.7'
+	compile group: 'org.apache.velocity', name: 'velocity-tools', version:'2.0'
 	compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
 	compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
 	compile group: 'org.springframework', name: 'spring-context', version:'4.1.2.RELEASE'
