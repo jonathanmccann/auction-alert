@@ -390,7 +390,7 @@ public class UserControllerTest extends BaseTestCase {
 			_USER_ID, "unsubscribeToken", _USER.getCustomerId(),
 			_USER.getSubscriptionId(), _USER.isActive(), true);
 
-		MockHttpServletRequestBuilder request = get("/unsubscribe");
+		MockHttpServletRequestBuilder request = get("/email_unsubscribe");
 
 		request.param("emailAddress", _USER.getEmailAddress());
 		request.param("unsubscribeToken", "invalidUnsubscribeToken");
@@ -398,15 +398,15 @@ public class UserControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("unsubscribe"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/unsubscribe.jsp"));
+		resultActions.andExpect(view().name("email_unsubscribe"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/email_unsubscribe.jsp"));
 		resultActions.andExpect(model().attributeExists("unsubscribeMessage"));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
 		Assert.assertTrue(user.isEmailNotification());
 
-		request = get("/unsubscribe");
+		request = get("/email_unsubscribe");
 
 		request.param("emailAddress", _USER.getEmailAddress());
 		request.param("unsubscribeToken", "unsubscribeToken");
@@ -414,8 +414,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("unsubscribe"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/unsubscribe.jsp"));
+		resultActions.andExpect(view().name("email_unsubscribe"));
+		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/email_unsubscribe.jsp"));
 		resultActions.andExpect(model().attributeExists("unsubscribeMessage"));
 
 		user = UserUtil.getUserByUserId(_USER_ID);

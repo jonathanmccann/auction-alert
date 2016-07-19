@@ -108,7 +108,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 			"Keywords: Test keywords\n\nItem: itemTitle\n" +
 				"Auction Price: $14.99\nFixed Price: $29.99\n" +
 				"URL: http://www.ebay.com/itm/1234\n\n" +
-				"<a href=\"/unsubscribe?emailAddress=test@test.com&" +
+				"<a href=\"/email_unsubscribe?emailAddress=test@test.com&" +
 				"unsubscribeToken=unsubscribeToken\">Unsubscribe</a>",
 			message.getContent());
 

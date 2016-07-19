@@ -422,8 +422,8 @@ public class UserController {
 		return "redirect:my_account";
 	}
 
-	@RequestMapping(value = "/unsubscribe", method = RequestMethod.GET)
-	public String unsubscribeFromEmailNotifications(
+	@RequestMapping(value = "/email_unsubscribe", method = RequestMethod.GET)
+	public void unsubscribeFromEmailNotifications(
 			String emailAddress, String unsubscribeToken,
 			Map<String, Object> model)
 		throws Exception {
@@ -445,7 +445,7 @@ public class UserController {
 				LanguageUtil.getMessage("unsubscribe-failure"));
 		}
 
-		return "unsubscribe";
+		return;
 	}
 
 	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)
