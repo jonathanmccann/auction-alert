@@ -125,8 +125,12 @@
 				</div>
 			</div>
 
-			<div id="content">
-			</div>
+			<section class="special box">
+				<h2 class="align-left">Results</h2>
+				<div id="content">
+					<h5>Please start monitoring in order to display results.</h5>
+				</div>
+			</section>
 		</div>
 
 		<%@ include file="footer.jspf" %>

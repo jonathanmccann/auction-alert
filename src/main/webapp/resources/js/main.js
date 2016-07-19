@@ -1,10 +1,4 @@
 $(window).load(function() {
-	$("#search").click(function() {
-		$("#searchQuery").slideToggle(500);
-
-		$(this).toggleClass("fa-angle-down fa-angle-right")
-	});
-
 	$("#user\\.emailAddress, #keywords, #maxPrice, #minPrice").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,

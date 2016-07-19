@@ -3,7 +3,11 @@ $(window).load(function() {
 
 	var campaignId = $("#campaignId").val();
 
+	var searchQuery = $("#searchQuery");
+
 	var contentDiv = document.getElementById('content');
+
+	var imageRegex = new RegExp("<img src='([^']+)");
 
 	var intervalId;
 
@@ -13,15 +17,36 @@ $(window).load(function() {
 
 	function fetchRss(url) {
 		$.ajax({
-			url: "https://query.yahooapis.com/v1/public/yql?q=select%20title%2C%20guid%20from%20rss(0%2C10)%20where%20url%20%3D%20%22" + url + "%22&format=json",
+			url: "https://query.yahooapis.com/v1/public/yql?q=select%20title%2C%20description%2C%20guid%2C%20e%3ACurrentPrice%2C%20e%3AListingType%2C%20e%3ABuyItNowPrice%20from%20rss(0%2C10)%20where%20url%20%3D%20%22" + url + "%22&format=json",
 			success: function (data) {
 				if (data.query && data.query.results && data.query.results.item) {
 					$.each(data.query.results.item, function (i, e) {
 						var itemId = e.guid;
 
 						if (itemIds.indexOf(itemId) < 0) {
-							contentDiv.innerHTML = '<div id="' + itemId + '"> <a href="' + itemUrl + itemId + '" target="_blank">' + e.title + '</a> </div>' + contentDiv.innerHTML;
+							var imageUrl = imageRegex.exec(e.description)[1];
 
+							var html = '<div align="left" id="' + itemId + '"> <div class="monitor-result-image"> <img src=' + imageUrl + '> </div> <div class="monitor-result-information"> <a href="' + itemUrl + itemId + '" target="_blank">' + e.title + '</a> <br>';
+
+							if (e.ListingType == "Auction") {
+								html += 'Auction Price: $' + Number(e.CurrentPrice).toFixed(2);
+							}
+							else if (e.ListingType == "AuctionWithBIN") {
+								html += 'Auction Price: $' + Number(e.CurrentPrice).toFixed(2) + '<br>';
+								html += 'Fixed Price: $' + Number(e.BuyItNowPrice).toFixed(2);
+							}
+							else if ((e.ListingType == "FixedPrice") || (e.ListingType == "StoreInventory")) {
+								html += 'Fixed Price: $' + Number(e.CurrentPrice).toFixed(2);
+							}
+
+							contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
+							/*
+							html += '<div class="result-image">';
+					html += '<img alt="' + data[i]._galleryURL + '" src="' + data[i]._galleryURL + '">';
+					html += '</div>';
+					html += '<div class="result-information">';
+					html += '<a href="' + data[i]._itemURL + '" target="_blank">' + data[i]._itemTitle + '</a> <br>';
+					*/
 							sendNotification(e.title);
 
 							itemIds.unshift(itemId);
@@ -53,8 +78,18 @@ $(window).load(function() {
 		});
 	}
 
+	function collapseSearchQuery() {
+		searchQuery.slideToggle(500);
+
+		$(this).toggleClass("fa-angle-down fa-angle-right")
+	}
+
+	$("#search").click(function() {
+		collapseSearchQuery();
+	});
+
 	$("#clearResults").click(function() {
-		contentDiv.innerHTML = "";
+		contentDiv.innerHTML = "<h5>Please start monitoring in order to display results.</h5>";
 	});
 
 	$('#startMonitoring').click(function() {
@@ -72,10 +107,8 @@ $(window).load(function() {
 			clearInterval(intervalId);
 		}
 
-		if ($("#searchQuery").is(':visible')) {
-			$("#searchQuery").slideToggle(500);
-
-			$(this).toggleClass("fa-angle-down fa-angle-right")
+		if (searchQuery.is(':visible')) {
+			collapseSearchQuery();
 		}
 
 		$(header).find('i').toggleClass('fa-angle-down fa-angle-right')
@@ -130,6 +163,8 @@ $(window).load(function() {
 		if (maxPrice && (maxPrice > 0)) {
 			url += "&maxPrice=" + maxPrice;
 		}
+
+		fetchRss(encodeURIComponent(url + "&" + new Date().getTime()));
 
 		intervalId = setInterval(function() {
 			fetchRss(encodeURIComponent(url + "&" + new Date().getTime()));
