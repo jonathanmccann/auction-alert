@@ -26,17 +26,17 @@ function getSearchQueryResults(searchQueryId, active) {
 
 				for (var i = 0; i < data.length; i++) {
 					html += '<div class="result-image">';
-					html += '<img alt="' + data[i]._galleryURL + '" src="' + data[i]._galleryURL + '">';
+					html += '<img alt="' + data[i].galleryURL + '" src="' + data[i].galleryURL + '">';
 					html += '</div>';
 					html += '<div class="result-information">';
-					html += '<a href="' + data[i]._itemURL + '" target="_blank">' + data[i]._itemTitle + '</a> <br>';
+					html += '<a href="' + data[i].itemURL + '" target="_blank">' + data[i].itemTitle + '</a> <br>';
 
-					if (data[i]._auctionPrice > 0) {
-						html += 'Auction Price: $' + data[i]._auctionPrice.toFixed(2) + '<br>';
+					if (data[i].auctionPrice > 0) {
+						html += 'Auction Price: $' + data[i].auctionPrice.toFixed(2) + '<br>';
 					}
 
-					if (data[i]._fixedPrice > 0) {
-						html += 'Fixed Price: $' + data[i]._fixedPrice.toFixed(2);
+					if (data[i].fixedPrice > 0) {
+						html += 'Fixed Price: $' + data[i].fixedPrice.toFixed(2);
 					}
 
 					html += "</div>";
