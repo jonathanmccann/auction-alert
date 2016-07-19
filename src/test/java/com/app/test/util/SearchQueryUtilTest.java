@@ -290,6 +290,27 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testNormalizeSearchQueryKeywords() throws Exception {
+		Class clazz = Class.forName(SearchQueryUtil.class.getName());
+
+		Object classInstance = clazz.newInstance();
+
+		Method method = clazz.getDeclaredMethod(
+			"_normalizeSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setKeywords("<script>alert('Site XSS');</script>");
+
+		method.invoke(classInstance, searchQuery);
+
+		Assert.assertEquals(
+			"scriptalert('Site XSS');/script", searchQuery.getKeywords());
+	}
+
+	@Test
 	public void testNormalizeSearchQueryCondition() throws Exception {
 		Class clazz = Class.forName(SearchQueryUtil.class.getName());
 

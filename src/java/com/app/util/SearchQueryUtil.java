@@ -21,6 +21,7 @@ import com.app.model.SearchQuery;
 import java.sql.SQLException;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,7 +118,15 @@ public class SearchQueryUtil {
 			searchQuery.setAuctionListing(true);
 			searchQuery.setFixedPriceListing(true);
 		}
+
+		String keywords = searchQuery.getKeywords();
+
+		searchQuery.setKeywords(
+			_KEYWORDS_INVALID_CHARACTERS_PATTERN.matcher(keywords).replaceAll(""));
 	}
+
+	private static final Pattern _KEYWORDS_INVALID_CHARACTERS_PATTERN =
+		Pattern.compile("[<>]");
 
 	private static SearchQueryDAO _searchQueryDAO;
 
