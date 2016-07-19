@@ -83,5 +83,7 @@
 				</div>
 			</div>
 		</section>
+
+		<%@ include file="footer.jspf" %>
 	</body>
 </html>
