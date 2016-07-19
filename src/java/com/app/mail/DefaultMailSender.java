@@ -92,8 +92,8 @@ public class DefaultMailSender implements MailSender {
 		try {
 			Message emailMessage = _populateEmailMessage(
 				searchQueryResultMap, user.getEmailAddress(),
-				user.getUnsubscribeToken(),
-				PropertiesValues.OUTBOUND_EMAIL_ADDRESS, session);
+				PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
+				user.getUnsubscribeToken(), session);
 
 			Transport.send(emailMessage);
 
