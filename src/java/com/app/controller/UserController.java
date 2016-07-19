@@ -167,6 +167,27 @@ public class UserController {
 		return "redirect:my_account";
 	}
 
+	@RequestMapping(value ="/faq", method = RequestMethod.GET)
+	public String faq(Map<String, Object> model) throws Exception {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (currentUser.isAuthenticated()) {
+			User user = UserUtil.getCurrentUser();
+
+			if (user.isActive() || user.isPendingCancellation()) {
+				model.put("isActive", true);
+			}
+			else {
+				model.put("isActive", false);
+			}
+		}
+		else {
+			model.put("isActive", false);
+		}
+
+		return "faq";
+	}
+
 	@RequestMapping(value = { "", "/", "/home" }, method = RequestMethod.GET)
 	public String home(Map<String, Object> model) throws Exception {
 		Subject currentUser = SecurityUtils.getSubject();

@@ -1299,3 +1299,9 @@
 		text-align: left;
 		vertical-align: top;
 	}
+
+/* FAQ */
+
+	.faq-paragraph {
+		margin-left: 50px;
+	}
