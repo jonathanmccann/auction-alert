@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -36,15 +37,35 @@ import org.junit.Test;
  */
 public class SendGridMailSenderTest extends BaseTestCase {
 
-	@Test
-	public void testPopulateEmailMessage() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		setUpProperties();
 
-		Class clazz = Class.forName(SendGridMailSender.class.getName());
+		_clazz = Class.forName(SendGridMailSender.class.getName());
 
-		Object classInstance = clazz.newInstance();
+		_classInstance = _clazz.newInstance();
+	}
 
-		Method populateEmailMessageMethod = clazz.getDeclaredMethod(
+	@Test
+	public void testPopulateContactMessage() throws Exception {
+		Method populateContactMessageMethod = _clazz.getDeclaredMethod(
+			"_populateContactMessage", String.class, String.class);
+
+		populateContactMessageMethod.setAccessible(true);
+
+		SendGrid.Email email =
+			(SendGrid.Email)populateContactMessageMethod.invoke(
+				_classInstance, "test@test.com", "Sample contact message");
+
+		Assert.assertEquals("test@test.com", email.getFrom());
+		Assert.assertEquals(
+			"You Have A New Message From test@test.com", email.getSubject());
+		Assert.assertEquals("Sample contact message", email.getText());
+	}
+
+	@Test
+	public void testPopulateEmailMessage() throws Exception {
+		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
 			"_populateEmailMessage", Map.class,	String.class, String.class);
 
 		populateEmailMessageMethod.setAccessible(true);
@@ -66,7 +87,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		SendGrid.Email email =
 			(SendGrid.Email)populateEmailMessageMethod.invoke(
-				classInstance, searchQueryResultMap, "test@test.com",
+				_classInstance, searchQueryResultMap, "test@test.com",
 				"unsubscribeToken");
 
 		Assert.assertEquals("test@test.com", email.getFrom());
@@ -86,5 +107,8 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Assert.assertArrayEquals(recipientAddresses, email.getTos());
 	}
+
+	private static Object _classInstance;
+	private static Class _clazz;
 
 }

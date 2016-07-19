@@ -42,6 +42,19 @@ import org.slf4j.LoggerFactory;
 public class SendGridMailSender implements MailSender {
 
 	@Override
+	public void sendContactMessage(String emailAddress, String message)
+		throws Exception {
+
+		SendGrid sendgrid = new SendGrid(
+			PropertiesValues.SENDGRID_API_KEY);
+
+		SendGrid.Email email = _populateContactMessage(
+			emailAddress, message);
+
+		sendgrid.send(email);
+	}
+
+	@Override
 	public void sendSearchResultsToRecipient(
 			int userId,
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
@@ -84,6 +97,20 @@ public class SendGridMailSender implements MailSender {
 		}
 
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
+	}
+
+	private SendGrid.Email _populateContactMessage(
+			String emailAddress, String message)
+		throws Exception {
+
+		SendGrid.Email email = new SendGrid.Email();
+
+		email.addTo(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		email.setFrom(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		email.setSubject("You Have A New Message From " + emailAddress);
+		email.setText(message);
+
+		return email;
 	}
 
 	private SendGrid.Email _populateEmailMessage(

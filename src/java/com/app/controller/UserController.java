@@ -20,6 +20,9 @@ import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.PasswordLengthException;
 import com.app.exception.RecaptchaException;
 import com.app.language.LanguageUtil;
+import com.app.mail.MailSender;
+import com.app.mail.MailSenderFactory;
+import com.app.mail.MailUtil;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
@@ -58,6 +61,50 @@ import org.springframework.web.util.WebUtils;
  */
 @Controller
 public class UserController {
+
+	@RequestMapping(value ="/contact", method = RequestMethod.GET)
+	public String contact(Map<String, Object> model) throws Exception {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (currentUser.isAuthenticated()) {
+			User user = UserUtil.getCurrentUser();
+
+			if (user.isActive() || user.isPendingCancellation()) {
+				model.put("isActive", true);
+			}
+			else {
+				model.put("isActive", false);
+			}
+
+			model.put("emailAddress", user.getEmailAddress());
+		}
+		else {
+			model.put("isActive", false);
+		}
+
+		return "contact";
+	}
+
+	@RequestMapping(value ="/contact", method = RequestMethod.POST)
+	public String contact(
+			String emailAddress, String message, Map<String, Object> model)
+		throws Exception {
+
+		MailSender mailSender = MailSenderFactory.getInstance();
+
+		try {
+			mailSender.sendContactMessage(emailAddress, message);
+
+			model.put("success", LanguageUtil.getMessage("message-send-success"));
+		}
+		catch (Exception e) {
+			_log.error("Unable to deliver contact message");
+
+			model.put("error", LanguageUtil.getMessage("message-send-fail"));
+		}
+
+		return contact(model);
+	}
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.GET)
 	public String createAccount(

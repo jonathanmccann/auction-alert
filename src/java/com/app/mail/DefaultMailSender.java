@@ -22,6 +22,7 @@ import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 
+import com.sendgrid.SendGrid;
 import freemarker.template.Template;
 
 import java.io.StringWriter;
@@ -47,6 +48,18 @@ import org.slf4j.LoggerFactory;
  * @author Jonathan McCann
  */
 public class DefaultMailSender implements MailSender {
+
+	@Override
+	public void sendContactMessage(String emailAddress, String message)
+		throws Exception {
+
+		Session session = _authenticateOutboundEmailAddress();
+
+		Message emailMessage = _populateContactMessage(
+			emailAddress, message, session);
+
+		Transport.send(emailMessage);
+	}
 
 	@Override
 	public void sendSearchResultsToRecipient(
@@ -105,6 +118,25 @@ public class DefaultMailSender implements MailSender {
 				}
 
 			});
+	}
+
+	private static Message _populateContactMessage(
+			String emailAddress, String messageBody, Session session)
+		throws Exception {
+
+		Message message = new MimeMessage(session);
+
+		message.setFrom(
+			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+
+		message.addRecipient(
+			Message.RecipientType.TO,
+			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+
+		message.setSubject("You Have A New Message From " + emailAddress);
+		message.setText(messageBody);
+
+		return message;
 	}
 
 	private static Message _populateEmailMessage(

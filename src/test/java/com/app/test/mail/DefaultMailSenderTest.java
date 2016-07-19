@@ -30,6 +30,7 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -37,15 +38,45 @@ import org.junit.Test;
  */
 public class DefaultMailSenderTest extends BaseTestCase {
 
-	@Test
-	public void testPopulateEmailMessage() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		setUpProperties();
 
-		Class clazz = Class.forName(DefaultMailSender.class.getName());
+		_clazz = Class.forName(DefaultMailSender.class.getName());
 
-		Object classInstance = clazz.newInstance();
+		_classInstance = _clazz.newInstance();
 
-		Method populateEmailMessageMethod = clazz.getDeclaredMethod(
+		Method _authenticateOutboundEmailAddressMethod =
+			_clazz.getDeclaredMethod("_authenticateOutboundEmailAddress");
+
+		_authenticateOutboundEmailAddressMethod.setAccessible(true);
+
+		_session =
+			(Session)_authenticateOutboundEmailAddressMethod.invoke(
+				_classInstance);
+	}
+
+	@Test
+	public void testPopulateContactMessage() throws Exception {
+		Method populateContactMessage = _clazz.getDeclaredMethod(
+			"_populateContactMessage", String.class, String.class,
+			Session.class);
+
+		populateContactMessage.setAccessible(true);
+
+		Message message = (Message)populateContactMessage.invoke(
+			_classInstance, "test@test.com", "Sample contact message",
+			_session);
+
+		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"You Have A New Message From test@test.com", message.getSubject());
+		Assert.assertEquals("Sample contact message", message.getContent());
+	}
+
+	@Test
+	public void testPopulateEmailMessage() throws Exception {
+		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
 			"_populateEmailMessage", Map.class, String.class, String.class,
 			String.class, Session.class);
 
@@ -66,18 +97,9 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		searchQueryResultMap.put(searchQuery, searchResults);
 
-		Method _authenticateOutboundEmailAddressMethod =
-			clazz.getDeclaredMethod("_authenticateOutboundEmailAddress");
-
-		_authenticateOutboundEmailAddressMethod.setAccessible(true);
-
-		Session session =
-			(Session)_authenticateOutboundEmailAddressMethod.invoke(
-				classInstance);
-
 		Message message = (Message)populateEmailMessageMethod.invoke(
-			classInstance, searchQueryResultMap, "test@test.com",
-			"test@test.com", "unsubscribeToken", session);
+			_classInstance, searchQueryResultMap, "test@test.com",
+			"test@test.com", "unsubscribeToken", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertTrue(
@@ -97,5 +119,9 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.TO));
 	}
+
+	private static Object _classInstance;
+	private static Class _clazz;
+	private static Session _session;
 
 }
