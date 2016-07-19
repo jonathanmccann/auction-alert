@@ -41,6 +41,7 @@ public class SearchQueryUtil {
 	public static int addSearchQuery(SearchQuery searchQuery)
 		throws DatabaseConnectionException, SQLException {
 
+		_escapeSearchQueryKeywords(searchQuery);
 		_normalizeSearchQuery(searchQuery);
 
 		return _searchQueryDAO.addSearchQuery(searchQuery);
@@ -103,6 +104,13 @@ public class SearchQueryUtil {
 		_searchQueryDAO = searchQueryDAO;
 	}
 
+	private static void _escapeSearchQueryKeywords(SearchQuery searchQuery) {
+		String keywords = searchQuery.getKeywords();
+
+		searchQuery.setKeywords(
+			_KEYWORDS_INVALID_CHARACTERS_PATTERN.matcher(keywords).replaceAll(""));
+	}
+
 	private static void _normalizeSearchQuery(SearchQuery searchQuery) {
 		if (!searchQuery.isNewCondition() && !searchQuery.isUsedCondition() &&
 			!searchQuery.isUnspecifiedCondition()) {
@@ -118,11 +126,6 @@ public class SearchQueryUtil {
 			searchQuery.setAuctionListing(true);
 			searchQuery.setFixedPriceListing(true);
 		}
-
-		String keywords = searchQuery.getKeywords();
-
-		searchQuery.setKeywords(
-			_KEYWORDS_INVALID_CHARACTERS_PATTERN.matcher(keywords).replaceAll(""));
 	}
 
 	private static final Pattern _KEYWORDS_INVALID_CHARACTERS_PATTERN =

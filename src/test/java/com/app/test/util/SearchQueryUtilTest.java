@@ -290,13 +290,13 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testNormalizeSearchQueryKeywords() throws Exception {
+	public void testEscapeSearchQueryKeywords() throws Exception {
 		Class clazz = Class.forName(SearchQueryUtil.class.getName());
 
 		Object classInstance = clazz.newInstance();
 
 		Method method = clazz.getDeclaredMethod(
-			"_normalizeSearchQuery", SearchQuery.class);
+			"_escapeSearchQueryKeywords", SearchQuery.class);
 
 		method.setAccessible(true);
 
