@@ -38,8 +38,11 @@
 				</td>
 			</tr>
 		</table>
-		<footer style="background: #f8f8f8; padding: 4em 0 6em 0;">
-			<a style="display: block; text-align: center" href="/unsubscribe?emailAddress=${emailAddress}&unsubscribeToken=${unsubscribeToken}">Unsubscribe</a>
+		<footer style="background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb">
+			<a style="display: block;" href="/unsubscribe?emailAddress=${emailAddress}&unsubscribeToken=${unsubscribeToken}">Unsubscribe</a>
+			<p style="text-align: center">
+				© eBay Searcher. All rights reserved.
+			</p>
 		</footer>
 	</body>
 </html>
