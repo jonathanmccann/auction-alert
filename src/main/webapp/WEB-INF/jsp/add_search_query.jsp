@@ -103,61 +103,62 @@
 						<fmt:formatNumber pattern="0.00" value="${searchQuery.maxPrice}" var="maxPrice" />
 
 						<ul class="alt">
-						<li>
-							<b>Keywords:</b> <form:input maxlength="300" path="keywords" value="${searchQuery.keywords}" />
-							<form:select path="categoryId">
-								<form:option value="All Categories"></form:option>
-								<form:options items="${searchQueryCategories}" />
-							</form:select>
-							<form:select disabled="true" id="subcategoryId" path="subcategoryId">
-								<form:option value="All Subcategories"></form:option>
-							</form:select>
-						</li>
-						<li>
-							<b>Search Options:</b>
+							<li>
+								<b>Keywords:</b> <form:input maxlength="300" path="keywords" value="${searchQuery.keywords}" />
+								<form:select path="categoryId">
+									<form:option value="All Categories"></form:option>
+									<form:options items="${searchQueryCategories}" />
+								</form:select>
+								<form:select disabled="true" id="subcategoryId" path="subcategoryId">
+									<form:option value="All Subcategories"></form:option>
+								</form:select>
+							</li>
+							<li>
+								<b>Search Options:</b>
 
-							<div>
-								<form:checkbox label="Search Description" path="searchDescription" value="${searchQuery.searchDescription}" /> <br>
-								<form:checkbox label="Free Shipping" path="freeShippingOnly" value="${searchQuery.freeShippingOnly}" />
-							</div>
-						</li>
-						<li>
-							<b>Listing Type:</b>
+								<div>
+									<form:checkbox label="Search Description" path="searchDescription" value="${searchQuery.searchDescription}" /> <br>
+									<form:checkbox label="Free Shipping" path="freeShippingOnly" value="${searchQuery.freeShippingOnly}" />
+								</div>
+							</li>
+							<li>
+								<b>Listing Type:</b>
 
-							<div>
-								<form:checkbox label="Auction" path="auctionListing" value="${searchQuery.auctionListing}"/> <br>
-								<form:checkbox label="Buy It Now" path="fixedPriceListing" value="${searchQuery.fixedPriceListing}" />
-							</div>
-						</li>
-						<li>
-							<b>Condition:</b>
+								<div>
+									<form:checkbox label="Auction" path="auctionListing" value="${searchQuery.auctionListing}"/> <br>
+									<form:checkbox label="Buy It Now" path="fixedPriceListing" value="${searchQuery.fixedPriceListing}" />
+								</div>
+							</li>
+							<li>
+								<b>Condition:</b>
 
-							<div>
-								<form:checkbox label="New" path="newCondition" value="${searchQuery.newCondition}"/> <br>
-								<form:checkbox label="Used" path="usedCondition" value="${searchQuery.usedCondition}"/> <br>
-								<form:checkbox label="Unspecified" path="unspecifiedCondition" value="${searchQuery.unspecifiedCondition}" />
-							</div>
-						</li>
-						<li>
-							<b>Price:</b>
+								<div>
+									<form:checkbox label="New" path="newCondition" value="${searchQuery.newCondition}"/> <br>
+									<form:checkbox label="Used" path="usedCondition" value="${searchQuery.usedCondition}"/> <br>
+									<form:checkbox label="Unspecified" path="unspecifiedCondition" value="${searchQuery.unspecifiedCondition}" />
+								</div>
+							</li>
+							<li>
+								<b>Price:</b>
 
-							<div>
-								Show items priced from <form:input path="minPrice" value="${minPrice}" /> to <form:input path="maxPrice" value="${maxPrice}" />
-							</div>
-						</li>
-						<li class="padding-top">
-							<c:choose>
-								<c:when test="${disabled}">
-									<input class="button special" disabled id="updateSearchQuerySubmit" title="You have reached your maximum number of search queries." type="submit" value="Add Search Query" />
-								</c:when>
-								<c:when test="${isAdd}">
-									<input class="button special" formaction="add_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Add Search Query" />
-								</c:when>
-								<c:otherwise>
-									<input class="button special" formaction="update_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Update Search Query" />
-								</c:otherwise>
-							</c:choose>
-						</li>
+								<div>
+									Show items priced from <form:input path="minPrice" value="${minPrice}" /> to <form:input path="maxPrice" value="${maxPrice}" />
+								</div>
+							</li>
+							<li class="padding-top">
+								<c:choose>
+									<c:when test="${disabled}">
+										<input class="button special" disabled id="updateSearchQuerySubmit" title="You have reached your maximum number of search queries." type="submit" value="Add Search Query" />
+									</c:when>
+									<c:when test="${isAdd}">
+										<input class="button special" formaction="add_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Add Search Query" />
+									</c:when>
+									<c:otherwise>
+										<input class="button special" formaction="update_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Update Search Query" />
+									</c:otherwise>
+								</c:choose>
+							</li>
+						</ul>
 					</fieldset>
 				</form:form>
 			</div>
