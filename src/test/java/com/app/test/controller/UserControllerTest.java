@@ -312,54 +312,6 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testResubscribeWithNullSubscription() throws Exception {
-		setUpNullSubscription();
-		setUpProperties();
-		setUpUserUtil();
-
-		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
-			true);
-
-		this.mockMvc.perform(post("/resubscribe"))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(view().name("redirect:my_account"))
-			.andExpect(redirectedUrl("my_account"));
-
-		User user = UserUtil.getUserByUserId(_USER_ID);
-
-		Assert.assertNotNull(user.getUnsubscribeToken());
-		Assert.assertEquals("customerId", user.getCustomerId());
-		Assert.assertEquals("updatedSubscriptionId", user.getSubscriptionId());
-		Assert.assertTrue(user.isActive());
-		Assert.assertFalse(user.isPendingCancellation());
-	}
-
-	@Test
-	public void testResubscribeWithPreviousSubscription() throws Exception {
-		setUpProperties();
-		setUpSubscription();
-		setUpUserUtil();
-
-		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
-			true);
-
-		this.mockMvc.perform(post("/resubscribe"))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(view().name("redirect:my_account"))
-			.andExpect(redirectedUrl("my_account"));
-
-		User user = UserUtil.getUserByUserId(_USER_ID);
-
-		Assert.assertNotNull(user.getUnsubscribeToken());
-		Assert.assertEquals("customerId", user.getCustomerId());
-		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
-		Assert.assertTrue(user.isActive());
-		Assert.assertFalse(user.isPendingCancellation());
-	}
-
-	@Test
 	public void testResubscribeWithResubscribeException() throws Exception {
 		setUpUserUtil();
 
