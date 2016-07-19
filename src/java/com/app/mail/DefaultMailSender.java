@@ -160,7 +160,9 @@ public class DefaultMailSender implements MailSender {
 
 		rootMap.put("emailAddress", recipientEmailAddress);
 		rootMap.put("searchQueryResultMap", searchQueryResultMap);
-		rootMap.put("unsubscribeToken", unsubscribeToken);
+		rootMap.put(
+			"unsubscribeToken",
+			MailUtil.escapeUnsubscribeToken(unsubscribeToken));
 		rootMap.put("numberTool", new NumberTool());
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
