@@ -19,8 +19,10 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 
-import com.sendgrid.SendGrid;
+import com.sendgrid.Content;
+import com.sendgrid.Mail;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
 /**
  * @author Jonathan McCann
@@ -53,18 +57,44 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		populateContactMessageMethod.setAccessible(true);
 
-		SendGrid.Email email =
-			(SendGrid.Email)populateContactMessageMethod.invoke(
+		Mail mail =
+			(Mail)populateContactMessageMethod.invoke(
 				_classInstance, "test@test.com", "Sample contact message");
 
-		Assert.assertEquals("test@test.com", email.getFrom());
 		Assert.assertEquals(
-			"You Have A New Message From test@test.com", email.getSubject());
-		Assert.assertEquals("Sample contact message", email.getText());
+			"You Have A New Message From test@test.com", mail.getSubject());
+
+		List<Content> mailContent = mail.getContent();
+
+		Content content = mailContent.get(0);
+
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals("Sample contact message", content.getValue());
 	}
 
 	@Test
 	public void testPopulateEmailMessage() throws Exception {
+		Field velocityEngine = _clazz.getDeclaredField("velocityEngine");
+
+		velocityEngine.setAccessible(true);
+
+		VelocityEngineFactoryBean velocityEngineFactoryBean =
+			new VelocityEngineFactoryBean();
+
+		Map<String, Object> velocityPropertiesMap = new HashMap<>();
+
+		velocityPropertiesMap.put("resource.loader", "class");
+		velocityPropertiesMap.put(
+			"class.resource.loader.class",
+			"org.apache.velocity.runtime.resource.loader." +
+				"ClasspathResourceLoader");
+
+		velocityEngineFactoryBean.setVelocityPropertiesMap(
+			velocityPropertiesMap);
+
+		velocityEngine.set(
+			_classInstance, velocityEngineFactoryBean.createVelocityEngine());
+
 		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
 			"_populateEmailMessage", Map.class,	String.class, String.class);
 
@@ -85,30 +115,62 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		searchQueryResultMap.put(searchQuery, searchResults);
 
-		SendGrid.Email email =
-			(SendGrid.Email)populateEmailMessageMethod.invoke(
+		Mail mail =
+			(Mail)populateEmailMessageMethod.invoke(
 				_classInstance, searchQueryResultMap, "test@test.com",
 				"unsubscribeToken");
 
-		Assert.assertEquals("test@test.com", email.getFrom());
 		Assert.assertTrue(
-			email.getSubject().contains("New Search Results - "));
-		Assert.assertEquals(
-			"Keywords: Test keywords\n\nItem: itemTitle\n" +
-				"Auction Price: $14.99\nFixed Price: $29.99\n" +
-					"URL: http://www.ebay.com/itm/1234\n\n" +
-						"<a href=\"/email_unsubscribe?emailAddress=test@test.com&" +
-							"unsubscribeToken=unsubscribeToken\">Unsubscribe</a>",
-			email.getText());
+			mail.getSubject().contains("New Search Results - "));
 
-		String[] recipientAddresses = new String[1];
+		List<Content> mailContent = mail.getContent();
 
-		recipientAddresses[0] = "test@test.com";
+		Content content = mailContent.get(0);
 
-		Assert.assertArrayEquals(recipientAddresses, email.getTos());
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals(_EMAIL_CONTENT, content.getValue());
 	}
 
 	private static Object _classInstance;
 	private static Class _clazz;
+
+	public static final String _EMAIL_CONTENT = "<html>\n" +
+		"\t<body>\n" +
+		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
+		"\t\t\t<tr>\n" +
+		"\t\t\t\t<td align=\"center\">\n" +
+		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">eBay Searcher</h2>\n" +
+		"\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t<table>\n" +
+		"\t\t\t\t\t\t\t\n" +
+		"\t\t\t\t\t\t\t<h3 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.25em; line-height: 1.5em; text-align: center;\">Test keywords</h3>\n" +
+		"\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr>\n" +
+		"\t\t\t\t\t\t\t\t\t<td>\n" +
+		"\t\t\t\t\t\t\t\t\t\t<div style=\"display: inline-block; padding: 10px; width: 140px;\">\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t<img alt=\"http://www.ebay.com/123.jpg\" src=\"http://www.ebay.com/123.jpg\">\n" +
+		"\t\t\t\t\t\t\t\t\t\t</div>\n" +
+		"\n" +
+		"\t\t\t\t\t\t\t\t\t\t<div style=\"display: inline-block; text-align: left; vertical-align: top;\">\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t<a href=\"http://www.ebay.com/itm/1234\">itemTitle</a> <br> <br>\n" +
+		"\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAuction Price: $14.99\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tFixed Price: $29.99\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
+		"\t\t\t\t\t\t\t\t\t</td>\n" +
+		"\t\t\t\t\t\t\t\t</tr>\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t\t\t</table>\n" +
+		"\t\t\t\t\t\t\t\t\t</td>\n" +
+		"\t\t\t</tr>\n" +
+		"\t\t</table>\n" +
+		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
+		"\t\t\t<a style=\"display: block;\" href=\"/email_unsubscribe?emailAddress=test@test.com&unsubscribeToken=unsubscribeToken\">Unsubscribe</a>\n" +
+		"\t\t\t<p style=\"text-align: center\">\n" +
+		"\t\t\t\t© eBay Searcher. All rights reserved.\n" +
+		"\t\t\t</p>\n" +
+		"\t\t</footer>\n" +
+		"\t</body>\n" +
+		"</html>";
 
 }
