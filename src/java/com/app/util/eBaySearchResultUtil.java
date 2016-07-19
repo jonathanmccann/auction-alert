@@ -34,6 +34,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,8 @@ public class eBaySearchResultUtil {
 		ListingInfo listingInfo = item.getListingInfo();
 
 		searchResult.setItemId(item.getItemId());
-		searchResult.setItemTitle(item.getTitle());
+		searchResult.setItemTitle(
+			_ITEM_TITLE_PATTERN.matcher(item.getTitle()).replaceAll(""));
 		searchResult.setItemURL(_EBAY_URL_PREFIX + searchResult.getItemId());
 		searchResult.setGalleryURL(item.getGalleryURL());
 
@@ -234,6 +236,9 @@ public class eBaySearchResultUtil {
 
 	private static final DecimalFormat _DECIMAL_FORMAT = new DecimalFormat(
 		"0.00");
+
+	private static final Pattern _ITEM_TITLE_PATTERN =
+		Pattern.compile("\\P{Print}");
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
