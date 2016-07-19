@@ -89,27 +89,37 @@ public class StripeUtil {
 		}
 	}
 
-	public static void resubscribe(String customerId, String subscriptionId)
+	public static void resubscribe(
+			String customerId, String subscriptionId, String stripeToken)
 		throws Exception {
 
-		User user = UserUtil.getCurrentUser();
+		Map<String, Object> customerParameters = new HashMap<>();
 
-		Map<String, Object> parameters = new HashMap<>();
+		customerParameters.put("source", stripeToken);
 
-		parameters.put("plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
+		Customer customer = Customer.retrieve(customerId);
+
+		customer.update(customerParameters);
+
+		Map<String, Object> subscriptionParameters = new HashMap<>();
+
+		subscriptionParameters.put(
+			"plan", PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
 
 		Subscription subscription = Subscription.retrieve(subscriptionId);
 
 		if (subscription == null) {
-			parameters.put("customer", customerId);
+			subscriptionParameters.put("customer", customerId);
 
-			subscription = Subscription.create(parameters);
+			subscription = Subscription.create(subscriptionParameters);
 
 			subscriptionId = subscription.getId();
 		}
 		else {
-			subscription.update(parameters);
+			subscription.update(subscriptionParameters);
 		}
+
+		User user = UserUtil.getCurrentUser();
 
 		UserUtil.updateUserSubscription(
 			user.getUserId(), user.getUnsubscribeToken(), customerId,

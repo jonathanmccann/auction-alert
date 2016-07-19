@@ -387,7 +387,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/resubscribe", method = RequestMethod.POST)
-	public String resubscribe(RedirectAttributes redirectAttributes)
+	public String resubscribe(
+			String stripeToken, RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		User currentUser = UserUtil.getCurrentUser();
@@ -399,7 +400,7 @@ public class UserController {
 
 			try {
 				StripeUtil.resubscribe(
-					currentUser.getCustomerId(), subscriptionId);
+					currentUser.getCustomerId(), subscriptionId, stripeToken);
 
 				redirectAttributes.addFlashAttribute(
 					"success", LanguageUtil.getMessage("subscription-updated"));

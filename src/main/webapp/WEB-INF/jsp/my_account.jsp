@@ -34,7 +34,7 @@
 		<script src="/resources/js/init.js" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
 		<script src="https://checkout.stripe.com/checkout.js" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/update-billing.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/subscription.js" />" type="text/javascript"></script>
 		<noscript>
 			<link rel="stylesheet" href="/resources/css/skel.css" />
 			<link rel="stylesheet" href="/resources/css/style.css" />
@@ -100,8 +100,10 @@
 
 			<c:choose>
 				<c:when test="${(not empty user.subscriptionId) && ((not user.active) || (user.pendingCancellation))}">
-					<form:form action="/resubscribe" method="POST">
-						<input class="button special" id="resubscribe" title="Your previous billing information will be used to resubscribe. If your current billing period has ended, you will be billed immediately." type="submit" value="Resubscribe" />
+					<form:form action="/resubscribe" id="resubscribeForm" method="POST">
+						<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
+
+						<input class="button special" id="resubscribe" title="If your current billing period has ended, you will be billed immediately. Otherwise, you be will be charged at the beginning of the next billing period." type="submit" value="Resubscribe" />
 					</form:form>
 				</c:when>
 				<c:otherwise>
