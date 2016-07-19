@@ -28,6 +28,15 @@
 	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
 	<bean id="userDAO" class="com.app.dao.UserDAO" />
 
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<value>
+				resource.loader=class
+				class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+			</value>
+		</property>
+	</bean>
+
 	<cache:annotation-driven/>
 
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
