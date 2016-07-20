@@ -20,6 +20,7 @@ import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.PasswordLengthException;
 import com.app.model.User;
+import com.app.shiro.eBaySaltedAuthenticationInfo;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.CredentialsException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha512Hash;
@@ -137,15 +141,27 @@ public class UserUtil {
 	}
 
 	public static void updateUserDetails(
-			String emailAddress, boolean emailNotification)
+			String emailAddress, String currentPassword, String newPassword,
+			boolean emailNotification)
 		throws
-			DatabaseConnectionException, DuplicateEmailAddressException,
-			InvalidEmailAddressException, SQLException {
+			CredentialsException, DatabaseConnectionException,
+			DuplicateEmailAddressException, InvalidEmailAddressException,
+			SQLException {
+
+		User user = getCurrentUser();
+
+		_validateCredentials(
+			user.getEmailAddress(), user.getPassword(), currentPassword,
+			user.getSalt());
 
 		_validateEmailAddress(getCurrentUserId(), emailAddress);
 
+		List<String> passwordAndSalt = _generatePasswordAndSalt(
+			newPassword);
+
 		_userDAO.updateUserDetails(
-			getCurrentUserId(), emailAddress, emailNotification);
+			user.getUserId(), emailAddress, passwordAndSalt.get(0),
+			passwordAndSalt.get(1), emailNotification);
 	}
 
 	public static void updateUserLoginDetails(
@@ -164,6 +180,13 @@ public class UserUtil {
 		_userDAO.updateUserSubscription(
 			userId, unsubscribeToken, customerId, subscriptionId,
 			active, pendingCancellation);
+	}
+
+	@Autowired
+	public void setHashedCredentialsMatcher(
+		HashedCredentialsMatcher hashedCredentialsMatcher) {
+
+		_hashedCredentialsMatcher = hashedCredentialsMatcher;
 	}
 
 	@Autowired
@@ -187,6 +210,21 @@ public class UserUtil {
 		passwordAndSalt.add(salt.toString());
 
 		return passwordAndSalt;
+	}
+
+	private static void _validateCredentials(
+			String emailAddress, String encryptedPassword, String password,
+			String salt)
+		throws CredentialsException {
+
+		boolean credentialsMatch = _hashedCredentialsMatcher.doCredentialsMatch(
+			new UsernamePasswordToken(emailAddress, password),
+			new eBaySaltedAuthenticationInfo(
+				emailAddress, encryptedPassword, salt));
+
+		if (!credentialsMatch) {
+			throw new CredentialsException();
+		}
 	}
 
 	private static void _validateEmailAddress(int userId, String emailAddress)
@@ -213,6 +251,8 @@ public class UserUtil {
 			throw new PasswordLengthException();
 		}
 	}
+
+	private static HashedCredentialsMatcher _hashedCredentialsMatcher;
 
 	private static UserDAO _userDAO;
 

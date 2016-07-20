@@ -28,6 +28,12 @@
 	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
 	<bean id="userDAO" class="com.app.dao.UserDAO" />
 
+	<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher" id="sha512Matcher">
+		<property name="hashAlgorithmName" value="SHA-512" />
+		<property name="storedCredentialsHexEncoded" value="false" />
+		<property name="hashIterations" value="1024" />
+	</bean>
+
 	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
 		<property name="velocityProperties">
 			<value>

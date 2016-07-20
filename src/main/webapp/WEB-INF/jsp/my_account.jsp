@@ -90,6 +90,12 @@
 				<div>
 					<b>Email Address: </b><form:input path="emailAddress" value="${emailAddress}" />
 				</div>
+				<div>
+					<b>Current Password: </b><form:input path="currentPassword" type="password" />
+				</div>
+				<div>
+					<b>New Password: </b><form:input path="newPassword" type="password" />
+				</div>
 				<div class="padding-top">
 					<form:checkbox id="emailNotification" label="Send Email Notifications" path="emailNotification" value="${emailNotification}" />
 				</div>

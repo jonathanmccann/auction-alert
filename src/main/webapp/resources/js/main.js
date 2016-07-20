@@ -1,5 +1,5 @@
 $(window).load(function() {
-	$("#user\\.emailAddress, #keywords, #maxPrice, #minPrice").tooltipster({
+	$("#user\\.emailAddress, #user\\.newPassword, #user\\.password, #keywords, #maxPrice, #minPrice").tooltipster({
 		trigger: 'custom',
 		onlyOne: false,
 		position: 'bottom'
@@ -58,6 +58,14 @@ $(window).load(function() {
 				maxlength: 255,
 				required: true,
 				email: true
+			},
+			'user.password': {
+				required: true,
+				minlength: 6
+			},
+			'user.newPassword': {
+				required: true,
+				minlength: 6
 			}
 		}
 	});

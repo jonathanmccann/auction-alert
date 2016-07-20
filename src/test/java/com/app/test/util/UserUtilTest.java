@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.shiro.authc.CredentialsException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -34,6 +35,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.test.annotation.DirtiesContext;
@@ -197,18 +199,15 @@ public class UserUtilTest extends BaseTestCase {
 	public void testUpdateUserDetails() throws Exception {
 		setUpUserUtil();
 
-		User user = UserUtil.addUser("update@test.com", "password");
+		User user = UserUtil.addUser("test@test.com", "password");
 
-		Assert.assertNotNull(user);
-		Assert.assertEquals("update@test.com", user.getEmailAddress());
-		Assert.assertTrue(user.isEmailNotification());
-
-		UserUtil.updateUserDetails("test@test.com", false);
+		UserUtil.updateUserDetails(
+			"update@test.com", "password", "newPassword", false);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
-		Assert.assertEquals("test@test.com", user.getEmailAddress());
+		Assert.assertEquals("update@test.com", user.getEmailAddress());
 		Assert.assertFalse(user.isEmailNotification());
 	}
 
@@ -255,6 +254,46 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
 		Assert.assertTrue(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testValidateCredentials() throws Exception {
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		Method validateCredentials = _clazz.getDeclaredMethod(
+			"_validateCredentials", String.class, String.class, String.class,
+			String.class);
+
+		validateCredentials.setAccessible(true);
+
+		validateCredentials.invoke(
+			_classInstance, "test@test.com", user.getPassword(), "password",
+			user.getSalt());
+	}
+
+	@Test
+	public void testValidateCredentialsWithIncorrectPassword()
+		throws Exception {
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		Method validateCredentials = _clazz.getDeclaredMethod(
+			"_validateCredentials", String.class, String.class, String.class,
+			String.class);
+
+		validateCredentials.setAccessible(true);
+
+		try {
+			validateCredentials.invoke(
+				_classInstance, "test@test.com", user.getPassword(),
+				"incorrectPassword", user.getSalt());
+
+			Assert.fail();
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(
+				ite.getCause() instanceof CredentialsException);
+		}
 	}
 
 	@Test

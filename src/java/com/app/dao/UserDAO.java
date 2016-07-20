@@ -248,7 +248,8 @@ public class UserDAO {
 
 	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUserDetails(
-			int userId, String emailAddress, boolean emailNotification)
+			int userId, String emailAddress, String password, String salt,
+			boolean emailNotification)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Updating user ID: {}", userId);
@@ -258,8 +259,10 @@ public class UserDAO {
 				_UPDATE_USER_DETAILS_SQL)) {
 
 			preparedStatement.setString(1, emailAddress);
-			preparedStatement.setBoolean(2, emailNotification);
-			preparedStatement.setInt(3, userId);
+			preparedStatement.setString(2, password);
+			preparedStatement.setString(3, salt);
+			preparedStatement.setBoolean(4, emailNotification);
+			preparedStatement.setInt(5, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -362,8 +365,8 @@ public class UserDAO {
 				"pendingCancellation = ? WHERE userId = ?";
 
 	private static final String _UPDATE_USER_DETAILS_SQL =
-		"UPDATE User_ SET emailAddress = ?, emailNotification = ? WHERE " +
-			"userId = ?";
+		"UPDATE User_ SET emailAddress = ?, password = ?, salt = ?, " +
+			"emailNotification = ? WHERE userId = ?";
 
 	public static final String _UPDATE_USER_LOGIN_DETAILS_SQL =
 		"UPDATE User_ SET lastLoginDate = ?, lastLoginIpAddress = ? WHERE " +

@@ -24,6 +24,7 @@ import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
 import com.app.mail.MailUtil;
 import com.app.model.User;
+import com.app.shiro.eBaySaltedAuthenticationInfo;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
 import com.app.util.StripeUtil;
@@ -35,19 +36,24 @@ import java.sql.Timestamp;
 
 import java.util.Map;
 
+import javax.security.auth.login.CredentialException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.CredentialsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -487,10 +493,15 @@ public class UserController {
 
 		try {
 			UserUtil.updateUserDetails(
-				user.getEmailAddress(), user.isEmailNotification());
+				user.getEmailAddress(), user.getCurrentPassword(),
+				user.getNewPassword(), user.isEmailNotification());
 
 			redirectAttributes.addFlashAttribute(
 				"success", LanguageUtil.getMessage("account-updated"));
+		}
+		catch (CredentialsException ce) {
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("incorrect-password"));
 		}
 		catch (DuplicateEmailAddressException deae) {
 			redirectAttributes.addFlashAttribute(

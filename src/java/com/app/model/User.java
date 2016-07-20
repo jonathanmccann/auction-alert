@@ -55,6 +55,14 @@ public class User {
 		return _lastLoginIpAddress;
 	}
 
+	public String getCurrentPassword() {
+		return _currentPassword;
+	}
+
+	public String getNewPassword() {
+		return _newPassword;
+	}
+
 	public String getPassword() {
 		return _password;
 	}
@@ -115,6 +123,14 @@ public class User {
 		_lastLoginIpAddress = lastLoginIpAddress;
 	}
 
+	public void setCurrentPassword(String currentPassword) {
+		_currentPassword = currentPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		_newPassword = newPassword;
+	}
+
 	public void setPassword(String password) {
 		_password = password;
 	}
@@ -146,6 +162,8 @@ public class User {
 	private boolean _emailNotification;
 	private Timestamp _lastLoginDate;
 	private String _lastLoginIpAddress;
+	private String _currentPassword;
+	private String _newPassword;
 	private String _password;
 	private boolean _pendingCancellation;
 	private String _salt;
