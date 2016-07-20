@@ -98,6 +98,7 @@
 				</div>
 			</form:form>
 
+			<b>Billing Options:</b> <br>
 			<c:choose>
 				<c:when test="${(not empty user.subscriptionId) && ((not user.active) || (user.pendingCancellation))}">
 					<form:form action="/resubscribe" id="resubscribeForm" method="POST">
