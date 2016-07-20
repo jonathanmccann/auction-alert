@@ -29,6 +29,8 @@ public class ValidatorUtilTest {
 		Assert.assertFalse(
 			ValidatorUtil.isValidEmailAddress("invalidEmailAddress"));
 		Assert.assertFalse(
+			ValidatorUtil.isValidEmailAddress("invalidEmailAddress@test"));
+		Assert.assertFalse(
 			ValidatorUtil.isValidEmailAddress("invalidEmailAddress#test.com"));
 	}
 
@@ -87,7 +89,6 @@ public class ValidatorUtilTest {
 
 	@Test
 	public void testValidEmailAddress() throws Exception {
-		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test@test"));
 		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test@test.com"));
 		Assert.assertTrue(ValidatorUtil.isValidEmailAddress("test2@test2.com"));
 	}
