@@ -75,6 +75,23 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testCreateAccountExceedingMaximumNumberOfUsers()
+		throws Exception {
+
+		UserUtil.addUser("test2@test.com", "password");
+
+		MockHttpServletRequestBuilder request = post("/create_account");
+
+		request.param("emailAddress", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:create_account"));
+		resultActions.andExpect(redirectedUrl("create_account"));
+	}
+
+	@Test
 	public void testCreateAccountWithDuplicateEmailAddress() throws Exception {
 		MockHttpServletRequestBuilder request = post("/create_account");
 

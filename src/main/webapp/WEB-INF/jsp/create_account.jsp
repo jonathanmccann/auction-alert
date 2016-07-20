@@ -58,28 +58,39 @@
 		</section>
 
 		<div id="user-details">
-			<c:if test="${not empty error}">
-				<div id="error">
-					<i class="icon fa-times-circle"></i>
-					${error}
-				</div>
-			</c:if>
+			<c:choose>
+				<c:when test="${exceedsMaximumNumberOfUsers}">
+					<div class="container">
+						<div class="align-center">
+							<h2>Currently we have reached the maximum number of users. Please <a href="/contact">contact us</a> to be added to the waiting list.</h2>
+						</div>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<c:if test="${not empty error}">
+						<div id="error">
+							<i class="icon fa-times-circle"></i>
+							${error}
+						</div>
+					</c:if>
 
-			<form:form action="create_account" commandName="createAccount" id="createAccountForm" method="post">
-				<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
+					<form:form action="create_account" commandName="createAccount" id="createAccountForm" method="post">
+						<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
 
-				<input id="redirect" name="redirect" type="hidden" value="${redirect}" />
+						<input id="redirect" name="redirect" type="hidden" value="${redirect}" />
 
-				<div>
-					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
-				</div>
-				<div>
-					<b>Password: </b><input id="password" name="password" type="password" />
-				</div>
-				<div class="padding-top">
-					<input class="button special" id="createAccountSubmit" type="submit" value="Create Account" />
-				</div>
-			</form:form>
+						<div>
+							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
+						</div>
+						<div>
+							<b>Password: </b><input id="password" name="password" type="password" />
+						</div>
+						<div class="padding-top">
+							<input class="button special" id="createAccountSubmit" type="submit" value="Create Account" />
+						</div>
+					</form:form>
+				</c:otherwise>
+			</c:choose>
 		</div>
 
 		<%@ include file="footer.jspf" %>

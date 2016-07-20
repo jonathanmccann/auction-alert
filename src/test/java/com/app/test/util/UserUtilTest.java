@@ -103,6 +103,7 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertFalse(UserUtil.exceedsMaximumNumberOfUsers());
 
 		UserUtil.addUser("test@test.com", "password");
+		UserUtil.addUser("test2@test.com", "password");
 
 		Assert.assertTrue(UserUtil.exceedsMaximumNumberOfUsers());
 	}

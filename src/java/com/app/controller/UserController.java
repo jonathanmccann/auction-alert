@@ -108,7 +108,8 @@ public class UserController {
 
 	@RequestMapping(value = "/create_account", method = RequestMethod.GET)
 	public String createAccount(
-		@ModelAttribute("error")String error, Map<String, Object> model) {
+			@ModelAttribute("error")String error, Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
 
 		Subject currentUser = SecurityUtils.getSubject();
 
@@ -117,6 +118,9 @@ public class UserController {
 		}
 		else {
 			model.put("error", error);
+			model.put(
+				"exceedsMaximumNumberOfUsers",
+				UserUtil.exceedsMaximumNumberOfUsers());
 			model.put(
 				"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
@@ -129,6 +133,10 @@ public class UserController {
 			String emailAddress, String password, String stripeToken,
 			HttpServletRequest request, RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
+
+		if (UserUtil.exceedsMaximumNumberOfUsers()) {
+			return "redirect:create_account";
+		}
 
 		User user = null;
 
