@@ -72,6 +72,7 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
 		Assert.assertEquals(
 			1, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES);
+		Assert.assertEquals(1, PropertiesValues.MAXIMUM_NUMBER_OF_USERS);
 		Assert.assertEquals(
 			"Recaptcha Site Key", PropertiesValues.RECAPTCHA_SITE_KEY);
 		Assert.assertEquals(

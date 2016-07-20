@@ -61,6 +61,10 @@ public class PropertiesValues {
 			PropertiesUtil.getConfigurationProperty(
 				"maximum.number.of.search.queries"));
 
+	public static final int MAXIMUM_NUMBER_OF_USERS =
+		Integer.parseInt(
+			PropertiesUtil.getConfigurationProperty("maximum.number.of.users"));
+
 	public static final int NUMBER_OF_EMAILS_PER_DAY = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty("number.of.emails.per.day"));
 
