@@ -65,6 +65,18 @@ public class UserUtil {
 		_userDAO.deleteUserByUserId(userId);
 	}
 
+	public static boolean exceedsMaximumNumberOfUsers()
+		throws DatabaseConnectionException, SQLException {
+
+		int searchQueryCount = _userDAO.getUserCount();
+
+		if ((searchQueryCount + 1) > PropertiesValues.MAXIMUM_NUMBER_OF_USERS) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static String generateUnsubscribeToken(String customerId) {
 		RandomNumberGenerator rng = new SecureRandomNumberGenerator();
 

@@ -131,6 +131,25 @@ public class UserDAO {
 		}
 	}
 
+	public int getUserCount() throws DatabaseConnectionException, SQLException {
+		_log.debug("Getting user count");
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_USER_COUNT_SQL)) {
+
+			int searchQueryCount = 0;
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				searchQueryCount = resultSet.getInt(1);
+			}
+
+			return searchQueryCount;
+		}
+	}
+
 	@Cacheable(value = "userIds")
 	public List<Integer> getUserIds(boolean active)
 		throws DatabaseConnectionException, SQLException {
@@ -321,6 +340,9 @@ public class UserDAO {
 
 	private static final String _GET_USER_BY_USER_ID_SQL =
 		"SELECT * FROM User_ WHERE userId = ?";
+
+	private static final String _GET_USER_COUNT_SQL =
+		"SELECT COUNT(*) FROM User_";
 
 	private static final String _GET_USER_IDS =
 		"SELECT userId FROM User_ WHERE active = ? ORDER BY userId";

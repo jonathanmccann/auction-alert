@@ -97,6 +97,17 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testExceedsMaximumNumberOfSearchQueries() throws Exception {
+		setUpProperties();
+
+		Assert.assertFalse(UserUtil.exceedsMaximumNumberOfUsers());
+
+		UserUtil.addUser("test@test.com", "password");
+
+		Assert.assertTrue(UserUtil.exceedsMaximumNumberOfUsers());
+	}
+
+	@Test
 	public void testGetUserByInvalidEmailAddress() throws Exception {
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
