@@ -34,6 +34,7 @@ import com.app.util.ValidatorUtil;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import java.util.Date;
 import java.util.Map;
 
 import javax.security.auth.login.CredentialException;
@@ -398,6 +399,45 @@ public class UserController {
 		currentUser.logout();
 
 		return "redirect:home";
+	}
+
+	@RequestMapping(value = "/reset_password", method = RequestMethod.GET)
+	public String resetPassword(
+		@ModelAttribute("error")String error,
+		@ModelAttribute("success")String success, Map<String, Object> model) {
+
+		model.put("error", error);
+		model.put("success", success);
+
+		return "reset_password";
+	}
+
+	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
+	public String resetPassword(
+			String emailAddress, String password, String passwordResetToken,
+			RedirectAttributes redirectAttributes)
+		throws DatabaseConnectionException, SQLException {
+
+		User user = UserUtil.getUserByEmailAddress(emailAddress);
+
+		Timestamp passwordResetExpiration = user.getPasswordResetExpiration();
+
+		Date date = new Date();
+
+		if (date.after(passwordResetExpiration) ||
+			!user.getPasswordResetToken().equals(passwordResetToken)) {
+
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("password-reset-fail"));
+		}
+		else {
+			UserUtil.updatePassword(password);
+
+			redirectAttributes.addFlashAttribute(
+				"success", LanguageUtil.getMessage("password-reset-success"));
+		}
+
+		return "redirect:reset_password";
 	}
 
 	@RequestMapping(value = "/resubscribe", method = RequestMethod.POST)

@@ -26,7 +26,10 @@ import com.stripe.model.Customer;
 import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -326,6 +329,58 @@ public class UserControllerTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
 		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testGetResetPassword() throws Exception {
+		this.mockMvc.perform(get("/reset_password"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("reset_password"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/reset_password.jsp"));
+	}
+
+	@Test
+	public void testResetPassword() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.updatePasswordResetToken();
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		MockHttpServletRequestBuilder request = post("/reset_password");
+
+		request.param("emailAddress", user.getEmailAddress());
+		request.param("password", "updatedPassword");
+		request.param("passwordResetToken", user.getPasswordResetToken());
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:reset_password"));
+		resultActions.andExpect(redirectedUrl("reset_password"));
+		resultActions.andExpect(flash().attributeExists("success"));
+	}
+
+	@Test
+	public void testResetPasswordWithInvalidResetToken() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.updatePasswordResetToken();
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		MockHttpServletRequestBuilder request = post("/reset_password");
+
+		request.param("emailAddress", user.getEmailAddress());
+		request.param("password", "updatedPassword");
+		request.param("passwordResetToken", "invalidPasswordResetToken");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:reset_password"));
+		resultActions.andExpect(redirectedUrl("reset_password"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
