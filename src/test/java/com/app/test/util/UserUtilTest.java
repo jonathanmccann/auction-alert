@@ -171,6 +171,40 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testUpdatePassword() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		String password = user.getPassword();
+		String salt = user.getSalt();
+
+		UserUtil.updatePassword("updatedPassword");
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotEquals(password, user.getPassword());
+		Assert.assertNotEquals(salt, user.getSalt());
+	}
+
+	@Test
+	public void testUpdatePasswordResetToken() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		Assert.assertNull(user.getPasswordResetToken());
+		Assert.assertNull(user.getPasswordResetExpiration());
+
+		UserUtil.updatePasswordResetToken();
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user.getPasswordResetToken());
+		Assert.assertNotNull(user.getPasswordResetExpiration());
+	}
+
+	@Test
 	public void testUpdateEmailsSent() throws Exception {
 		User user = UserUtil.addUser("test@test.com", "password");
 

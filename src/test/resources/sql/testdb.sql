@@ -56,7 +56,9 @@ CREATE TABLE IF NOT EXISTS User_(
 	active BOOLEAN DEFAULT FALSE,
 	pendingCancellation BOOLEAN DEFAULT FALSE,
 	lastLoginDate TIMESTAMP,
-	lastLoginIpAddress VARCHAR(20)
+	lastLoginIpAddress VARCHAR(20),
+	passwordResetToken VARCHAR(100),
+	passwordResetExpiration TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS Release_(

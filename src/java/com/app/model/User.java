@@ -83,6 +83,14 @@ public class User {
 		return _userId;
 	}
 
+	public String getPasswordResetToken() {
+		return _passwordResetToken;
+	}
+
+	public Timestamp getPasswordResetExpiration() {
+		return _passwordResetExpiration;
+	}
+
 	public boolean isActive() {
 		return _active;
 	}
@@ -135,6 +143,14 @@ public class User {
 		_password = password;
 	}
 
+	public void setPasswordResetToken(String passwordResetToken) {
+		_passwordResetToken = passwordResetToken;
+	}
+
+	public void setPasswordResetExpiration(Timestamp passwordResetExpiration) {
+		_passwordResetExpiration = passwordResetExpiration;
+	}
+
 	public void setPendingCancellation(boolean pendingCancellation) {
 		_pendingCancellation = pendingCancellation;
 	}
@@ -165,6 +181,8 @@ public class User {
 	private String _currentPassword;
 	private String _newPassword;
 	private String _password;
+	private String _passwordResetToken;
+	private Timestamp _passwordResetExpiration;
 	private boolean _pendingCancellation;
 	private String _salt;
 	private String _subscriptionId;

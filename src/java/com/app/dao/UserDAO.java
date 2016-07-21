@@ -26,6 +26,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -222,6 +224,51 @@ public class UserDAO {
 	}
 
 	@CacheEvict(value = "userByUserId", key = "#userId")
+	public void updatePassword(int userId, String password, String salt)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Updating emails sent for user ID: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_UPDATE_PASSWORD_SQL)) {
+
+			preparedStatement.setString(1, password);
+			preparedStatement.setString(2, salt);
+			preparedStatement.setInt(3, userId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@CacheEvict(value = "userByUserId", key = "#userId")
+	public void updatePasswordResetToken(int userId, String passwordResetToken)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Updating emails sent for user ID: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_UPDATE_PASSWORD_RESET_TOKEN_SQL)) {
+
+			Date currentDate = new Date();
+
+			Calendar calendar = Calendar.getInstance();
+
+			calendar.setTime(currentDate);
+			calendar.add(Calendar.HOUR, 1);
+
+			Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+
+			preparedStatement.setString(1, passwordResetToken);
+			preparedStatement.setTimestamp(2, timestamp);
+			preparedStatement.setInt(3, userId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
+	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUser(
 			int userId, String emailAddress, boolean emailNotification,
 			String customerId, String subscriptionId, boolean active,
@@ -328,6 +375,9 @@ public class UserDAO {
 		user.setPendingCancellation(resultSet.getBoolean("pendingCancellation"));
 		user.setLastLoginDate(resultSet.getTimestamp("lastLoginDate"));
 		user.setLastLoginIpAddress(resultSet.getString("lastLoginIpAddress"));
+		user.setPasswordResetToken(resultSet.getString("passwordResetToken"));
+		user.setPasswordResetExpiration(
+			resultSet.getTimestamp("passwordResetExpiration"));
 
 		return user;
 	}
@@ -353,11 +403,18 @@ public class UserDAO {
 	public static final String _RESET_EMAILS_SENT_SQL =
 		"UPDATE User_ SET emailsSent = 0";
 
+	public static final String _UPDATE_PASSWORD_RESET_TOKEN_SQL =
+		"UPDATE User_ SET passwordResetToken = ?, passwordResetExpiration= ? " +
+			"WHERE userId = ?";
+
 	public static final String _UNSUBSCRIBE_USER_FROM_EMAIL_NOTIFICATIONS_SQL =
 		"UPDATE User_ SET emailNotification = false WHERE emailAddress = ?";
 
 	public static final String _UPDATE_EMAILS_SENT_SQL =
 		"UPDATE User_ SET emailsSent = ? where userId = ?";
+
+	public static final String _UPDATE_PASSWORD_SQL =
+		"UPDATE User_ SET password = ?, salt = ? WHERE userId = ?";
 
 	private static final String _UPDATE_USER_SQL =
 		"UPDATE User_ SET emailAddress = ?, emailNotification = ?, " +
