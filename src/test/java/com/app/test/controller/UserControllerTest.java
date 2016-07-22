@@ -384,6 +384,24 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testResetPasswordWithNullUser() throws Exception {
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = post("/reset_password");
+
+		request.param("emailAddress", "invalid@test.com");
+		request.param("password", "updatedPassword");
+		request.param("passwordResetToken", "invalidPasswordResetToken");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:reset_password"));
+		resultActions.andExpect(redirectedUrl("reset_password"));
+		resultActions.andExpect(flash().attributeExists("error"));
+	}
+
+	@Test
 	public void testResubscribeWithResubscribeException() throws Exception {
 		setUpUserUtil();
 

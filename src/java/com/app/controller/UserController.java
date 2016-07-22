@@ -459,21 +459,29 @@ public class UserController {
 
 		User user = UserUtil.getUserByEmailAddress(emailAddress);
 
-		Timestamp passwordResetExpiration = user.getPasswordResetExpiration();
-
-		Date date = new Date();
-
-		if (date.after(passwordResetExpiration) ||
-			!user.getPasswordResetToken().equals(passwordResetToken)) {
-
+		if (user == null) {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("password-reset-fail"));
 		}
 		else {
-			UserUtil.updatePassword(user.getUserId(), password);
+			Timestamp passwordResetExpiration =
+				user.getPasswordResetExpiration();
 
-			redirectAttributes.addFlashAttribute(
-				"success", LanguageUtil.getMessage("password-reset-success"));
+			Date date = new Date();
+
+			if (date.after(passwordResetExpiration) ||
+				!user.getPasswordResetToken().equals(passwordResetToken)) {
+
+				redirectAttributes.addFlashAttribute(
+					"error", LanguageUtil.getMessage("password-reset-fail"));
+			}
+			else {
+				UserUtil.updatePassword(user.getUserId(), password);
+
+				redirectAttributes.addFlashAttribute(
+					"success", LanguageUtil.getMessage(
+						"password-reset-success"));
+			}
 		}
 
 		return "redirect:reset_password";
