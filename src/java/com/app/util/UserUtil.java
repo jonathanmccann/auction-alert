@@ -19,6 +19,8 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.PasswordLengthException;
+import com.app.exception.PasswordResetException;
+import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.shiro.eBaySaltedAuthenticationInfo;
 
@@ -26,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
@@ -125,6 +128,26 @@ public class UserUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		_userDAO.resetEmailsSent();
+	}
+
+	public static void resetPassword(
+			String emailAddress, String password, String passwordResetToken)
+		throws Exception {
+
+		User user = getUserByEmailAddress(emailAddress);
+
+		Timestamp passwordResetExpiration = user.getPasswordResetExpiration();
+
+		Date date = new Date();
+
+		if (date.after(passwordResetExpiration) ||
+			!user.getPasswordResetToken().equals(passwordResetToken)) {
+
+			throw new PasswordResetException();
+		}
+		else {
+			updatePassword(user.getUserId(), password);
+		}
 	}
 
 	public static void unsubscribeUserFromEmailNotifications(

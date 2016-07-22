@@ -457,37 +457,15 @@ public class UserController {
 			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
-		User user = UserUtil.getUserByEmailAddress(emailAddress);
+		try {
+			UserUtil.resetPassword(emailAddress, password, passwordResetToken);
 
-		if (user == null) {
+			redirectAttributes.addFlashAttribute(
+				"success", LanguageUtil.getMessage("password-reset-success"));
+		}
+		catch (Exception e) {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("password-reset-fail"));
-		}
-		else {
-			Timestamp passwordResetExpiration =
-				user.getPasswordResetExpiration();
-
-			Date date = new Date();
-
-			if (date.after(passwordResetExpiration) ||
-				!user.getPasswordResetToken().equals(passwordResetToken)) {
-
-				redirectAttributes.addFlashAttribute(
-					"error", LanguageUtil.getMessage("password-reset-fail"));
-			}
-			else {
-				try {
-					UserUtil.updatePassword(user.getUserId(), password);
-
-					redirectAttributes.addFlashAttribute(
-						"success", LanguageUtil.getMessage(
-							"password-reset-success"));
-				}
-				catch (PasswordLengthException ple) {
-					redirectAttributes.addFlashAttribute(
-						"error", LanguageUtil.getMessage("password-reset-fail"));
-				}
-			}
 		}
 
 		return "redirect:reset_password";
