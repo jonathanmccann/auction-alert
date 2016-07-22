@@ -52,7 +52,7 @@
 			</div>
 		</section>
 
-		<div class="padding-top">
+		<div id="user-details">
 			<c:choose>
 				<c:when test="${not empty success}">
 					<div id="success">
@@ -63,13 +63,11 @@
 				<c:otherwise>
 					<div id="info">
 						<i class="icon fa-info-circle"></i>
-						A password reset token will be sent to your email address. Please use this token to reset your password and note that the token is only valid for one hour.
+						A password reset token will be sent to your email address.
 					</div>
 				</c:otherwise>
 			</c:choose>
-		</div>
 
-		<div id="user-details">
 			<form:form action="forgot_password" commandName="forgot_password" method="post">
 				<div>
 					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text" />

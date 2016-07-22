@@ -55,7 +55,7 @@
 			</div>
 		</section>
 
-		<div class="container padding-top">
+		<div id="user-details">
 			<c:if test="${not empty error}">
 				<div id="error">
 					<i class="icon fa-times-circle"></i>
@@ -82,7 +82,6 @@
 				</div>
 				<div class="padding-top">
 					<input class="button special" formaction="reset_password" formmethod="post" id="resetPasswordSubmit" type="submit" value="Reset Password" />
-					<input class="button special" formaction="update_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Update Search Query" />
 				</div>
 			</form:form>
 		</div>
