@@ -76,6 +76,8 @@
 				<div class="padding-top">
 					<input class="button special" type="submit" value="Log In" />
 				</div>
+
+				<a href="/forgot_password">Forgot password?</a>
 			</form:form>
 		</div>
 
