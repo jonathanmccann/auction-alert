@@ -60,6 +60,10 @@ public class eBaySearchResultUtil {
 
 		searchResults = result.getSearchResult();
 
+		if (searchResults == null) {
+			return new ArrayList<>();
+		}
+
 		List<SearchItem> searchItems = searchResults.getItem();
 
 		return _createSearchResults(
