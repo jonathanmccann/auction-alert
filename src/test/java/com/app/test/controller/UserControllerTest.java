@@ -589,30 +589,6 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("stripePublishableKey"));
 	}
 
-	protected static void setUpNullSubscription() throws Exception {
-		Subscription subscription = Mockito.mock(Subscription.class);
-
-		Mockito.when(
-			subscription.getId()
-		).thenReturn(
-			"updatedSubscriptionId"
-		);
-
-		PowerMockito.spy(Subscription.class);
-
-		PowerMockito.doReturn(
-			null
-		).when(
-			Subscription.class, "retrieve", Mockito.anyString()
-		);
-
-		PowerMockito.doReturn(
-			subscription
-		).when(
-			Subscription.class, "create", Mockito.anyMap()
-		);
-	}
-
 	protected static void setUpSubscription() throws Exception {
 		Subscription subscription = Mockito.mock(Subscription.class);
 
