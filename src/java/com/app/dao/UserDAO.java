@@ -414,7 +414,8 @@ public class UserDAO {
 		"UPDATE User_ SET emailsSent = ? where userId = ?";
 
 	public static final String _UPDATE_PASSWORD_SQL =
-		"UPDATE User_ SET password = ?, salt = ? WHERE userId = ?";
+		"UPDATE User_ SET password = ?, salt = ?, passwordResetToken = NULL " +
+			"WHERE userId = ?";
 
 	private static final String _UPDATE_USER_SQL =
 		"UPDATE User_ SET emailAddress = ?, emailNotification = ?, " +
