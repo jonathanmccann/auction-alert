@@ -652,6 +652,8 @@ public class UserControllerTest extends BaseTestCase {
 		request.param("userId", String.valueOf(_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
 		request.param("emailNotification", "false");
+		request.param("currentPassword", "password");
+		request.param("newPassword", "updatedPassword");
 
 		return request;
 	}
