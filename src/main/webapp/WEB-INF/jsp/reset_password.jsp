@@ -24,10 +24,14 @@
 <html>
 	<head>
 		<title>Reset Password</title>
+		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
 		<noscript>
 			<link rel="stylesheet" href="/resources/css/skel.css" />
 			<link rel="stylesheet" href="/resources/css/style.css" />
@@ -66,7 +70,7 @@
 				</div>
 			</c:if>
 
-			<form:form action="reset_password" commandName="reset_password" method="post">
+			<form:form commandName="resetPassword" id="resetPasswordForm">
 				<div>
 					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text" />
 				</div>
@@ -77,7 +81,8 @@
 					<b>Password Reset Token: </b><input id="passwordResetToken" name="passwordResetToken" type="text" />
 				</div>
 				<div class="padding-top">
-					<input class="button special" type="submit" value="Reset Password" />
+					<input class="button special" formaction="reset_password" formmethod="post" id="resetPasswordSubmit" type="submit" value="Reset Password" />
+					<input class="button special" formaction="update_search_query" formmethod="post" id="updateSearchQuerySubmit" type="submit" value="Update Search Query" />
 				</div>
 			</form:form>
 		</div>

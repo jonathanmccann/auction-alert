@@ -476,11 +476,17 @@ public class UserController {
 					"error", LanguageUtil.getMessage("password-reset-fail"));
 			}
 			else {
-				UserUtil.updatePassword(user.getUserId(), password);
+				try {
+					UserUtil.updatePassword(user.getUserId(), password);
 
-				redirectAttributes.addFlashAttribute(
-					"success", LanguageUtil.getMessage(
-						"password-reset-success"));
+					redirectAttributes.addFlashAttribute(
+						"success", LanguageUtil.getMessage(
+							"password-reset-success"));
+				}
+				catch (PasswordLengthException ple) {
+					redirectAttributes.addFlashAttribute(
+						"error", LanguageUtil.getMessage("password-reset-fail"));
+				}
 			}
 		}
 

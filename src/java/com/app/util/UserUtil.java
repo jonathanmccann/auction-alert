@@ -141,7 +141,10 @@ public class UserUtil {
 	}
 
 	public static void updatePassword(int userId, String plainTextPassword)
-		throws DatabaseConnectionException, SQLException {
+		throws
+			DatabaseConnectionException, PasswordLengthException, SQLException {
+
+		_validatePassword(plainTextPassword);
 
 		List<String> passwordAndSalt = _generatePasswordAndSalt(
 			plainTextPassword);
