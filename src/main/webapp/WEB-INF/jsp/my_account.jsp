@@ -32,7 +32,7 @@
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/validate-user.js" />" type="text/javascript"></script>
 		<script src="https://checkout.stripe.com/checkout.js" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/subscription.js" />" type="text/javascript"></script>
 		<noscript>

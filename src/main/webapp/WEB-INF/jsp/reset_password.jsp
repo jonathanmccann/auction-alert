@@ -31,7 +31,7 @@
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/validate-user.js" />" type="text/javascript"></script>
 		<noscript>
 			<link rel="stylesheet" href="/resources/css/skel.css" />
 			<link rel="stylesheet" href="/resources/css/style.css" />

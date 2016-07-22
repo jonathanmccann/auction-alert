@@ -87,7 +87,7 @@ $(window).load(function() {
 	});
 
 	$('#startMonitoring').click(function() {
-		var valid = $("#monitorForm").valid();
+		var valid = $("#searchQueryForm").valid();
 
 		if (!valid) {
 			$('html, body').animate({

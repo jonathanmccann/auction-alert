@@ -28,7 +28,7 @@
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/validate-search-query.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/skel.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/skel-layers.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/init.js" />" type="text/javascript"></script>
@@ -57,7 +57,7 @@
 			<div id="searchQuery" class="container padding-top">
 				<input id="campaignId" type="hidden" value="${campaignId}">
 
-				<form id="monitorForm" name="monitorForm">
+				<form id="searchQueryForm">
 					<ul class="alt">
 						<li>
 							<b>Keywords:</b> <input id="keywords" name="keywords" maxlength="300" type="text" />

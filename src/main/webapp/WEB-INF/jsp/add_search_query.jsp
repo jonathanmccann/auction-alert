@@ -37,7 +37,7 @@
 		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/main.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/resources/js/validate-search-query.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/skel.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/skel-layers.min.js" />" type="text/javascript"></script>
 		<script src="<c:url value="/resources/js/init.js" />" type="text/javascript"></script>
@@ -75,7 +75,7 @@
 			</c:if>
 
 			<div class="padding-top">
-				<form:form commandName="searchQuery" id="addSearchQueryForm">
+				<form:form commandName="searchQuery" id="searchQueryForm">
 					<c:choose>
 						<c:when test="${disabled}">
 							<fieldset disabled>
