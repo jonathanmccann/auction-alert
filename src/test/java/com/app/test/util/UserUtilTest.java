@@ -179,12 +179,24 @@ public class UserUtilTest extends BaseTestCase {
 		String password = user.getPassword();
 		String salt = user.getSalt();
 
-		UserUtil.updatePassword("updatedPassword");
+		UserUtil.updatePasswordResetToken(_USER_ID);
+
+		UserUtil.updatePassword(_USER_ID, "updatedPassword");
 
 		user = UserUtil.getUserByUserId(_USER_ID);
 
 		Assert.assertNotEquals(password, user.getPassword());
 		Assert.assertNotEquals(salt, user.getSalt());
+		Assert.assertNull(user.getPasswordResetToken());
+	}
+
+	@Test(expected = PasswordLengthException.class)
+	public void testUpdatePasswordWithInvalidPassword() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.addUser("test@test.com", "password");
+
+		UserUtil.updatePassword(_USER_ID, "test");
 	}
 
 	@Test
@@ -196,7 +208,7 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNull(user.getPasswordResetToken());
 		Assert.assertNull(user.getPasswordResetExpiration());
 
-		UserUtil.updatePasswordResetToken();
+		UserUtil.updatePasswordResetToken(_USER_ID);
 
 		user = UserUtil.getUserByUserId(_USER_ID);
 

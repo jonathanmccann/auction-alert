@@ -343,7 +343,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testResetPassword() throws Exception {
 		setUpUserUtil();
 
-		UserUtil.updatePasswordResetToken();
+		UserUtil.updatePasswordResetToken(_USER_ID);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -365,7 +365,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testResetPasswordWithInvalidResetToken() throws Exception {
 		setUpUserUtil();
 
-		UserUtil.updatePasswordResetToken();
+		UserUtil.updatePasswordResetToken(_USER_ID);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
