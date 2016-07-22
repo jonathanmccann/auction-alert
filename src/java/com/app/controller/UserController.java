@@ -250,6 +250,45 @@ public class UserController {
 		return "faq";
 	}
 
+	@RequestMapping(value ="/forgot_password", method = RequestMethod.GET)
+	public String forgotPassword(
+			@ModelAttribute("success")String success, Map<String, Object> model)
+		throws Exception {
+
+		model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
+		model.put("success", success);
+
+		return "forgot_password";
+	}
+
+	@RequestMapping(value ="/forgot_password", method = RequestMethod.POST)
+	public String forgotPassword(
+			String emailAddress,
+			@RequestParam(value = "g-recaptcha-response", required = false)
+				String recaptchaResponse,
+			RedirectAttributes redirectAttributes)
+		throws Exception {
+
+		boolean valid = RecaptchaUtil.verifyRecaptchaResponse(
+			recaptchaResponse);
+
+		if (valid) {
+			User user = UserUtil.getUserByEmailAddress(emailAddress);
+
+			String passwordResetToken = UserUtil.updatePasswordResetToken(
+				user.getUserId());
+
+			MailSender mailSender = MailSenderFactory.getInstance();
+
+			mailSender.sendPasswordResetToken(emailAddress, passwordResetToken);
+		}
+
+		redirectAttributes.addFlashAttribute(
+			"success", LanguageUtil.getMessage("forgot-password-success"));
+
+		return "redirect:forgot_password";
+	}
+
 	@RequestMapping(value = { "", "/", "/home" }, method = RequestMethod.GET)
 	public String home(Map<String, Object> model) throws Exception {
 		Subject currentUser = SecurityUtils.getSubject();
@@ -431,7 +470,7 @@ public class UserController {
 				"error", LanguageUtil.getMessage("password-reset-fail"));
 		}
 		else {
-			UserUtil.updatePassword(password);
+			UserUtil.updatePassword(user.getUserId(), password);
 
 			redirectAttributes.addFlashAttribute(
 				"success", LanguageUtil.getMessage("password-reset-success"));

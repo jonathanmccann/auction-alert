@@ -245,7 +245,7 @@ public class UserDAO {
 	public void updatePasswordResetToken(int userId, String passwordResetToken)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Updating emails sent for user ID: {}", userId);
+		_log.debug("Updating password reset token for user ID: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(

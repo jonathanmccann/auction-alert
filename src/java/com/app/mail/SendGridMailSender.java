@@ -56,6 +56,17 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
+	public void sendPasswordResetToken(
+			String emailAddress, String passwordResetToken)
+		throws Exception {
+
+		Mail mail = _populatePasswordResetToken(
+			emailAddress, passwordResetToken);
+
+		_sendEmail(mail);
+	}
+
+	@Override
 	public void sendSearchResultsToRecipient(
 			int userId,
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
@@ -131,6 +142,26 @@ public class SendGridMailSender implements MailSender {
 			velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
 
 		Content content = new Content("text/html", message);
+
+		return new Mail(emailFrom, subject, emailTo, content);
+	}
+
+	private Mail _populatePasswordResetToken(
+			String emailAddress, String passwordResetToken)
+		throws Exception {
+
+		Email emailTo = new Email(emailAddress);
+		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		String subject = "Password Reset Token";
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("passwordResetToken", passwordResetToken);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
+
+		Content content = new Content("text/html", messageBody);
 
 		return new Mail(emailFrom, subject, emailTo, content);
 	}

@@ -140,25 +140,29 @@ public class UserUtil {
 		_userDAO.updateEmailsSent(userId, emailsSent);
 	}
 
-	public static void updatePassword(String plainTextPassword)
+	public static void updatePassword(int userId, String plainTextPassword)
 		throws DatabaseConnectionException, SQLException {
 
 		List<String> passwordAndSalt = _generatePasswordAndSalt(
 			plainTextPassword);
 
 		_userDAO.updatePassword(
-			getCurrentUserId(), passwordAndSalt.get(0), passwordAndSalt.get(1));
+			userId, passwordAndSalt.get(0), passwordAndSalt.get(1));
 	}
 
-	public static void updatePasswordResetToken()
+	public static String updatePasswordResetToken(int userId)
 		throws DatabaseConnectionException, SQLException {
 
 		RandomNumberGenerator rng = new SecureRandomNumberGenerator();
 
-		Object passwordResetToken = rng.nextBytes();
+		Object randomBytes = rng.nextBytes();
+
+		String passwordResetToken = randomBytes.toString();
 
 		_userDAO.updatePasswordResetToken(
-			getCurrentUserId(), passwordResetToken.toString());
+			userId, passwordResetToken);
+
+		return passwordResetToken;
 	}
 
 	public static void updateUserDetails(

@@ -31,6 +31,10 @@ public interface MailSender {
 	public void sendContactMessage(String emailAddress, String message)
 		throws Exception;
 
+	public void sendPasswordResetToken(
+			String emailAddress, String passwordResetToken)
+		throws Exception;
+
 	public void sendSearchResultsToRecipient(
 			int userId,
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)

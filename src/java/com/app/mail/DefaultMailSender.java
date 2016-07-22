@@ -62,6 +62,19 @@ public class DefaultMailSender implements MailSender {
 	}
 
 	@Override
+	public void sendPasswordResetToken(
+			String emailAddress, String passwordResetToken)
+		throws Exception {
+
+		Session session = _authenticateOutboundEmailAddress();
+
+		Message message = _populatePasswordResetToken(
+			emailAddress, passwordResetToken, session);
+
+		Transport.send(message);
+	}
+
+	@Override
 	public void sendSearchResultsToRecipient(
 			int userId,
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
@@ -167,6 +180,32 @@ public class DefaultMailSender implements MailSender {
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
+
+		message.setContent(messageBody, "text/html");
+
+		return message;
+	}
+
+	private Message _populatePasswordResetToken(
+			String emailAddress, String passwordResetToken, Session session)
+		throws Exception {
+
+		Message message = new MimeMessage(session);
+
+		message.setFrom(
+			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+
+		message.addRecipient(
+			Message.RecipientType.TO, new InternetAddress(emailAddress));
+
+		message.setSubject("Password Reset Token");
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("passwordResetToken", passwordResetToken);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
 
 		message.setContent(messageBody, "text/html");
 
