@@ -3,6 +3,8 @@ $(window).load(function() {
 
 	var campaignId = $("#campaignId").val();
 
+	var search = $("#search");
+
 	var searchQuery = $("#searchQuery");
 
 	var contentDiv = document.getElementById('content');
@@ -75,10 +77,10 @@ $(window).load(function() {
 	function collapseSearchQuery() {
 		searchQuery.slideToggle(500);
 
-		$(this).toggleClass("fa-angle-down fa-angle-right")
+		search.toggleClass("fa-angle-down fa-angle-right")
 	}
 
-	$("#search").click(function() {
+	search.click(function() {
 		collapseSearchQuery();
 	});
 
@@ -104,8 +106,6 @@ $(window).load(function() {
 		if (searchQuery.is(':visible')) {
 			collapseSearchQuery();
 		}
-
-		$(header).find('i').toggleClass('fa-angle-down fa-angle-right')
 
 		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 
