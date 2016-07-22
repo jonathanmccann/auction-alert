@@ -40,13 +40,7 @@ $(window).load(function() {
 							}
 
 							contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
-							/*
-							html += '<div class="result-image">';
-					html += '<img alt="' + data[i]._galleryURL + '" src="' + data[i]._galleryURL + '">';
-					html += '</div>';
-					html += '<div class="result-information">';
-					html += '<a href="' + data[i]._itemURL + '" target="_blank">' + data[i]._itemTitle + '</a> <br>';
-					*/
+
 							sendNotification(e.title);
 
 							itemIds.unshift(itemId);
