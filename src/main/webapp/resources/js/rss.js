@@ -107,6 +107,8 @@ $(window).load(function() {
 			collapseSearchQuery();
 		}
 
+		contentDiv.innerHTML = "";
+
 		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 
 		var subcategoryId = $('#subcategoryId').val();
