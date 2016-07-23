@@ -70,6 +70,7 @@
 							<input class="button special" formaction="activate_search_query" formmethod="post" id="activateButton" type="submit" value="Activate" />
 							<input class="button special" formaction="deactivate_search_query" formmethod="post" id="deactivateButton" type="submit" value="Deactivate" />
 							<input class="button special" formaction="update_search_query" formmethod="get" id="editButton" type="submit" value="Edit" />
+							<input class="button special" formaction="monitor" formmethod="get" id="monitorButton" type="submit" value="Monitor" />
 							<input class="button special" formaction="delete_search_query" formmethod="post" id="deleteButton" type="submit" value="Delete" />
 						</form:form>
 						<section class="special box">

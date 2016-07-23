@@ -17,6 +17,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -57,61 +58,59 @@
 			<div id="searchQuery" class="container padding-top">
 				<input id="campaignId" type="hidden" value="${campaignId}">
 
-				<form id="searchQueryForm">
+				<form:form commandName="searchQuery" id="searchQueryForm">
+					<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
+
+					<input id="initialSubcategoryId" type="hidden" value="${searchQuery.subcategoryId}" />
+
+					<fmt:formatNumber pattern="0.00" value="${searchQuery.minPrice}" var="minPrice" />
+					<fmt:formatNumber pattern="0.00" value="${searchQuery.maxPrice}" var="maxPrice" />
+
 					<ul class="alt">
 						<li>
-							<b>Keywords:</b> <input id="keywords" name="keywords" maxlength="300" type="text" />
-							<select id="categoryId">
-								<option value="All Categories">All Categories</option>
-								<c:forEach items="${searchQueryCategories}" var="searchQueryCategory">
-									<option value="${searchQueryCategory.key}">${searchQueryCategory.value}</option>
-								</c:forEach>
-							</select>
-							<select disabled id="subcategoryId" >
-								<option value="All Subcategories"></option>
-							</select>
+							<b>Keywords:</b> <form:input maxlength="300" path="keywords" value="${searchQuery.keywords}" />
+							<form:select path="categoryId">
+								<form:option value="All Categories"></form:option>
+								<form:options items="${searchQueryCategories}" />
+							</form:select>
+							<form:select disabled="true" id="subcategoryId" path="subcategoryId">
+								<form:option value="All Subcategories"></form:option>
+							</form:select>
 						</li>
 						<li>
 							<b>Search Options:</b>
 
 							<div>
-								<input id="searchDescription" type="checkbox" />
-								<label for="searchDescription">Search Description</label> <br>
-								<input id="freeShippingOnly" type="checkbox" />
-								<label for="freeShippingOnly">Free Shipping</label>
+								<form:checkbox label="Search Description" path="searchDescription" value="${searchQuery.searchDescription}" /> <br>
+								<form:checkbox label="Free Shipping" path="freeShippingOnly" value="${searchQuery.freeShippingOnly}" />
 							</div>
 						</li>
 						<li>
 							<b>Listing Type:</b>
 
 							<div>
-								<input id="auctionListing" type="checkbox" />
-								<label for="auctionListing">Auction</label> <br>
-								<input id="fixedPriceListing" type="checkbox" />
-								<label for="fixedPriceListing">Buy It Now</label>
+								<form:checkbox label="Auction" path="auctionListing" value="${searchQuery.auctionListing}"/> <br>
+								<form:checkbox label="Buy It Now" path="fixedPriceListing" value="${searchQuery.fixedPriceListing}" />
 							</div>
 						</li>
 						<li>
 							<b>Condition:</b>
 
 							<div>
-								<input id="newCondition" type="checkbox" />
-								<label for="newCondition">New</label> <br>
-								<input id="usedCondition" type="checkbox" />
-								<label for="usedCondition">Used</label> <br>
-								<input id="unspecifiedCondition" type="checkbox" />
-								<label for="unspecifiedCondition">Unspecified</label>
+								<form:checkbox label="New" path="newCondition" value="${searchQuery.newCondition}"/> <br>
+								<form:checkbox label="Used" path="usedCondition" value="${searchQuery.usedCondition}"/> <br>
+								<form:checkbox label="Unspecified" path="unspecifiedCondition" value="${searchQuery.unspecifiedCondition}" />
 							</div>
 						</li>
 						<li>
 							<b>Price:</b>
 
 							<div>
-								Show items priced from <input id="minPrice" name="minPrice" type="text" value="0.00" /> to <input id="maxPrice" name="maxPrice" type="text" value="0.00" />
+								Show items priced from <form:input path="minPrice" value="${minPrice}" /> to <form:input path="maxPrice" value="${maxPrice}" />
 							</div>
 						</li>
 					</ul>
-				</form>
+				</form:form>
 			</div>
 
 			<div>
