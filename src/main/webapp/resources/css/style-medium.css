@@ -113,3 +113,9 @@
 			#navPanel nav .button {
 				width: 100%;
 			}
+
+/* User Details */
+
+	#user-details {
+		width: 70%;
+	}
