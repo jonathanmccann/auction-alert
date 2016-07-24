@@ -95,6 +95,7 @@
 
 					#navPanel nav ul li:first-child a:not(.button), #navPanel nav ul li:first-child span:not(.button) {
 						border-top: 0;
+						text-align: center;
 					}
 
 					#navPanel nav ul li a:not(.button), #navPanel nav ul li span:not(.button) {
