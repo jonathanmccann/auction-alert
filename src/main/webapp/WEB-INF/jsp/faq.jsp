@@ -68,18 +68,16 @@
 			<div class="container">
 				<div>
 					<h2>What do I receive when I sign up?</h2>
-					<div class="faq-paragraph">
-						<h4>Email Notifications</h4>
-						<p class="faq-paragraph">
-							As a subscriber, you have the ability to save 10 search queries that will be searched every minute.
-							Whenever a new result is found, an email notification is sent immediately to you, up to 30 emails a day.
-						</p>
-						<h4>Real Time Monitoring</h4>
-						<p class="faq-paragraph">
-							You will also have the added benefit of having real time monitoring of a single search query.
-							The query will be searched every five seconds and the results will be populated on the web page. Optionally, desktop notifications can be delivered for each new result.
-						</p>
-					</div>
+					<h4>Email Notifications</h4>
+					<p class="faq-paragraph">
+						As a subscriber, you have the ability to save 10 search queries that will be searched every minute.
+						Whenever a new result is found, an email notification is sent immediately to you, up to 30 emails a day.
+					</p>
+					<h4>Real Time Monitoring</h4>
+					<p class="faq-paragraph">
+						You will also have the added benefit of having real time monitoring of a single search query.
+						The query will be searched every five seconds and the results will be populated on the web page. Optionally, desktop notifications can be delivered for each new result.
+					</p>
 					<h2>Who do I contact if I have further questions?</h2>
 					<p class="faq-paragraph">
 						Please feel free to use our <a href="/contact">contact</a> page to get in touch with us.
