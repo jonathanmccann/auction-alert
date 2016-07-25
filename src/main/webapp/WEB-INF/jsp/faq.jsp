@@ -78,6 +78,10 @@
 						You will also have the added benefit of having real time monitoring of a single search query.
 						The query will be searched every five seconds and the results will be populated on the web page. Optionally, desktop notifications can be delivered for each new result.
 					</p>
+					<h2>Is Javascript required for using this website?</h2>
+					<p class="faq-paragraph">
+						Yes. Javascript is essential to the use of this website and its services.
+					</p>
 					<h2>Who do I contact if I have further questions?</h2>
 					<p class="faq-paragraph">
 						Please feel free to use our <a href="/contact">contact</a> page to get in touch with us.
