@@ -197,10 +197,12 @@
 							<div class="container">
 								<div class="row">
 									<div class="6u">
-										<section class="special box">
-											<i class="icon fa-line-chart major"></i>
-											<h3>Number of Search Queries</h3>
-										</section>
+										<a href="view_search_queries">
+											<section class="special box">
+												<i class="icon fa-send major"></i>
+												<h3>${emailsSent}</h3>
+											</section>
+										</a>
 									</div>
 									<div class="6u">
 										<a href="my_account">

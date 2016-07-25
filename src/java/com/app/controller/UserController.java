@@ -25,6 +25,7 @@ import com.app.mail.MailSenderFactory;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
+import com.app.util.SearchQueryUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
@@ -309,6 +310,19 @@ public class UserController {
 				model.put(
 					"nextChargeDate",
 					LanguageUtil.getMessage("inactive-account"));
+			}
+
+			int emailsSent = user.getEmailsSent();
+
+			if (emailsSent == 1) {
+				model.put(
+					"emailsSent", LanguageUtil.getMessage("one-email-sent"));
+			}
+			else {
+				model.put(
+					"emailsSent",
+					LanguageUtil.formatMessage(
+						"x-emails-sent", user.getEmailsSent()));
 			}
 		}
 
