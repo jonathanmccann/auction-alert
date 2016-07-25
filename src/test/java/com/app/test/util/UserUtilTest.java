@@ -247,6 +247,9 @@ public class UserUtilTest extends BaseTestCase {
 
 		User user = UserUtil.addUser("test@test.com", "password");
 
+		String password = user.getPassword();
+		String salt = user.getSalt();
+
 		UserUtil.updateUserDetails(
 			"update@test.com", "password", "newPassword", false);
 
@@ -255,6 +258,49 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
 		Assert.assertFalse(user.isEmailNotification());
+		Assert.assertNotEquals(password, user.getPassword());
+		Assert.assertNotEquals(salt, user.getSalt());
+	}
+
+	@Test(expected = PasswordLengthException.class)
+	public void testUpdateUserDetailsWithInvalidPassword() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		String password = user.getPassword();
+		String salt = user.getSalt();
+
+		UserUtil.updateUserDetails(
+			"update@test.com", "password", "short", false);
+
+		user = UserUtil.getUserByUserId(user.getUserId());
+
+		Assert.assertNotNull(user);
+		Assert.assertEquals("update@test.com", user.getEmailAddress());
+		Assert.assertFalse(user.isEmailNotification());
+		Assert.assertNotEquals(password, user.getPassword());
+		Assert.assertNotEquals(salt, user.getSalt());
+	}
+
+	@Test
+	public void testUpdateUserDetailsWithoutPassword() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		String password = user.getPassword();
+		String salt = user.getSalt();
+
+		UserUtil.updateUserDetails("update@test.com", "", "", false);
+
+		user = UserUtil.getUserByUserId(user.getUserId());
+
+		Assert.assertNotNull(user);
+		Assert.assertEquals("update@test.com", user.getEmailAddress());
+		Assert.assertFalse(user.isEmailNotification());
+		Assert.assertEquals(password, user.getPassword());
+		Assert.assertEquals(salt, user.getSalt());
 	}
 
 	@Test

@@ -520,6 +520,29 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testUpdateMyAccountWithInvalidPassword() throws Exception {
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = post(
+			"/my_account");
+
+		request.param("userId", String.valueOf(_USER.getUserId()));
+		request.param("emailAddress", "test2@test.com");
+		request.param("emailNotification", "false");
+		request.param("currentPassword", "password");
+		request.param("newPassword", "short");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
+
+		_assertNotUpdatedUser();
+	}
+
+	@Test
 	public void testUpdateMyAccountWithInvalidUserId() throws Exception {
 		setUpInvalidUserUtil();
 

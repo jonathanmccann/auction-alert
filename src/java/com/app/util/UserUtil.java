@@ -197,22 +197,32 @@ public class UserUtil {
 		throws
 			CredentialsException, DatabaseConnectionException,
 			DuplicateEmailAddressException, InvalidEmailAddressException,
-			SQLException {
-
-		User user = getCurrentUser();
-
-		_validateCredentials(
-			user.getEmailAddress(), user.getPassword(), currentPassword,
-			user.getSalt());
+			PasswordLengthException, SQLException {
 
 		_validateEmailAddress(getCurrentUserId(), emailAddress);
 
-		List<String> passwordAndSalt = _generatePasswordAndSalt(
-			newPassword);
+		User user = getCurrentUser();
 
-		_userDAO.updateUserDetails(
-			user.getUserId(), emailAddress, passwordAndSalt.get(0),
-			passwordAndSalt.get(1), emailNotification);
+		if (ValidatorUtil.isNotNull(currentPassword) ||
+			ValidatorUtil.isNotNull(newPassword)) {
+
+			_validateCredentials(
+				user.getEmailAddress(), user.getPassword(), currentPassword,
+				user.getSalt());
+
+			_validatePassword(newPassword);
+
+			List<String> passwordAndSalt = _generatePasswordAndSalt(
+				newPassword);
+
+			_userDAO.updateUserDetails(
+				user.getUserId(), emailAddress, passwordAndSalt.get(0),
+				passwordAndSalt.get(1), emailNotification);
+		}
+		else {
+			_userDAO.updateUserEmailDetails(
+				user.getUserId(), emailAddress, emailNotification);
+		}
 	}
 
 	public static void updateUserLoginDetails(
@@ -273,7 +283,9 @@ public class UserUtil {
 			new eBaySaltedAuthenticationInfo(
 				emailAddress, encryptedPassword, salt));
 
-		if (!credentialsMatch) {
+		if (ValidatorUtil.isNull(encryptedPassword) ||
+			ValidatorUtil.isNull(password) || !credentialsMatch) {
+
 			throw new CredentialsException();
 		}
 	}

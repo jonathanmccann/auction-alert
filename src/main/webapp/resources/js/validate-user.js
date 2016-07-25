@@ -22,7 +22,6 @@ $(window).load(function() {
 		},
 		rules: {
 			currentPassword: {
-				required: true,
 				minlength: 6
 			},
 			emailAddress: {
@@ -32,7 +31,6 @@ $(window).load(function() {
 				email: true
 			},
 			newPassword: {
-				required: true,
 				minlength: 6
 			},
 			password: {

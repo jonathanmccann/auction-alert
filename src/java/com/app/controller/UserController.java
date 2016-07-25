@@ -582,6 +582,10 @@ public class UserController {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-email-address"));
 		}
+		catch (PasswordLengthException ple) {
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("invalid-password-length"));
+		}
 
 		return "redirect:my_account";
 	}
