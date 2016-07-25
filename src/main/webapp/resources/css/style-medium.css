@@ -130,3 +130,9 @@
 	#searchQueryForm textarea {
 		width: 100%;
 	}
+
+/* Monitor */
+
+	.monitor-result-image {
+		display: inherit;
+	}
