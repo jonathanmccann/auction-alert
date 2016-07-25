@@ -145,6 +145,7 @@
 								30 emails a day <br>
 								Unlimited monitoring
 							</p>
+							<a href="create_account" class="button special">Sign Up</a>
 						</section>
 					</div>
 				</section>
