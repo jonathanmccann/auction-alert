@@ -20,7 +20,6 @@ import com.app.exception.DuplicateEmailAddressException;
 import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.PasswordLengthException;
 import com.app.exception.PasswordResetException;
-import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.shiro.eBaySaltedAuthenticationInfo;
 

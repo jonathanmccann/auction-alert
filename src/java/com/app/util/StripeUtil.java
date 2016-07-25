@@ -14,18 +14,15 @@
 
 package com.app.util;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.User;
 
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Jonathan McCann
