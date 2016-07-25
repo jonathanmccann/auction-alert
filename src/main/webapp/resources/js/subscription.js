@@ -5,7 +5,7 @@ $(window).load(function() {
 	var resubscribeHandler = StripeCheckout.configure({
 		key: $('#stripePublishableKey').val(),
 		image: "images/marketplace.png",
-		name: "eBay Search",
+		name: "Auction Alert",
 		description: "Subscription ($9.99 per month)",
 		amount: "999",
 		panelLabel: "Resubscribe",
@@ -21,7 +21,7 @@ $(window).load(function() {
 	var updateBillingHandler = StripeCheckout.configure({
 		key: $('#stripePublishableKey').val(),
 		image: "images/marketplace.png",
-		name: "eBay Search",
+		name: "Auction Alert",
 		label: "Update Card Details",
 		panelLabel: "Update Card Details",
 		allowRememberMe: false,

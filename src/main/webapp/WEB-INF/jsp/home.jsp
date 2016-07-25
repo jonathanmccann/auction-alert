@@ -62,7 +62,7 @@
 			</div>
 		</div>
 		<header id="header" class="skel-layers-fixed">
-			<h1><a href="#">eBay Searcher</a></h1>
+			<h1><a href="#">Auction Alert</a></h1>
 			<nav id="nav">
 				<ul>
 					<shiro:guest>
@@ -87,8 +87,8 @@
 			<div>
 				<section id="banner" class="major">
 					<div class="inner">
-						<h2>This is eBay Searcher</h2>
-						<p>A simple way to stay alerted</p>
+						<h2>This is Auction Alert</h2>
+						<p>The simple way to stay informed</p>
 						<ul class="actions">
 							<li><a href="create_account" class="button big special">Sign Up</a></li>
 							<li><a href="#about" id="learn-more" class="button big alt">Learn More</a></li>

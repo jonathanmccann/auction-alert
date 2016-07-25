@@ -38,7 +38,7 @@
 	</head>
 	<body>
 		<header id="header" class="skel-layers-fixed">
-			<h1><a href="home">eBay Searcher</a></h1>
+			<h1><a href="home">Auction Alert</a></h1>
 			<nav id="nav">
 				<ul>
 					<li><a href="log_in" id="loginLink">Log In</a></li>

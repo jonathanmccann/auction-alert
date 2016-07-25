@@ -146,7 +146,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
 		"\t\t\t<tr>\n" +
 		"\t\t\t\t<td align=\"center\">\n" +
-		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">eBay Searcher</h2>\n" +
+		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">Auction Alert</h2>\n" +
 		"\n" +
 		"\t\t\t\t\t\t\t\t\t\t\t<table>\n" +
 		"\t\t\t\t\t\t\t\n" +
@@ -174,7 +174,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
 		"\t\t\t<a style=\"display: block;\" href=\"/email_unsubscribe?emailAddress=test@test.com&unsubscribeToken=unsubscribeToken\">Unsubscribe</a>\n" +
 		"\t\t\t<p style=\"text-align: center\">\n" +
-		"\t\t\t\t© eBay Searcher. All rights reserved.\n" +
+		"\t\t\t\t© Auction Alert. All rights reserved.\n" +
 		"\t\t\t</p>\n" +
 		"\t\t</footer>\n" +
 		"\t</body>\n" +
