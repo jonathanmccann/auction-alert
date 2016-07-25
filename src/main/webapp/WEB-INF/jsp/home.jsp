@@ -103,14 +103,14 @@
 								<section class="special box">
 									<i class="icon fa-save major"></i>
 									<h3>Save</h3>
-									<p>Search queries are stored.</p>
+									<p>Search queries are saved to be edited, searched, and monitored.</p>
 								</section>
 							</div>
 							<div class="4u">
 								<section class="special box">
 									<i class="icon fa-search major"></i>
 									<h3>Search</h3>
-									<p>Each search query is performed every minute.</p>
+									<p>Each search query is searched every minute.</p>
 								</section>
 							</div>
 							<div class="4u">
@@ -124,12 +124,27 @@
 					</div>
 				</section>
 
-				<section id="pricing" class="wrapper style2">
+				<section id="monitor" class="wrapper style2">
 					<div class="container">
-						<section class="special">
+						<section class="special box">
+							<i class="icon fa-refresh major"></i>
+							<h3>Monitoring</h3>
+							<p>Keep tabs on a search query with five second searches and desktop notifications.</p>
+						</section>
+					</div>
+				</section>
+
+				<section id="pricing" class="wrapper style1">
+					<div class="container">
+						<section class="special box">
 							<i class="icon fa-dollar major"></i>
 							<h3>Pricing</h3>
-							<p>$10 per month</p>
+							<p>
+								<b>$10 per month</b> <br> <br>
+								10 search queries <br>
+								30 emails a day <br>
+								Unlimited monitoring
+							</p>
 						</section>
 					</div>
 				</section>
