@@ -57,7 +57,7 @@ public class SaltedJdbcRealm extends JdbcRealm {
 				return null;
 			}
 
-			return new eBaySaltedAuthenticationInfo(
+			return new UserSaltedAuthenticationInfo(
 				emailAddress, user.getPassword(), user.getSalt());
 		}
 		catch (Exception e) {

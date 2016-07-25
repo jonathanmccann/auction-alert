@@ -24,9 +24,9 @@ import org.apache.shiro.util.SimpleByteSource;
 /**
  * @author Jonathan McCann
  */
-public class eBaySaltedAuthenticationInfo implements SaltedAuthenticationInfo {
+public class UserSaltedAuthenticationInfo implements SaltedAuthenticationInfo {
 
-	public eBaySaltedAuthenticationInfo(
+	public UserSaltedAuthenticationInfo(
 		String emailAddress, String password, String salt) {
 
 		_emailAddress = emailAddress;

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jonathan McCann
  */
-public class eBayServletContextListener implements ServletContextListener {
+public class AppServletContextListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
@@ -96,6 +96,6 @@ public class eBayServletContextListener implements ServletContextListener {
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		eBayServletContextListener.class);
+		AppServletContextListener.class);
 
 }

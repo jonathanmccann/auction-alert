@@ -24,7 +24,7 @@
 	</listener>
 
 	<listener>
-		<listener-class>com.app.listener.eBayServletContextListener</listener-class>
+		<listener-class>com.app.listener.AppServletContextListener</listener-class>
 	</listener>
 
 	<servlet>

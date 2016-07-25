@@ -21,7 +21,7 @@ import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.PasswordLengthException;
 import com.app.exception.PasswordResetException;
 import com.app.model.User;
-import com.app.shiro.eBaySaltedAuthenticationInfo;
+import com.app.shiro.UserSaltedAuthenticationInfo;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -279,7 +279,7 @@ public class UserUtil {
 
 		boolean credentialsMatch = _hashedCredentialsMatcher.doCredentialsMatch(
 			new UsernamePasswordToken(emailAddress, password),
-			new eBaySaltedAuthenticationInfo(
+			new UserSaltedAuthenticationInfo(
 				emailAddress, encryptedPassword, salt));
 
 		if (ValidatorUtil.isNull(encryptedPassword) ||
