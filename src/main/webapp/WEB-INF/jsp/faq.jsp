@@ -77,6 +77,7 @@
 					<p class="faq-paragraph">
 						You will also have the added benefit of having real time monitoring of a single search query.
 						The query will be searched every five seconds and the results will be populated on the web page. Optionally, desktop notifications can be delivered for each new result.
+						Please note that desktop notifications are subject to the operating system and browser and may not be supported.
 					</p>
 					<h2>Is Javascript required for using this website?</h2>
 					<p class="faq-paragraph">
