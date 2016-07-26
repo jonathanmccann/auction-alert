@@ -79,6 +79,11 @@
 						The query will be searched every five seconds and the results will be populated on the web page. Optionally, desktop notifications can be delivered for each new result.
 						Please note that desktop notifications are subject to the operating system and browser and may not be supported.
 					</p>
+					<h2>How secure is my card information?</h2>
+					<p class="faq-paragraph">
+						Your card information is sent securely to Stripe and those details are not stored anywhere in this application.
+						For more information about Stripe's security and how they are keeping your information secure, please visit <a href="https://stripe.com/docs/security/stripe" target="_blank">their site</a>.
+					</p>
 					<h2>Is Javascript required for using this website?</h2>
 					<p class="faq-paragraph">
 						Yes. Javascript is essential to the use of this website and its services.
