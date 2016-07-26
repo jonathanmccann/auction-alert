@@ -118,7 +118,7 @@
 				<button class="button special" id="stopMonitoring">Stop Monitoring</button>
 				<button class="button special" id="clearResults">Clear Results</button>
 
-				<div class="padding-top">
+				<div class="padding-top" id="notificationOptions">
 					<input id="desktopNotifications" type="checkbox" />
 					<label for="desktopNotifications">Receive Desktop Notifications</label>
 				</div>

@@ -17,6 +17,10 @@ $(window).load(function() {
 
 	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?programid=1&toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&campaignid=" + campaignId + "&keyword=";
 
+	if (typeof Notification !== 'function') {
+		$('#notificationOptions').hide();
+	}
+
 	function fetchRss(url) {
 		$.ajax({
 			url: "https://query.yahooapis.com/v1/public/yql?q=select%20title%2C%20description%2C%20guid%2C%20e%3ACurrentPrice%2C%20e%3AListingType%2C%20e%3ABuyItNowPrice%20from%20rss(0%2C10)%20where%20url%20%3D%20%22" + url + "%22&format=json",
