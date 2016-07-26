@@ -71,13 +71,14 @@ $(window).load(function() {
 			sendNotification(title);
 
 			itemIds.unshift(itemId);
-		}
-		else if (itemIds.length > 30) {
-			var lastItemId = "#" + itemIds[itemIds.length - 1];
 
-			$(lastItemId).remove();
+			if (itemIds.length > 30) {
+				var lastItemId = "#" + itemIds[itemIds.length - 1];
 
-			itemIds.splice(itemIds.length - 1, 1);
+				$(lastItemId).remove();
+
+				itemIds.splice(itemIds.length - 1, 1);
+			}
 		}
 	}
 
