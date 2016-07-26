@@ -22,42 +22,63 @@ $(window).load(function() {
 			url: "https://query.yahooapis.com/v1/public/yql?q=select%20title%2C%20description%2C%20guid%2C%20e%3ACurrentPrice%2C%20e%3AListingType%2C%20e%3ABuyItNowPrice%20from%20rss(0%2C10)%20where%20url%20%3D%20%22" + url + "%22&format=json",
 			success: function (data) {
 				if (data.query && data.query.results && data.query.results.item) {
-					$.each(data.query.results.item, function (i, e) {
-						var itemId = e.guid;
+					if (data.query.count == 1) {
+						var item = data.query.results.item;
 
-						if (itemIds.indexOf(itemId) < 0) {
+						var itemId = item.guid;
+						var imageUrl = imageRegex.exec(item.description)[1];
+						var title = item.title;
+						var listingType = item.ListingType;
+						var currentPrice = item.CurrentPrice;
+						var fixedPrice = item.BuyItNowPrice;
+
+						populateResults(itemId, imageUrl, title, listingType, currentPrice, fixedPrice);
+					}
+					else {
+						$.each(data.query.results.item, function (i, e) {
+							var itemId = e.guid;
 							var imageUrl = imageRegex.exec(e.description)[1];
+							var title = e.title;
+							var listingType = e.ListingType;
+							var currentPrice = e.CurrentPrice;
+							var fixedPrice = e.BuyItNowPrice;
 
-							var html = '<div align="left" id="' + itemId + '"> <div class="monitor-result-image"> <img src=' + imageUrl + '> </div> <div class="monitor-result-information"> <a href="' + itemUrl + itemId + '" target="_blank">' + e.title + '</a> <br>';
-
-							if (e.ListingType == "Auction") {
-								html += 'Auction Price: $' + Number(e.CurrentPrice).toFixed(2);
-							}
-							else if (e.ListingType == "AuctionWithBIN") {
-								html += 'Auction Price: $' + Number(e.CurrentPrice).toFixed(2) + '<br>';
-								html += 'Fixed Price: $' + Number(e.BuyItNowPrice).toFixed(2);
-							}
-							else if ((e.ListingType == "FixedPrice") || (e.ListingType == "StoreInventory")) {
-								html += 'Fixed Price: $' + Number(e.CurrentPrice).toFixed(2);
-							}
-
-							contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
-
-							sendNotification(e.title);
-
-							itemIds.unshift(itemId);
-						}
-						else if (itemIds.length > 30) {
-							var lastItemId = "#" + itemIds[itemIds.length - 1];
-
-							$(lastItemId).remove();
-
-							itemIds.splice(itemIds.length - 1, 1);
-						}
-					});
+							populateResults(itemId, imageUrl, title, listingType, currentPrice, fixedPrice);
+						});
+					}
 				}
 			}
 		});
+	}
+
+	function populateResults(itemId, imageUrl, title, listingType, currentPrice, fixedPrice) {
+		if (itemIds.indexOf(itemId) < 0) {
+			var html = '<div align="left" id="' + itemId + '"> <div class="monitor-result-image"> <img src=' + imageUrl + '> </div> <div class="monitor-result-information"> <a href="' + itemUrl + itemId + '" target="_blank">' + title + '</a> <br>';
+
+			if (listingType == "Auction") {
+				html += 'Auction Price: $' + Number(currentPrice).toFixed(2);
+			}
+			else if (listingType == "AuctionWithBIN") {
+				html += 'Auction Price: $' + Number(currentPrice).toFixed(2) + '<br>';
+				html += 'Fixed Price: $' + Number(fixedPrice).toFixed(2);
+			}
+			else if ((listingType == "FixedPrice") || (listingType == "StoreInventory")) {
+				html += 'Fixed Price: $' + Number(currentPrice).toFixed(2);
+			}
+
+			contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
+
+			sendNotification(title);
+
+			itemIds.unshift(itemId);
+		}
+		else if (itemIds.length > 30) {
+			var lastItemId = "#" + itemIds[itemIds.length - 1];
+
+			$(lastItemId).remove();
+
+			itemIds.splice(itemIds.length - 1, 1);
+		}
 	}
 
 	function sendNotification(title) {
