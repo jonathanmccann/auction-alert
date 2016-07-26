@@ -47,7 +47,7 @@
 				<div class="login-body">
 					<form:form action="log_in" commandName="logIn" method="post">
 						<div>
-							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text"/>
+							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email"/>
 						</div>
 						<div>
 							<b>Password: </b><input id="password" name="password" type="password" />

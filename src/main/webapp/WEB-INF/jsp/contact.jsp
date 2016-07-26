@@ -81,7 +81,7 @@
 
 			<form:form action="contact" commandName="contact" method="post">
 				<div>
-					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text" value="${emailAddress}"/>
+					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email" value="${emailAddress}"/>
 				</div>
 				<div>
 					<b>Message: </b><textarea rows="4" cols="50" id="message" name="message"></textarea>

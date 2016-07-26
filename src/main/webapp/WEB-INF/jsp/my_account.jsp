@@ -88,7 +88,7 @@
 				</c:if>
 
 				<div>
-					<b>Email Address: </b><form:input path="emailAddress" value="${emailAddress}" />
+					<b>Email Address: </b><form:input path="emailAddress" type="email" value="${emailAddress}" />
 				</div>
 				<div>
 					<b>Current Password: </b><form:input path="currentPassword" type="password" />

@@ -70,7 +70,7 @@
 
 			<form:form action="forgot_password" commandName="forgot_password" method="post">
 				<div>
-					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="text" />
+					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email" />
 				</div>
 				<div class="padding-top g-recaptcha" data-sitekey="${recaptchaSiteKey}"></div>
 				<div class="padding-top">
