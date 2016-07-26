@@ -87,25 +87,27 @@ $(window).load(function() {
 			return;
 		}
 
-		Notification.requestPermission().then(function(result) {
-			if ((result === 'denied') || (result === 'default')) {
-				return;
-			}
+		if (typeof Notification === 'function') {
+			Notification.requestPermission().then(function (result) {
+				if ((result === 'denied') || (result === 'default')) {
+					return;
+				}
 
-			var options = {
-				icon: imageUrl
-			};
+				var options = {
+					icon: imageUrl
+				};
 
-			var notification = new Notification(title, options);
+				var notification = new Notification(title, options);
 
-			notification.onclick = function(event) {
-				event.preventDefault();
+				notification.onclick = function (event) {
+					event.preventDefault();
 
-				window.open(itemUrl);
+					window.open(itemUrl);
 
-				notification.close();
-			};
-		});
+					notification.close();
+				};
+			});
+		}
 	}
 
 	function collapseSearchQuery() {
