@@ -68,7 +68,7 @@ $(window).load(function() {
 
 			contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
 
-			sendNotification(title);
+			sendNotification(title, itemUrl + itemId, imageUrl);
 
 			itemIds.unshift(itemId);
 
@@ -82,7 +82,7 @@ $(window).load(function() {
 		}
 	}
 
-	function sendNotification(title) {
+	function sendNotification(title, itemUrl, imageUrl) {
 		if (!$("#desktopNotifications").is(":checked")) {
 			return;
 		}
@@ -92,7 +92,19 @@ $(window).load(function() {
 				return;
 			}
 
-			new Notification(title);
+			var options = {
+				icon: imageUrl
+			};
+
+			var notification = new Notification(title, options);
+
+			notification.onclick = function(event) {
+				event.preventDefault();
+
+				window.open(itemUrl);
+
+				notification.close();
+			};
 		});
 	}
 
