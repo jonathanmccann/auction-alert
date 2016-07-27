@@ -137,6 +137,7 @@ public class SendGridMailSender implements MailSender {
 			"unsubscribeToken",
 			MailUtil.escapeUnsubscribeToken(unsubscribeToken));
 		rootMap.put("numberTool", new NumberTool());
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String message = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
@@ -157,6 +158,7 @@ public class SendGridMailSender implements MailSender {
 		Map<String, Object> rootMap = new HashMap<>();
 
 		rootMap.put("passwordResetToken", passwordResetToken);
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);

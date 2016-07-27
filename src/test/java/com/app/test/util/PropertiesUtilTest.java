@@ -78,6 +78,8 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Recaptcha Secret Key", PropertiesValues.RECAPTCHA_SECRET_KEY);
 		Assert.assertEquals(
+			"http://www.test.com", PropertiesValues.ROOT_DOMAIN_NAME);
+		Assert.assertEquals(
 			"SendGrid API Key", PropertiesValues.SENDGRID_API_KEY);
 		Assert.assertEquals(
 			"Stripe Publishable Key", PropertiesValues.STRIPE_PUBLISHABLE_KEY);

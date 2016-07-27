@@ -84,6 +84,9 @@ public class PropertiesValues {
 	public static final String RECAPTCHA_SITE_KEY =
 		PropertiesUtil.getConfigurationProperty("recaptcha.site.key");
 
+	public static final String ROOT_DOMAIN_NAME =
+		PropertiesUtil.getConfigurationProperty("root.domain.name");
+
 	public static final String SENDGRID_API_KEY =
 		PropertiesUtil.getConfigurationProperty("sendgrid.api.key");
 

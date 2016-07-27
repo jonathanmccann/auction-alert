@@ -172,9 +172,9 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		"\t\t\t</tr>\n" +
 		"\t\t</table>\n" +
 		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
-		"\t\t\t<a style=\"display: block;\" href=\"/email_unsubscribe?emailAddress=test@test.com&unsubscribeToken=unsubscribeToken\">Unsubscribe</a>\n" +
+		"\t\t\t<a style=\"display: block;\" href=\"http://www.test.com/email_unsubscribe?emailAddress=test@test.com&unsubscribeToken=unsubscribeToken\">Unsubscribe</a>\n" +
 		"\t\t\t<p style=\"text-align: center\">\n" +
-		"\t\t\t\t© Auction Alert. All rights reserved.\n" +
+		"\t\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
 		"\t\t\t</p>\n" +
 		"\t\t</footer>\n" +
 		"\t</body>\n" +
