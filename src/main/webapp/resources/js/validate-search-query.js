@@ -17,7 +17,7 @@ $(window).load(function() {
 		var $min = $(param);
 
 		if (this.settings.onfocusout) {
-			$min.off(".validate-startOfDay").on("blur.validate-startOfDay", function() {
+			$min.off(".validate-minPrice").on("blur.validate-minPrice", function() {
 				$(element).valid();
 			});
 		}
