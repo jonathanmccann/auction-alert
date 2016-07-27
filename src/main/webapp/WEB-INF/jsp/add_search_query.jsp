@@ -67,6 +67,13 @@
 		</section>
 
 		<div class="container padding-top">
+			<c:if test="${not empty error}">
+				<div id="error">
+					<i class="icon fa-times-circle"></i>
+					${error}
+				</div>
+			</c:if>
+
 			<c:if test="${not empty info}">
 				<div id="info">
 					<i class="icon fa-info-circle"></i>

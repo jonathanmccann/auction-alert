@@ -19,23 +19,17 @@ import static org.hamcrest.Matchers.is;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.app.controller.SearchQueryController;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
-import com.app.util.DatabaseUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
-import java.lang.reflect.Method;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
@@ -349,6 +343,19 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetMonitor() throws Exception {
+		this.mockMvc.perform(get("/monitor"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("monitor"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor.jsp"))
+			.andExpect(model().attributeExists("campaignId"))
+			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("searchQuery"))
+			.andExpect(model().attribute(
+				"searchQuery", hasProperty("searchQueryId", is(0))));
+	}
+
+	@Test
 	public void testGetUpdateSearchQuery() throws Exception {
 		setUpUserUtil();
 
@@ -419,22 +426,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		this.mockMvc.perform(request)
 			.andExpect(status().isOk())
 			.andExpect(view().name("add_search_query"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"))
-			.andExpect(model().attributeExists("searchQueryCategories"))
-			.andExpect(model().attributeExists("isAdd"))
-			.andExpect(model().attributeDoesNotExist("disabled"))
-			.andExpect(model().attributeDoesNotExist("info"));
-	}
-
-	@Test
-	public void testHandleError() throws Exception {
-		setUpUserUtil();
-
-		DatabaseUtil.setDatabaseProperties("test", "test", "test");
-
-		this.mockMvc.perform(get("/add_search_query"))
-			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:error.jsp"));
+			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"));
 	}
 
 	@Test
@@ -470,6 +462,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "All Categories");
 		request.param("active", "true");
@@ -502,6 +495,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
 		request.param("subcategoryId", "All Subcategories");
@@ -533,11 +527,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		this.mockMvc.perform(post("/add_search_query"))
 			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:error.jsp"))
-			.andExpect(model().attributeDoesNotExist("searchQueries"))
-			.andExpect(model().attributeDoesNotExist("disabled"))
-			.andExpect(model().attributeDoesNotExist("info"))
-			.andExpect(model().attributeDoesNotExist("isAdd"));
+			.andExpect(view().name("redirect:add_search_query"))
+			.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test
@@ -547,6 +538,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
 		request.param("subcategoryId", "200");
@@ -595,6 +587,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("active", "true");
 
@@ -625,6 +618,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
 			"/add_search_query");
 
+		request.param("userId", String.valueOf(_USER_ID));
 		request.param("keywords", "First test keywords");
 		request.param("categoryId", "100");
 		request.param("subcategoryId", "200");
@@ -1050,81 +1044,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().isFound());
-		resultActions.andExpect(view().name("redirect:error.jsp"));
-		resultActions.andExpect(model().attributeDoesNotExist("searchQueries"));
-		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
-		resultActions.andExpect(model().attributeDoesNotExist("info"));
-		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
-	}
-
-	@Test
-	public void testValidateCategoryId() throws Exception {
-		Class clazz = Class.forName(SearchQueryController.class.getName());
-
-		Object classInstance = clazz.newInstance();
-
-		Method method = clazz.getDeclaredMethod(
-			"validateCategoryId", SearchQuery.class);
-
-		method.setAccessible(true);
-
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setCategoryId("");
-		searchQuery.setSubcategoryId("");
-
-		method.invoke(classInstance, searchQuery);
-
-		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
-
-		searchQuery.setCategoryId("All Categories");
-		searchQuery.setSubcategoryId("All Subcategories");
-
-		method.invoke(classInstance, searchQuery);
-
-		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
-
-		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("All Subcategories");
-
-		method.invoke(classInstance, searchQuery);
-
-		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
-
-		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("");
-
-		method.invoke(classInstance, searchQuery);
-
-		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
-
-		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
-
-		method.invoke(classInstance, searchQuery);
-
-		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("200", searchQuery.getSubcategoryId());
-
-		searchQuery.setCategoryId("");
-		searchQuery.setSubcategoryId("200");
-
-		method.invoke(classInstance, searchQuery);
-
-		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
-
-		searchQuery.setCategoryId("All Categories");
-		searchQuery.setSubcategoryId("200");
-
-		method.invoke(classInstance, searchQuery);
-
-		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
+		resultActions.andExpect(view().name("redirect:update_search_query"));
+		resultActions.andExpect(model().attributeExists("searchQueryId"));
+		resultActions.andExpect(flash().attributeExists("error"));
 	}
 
 	@Test

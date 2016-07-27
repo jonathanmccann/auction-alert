@@ -16,11 +16,15 @@ package com.app.util;
 
 import com.app.dao.SearchQueryDAO;
 import com.app.exception.DatabaseConnectionException;
+import com.app.exception.SearchQueryException;
 import com.app.model.SearchQuery;
 
+import java.math.RoundingMode;
 import java.sql.SQLException;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +43,13 @@ public class SearchQueryUtil {
 	}
 
 	public static int addSearchQuery(SearchQuery searchQuery)
-		throws DatabaseConnectionException, SQLException {
+		throws DatabaseConnectionException, SearchQueryException, SQLException {
+
+		if (exceedsMaximumNumberOfSearchQueries(searchQuery.getUserId())) {
+			throw new SearchQueryException();
+		}
+
+		_validateSearchQuery(searchQuery);
 
 		_escapeSearchQueryKeywords(searchQuery);
 		_normalizeSearchQuery(searchQuery);
@@ -92,9 +102,11 @@ public class SearchQueryUtil {
 	}
 
 	public static void updateSearchQuery(int userId, SearchQuery searchQuery)
-		throws DatabaseConnectionException, SQLException {
+		throws DatabaseConnectionException, SearchQueryException, SQLException {
 
+		_escapeSearchQueryKeywords(searchQuery);
 		_normalizeSearchQuery(searchQuery);
+		_validateSearchQuery(searchQuery);
 
 		_searchQueryDAO.updateSearchQuery(userId, searchQuery);
 	}
@@ -125,6 +137,34 @@ public class SearchQueryUtil {
 
 			searchQuery.setAuctionListing(true);
 			searchQuery.setFixedPriceListing(true);
+		}
+
+		String categoryId = searchQuery.getCategoryId();
+		String subcategoryId = searchQuery.getSubcategoryId();
+
+		if (ValidatorUtil.isNull(categoryId) ||
+			categoryId.equalsIgnoreCase("All Categories")) {
+
+			searchQuery.setCategoryId("");
+			searchQuery.setSubcategoryId("");
+		}
+
+		if (ValidatorUtil.isNull(subcategoryId) ||
+			subcategoryId.equalsIgnoreCase("All Subcategories")) {
+
+			searchQuery.setSubcategoryId("");
+		}
+	}
+
+	private static void _validateSearchQuery(SearchQuery searchQuery)
+		throws SearchQueryException{
+
+		if (ValidatorUtil.isNull(searchQuery.getKeywords())) {
+			throw new SearchQueryException();
+		}
+
+		if (searchQuery.getMinPrice() > searchQuery.getMaxPrice()) {
+			throw new SearchQueryException();
 		}
 	}
 

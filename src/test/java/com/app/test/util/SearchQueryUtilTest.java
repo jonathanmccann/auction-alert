@@ -14,10 +14,12 @@
 
 package com.app.test.util;
 
+import com.app.exception.SearchQueryException;
 import com.app.model.SearchQuery;
 import com.app.test.BaseTestCase;
 import com.app.util.SearchQueryUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 
@@ -45,6 +47,10 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public static void setUpClass() throws Exception {
 		setUpDatabase();
 		setUpProperties();
+
+		_clazz = Class.forName(SearchQueryUtil.class.getName());
+
+		_classInstance = _clazz.newInstance();
 	}
 
 	@After
@@ -93,6 +99,23 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
+	@Test(expected = SearchQueryException.class)
+	public void testAddSearchQueryExceedingMaximumNumberOfSearchQueries()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
+
+		searchQuery = new SearchQuery(2, _USER_ID, "Second test keywords");
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
+
+		searchQuery = new SearchQuery(2, _USER_ID, "Third test keywords");
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
+	}
+
 	@Test
 	public void testAddSearchQueryWithKeywords() throws Exception {
 		SearchQuery searchQuery = new SearchQuery();
@@ -105,7 +128,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
 		Assert.assertEquals("First test keywords", searchQuery.getKeywords());
-		Assert.assertNull(searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getCategoryId());
 	}
 
 	@Test
@@ -291,11 +314,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testEscapeSearchQueryKeywords() throws Exception {
-		Class clazz = Class.forName(SearchQueryUtil.class.getName());
-
-		Object classInstance = clazz.newInstance();
-
-		Method method = clazz.getDeclaredMethod(
+		Method method = _clazz.getDeclaredMethod(
 			"_escapeSearchQueryKeywords", SearchQuery.class);
 
 		method.setAccessible(true);
@@ -304,19 +323,81 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 		searchQuery.setKeywords("<script>alert('Site XSS');</script>");
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals(
 			"scriptalert('Site XSS');/script", searchQuery.getKeywords());
 	}
 
 	@Test
+	public void testNormalizeSearchQueryCategoryId() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"_normalizeSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setCategoryId("");
+		searchQuery.setSubcategoryId("");
+
+		method.invoke(_classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("All Categories");
+		searchQuery.setSubcategoryId("All Subcategories");
+
+		method.invoke(_classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("All Subcategories");
+
+		method.invoke(_classInstance, searchQuery);
+
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("");
+
+		method.invoke(_classInstance, searchQuery);
+
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+
+		method.invoke(_classInstance, searchQuery);
+
+		Assert.assertEquals("100", searchQuery.getCategoryId());
+		Assert.assertEquals("200", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("");
+		searchQuery.setSubcategoryId("200");
+
+		method.invoke(_classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+
+		searchQuery.setCategoryId("All Categories");
+		searchQuery.setSubcategoryId("200");
+
+		method.invoke(_classInstance, searchQuery);
+
+		Assert.assertEquals("", searchQuery.getCategoryId());
+		Assert.assertEquals("", searchQuery.getSubcategoryId());
+	}
+
+	@Test
 	public void testNormalizeSearchQueryCondition() throws Exception {
-		Class clazz = Class.forName(SearchQueryUtil.class.getName());
-
-		Object classInstance = clazz.newInstance();
-
-		Method method = clazz.getDeclaredMethod(
+		Method method = _clazz.getDeclaredMethod(
 			"_normalizeSearchQuery", SearchQuery.class);
 
 		method.setAccessible(true);
@@ -327,7 +408,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(false);
 		searchQuery.setUnspecifiedCondition(false);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isNewCondition());
 		Assert.assertTrue(searchQuery.isUsedCondition());
@@ -337,7 +418,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(false);
 		searchQuery.setUnspecifiedCondition(false);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isNewCondition());
 		Assert.assertFalse(searchQuery.isUsedCondition());
@@ -347,7 +428,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(true);
 		searchQuery.setUnspecifiedCondition(false);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isNewCondition());
 		Assert.assertTrue(searchQuery.isUsedCondition());
@@ -357,7 +438,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(true);
 		searchQuery.setUnspecifiedCondition(true);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isNewCondition());
 		Assert.assertTrue(searchQuery.isUsedCondition());
@@ -367,7 +448,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(false);
 		searchQuery.setUnspecifiedCondition(true);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isNewCondition());
 		Assert.assertFalse(searchQuery.isUsedCondition());
@@ -377,7 +458,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(true);
 		searchQuery.setUnspecifiedCondition(false);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertFalse(searchQuery.isNewCondition());
 		Assert.assertTrue(searchQuery.isUsedCondition());
@@ -387,7 +468,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(false);
 		searchQuery.setUnspecifiedCondition(true);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertFalse(searchQuery.isNewCondition());
 		Assert.assertFalse(searchQuery.isUsedCondition());
@@ -396,11 +477,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testNormalizeSearchQueryListingType() throws Exception {
-		Class clazz = Class.forName(SearchQueryUtil.class.getName());
-
-		Object classInstance = clazz.newInstance();
-
-		Method method = clazz.getDeclaredMethod(
+		Method method = _clazz.getDeclaredMethod(
 			"_normalizeSearchQuery", SearchQuery.class);
 
 		method.setAccessible(true);
@@ -410,7 +487,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setAuctionListing(false);
 		searchQuery.setFixedPriceListing(false);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isAuctionListing());
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
@@ -418,7 +495,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(false);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isAuctionListing());
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
@@ -426,7 +503,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setAuctionListing(false);
 		searchQuery.setFixedPriceListing(true);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertFalse(searchQuery.isAuctionListing());
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
@@ -434,7 +511,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
 
-		method.invoke(classInstance, searchQuery);
+		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertTrue(searchQuery.isAuctionListing());
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
@@ -489,6 +566,82 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
-	private static final int _USER_ID = 1;
+	@Test
+	public void testValidateSearchQueryKeywords() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"_validateSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setKeywords("Test keywords");
+
+		method.invoke(_classInstance, searchQuery);
+	}
+
+	@Test
+	public void testValidateSearchQueryInvalidKeywords() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"_validateSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		try {
+			method.invoke(_classInstance, searchQuery);
+
+			Assert.fail();
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(
+				ite.getCause() instanceof SearchQueryException);
+		}
+	}
+
+	@Test
+	public void testValidateSearchQueryPriceRange() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"_validateSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setMinPrice(0.00);
+		searchQuery.setMaxPrice(5.00);
+
+		method.invoke(_classInstance, searchQuery);
+	}
+
+	@Test
+	public void testValidateSearchQueryInvalidPriceRange() throws Exception {
+		Method method = _clazz.getDeclaredMethod(
+			"_validateSearchQuery", SearchQuery.class);
+
+		method.setAccessible(true);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setMinPrice(5.00);
+		searchQuery.setMaxPrice(0.00);
+
+		try {
+			method.invoke(_classInstance, searchQuery);
+
+			Assert.fail();
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(
+				ite.getCause() instanceof SearchQueryException);
+		}
+	}
+
+
+	private static Object _classInstance;
+	private static Class _clazz;
 
 }

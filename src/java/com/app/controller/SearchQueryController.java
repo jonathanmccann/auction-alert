@@ -15,6 +15,7 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.exception.SearchQueryException;
 import com.app.language.LanguageUtil;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
@@ -24,7 +25,6 @@ import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.UserUtil;
-import com.app.util.ValidatorUtil;
 
 import java.sql.SQLException;
 
@@ -33,13 +33,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -72,33 +69,31 @@ public class SearchQueryController {
 			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
-		int userId = UserUtil.getCurrentUserId();
+		try {
+			SearchQueryUtil.addSearchQuery(searchQuery);
+		}
+		catch (SearchQueryException sqe) {
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("invalid-search-query"));
 
-		if (SearchQueryUtil.exceedsMaximumNumberOfSearchQueries(userId)) {
 			return "redirect:add_search_query";
 		}
 
-		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
-			searchQuery.setUserId(userId);
-
-			validateCategoryId(searchQuery);
-
-			SearchQueryUtil.addSearchQuery(searchQuery);
-
-			return "redirect:view_search_queries";
-		}
-		else {
-			return "redirect:error.jsp";
-		}
+		return "redirect:view_search_queries";
 	}
 
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
-	public String addSearchQuery(Map<String, Object> model)
+	public String addSearchQuery(
+			@ModelAttribute("error")String error, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
 		SearchQuery searchQuery = new SearchQuery();
 
+		searchQuery.setUserId(UserUtil.getCurrentUserId());
+
 		model.put("searchQuery", searchQuery);
+
+		model.put("error", error);
 
 		if (SearchQueryUtil.exceedsMaximumNumberOfSearchQueries(
 				UserUtil.getCurrentUserId())) {
@@ -156,24 +151,29 @@ public class SearchQueryController {
 
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.POST)
 	public String updateSearchQuery(
-			@ModelAttribute("searchQuery")SearchQuery searchQuery)
+			@ModelAttribute("searchQuery")SearchQuery searchQuery,
+			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
-		if (ValidatorUtil.isNotNull(searchQuery.getKeywords())) {
-			validateCategoryId(searchQuery);
-
+		try {
 			SearchQueryUtil.updateSearchQuery(
 				UserUtil.getCurrentUserId(), searchQuery);
+		}
+		catch (SearchQueryException sqe) {
+			redirectAttributes.addAttribute(
+				"searchQueryId", searchQuery.getSearchQueryId());
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("invalid-search-query"));
 
-			return "redirect:view_search_queries";
+			return "redirect:update_search_query";
 		}
-		else {
-			return "redirect:error.jsp";
-		}
+
+		return "redirect:view_search_queries";
 	}
 
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
 	public String updateSearchQuery(
+			@ModelAttribute("error")String error,
 			@RequestParam("searchQueryId")int searchQueryId,
 			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
@@ -184,12 +184,11 @@ public class SearchQueryController {
 			model.put("searchQuery", searchQuery);
 
 			populateCategories(model);
+		}
 
-			return "add_search_query";
-		}
-		else {
-			return addSearchQuery(model);
-		}
+		model.put("error", error);
+
+		return "add_search_query";
 	}
 
 	@RequestMapping(value = "/view_search_queries", method = RequestMethod.GET)
@@ -256,24 +255,6 @@ public class SearchQueryController {
 		model.put("campaignId", PropertiesValues.EBAY_CAMPAIGN_ID);
 
 		return "monitor";
-	}
-
-	private void validateCategoryId(SearchQuery searchQuery) {
-		String categoryId = searchQuery.getCategoryId();
-		String subcategoryId = searchQuery.getSubcategoryId();
-
-		if (ValidatorUtil.isNull(categoryId) ||
-			categoryId.equalsIgnoreCase("All Categories")) {
-
-			searchQuery.setCategoryId("");
-			searchQuery.setSubcategoryId("");
-		}
-
-		if (ValidatorUtil.isNull(subcategoryId) ||
-			subcategoryId.equalsIgnoreCase("All Subcategories")) {
-
-			searchQuery.setSubcategoryId("");
-		}
 	}
 
 	private void populateCategories(Map<String, Object> model)
