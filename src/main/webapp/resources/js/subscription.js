@@ -4,7 +4,7 @@ $(window).load(function() {
 
 	var resubscribeHandler = StripeCheckout.configure({
 		key: $('#stripePublishableKey').val(),
-		image: "images/marketplace.png",
+		image: "resources/images/favicon.ico",
 		name: "Auction Alert",
 		description: "Subscription ($10.00 per month)",
 		amount: "1000",
@@ -20,7 +20,7 @@ $(window).load(function() {
 
 	var updateBillingHandler = StripeCheckout.configure({
 		key: $('#stripePublishableKey').val(),
-		image: "images/marketplace.png",
+		image: "resources/images/favicon.ico",
 		name: "Auction Alert",
 		label: "Update Card Details",
 		panelLabel: "Update Card Details",

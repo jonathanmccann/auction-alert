@@ -38,7 +38,7 @@ $(window).load(function() {
 
 	var handler = StripeCheckout.configure({
 		key: $('#stripePublishableKey').val(),
-		image: "images/marketplace.png",
+		image: "resources/images/favicon.ico",
 		name: "Auction Alert",
 		description: "Subscription ($10.00 per month)",
 		amount: "1000",
