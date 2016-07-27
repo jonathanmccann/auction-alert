@@ -62,7 +62,7 @@
 			</div>
 		</div>
 		<header id="header" class="skel-layers-fixed">
-			<h1><a href="#">Auction Alert</a></h1>
+			<h1><a href="/home">Auction Alert</a></h1>
 			<nav id="nav">
 				<ul>
 					<shiro:guest>
