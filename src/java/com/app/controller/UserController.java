@@ -36,7 +36,9 @@ import java.sql.Timestamp;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpStatus;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.CredentialsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -51,6 +53,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -491,6 +494,16 @@ public class UserController {
 		}
 
 		return "redirect:my_account";
+	}
+
+	@RequestMapping(value="/stripe", method=RequestMethod.POST)
+	public void stripeWebhookEndpoint(
+			@RequestBody String stripeJsonEvent, HttpServletResponse response)
+		throws Exception {
+
+		StripeUtil.handleStripeEvent(stripeJsonEvent);
+
+		response.setStatus(HttpStatus.SC_OK);
 	}
 
 	@RequestMapping(value = "/email_unsubscribe", method = RequestMethod.GET)

@@ -83,6 +83,27 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testDeactivateUser() throws Exception {
+		UserUtil.addUser("test@test.com", "password");
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
+			true);
+
+		User user = UserUtil.getUserByEmailAddress("test@test.com");
+
+		Assert.assertTrue(user.isActive());
+		Assert.assertTrue(user.isPendingCancellation());
+
+		UserUtil.deactivateUser("customerId");
+
+		user = UserUtil.getUserByEmailAddress("test@test.com");
+
+		Assert.assertFalse(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
 	public void testDeleteUser() throws Exception {
 		UserUtil.addUser("test@test.com", "password");
 

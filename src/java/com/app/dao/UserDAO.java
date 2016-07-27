@@ -67,6 +67,22 @@ public class UserDAO {
 		}
 	}
 
+	@CacheEvict(value = "userIds", allEntries = true)
+	public void deactivateUser(String customerId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug("Deactivating user with customer ID: {}", customerId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_DEACTIVATE_USER_SQL)) {
+
+			preparedStatement.setString(1, customerId);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	@Caching(
 		evict = {
 			@CacheEvict(value = "userByUserId", key = "#userId"),
@@ -403,6 +419,10 @@ public class UserDAO {
 
 	private static final String _ADD_USER_SQL =
 		"INSERT INTO User_(emailAddress, password, salt) VALUES(?, ?, ?)";
+
+	public static final String _DEACTIVATE_USER_SQL =
+		"UPDATE User_ SET active = false, pendingCancellation = false WHERE " +
+			"customerId = ?";
 
 	private static final String _DELETE_USER_BY_USER_ID_SQL =
 		"DELETE FROM User_ WHERE userId = ?";

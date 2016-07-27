@@ -16,7 +16,12 @@ package com.app.util;
 
 import com.app.model.User;
 
+import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.stripe.model.Event;
+import com.stripe.model.EventData;
+import com.stripe.model.Invoice;
+import com.stripe.model.StripeObject;
 import com.stripe.model.Subscription;
 
 import java.text.SimpleDateFormat;
@@ -68,6 +73,34 @@ public class StripeUtil {
 		UserUtil.updateUserSubscription(
 			user.getUserId(), user.getUnsubscribeToken(), user.getCustomerId(),
 			user.getSubscriptionId(), true, true);
+	}
+
+	public static void handleStripeEvent(String stripeJsonEvent)
+		throws Exception {
+
+		Event event = Event.GSON.fromJson(stripeJsonEvent, Event.class);
+
+		event = Event.retrieve(event.getId());
+
+		EventData eventData = event.getData();
+
+		StripeObject stripeObject = eventData.getObject();
+
+		if (event.getType().equals(_CHARGE_FAILED)) {
+			Charge charge = (Charge)stripeObject;
+
+			UserUtil.deactivateUser(charge.getCustomer());
+		}
+		else if (event.getType().equals(_CUSTOMER_SUBSCRIPTION_DELETED)) {
+			Subscription subscription = (Subscription)stripeObject;
+
+			UserUtil.deactivateUser(subscription.getCustomer());
+		}
+		else if (event.getType().equals(_INVOICE_PAYMENT_FAILED)) {
+			Invoice invoice = (Invoice)stripeObject;
+
+			UserUtil.deactivateUser(invoice.getCustomer());
+		}
 	}
 
 	public static String getNextChargeDate() throws Exception {
@@ -140,4 +173,9 @@ public class StripeUtil {
 	private static final SimpleDateFormat _NEXT_CHARGE_DATE_FORMAT =
 		new SimpleDateFormat("MMMM d");
 
+	public static final String _CHARGE_FAILED = "charge.failed";
+	public static final String _CUSTOMER_SUBSCRIPTION_DELETED =
+		"customer.subscription.deleted";
+	public static final String _INVOICE_PAYMENT_FAILED =
+		"invoice.payment_failed";
 }

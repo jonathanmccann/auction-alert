@@ -65,6 +65,12 @@ public class UserUtil {
 			emailAddress, passwordAndSalt.get(0), passwordAndSalt.get(1));
 	}
 
+	public static void deactivateUser(String customerId)
+		throws DatabaseConnectionException, SQLException {
+
+		_userDAO.deactivateUser(customerId);
+	}
+
 	public static void deleteUserByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 
