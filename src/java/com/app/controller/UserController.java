@@ -450,6 +450,10 @@ public class UserController {
 
 			redirectAttributes.addFlashAttribute(
 				"success", LanguageUtil.getMessage("password-reset-success"));
+
+			Subject currentUser = SecurityUtils.getSubject();
+
+			currentUser.logout();
 		}
 		catch (Exception e) {
 			redirectAttributes.addFlashAttribute(
