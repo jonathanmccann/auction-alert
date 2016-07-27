@@ -225,12 +225,6 @@ public class SearchQueryController {
 		return subcategories;
 	}
 
-	/*
-	java.lang.IllegalStateException: Optional int parameter 'searchQueryId' is
-	present but cannot be translated into a null value due to being declared as
-	a primitive type. Consider declaring it as object wrapper for the corresponding
-	primitive type.
-	 */
 	@RequestMapping(value = "/monitor", method = RequestMethod.GET)
 	public String monitor(Integer searchQueryId, Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
