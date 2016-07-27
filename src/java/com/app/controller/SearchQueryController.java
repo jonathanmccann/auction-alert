@@ -154,13 +154,6 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
-	@ExceptionHandler(Exception.class)
-	public String handleError(HttpServletRequest request, Exception exception) {
-		_log.error("Request: {}", request.getRequestURL(), exception);
-
-		return "redirect:error.jsp";
-	}
-
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.POST)
 	public String updateSearchQuery(
 			@ModelAttribute("searchQuery")SearchQuery searchQuery)

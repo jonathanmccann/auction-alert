@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
@@ -24,18 +24,53 @@
 <html>
 	<head>
 		<title>Error</title>
-		<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
+		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
+		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
+		<script src="/resources/js/init.js" type="text/javascript"></script>
+		<noscript>
+			<link rel="stylesheet" href="/resources/css/skel.css" />
+			<link rel="stylesheet" href="/resources/css/style.css" />
+			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+		</noscript>
 	</head>
 	<body>
-		<div>
-			<h2>An error has occurred</h2>
-			</br>
-			<shiro:user>
-				<div align="center">
-					<a href="add_search_query">Add a Search Query</a> | <a href="view_search_queries">View Search Queries</a> | <a href="view_search_query_results">View Search Query Results</a> <br> <br>
-					<a href="my_account">My Account</a> | <a href="log_out">Log Out</a>
-				</div>
-			</shiro:user>
-		</div>
+		<header id="header" class="skel-layers-fixed">
+			<h1><a href="/home">Auction Alert</a></h1>
+			<nav id="nav">
+				<ul>
+					<shiro:guest>
+						<li><a href="log_in" id="loginLink">Log In</a></li>
+						<li><a href="create_account" class="button special">Sign Up</a></li>
+					</shiro:guest>
+					<shiro:user>
+						<c:if test="${isActive}">
+							<li><a href="add_search_query">Add Search Query</a></li>
+							<li><a href="view_search_queries">Search Queries and Results</a></li>
+							<li><a href="monitor">Monitor</a></li>
+						</c:if>
+
+						<li><a href="my_account">My Account</a></li>
+						<li><a href="log_out" class="button special">Log Out</a></li>
+					</shiro:user>
+				</ul>
+			</nav>
+		</header>
+
+		<section id="banner" class="minor">
+			<div class="inner">
+				<h2>Error</h2>
+			</div>
+		</section>
+
+		<section id="about" class="wrapper style1 align-center">
+			<div class="container">
+				<p>
+					An error was encountered. If the issue persists, please contact the administrator.
+				</p>
+			</div>
+		</section>
+
+		<%@ include file="footer.jspf" %>
 	</body>
 </html>
