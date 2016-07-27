@@ -123,6 +123,26 @@ public class UserUtil {
 		return _userDAO.getUserIds(active);
 	}
 
+	public static boolean isCurrentUserActive()
+		throws DatabaseConnectionException, SQLException {
+
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (currentUser.isAuthenticated()) {
+			User user = getCurrentUser();
+
+			if (user.isActive() || user.isPendingCancellation()) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return true;
+		}
+	}
+
 	public static void resetEmailsSent()
 		throws DatabaseConnectionException, SQLException {
 

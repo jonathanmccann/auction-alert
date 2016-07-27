@@ -70,18 +70,10 @@ public class UserController {
 		if (currentUser.isAuthenticated()) {
 			User user = UserUtil.getCurrentUser();
 
-			if (user.isActive() || user.isPendingCancellation()) {
-				model.put("isActive", true);
-			}
-			else {
-				model.put("isActive", false);
-			}
-
 			model.put("emailAddress", user.getEmailAddress());
 		}
-		else {
-			model.put("isActive", false);
-		}
+
+		model.put("isActive", UserUtil.isCurrentUserActive());
 
 		return "contact";
 	}
@@ -225,21 +217,7 @@ public class UserController {
 
 	@RequestMapping(value ="/faq", method = RequestMethod.GET)
 	public String faq(Map<String, Object> model) throws Exception {
-		Subject currentUser = SecurityUtils.getSubject();
-
-		if (currentUser.isAuthenticated()) {
-			User user = UserUtil.getCurrentUser();
-
-			if (user.isActive() || user.isPendingCancellation()) {
-				model.put("isActive", true);
-			}
-			else {
-				model.put("isActive", false);
-			}
-		}
-		else {
-			model.put("isActive", false);
-		}
+		model.put("isActive", UserUtil.isCurrentUserActive());
 
 		return "faq";
 	}
@@ -607,7 +585,7 @@ public class UserController {
 		model.put("error", error);
 		model.put(
 			"info", WebUtils.getSessionAttribute(request, "info"));
-		model.put("isActive", UserUtil.getCurrentUser().isActive());
+		model.put("isActive", UserUtil.isCurrentUserActive());
 		model.put("success", success);
 		model.put("user", UserUtil.getCurrentUser());
 		model.put(
