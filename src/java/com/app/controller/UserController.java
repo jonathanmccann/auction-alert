@@ -25,7 +25,6 @@ import com.app.mail.MailSenderFactory;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
-import com.app.util.SearchQueryUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;

@@ -19,12 +19,9 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.exception.SearchQueryException;
 import com.app.model.SearchQuery;
 
-import java.math.RoundingMode;
 import java.sql.SQLException;
 
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
