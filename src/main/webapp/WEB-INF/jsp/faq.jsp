@@ -70,7 +70,7 @@
 					<h2>What do I receive when I sign up?</h2>
 					<h4>Email Notifications</h4>
 					<p class="faq-paragraph">
-						As a subscriber, you have the ability to save 10 search queries that will be searched every minute.
+						As a subscriber, you have the ability to save 10 search queries that will be searched on the US eBay site every minute.
 						Whenever a new result is found, an email notification is sent immediately to you, up to 30 emails a day.
 					</p>
 					<h4>Real Time Monitoring</h4>

@@ -88,7 +88,7 @@
 				<section id="banner" class="major">
 					<div class="inner">
 						<h2>This is Auction Alert</h2>
-						<p>The simple way to stay informed</p>
+						<p>The simple way to stay informed with eBay</p>
 						<ul class="actions">
 							<li><a href="create_account" class="button big special">Sign Up</a></li>
 							<li><a href="#about" id="learn-more" class="button big alt">Learn More</a></li>
