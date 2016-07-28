@@ -23,14 +23,7 @@ import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
 
 import com.stripe.model.Customer;
-import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -603,6 +596,12 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testViewMyAccount() throws Exception {
 		setUpUserUtil();
+
+		PowerMockito.doReturn(
+			true
+		).when(
+			UserUtil.class, "isCurrentUserActive"
+		);
 
 		this.mockMvc.perform(get("/my_account"))
 			.andExpect(status().isOk())
