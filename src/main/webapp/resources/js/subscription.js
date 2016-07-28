@@ -1,9 +1,10 @@
 $(window).load(function() {
 	var resubscribeForm = $('#resubscribeForm');
+	var stripePublishableKey = $('#stripePublishableKey');
 	var updateBillingForm = $('#updateBillingForm');
 
 	var resubscribeHandler = StripeCheckout.configure({
-		key: $('#stripePublishableKey').val(),
+		key: stripePublishableKey.val(),
 		image: "resources/images/favicon.ico",
 		name: "Auction Alert",
 		description: "Subscription ($10.00 per month)",
@@ -19,7 +20,7 @@ $(window).load(function() {
 	});
 
 	var updateBillingHandler = StripeCheckout.configure({
-		key: $('#stripePublishableKey').val(),
+		key: stripePublishableKey.val(),
 		image: "resources/images/favicon.ico",
 		name: "Auction Alert",
 		label: "Update Card Details",
