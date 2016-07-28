@@ -42,14 +42,14 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jonathan McCann
  */
-public class eBaySearchResultUtil {
+public class EbaySearchResultUtil {
 
-	public static List<SearchResult> geteBaySearchResults(
+	public static List<SearchResult> getEbaySearchResults(
 		SearchQuery searchQuery) {
 
 		_log.debug("Searching for: {}", searchQuery.getKeywords());
 
-		FindingServicePortType serviceClient = eBayAPIUtil.getServiceClient();
+		FindingServicePortType serviceClient = EbayAPIUtil.getServiceClient();
 
 		com.ebay.services.finding.SearchResult searchResults = null;
 
@@ -250,6 +250,6 @@ public class eBaySearchResultUtil {
 			"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=";
 
 	private static final Logger _log = LoggerFactory.getLogger(
-		eBaySearchResultUtil.class);
+		EbaySearchResultUtil.class);
 
 }

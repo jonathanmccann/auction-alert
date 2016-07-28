@@ -15,7 +15,7 @@
 package com.app.test.util;
 
 import com.app.test.BaseTestCase;
-import com.app.util.eBayAPIUtil;
+import com.app.util.EbayAPIUtil;
 
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.ApiCredential;
@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * @author Jonathan McCann
  */
-public class eBayAPIUtilTest extends BaseTestCase {
+public class EbayAPIUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() {
@@ -37,7 +37,7 @@ public class eBayAPIUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetApiContext() {
-		ApiContext apiContext = eBayAPIUtil.getApiContext();
+		ApiContext apiContext = EbayAPIUtil.getApiContext();
 
 		ApiCredential apiCredential = apiContext.getApiCredential();
 

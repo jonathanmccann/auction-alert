@@ -21,7 +21,7 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
-import com.app.util.eBaySearchResultUtil;
+import com.app.util.EbaySearchResultUtil;
 
 import java.sql.SQLException;
 
@@ -65,7 +65,7 @@ public class SearchResultRunnable implements Runnable {
 
 			for (SearchQuery searchQuery : searchQueries) {
 				List<SearchResult> searchResults =
-					eBaySearchResultUtil.geteBaySearchResults(searchQuery);
+					EbaySearchResultUtil.getEbaySearchResults(searchQuery);
 
 				searchResults = SearchResultUtil.filterSearchResults(
 					searchQuery, searchResults);

@@ -60,7 +60,7 @@
 		<property name="hashIterations" value="1024" />
 	</bean>
 
-	<bean class="com.app.shiro.SaltedJdbcRealm" id="eBayRealm">
+	<bean class="com.app.shiro.SaltedJdbcRealm" id="ebayRealm">
 		<property name="dataSource" ref="dataSource" />
 		<property name="authenticationQuery" value="SELECT password, salt FROM user WHERE username = ?" />
 		<property name="userRolesQuery" value="SELECT roleName FROM UserRole WHERE email = ?" />
@@ -73,7 +73,7 @@
 
 	<bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
 		<property name="cacheManager" ref="builtInCacheManager" />
-		<property name="realm" ref="eBayRealm" />
+		<property name="realm" ref="ebayRealm" />
 	</bean>
 
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor" />

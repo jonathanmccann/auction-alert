@@ -24,7 +24,7 @@ import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 /**
  * @author Jonathan McCann
  */
-public class eBayAPIUtil {
+public class EbayAPIUtil {
 
 	public static ApiContext getApiContext() {
 		return _apiContext;
@@ -49,11 +49,11 @@ public class eBayAPIUtil {
 		_apiContext.setSite(SiteCodeType.US);
 	}
 
-	public static void loadeBayServiceClient() {
-		loadeBayServiceClient(PropertiesValues.APPLICATION_ID);
+	public static void loadEbayServiceClient() {
+		loadEbayServiceClient(PropertiesValues.APPLICATION_ID);
 	}
 
-	public static void loadeBayServiceClient(String applicationId) {
+	public static void loadEbayServiceClient(String applicationId) {
 		ClientConfig config = new ClientConfig();
 
 		config.setApplicationId(applicationId);

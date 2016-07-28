@@ -75,7 +75,7 @@ public class CategoryUtil {
 	}
 
 	private static GetCategoriesCall _createGetCategoriesCall() {
-		ApiContext apiContext = eBayAPIUtil.getApiContext();
+		ApiContext apiContext = EbayAPIUtil.getApiContext();
 
 		GetCategoriesCall getCategoriesCall = new GetCategoriesCall(apiContext);
 

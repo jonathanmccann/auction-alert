@@ -19,7 +19,7 @@ import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
 import com.app.util.ValidatorUtil;
-import com.app.util.eBaySearchResultUtil;
+import com.app.util.EbaySearchResultUtil;
 
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
@@ -52,11 +52,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class eBaySearchResultUtilTest extends BaseTestCase {
+public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		Class<?> clazz = Class.forName(eBaySearchResultUtil.class.getName());
+		Class<?> clazz = Class.forName(EbaySearchResultUtil.class.getName());
 
 		_classInstance = clazz.newInstance();
 
@@ -124,23 +124,23 @@ public class eBaySearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGeteBaySearchResults() throws Exception {
+	public void testGetEbaySearchResults() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "eBay");
 
-		List<SearchResult> eBaySearchResults =
-			eBaySearchResultUtil.geteBaySearchResults(searchQuery);
+		List<SearchResult> EbaySearchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
 
-		Assert.assertEquals(5, eBaySearchResults.size());
+		Assert.assertEquals(5, EbaySearchResults.size());
 	}
 
 	@Test
-	public void testGeteBaySearchResultsWithCategory() throws Exception {
+	public void testGetEbaySearchResultsWithCategory() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "eBay", "267");
 
-		List<SearchResult> eBaySearchResults =
-			eBaySearchResultUtil.geteBaySearchResults(searchQuery);
+		List<SearchResult> EbaySearchResults=
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
 
-		Assert.assertEquals(5, eBaySearchResults.size());
+		Assert.assertEquals(5, EbaySearchResults.size());
 	}
 
 	@Test

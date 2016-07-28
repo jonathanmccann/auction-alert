@@ -17,7 +17,7 @@ package com.app.test;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.UserUtil;
-import com.app.util.eBayAPIUtil;
+import com.app.util.EbayAPIUtil;
 
 import java.net.URL;
 
@@ -41,7 +41,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public abstract class BaseTestCase {
 
 	protected static void setUpApiContext() {
-		eBayAPIUtil.loadApiContext("ebay.token");
+		EbayAPIUtil.loadApiContext("ebay.token");
 	}
 
 	protected static void setUpDatabase() throws Exception {
@@ -77,7 +77,7 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpServiceClient() {
-		eBayAPIUtil.loadeBayServiceClient(System.getProperty("application.id"));
+		EbayAPIUtil.loadEbayServiceClient(System.getProperty("application.id"));
 	}
 
 	protected static void setUpUserUtil() throws Exception {

@@ -18,7 +18,7 @@ import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
-import com.app.util.eBayAPIUtil;
+import com.app.util.EbayAPIUtil;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
@@ -66,11 +66,11 @@ public class AppServletContextListener implements ServletContextListener {
 
 			_log.info("Loading eBay service client");
 
-			eBayAPIUtil.loadeBayServiceClient();
+			EbayAPIUtil.loadEbayServiceClient();
 
 			_log.info("Initializing eBay API context");
 
-			eBayAPIUtil.loadApiContext();
+			EbayAPIUtil.loadApiContext();
 
 			_log.info("Loading database properties");
 
