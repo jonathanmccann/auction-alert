@@ -156,6 +156,18 @@ public class StripeUtil {
 			subscriptionId, true, false);
 	}
 
+	public static void updateCustomerEmailAddress() throws Exception {
+		User user = UserUtil.getCurrentUser();
+
+		Customer customer = Customer.retrieve(user.getCustomerId());
+
+		Map<String, Object> customerParams = new HashMap<>();
+
+		customerParams.put("email", user.getEmailAddress());
+
+		customer.update(customerParams);
+	}
+
 	public static void updateSubscription(String stripeToken)
 		throws Exception {
 

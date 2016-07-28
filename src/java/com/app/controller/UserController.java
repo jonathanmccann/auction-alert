@@ -565,8 +565,10 @@ public class UserController {
 				user.getEmailAddress(), user.getCurrentPassword(),
 				user.getNewPassword(), user.isEmailNotification());
 
+			StripeUtil.updateCustomerEmailAddress();
+
 			redirectAttributes.addFlashAttribute(
-				"success", LanguageUtil.getMessage("account-updated"));
+				"success", LanguageUtil.getMessage("account-update-success"));
 		}
 		catch (CredentialsException ce) {
 			redirectAttributes.addFlashAttribute(
@@ -583,6 +585,10 @@ public class UserController {
 		catch (PasswordLengthException ple) {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-password-length"));
+		}
+		catch (Exception e) {
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("account-update-fail"));
 		}
 
 		return "redirect:my_account";
