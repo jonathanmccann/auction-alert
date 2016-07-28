@@ -25,6 +25,7 @@ import com.app.util.UserUtil;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 
+import org.apache.shiro.SecurityUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -299,6 +300,35 @@ public class UserControllerTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
 		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testGetContactWithAuthenticatedUser() throws Exception {
+		setUpSecurityUtils(true);
+		setUpUserUtil();
+
+		this.mockMvc.perform(get("/contact"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("contact"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
+			.andExpect(model().attributeExists("emailAddress"))
+			.andExpect(model().attribute("emailAddress", "test@test.com"))
+			.andExpect(model().attributeExists("isActive"))
+			.andExpect(model().attribute("isActive", true));
+	}
+
+	@Test
+	public void testGetContactWithUnauthenticatedUser() throws Exception {
+		setUpSecurityUtils(false);
+		setUpUserUtil();
+
+		this.mockMvc.perform(get("/contact"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("contact"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
+			.andExpect(model().attributeDoesNotExist("emailAddress"))
+			.andExpect(model().attributeExists("isActive"))
+			.andExpect(model().attribute("isActive", true));
 	}
 
 	@Test
@@ -596,12 +626,6 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testViewMyAccount() throws Exception {
 		setUpUserUtil();
-
-		PowerMockito.doReturn(
-			true
-		).when(
-			UserUtil.class, "isCurrentUserActive"
-		);
 
 		this.mockMvc.perform(get("/my_account"))
 			.andExpect(status().isOk())

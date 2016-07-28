@@ -21,6 +21,10 @@ import com.app.util.EbayAPIUtil;
 
 import java.net.URL;
 
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.DelegatingSubject;
 import org.junit.runner.RunWith;
 
 import org.powermock.api.mockito.PowerMockito;
@@ -35,7 +39,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 /**
  * @author Jonathan McCann
  */
-@PrepareForTest(UserUtil.class)
+@PrepareForTest({SecurityUtils.class, UserUtil.class})
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
 public abstract class BaseTestCase {
@@ -76,6 +80,24 @@ public abstract class BaseTestCase {
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 	}
 
+	protected static void setUpSecurityUtils(boolean authenticated)
+		throws Exception {
+
+		PowerMockito.spy(SecurityUtils.class);
+
+		DefaultSecurityManager defaultSecurityManager =
+			new DefaultSecurityManager();
+
+		Subject subject = new DelegatingSubject(
+			null, authenticated, null, null, defaultSecurityManager);
+
+		PowerMockito.doReturn(
+			subject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+	}
+
 	protected static void setUpServiceClient() {
 		EbayAPIUtil.loadEbayServiceClient(System.getProperty("application.id"));
 	}
@@ -87,6 +109,12 @@ public abstract class BaseTestCase {
 			_USER_ID
 		).when(
 			UserUtil.class, "getCurrentUserId"
+		);
+
+		PowerMockito.doReturn(
+			true
+		).when(
+			UserUtil.class, "isCurrentUserActive"
 		);
 	}
 
