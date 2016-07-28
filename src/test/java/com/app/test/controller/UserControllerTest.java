@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.UserUtil;
@@ -25,7 +26,6 @@ import com.app.util.UserUtil;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 
-import org.apache.shiro.SecurityUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -329,6 +329,68 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(model().attributeDoesNotExist("emailAddress"))
 			.andExpect(model().attributeExists("isActive"))
 			.andExpect(model().attribute("isActive", true));
+	}
+
+	@Test
+	public void testGetCreateAccount() throws Exception {
+		setUpSecurityUtils(false);
+
+		this.mockMvc.perform(get("/create_account"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("create_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/create_account.jsp"))
+			.andExpect(model().attributeExists("error"))
+			.andExpect(model().attribute("error", ""))
+			.andExpect(model().attributeExists("exceedsMaximumNumberOfUsers"))
+			.andExpect(model().attribute("exceedsMaximumNumberOfUsers", false))
+			.andExpect(model().attributeExists("stripePublishableKey"))
+			.andExpect(
+				model().attribute(
+					"stripePublishableKey", "Stripe Publishable Key"));
+	}
+
+	@Test
+	public void testGetCreateAccountWithAuthenticatedUser() throws Exception {
+		setUpSecurityUtils(true);
+		setUpUserUtil();
+
+		this.mockMvc.perform(get("/create_account"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account?error="))
+			.andExpect(model().attributeExists("error"))
+			.andExpect(model().attribute("error", ""))
+			.andExpect(
+				model().attributeDoesNotExist("exceedsMaximumNumberOfUsers"));
+	}
+
+	@Test
+	public void testPostContact() throws Exception {
+		setUpMailSender();
+		setUpSecurityUtils(false);
+
+		this.mockMvc.perform(post("/contact"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("contact"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
+			.andExpect(model().attributeExists("success"))
+			.andExpect(
+				model().attribute(
+					"success", LanguageUtil.getMessage("message-send-success")));
+	}
+
+	@Test
+	public void testPostContactWithException() throws Exception {
+		setUpSecurityUtils(false);
+
+		this.mockMvc.perform(post("/contact"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("contact"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
+			.andExpect(model().attributeExists("error"))
+			.andExpect(
+				model().attribute(
+					"error", LanguageUtil.getMessage("message-send-fail")));
 	}
 
 	@Test

@@ -14,6 +14,9 @@
 
 package com.app.test;
 
+import com.app.mail.MailSender;
+import com.app.mail.MailSenderFactory;
+import com.app.mail.SendGridMailSender;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.UserUtil;
@@ -27,6 +30,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DelegatingSubject;
 import org.junit.runner.RunWith;
 
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -39,7 +43,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 /**
  * @author Jonathan McCann
  */
-@PrepareForTest({SecurityUtils.class, UserUtil.class})
+@PrepareForTest({MailSenderFactory.class, SecurityUtils.class, UserUtil.class})
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
 public abstract class BaseTestCase {
@@ -69,6 +73,24 @@ public abstract class BaseTestCase {
 			_INVALID_USER_ID
 		).when(
 			UserUtil.class, "getCurrentUserId"
+		);
+	}
+
+	protected void setUpMailSender() throws Exception {
+		MailSender mockMailSender = Mockito.mock(MailSender.class);
+
+		Mockito.doNothing().when(
+			mockMailSender
+		).sendContactMessage(
+			Mockito.anyString(), Mockito.anyString()
+		);
+
+		PowerMockito.spy(MailSenderFactory.class);
+
+		Mockito.when(
+			MailSenderFactory.getInstance()
+		).thenReturn(
+			mockMailSender
 		);
 	}
 
