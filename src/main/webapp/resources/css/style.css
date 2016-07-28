@@ -978,11 +978,14 @@
 /* Banner */
 
 	#banner {
-		background: #666666 url("../images/banner.jpg") no-repeat center center
-		background-size: cover;
-		color: #d8d8d8;
-		text-align: center;
-		position: relative;
+		background-color: #666666;
+		background-image: url("../images/banner.jpg");
+ 		background-size: cover;
+		background-position: center center;
+		background-repeat: no-repeat;
+ 		color: #d8d8d8;
+ 		text-align: center;
+ 		position: relative;
 	}
 
 		#banner:before {
@@ -1180,8 +1183,10 @@
 	}
 
 	#searchQueryForm select {
-		background: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc) no-repeat calc(100% - 20px) calc(1em + 2px),	calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-		background-size: 5px 5px, 5px 5px, 1px 1.5em;
+		background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
+		background-position: calc(100% - 20px) calc(1em + 2px),	calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
+ 		background-size: 5px 5px, 5px 5px, 1px 1.5em;
+		background-repeat: no-repeat;
 	}
 
 	#searchQueryForm select:-moz-focusring {
