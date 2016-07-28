@@ -60,11 +60,7 @@
 		<div id="user-details">
 			<c:choose>
 				<c:when test="${exceedsMaximumNumberOfUsers}">
-					<div class="container">
-						<div class="align-center">
-							<h2>Currently we have reached the maximum number of users. Please <a href="/contact">contact us</a> to be added to the waiting list.</h2>
-						</div>
-					</div>
+					Currently we have reached the maximum number of users. Please <a href="/contact">contact us</a> to be added to the waiting list.
 				</c:when>
 				<c:otherwise>
 					<c:if test="${not empty error}">
