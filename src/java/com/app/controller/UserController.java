@@ -227,8 +227,7 @@ public class UserController {
 
 	@RequestMapping(value ="/forgot_password", method = RequestMethod.GET)
 	public String forgotPassword(
-			@ModelAttribute("success")String success, Map<String, Object> model)
-		throws Exception {
+		@ModelAttribute("success")String success, Map<String, Object> model) {
 
 		model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
 		model.put("success", success);
@@ -441,9 +440,8 @@ public class UserController {
 
 	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
 	public String resetPassword(
-			String emailAddress, String password, String passwordResetToken,
-			RedirectAttributes redirectAttributes)
-		throws DatabaseConnectionException, SQLException {
+		String emailAddress, String password, String passwordResetToken,
+		RedirectAttributes redirectAttributes) {
 
 		try {
 			UserUtil.resetPassword(emailAddress, password, passwordResetToken);
@@ -538,8 +536,7 @@ public class UserController {
 
 	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)
 	public String updateSubscription(
-			String stripeToken, RedirectAttributes redirectAttributes)
-		throws Exception {
+		String stripeToken, RedirectAttributes redirectAttributes) {
 
 		try {
 			StripeUtil.updateSubscription(stripeToken);

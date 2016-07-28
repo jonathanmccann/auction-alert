@@ -28,6 +28,7 @@ import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.SendGrid;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class SendGridMailSender implements MailSender {
 
 	@Override
 	public void sendContactMessage(String emailAddress, String message)
-		throws Exception {
+		throws IOException {
 
 		Mail mail = _populateContactMessage(emailAddress, message);
 
@@ -58,7 +59,7 @@ public class SendGridMailSender implements MailSender {
 	@Override
 	public void sendPasswordResetToken(
 			String emailAddress, String passwordResetToken)
-		throws Exception {
+		throws IOException {
 
 		Mail mail = _populatePasswordResetToken(
 			emailAddress, passwordResetToken);
@@ -92,11 +93,11 @@ public class SendGridMailSender implements MailSender {
 			"Sending search results for {} queries for userId: {}",
 			searchQueryResultMap.size(), userId);
 
-		try {
-			Mail mail = _populateEmailMessage(
-				searchQueryResultMap, user.getEmailAddress(),
-				user.getUnsubscribeToken());
+		Mail mail = _populateEmailMessage(
+			searchQueryResultMap, user.getEmailAddress(),
+			user.getUnsubscribeToken());
 
+		try {
 			_sendEmail(mail);
 
 			emailsSent++;
@@ -108,10 +109,7 @@ public class SendGridMailSender implements MailSender {
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
 	}
 
-	private Mail _populateContactMessage(
-			String emailAddress, String message)
-		throws Exception {
-
+	private Mail _populateContactMessage(String emailAddress, String message) {
 		Email emailTo = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 		String subject = "You Have A New Message From " + emailAddress;
@@ -121,9 +119,8 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	private Mail _populateEmailMessage(
-			Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
-			String recipientEmailAddress, String unsubscribeToken)
-		throws Exception {
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
+		String recipientEmailAddress, String unsubscribeToken) {
 
 		Email emailTo = new Email(recipientEmailAddress);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
@@ -148,8 +145,7 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	private Mail _populatePasswordResetToken(
-			String emailAddress, String passwordResetToken)
-		throws Exception {
+		String emailAddress, String passwordResetToken) {
 
 		Email emailTo = new Email(emailAddress);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
@@ -168,7 +164,7 @@ public class SendGridMailSender implements MailSender {
 		return new Mail(emailFrom, subject, emailTo, content);
 	}
 
-	private void _sendEmail(Mail mail) throws Exception {
+	private void _sendEmail(Mail mail) throws IOException {
 		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
 
 		Request request = new Request();
