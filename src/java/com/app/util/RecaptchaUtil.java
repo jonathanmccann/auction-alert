@@ -17,6 +17,7 @@ package com.app.util;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Map;
@@ -27,10 +28,14 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class RecaptchaUtil {
 
-	public static boolean verifyRecaptchaResponse(String recaptchaResponse) {
+	public static boolean verifyRecaptchaResponse(String recaptchaResponse)
+		throws IOException {
+
 		if (ValidatorUtil.isNull(recaptchaResponse)) {
 			return false;
 		}
+
+		BufferedReader bufferedReader = null;
 
 		try {
 			URL url = new URL(_VERIFY_RECAPTCHA_URL + recaptchaResponse);
@@ -38,7 +43,7 @@ public class RecaptchaUtil {
 			HttpsURLConnection connection =
 				(HttpsURLConnection)url.openConnection();
 
-			BufferedReader bufferedReader = new BufferedReader(
+			bufferedReader = new BufferedReader(
 				new InputStreamReader(connection.getInputStream()));
 
 			Gson gson = new Gson();
@@ -50,6 +55,11 @@ public class RecaptchaUtil {
 		}
 		catch (Exception e) {
 			return false;
+		}
+		finally {
+			if (bufferedReader != null) {
+				bufferedReader.close();
+			}
 		}
 	}
 
