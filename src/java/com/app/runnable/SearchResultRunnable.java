@@ -49,7 +49,7 @@ public class SearchResultRunnable implements Runnable {
 			List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 				_userId, true);
 
-			if (searchQueries.size() == 0) {
+			if (searchQueries.isEmpty()) {
 				_log.info(
 					"There are no search queries for userId: {}", _userId);
 
