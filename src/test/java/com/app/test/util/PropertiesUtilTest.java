@@ -51,9 +51,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"eBay Campaign Id", PropertiesValues.EBAY_CAMPAIGN_ID);
 		Assert.assertEquals(
-			"JDBC Default Driver Class Name",
-			PropertiesValues.JDBC_DEFAULT_DRIVER_CLASS_NAME);
-		Assert.assertEquals(
 			"JDBC Default Password", PropertiesValues.JDBC_DEFAULT_PASSWORD);
 		Assert.assertEquals(
 			"JDBC Default URL", PropertiesValues.JDBC_DEFAULT_URL);
@@ -66,10 +63,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 			"test@test.com", PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 		Assert.assertEquals(
 			"test", PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
-		Assert.assertEquals("true", PropertiesValues.MAIL_SMTP_AUTH);
-		Assert.assertEquals("true", PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
-		Assert.assertEquals("smtp.gmail.com", PropertiesValues.MAIL_SMTP_HOST);
-		Assert.assertEquals("587", PropertiesValues.MAIL_SMTP_PORT);
 		Assert.assertEquals(
 			2, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES);
 		Assert.assertEquals(2, PropertiesValues.MAXIMUM_NUMBER_OF_USERS);
