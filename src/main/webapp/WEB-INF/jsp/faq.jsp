@@ -79,6 +79,11 @@
 						The query will be searched every five seconds and the results will be populated on the web page. Optionally, desktop notifications can be delivered for each new result.
 						Please note that desktop notifications are subject to the operating system and browser and may not be supported.
 					</p>
+					<h2>What regions does this application service?</h2>
+					<p class="faq-paragraph">
+						While anyone can register for an account, this application currently only searches the US eBay site.
+						However, this feature could be implemented in the future so please send your feedback to us.
+					</p>
 					<h2>How secure is my card information?</h2>
 					<p class="faq-paragraph">
 						Your card information is sent securely to Stripe and those details are not stored anywhere in this application.
