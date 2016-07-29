@@ -85,8 +85,9 @@ public class SearchResultRunnable implements Runnable {
 			long endTime = System.nanoTime();
 
 			_log.debug(
-				"Performing searches for userId: {} took {} milliseconds",
-				_userId, (endTime - startTime) / 1000000);
+				"Performing searches for userId: {} with {} queries took {} " +
+					"milliseconds",
+				_userId, searchQueries.size(), (endTime - startTime) / 1000000);
 		}
 		catch (DatabaseConnectionException | SQLException e) {
 			_log.error("Unable to perform search for userId: {}", _userId, e);
