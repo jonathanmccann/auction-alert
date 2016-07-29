@@ -118,7 +118,7 @@ public class SearchResultUtil {
 
 		_log.debug(
 			"Performing searches for {} users took {} seconds", userIds.size(),
-			(endTime - startTime) / 1000000000);
+			(endTime - startTime) / 1000000);
 	}
 
 	@Autowired
