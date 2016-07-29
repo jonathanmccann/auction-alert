@@ -32,7 +32,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class Scheduler {
 
-	@Scheduled(fixedRate = 300000)
+	@Scheduled(fixedRate = 60000)
 	public static void performEbaySearch() {
 		try {
 			SearchResultUtil.performSearch();
