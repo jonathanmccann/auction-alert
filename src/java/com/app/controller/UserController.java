@@ -397,12 +397,6 @@ public class UserController {
 							"Password for emailAddress {} is incorrect",
 							emailAddress);
 					}
-					else if (e instanceof LockedAccountException) {
-						_log.error(
-							"The account associated with emailAddress {} is " +
-								"locked",
-							emailAddress);
-					}
 				}
 
 				return "redirect:log_in";
