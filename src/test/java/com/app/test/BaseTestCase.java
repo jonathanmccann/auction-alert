@@ -85,6 +85,12 @@ public abstract class BaseTestCase {
 			Mockito.anyString(), Mockito.anyString()
 		);
 
+		Mockito.doNothing().when(
+			mockMailSender
+		).sendPasswordResetToken(
+			Mockito.anyString(), Mockito.anyString()
+		);
+
 		PowerMockito.spy(MailSenderFactory.class);
 
 		Mockito.when(

@@ -21,18 +21,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.app.language.LanguageUtil;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
+import com.app.util.PropertiesValues;
+import com.app.util.RecaptchaUtil;
 import com.app.util.UserUtil;
 
 import com.stripe.model.Customer;
+import com.stripe.model.CustomerSubscriptionCollection;
+import com.stripe.model.Event;
 import com.stripe.model.Subscription;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.SimpleSession;
+import org.apache.shiro.subject.Subject;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
+
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -48,12 +62,15 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@PrepareForTest({Customer.class, Subscription.class})
+@PrepareForTest({Customer.class, RecaptchaUtil.class, Subscription.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 public class UserControllerTest extends BaseTestCase {
@@ -61,14 +78,41 @@ public class UserControllerTest extends BaseTestCase {
 	@Rule
 	public PowerMockRule rule = new PowerMockRule();
 
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpProperties();
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
 		setUpDatabase();
-		setUpProperties();
 
 		_USER = UserUtil.addUser("test@test.com", "password");
+	}
+
+	@Test
+	public void testCreateAccount() throws Exception {
+		setUpCustomer();
+		setUpSecurityUtils(true);
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = post("/create_account");
+
+		request.param("emailAddress", "test2@test.com");
+		request.param("password", "password");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:home"));
+		resultActions.andExpect(redirectedUrl("home"));
+
+		User user = UserUtil.getUserByEmailAddress("test2@test.com");
+
+		Assert.assertEquals("testCustomerId", user.getCustomerId());
+		Assert.assertEquals("testSubscriptionId", user.getSubscriptionId());
 	}
 
 	@Test
@@ -100,6 +144,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:create_account"));
 		resultActions.andExpect(redirectedUrl("create_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("duplicate-email-address")));
 	}
 
 	@Test
@@ -114,6 +160,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:create_account"));
 		resultActions.andExpect(redirectedUrl("create_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("invalid-email-address")));
 	}
 
 	@Test
@@ -129,6 +177,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:create_account"));
 		resultActions.andExpect(redirectedUrl("create_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("invalid-password-length")));
 	}
 
 	@Test
@@ -139,8 +189,8 @@ public class UserControllerTest extends BaseTestCase {
 
 		MockHttpServletRequestBuilder request = post("/create_account");
 
-		request.param("stripeToken", "test");
-		request.param("stripeEmail", "test@test.com");
+		request.param("emailAddress", "test2@test.com");
+		request.param("password", "password");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -148,6 +198,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:create_account"));
 		resultActions.andExpect(redirectedUrl("create_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("incorrect-payment-information")));
 	}
 
 	@Test
@@ -170,6 +222,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("success"));
+		resultActions.andExpect(flash().attribute(
+			"success", LanguageUtil.getMessage("subscription-updated")));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -201,6 +255,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("subscription-already-cancelled")));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -230,6 +286,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("subscription-already-cancelled")));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -261,6 +319,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("subscription-already-cancelled")));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -292,6 +352,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("subscription-cancellation")));
 
 		User user = UserUtil.getCurrentUser();
 
@@ -365,6 +427,228 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetFaq() throws Exception {
+		setUpUserUtil();
+
+		this.mockMvc.perform(get("/faq"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("faq"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/faq.jsp"))
+			.andExpect(model().attribute("isActive", true));
+	}
+
+	@Test
+	public void testGetForgotPassword() throws Exception {
+		this.mockMvc.perform(get("/forgot_password"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("forgot_password"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/forgot_password.jsp"))
+			.andExpect(model().attribute(
+				"recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY))
+			.andExpect(model().attribute("success", ""));
+	}
+
+	@Test
+	public void testGetHomeWithPendingCancellation() throws Exception {
+		setUpSecurityUtils(true);
+		setUpSubscription();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "", "", "testSubscriptionId", true, true);
+
+		this.mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/home.jsp"))
+			.andExpect(model().attribute("isActive", true))
+			.andExpect(model().attribute(
+				"nextChargeDate",
+				LanguageUtil.formatMessage(
+					"subscription-will-end-on", "December 31")))
+			.andExpect(model().attribute(
+				"emailsSent", LanguageUtil.formatMessage("x-emails-sent", 0)));
+	}
+
+	@Test
+	public void testGetHomeWithActiveUser() throws Exception {
+		setUpSecurityUtils(true);
+		setUpSubscription();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "", "", "testSubscriptionId", true, false);
+
+		this.mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/home.jsp"))
+			.andExpect(model().attribute("isActive", true))
+			.andExpect(model().attribute(
+				"nextChargeDate",
+				LanguageUtil.formatMessage(
+					"next-charge-date", "December 31")))
+			.andExpect(model().attribute(
+				"emailsSent", LanguageUtil.formatMessage("x-emails-sent", 0)));
+	}
+
+	@Test
+	public void testGetHomeWithInactiveUser() throws Exception {
+		setUpSecurityUtils(true);
+		setUpSubscription();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "", "", "testSubscriptionId", false, false);
+
+		this.mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/home.jsp"))
+			.andExpect(model().attribute("isActive", false))
+			.andExpect(model().attribute(
+				"nextChargeDate",
+				LanguageUtil.getMessage("inactive-account")))
+			.andExpect(model().attribute(
+				"emailsSent", LanguageUtil.formatMessage("x-emails-sent", 0)));
+	}
+
+	@Test
+	public void testGetHomeWithOneEmailSent() throws Exception {
+		setUpSecurityUtils(true);
+		setUpSubscription();
+		setUpUserUtil();
+
+		UserUtil.updateEmailsSent(_USER_ID, 1);
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "", "", "testSubscriptionId", false, false);
+
+		this.mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/home.jsp"))
+			.andExpect(model().attribute("isActive", false))
+			.andExpect(model().attribute(
+				"nextChargeDate",
+				LanguageUtil.getMessage("inactive-account")))
+			.andExpect(model().attribute(
+				"emailsSent", LanguageUtil.getMessage("one-email-sent")));
+	}
+
+	@Test
+	public void testGetHomeWithUnauthenticatedUser() throws Exception {
+		setUpSecurityUtils(false);
+
+		this.mockMvc.perform(get("/"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/home.jsp"));
+
+		this.mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/home.jsp"));
+	}
+
+	@Test
+	public void testGetLogInWithAuthenticatedUser() throws Exception {
+		setUpSecurityUtils(true);
+		setUpSubscription();
+		setUpUserUtil();
+
+		this.mockMvc.perform(get("/log_in"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/home.jsp"));
+	}
+
+	@Test
+	public void testGetLogInWithUnauthenticatedUser() throws Exception {
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute("loginAttempts", 0);
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		this.mockMvc.perform(get("/log_in"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("log_in"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/log_in.jsp"));
+	}
+
+	@Test
+	public void testGetLogInExceedingLoginAttemptLimit() throws Exception {
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute(
+			"loginAttempts", PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		this.mockMvc.perform(get("/log_in"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("log_in"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/log_in.jsp"))
+			.andExpect(model().attribute(
+				"recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY));
+	}
+
+	@Test
+	public void testGetLogOut() throws Exception {
+		setUpSecurityUtils(true);
+
+		Subject currentUser = SecurityUtils.getSubject();
+
+		Assert.assertTrue(currentUser.isAuthenticated());
+
+		this.mockMvc.perform(get("/log_out"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:home"))
+			.andExpect(redirectedUrl("home"));
+
+		currentUser = SecurityUtils.getSubject();
+
+		Assert.assertFalse(currentUser.isAuthenticated());
+	}
+
+	@Test
+	public void testGetResetPassword() throws Exception {
+		this.mockMvc.perform(get("/reset_password"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("reset_password"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/reset_password.jsp"));
+	}
+
+	@Test
 	public void testPostContact() throws Exception {
 		setUpMailSender();
 		setUpSecurityUtils(false);
@@ -394,43 +678,295 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testResubscribeWithActiveUser() throws Exception {
-		setUpUserUtil();
+	public void testPostForgotPassword() throws Exception {
+		setUpMailSender();
+		setUpRecaptchaUtil(true);
 
-		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+		MockHttpServletRequestBuilder request = post("/forgot_password");
 
-		this.mockMvc.perform(post("/resubscribe"))
+		request.param("emailAddress", "test@test.com");
+
+		this.mockMvc.perform(request)
 			.andExpect(status().is3xxRedirection())
-			.andExpect(view().name("redirect:my_account"))
-			.andExpect(redirectedUrl("my_account"))
-			.andExpect(flash().attributeExists("error"));
+			.andExpect(view().name("redirect:forgot_password"))
+			.andExpect(redirectedUrl("forgot_password"))
+			.andExpect(flash().attribute(
+				"success", LanguageUtil.getMessage("forgot-password-success")));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
-		Assert.assertEquals("customerId", user.getCustomerId());
-		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
-		Assert.assertTrue(user.isActive());
-		Assert.assertFalse(user.isPendingCancellation());
+		Assert.assertNotNull(user.getPasswordResetToken());
 	}
 
 	@Test
-	public void testGetResetPassword() throws Exception {
-		this.mockMvc.perform(get("/reset_password"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("reset_password"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/reset_password.jsp"));
+	public void testPostForgotPasswordWithInvalidRecaptcha() throws Exception {
+		setUpRecaptchaUtil(false);
+
+		MockHttpServletRequestBuilder request = post("/forgot_password");
+
+		request.param("emailAddress", "test@test.com");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:forgot_password"))
+			.andExpect(redirectedUrl("forgot_password"))
+			.andExpect(flash().attribute(
+				"success", LanguageUtil.getMessage("forgot-password-success")));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNull(user.getPasswordResetToken());
 	}
 
 	@Test
-	public void testResetPassword() throws Exception {
+	public void testPostLogInWithAuthenticatedUser() throws Exception {
+		setUpSecurityUtils(true);
+
+		this.mockMvc.perform(post("/log_in"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:home"))
+			.andExpect(redirectedUrl("home"));
+	}
+
+	@Test
+	public void testPostLogInWithAuthenticatedUserAndRedirect()
+		throws Exception {
+
+		setUpSecurityUtils(true);
+
+		MockHttpServletRequestBuilder request = post("/log_in");
+
+		request.param("redirect", "test_redirect");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:test_redirect"))
+			.andExpect(redirectedUrl("test_redirect"));
+	}
+
+	@Test
+	public void testPostLogInWithUnauthenticatedUser() throws Exception {
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		Mockito.doNothing().when(
+			mockSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
+
+		MockHttpServletRequestBuilder request = post("/log_in");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:home"))
+			.andExpect(redirectedUrl("home"));
+	}
+
+	@Test
+	public void testPostLogInWithUnknownAccountException() throws Exception {
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		Mockito.doThrow(new UnknownAccountException()).when(
+			mockSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
+
+		MockHttpServletRequestBuilder request = post("/log_in");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:log_in"))
+			.andExpect(redirectedUrl("log_in"))
+			.andExpect(flash().attributeExists("error"))
+			.andExpect(flash().attribute(
+				"error", LanguageUtil.getMessage("log-in-failure")));
+	}
+
+	@Test
+	public void testPostLogInWithIncorrectCredentialsException()
+		throws Exception {
+
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		Mockito.doThrow(new IncorrectCredentialsException()).when(
+			mockSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
+
+		MockHttpServletRequestBuilder request = post("/log_in");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:log_in"))
+			.andExpect(redirectedUrl("log_in"))
+			.andExpect(flash().attributeExists("error"))
+			.andExpect(flash().attribute(
+				"error", LanguageUtil.getMessage("log-in-failure")));
+	}
+
+	@Test
+	public void testPostLogInExceedingLoginLimitAndFailingRecaptcha()
+		throws Exception {
+
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute(
+			"loginAttempts", PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		Mockito.doNothing().when(
+			mockSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
+
+		MockHttpServletRequestBuilder request = post("/log_in");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:log_in"))
+			.andExpect(redirectedUrl("log_in"))
+			.andExpect(flash().attributeExists("error"))
+			.andExpect(flash().attribute(
+				"error", LanguageUtil.getMessage("recaptcha-failure")));
+	}
+
+	@Test
+	public void testPostLogInExceedingLoginLimitAndPassingRecaptcha()
+		throws Exception {
+
+		setUpRecaptchaUtil(true);
+
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute(
+			"loginAttempts", PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		Mockito.doNothing().when(
+			mockSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
+
+		MockHttpServletRequestBuilder request = post("/log_in");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:home"))
+			.andExpect(redirectedUrl("home"));
+	}
+
+	@Test
+	public void testPostResetPassword() throws Exception {
+		setUpSecurityUtils(true);
 		setUpUserUtil();
+
+		Subject currentUser = SecurityUtils.getSubject();
+
+		Assert.assertTrue(currentUser.isAuthenticated());
 
 		UserUtil.updatePasswordResetToken(_USER_ID);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		String password = user.getPassword();
+		String salt = user.getSalt();
 
 		MockHttpServletRequestBuilder request = post("/reset_password");
 
@@ -444,15 +980,29 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:reset_password"));
 		resultActions.andExpect(redirectedUrl("reset_password"));
 		resultActions.andExpect(flash().attributeExists("success"));
+		resultActions.andExpect(flash().attribute(
+			"success", LanguageUtil.getMessage("password-reset-success")));
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotEquals(password, user.getPassword());
+		Assert.assertNotEquals(salt, user.getSalt());
+
+		currentUser = SecurityUtils.getSubject();
+
+		Assert.assertFalse(currentUser.isAuthenticated());
 	}
 
 	@Test
-	public void testResetPasswordWithInvalidResetToken() throws Exception {
+	public void testPostResetPasswordWithInvalidResetToken() throws Exception {
 		setUpUserUtil();
 
 		UserUtil.updatePasswordResetToken(_USER_ID);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		String password = user.getPassword();
+		String salt = user.getSalt();
 
 		MockHttpServletRequestBuilder request = post("/reset_password");
 
@@ -466,10 +1016,17 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:reset_password"));
 		resultActions.andExpect(redirectedUrl("reset_password"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("password-reset-fail")));
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertEquals(password, user.getPassword());
+		Assert.assertEquals(salt, user.getSalt());
 	}
 
 	@Test
-	public void testResetPasswordWithNullUser() throws Exception {
+	public void testPostResetPasswordWithNullUser() throws Exception {
 		setUpUserUtil();
 
 		MockHttpServletRequestBuilder request = post("/reset_password");
@@ -484,6 +1041,115 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:reset_password"));
 		resultActions.andExpect(redirectedUrl("reset_password"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("password-reset-fail")));
+	}
+
+	@Test
+	public void testResubscribeWithActiveUser() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
+			false);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"))
+			.andExpect(flash().attributeExists("error"))
+			.andExpect(flash().attribute(
+				"error",
+				LanguageUtil.getMessage("subscription-resubscribe-failure")));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user.getUnsubscribeToken());
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testResubscribeWithInactiveUser() throws Exception {
+		setUpCustomer();
+		setUpSubscription();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
+			true);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"))
+			.andExpect(flash().attributeExists("success"))
+			.andExpect(flash().attribute(
+				"success",
+				LanguageUtil.getMessage("subscription-updated")));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user.getUnsubscribeToken());
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testResubscribeWithNullSubscriptionId() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "unsubscribeToken", "customerId", "", true, false);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"))
+			.andExpect(flash().attributeExists("error"))
+			.andExpect(flash().attribute(
+				"error",
+				LanguageUtil.getMessage("subscription-resubscribe-failure")));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user.getUnsubscribeToken());
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
+	}
+
+	@Test
+	public void testResubscribeWithPendingCancellationUser() throws Exception {
+		setUpCustomer();
+		setUpSubscription();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
+			true);
+
+		this.mockMvc.perform(post("/resubscribe"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:my_account"))
+			.andExpect(redirectedUrl("my_account"))
+			.andExpect(flash().attributeExists("success"))
+			.andExpect(flash().attribute(
+				"success",
+				LanguageUtil.getMessage("subscription-updated")));
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user.getUnsubscribeToken());
+		Assert.assertEquals("customerId", user.getCustomerId());
+		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
+		Assert.assertTrue(user.isActive());
+		Assert.assertFalse(user.isPendingCancellation());
 	}
 
 	@Test
@@ -498,7 +1164,10 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(status().is3xxRedirection())
 			.andExpect(view().name("redirect:my_account"))
 			.andExpect(redirectedUrl("my_account"))
-			.andExpect(flash().attributeExists("error"));
+			.andExpect(flash().attributeExists("error"))
+			.andExpect(flash().attribute(
+				"error",
+				LanguageUtil.getMessage("subscription-resubscribe-failure")));
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -552,6 +1221,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateMyAccount() throws Exception {
+		setUpCustomer();
 		setUpUserUtil();
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
@@ -562,6 +1232,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("success"));
+		resultActions.andExpect(flash().attribute(
+			"success", LanguageUtil.getMessage("account-update-success")));
 
 		_assertUpdatedUser();
 	}
@@ -570,6 +1242,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testUpdateMyAccountWithDuplicateEmailAddress()
 		throws Exception {
 
+		setUpCustomer();
 		setUpUserUtil();
 
 		UserUtil.addUser("test2@test.com", "password");
@@ -582,12 +1255,15 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("duplicate-email-address")));
 
 		_assertNotUpdatedUser();
 	}
 
 	@Test
 	public void testUpdateMyAccountWithInvalidEmailAddress() throws Exception {
+		setUpCustomer();
 		setUpUserUtil();
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
@@ -600,12 +1276,41 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("invalid-email-address")));
+
+		_assertNotUpdatedUser();
+	}
+
+	@Test
+	public void testUpdateMyAccountWithIncorrectPassword() throws Exception {
+		setUpCustomer();
+		setUpUserUtil();
+
+		MockHttpServletRequestBuilder request = post(
+			"/my_account");
+
+		request.param("userId", String.valueOf(_USER.getUserId()));
+		request.param("emailAddress", "test2@test.com");
+		request.param("emailNotification", "false");
+		request.param("currentPassword", "incorrectPassword");
+		request.param("newPassword", "short");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("incorrect-password")));
 
 		_assertNotUpdatedUser();
 	}
 
 	@Test
 	public void testUpdateMyAccountWithInvalidPassword() throws Exception {
+		setUpCustomer();
 		setUpUserUtil();
 
 		MockHttpServletRequestBuilder request = post(
@@ -623,15 +1328,16 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("invalid-password-length")));
 
 		_assertNotUpdatedUser();
 	}
 
 	@Test
 	public void testUpdateMyAccountWithInvalidUserId() throws Exception {
+		setUpCustomer();
 		setUpInvalidUserUtil();
-
-		UserUtil.addUser("test2@test.com", "password");
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
@@ -640,13 +1346,39 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(status().is3xxRedirection());
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("account-update-fail")));
 
 		_assertNotUpdatedUser();
 	}
 
 	@Test
+	public void testUpdateSubscription() throws Exception {
+		setUpCustomer();
+		setUpUserUtil();
+
+		UserUtil.updateUserSubscription(
+			_USER_ID, _USER.getUnsubscribeToken(), "customerId",
+			"subscriptionId", true, false);
+
+		MockHttpServletRequestBuilder request = post("/update_subscription");
+
+		request.param("stripeToken", "test");
+		request.param("stripeEmail", "test@test.com");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("success"));
+		resultActions.andExpect(flash().attribute(
+			"success",
+			LanguageUtil.getMessage("subscription-updated")));
+	}
+
+	@Test
 	public void testUpdateSubscriptionWithStripeException() throws Exception {
-		setUpProperties();
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
@@ -664,6 +1396,9 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error",
+			LanguageUtil.getMessage("incorrect-payment-information")));
 	}
 
 	@Test
@@ -683,6 +1418,9 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:my_account"));
 		resultActions.andExpect(redirectedUrl("my_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error",
+			LanguageUtil.getMessage("incorrect-payment-information")));
 	}
 
 	@Test
@@ -697,8 +1435,69 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("stripePublishableKey"));
 	}
 
+	protected static void setUpCustomer() throws Exception {
+		Customer customer = Mockito.mock(Customer.class);
+
+		CustomerSubscriptionCollection customerSubscriptionCollection =
+			new CustomerSubscriptionCollection();
+
+		List<Subscription> subscriptions = new ArrayList<>();
+
+		Subscription subscription = new Subscription();
+
+		subscription.setId("testSubscriptionId");
+
+		subscriptions.add(subscription);
+
+		customerSubscriptionCollection.setData(subscriptions);
+
+		PowerMockito.spy(Customer.class);
+
+		PowerMockito.doReturn(
+			customer
+		).when(
+			Customer.class, "retrieve", Mockito.anyString()
+		);
+
+		PowerMockito.doReturn(
+			customer
+		).when(
+			Customer.class, "create", Mockito.anyMap()
+		);
+
+		Mockito.when(
+			customer.update(Mockito.anyMap())
+		).thenReturn(
+			customer
+		);
+
+		Mockito.when(
+			customer.getSubscriptions()
+		).thenReturn(
+			customerSubscriptionCollection
+		);
+
+		Mockito.when(
+			customer.getId()
+		).thenReturn(
+			"testCustomerId"
+		);
+	}
+
+	protected static void setUpRecaptchaUtil(boolean valid) throws Exception {
+		PowerMockito.spy(RecaptchaUtil.class);
+
+		PowerMockito.doReturn(
+			valid
+		).when(
+			RecaptchaUtil.class, "verifyRecaptchaResponse", Mockito.anyString()
+		);
+	}
+
 	protected static void setUpSubscription() throws Exception {
 		Subscription subscription = Mockito.mock(Subscription.class);
+
+		subscription.setCurrentPeriodEnd(0L);
 
 		PowerMockito.spy(Subscription.class);
 
@@ -706,6 +1505,12 @@ public class UserControllerTest extends BaseTestCase {
 			subscription
 		).when(
 			Subscription.class, "retrieve", Mockito.anyString()
+		);
+
+		Mockito.when(
+			subscription.update(Mockito.anyMap())
+		).thenReturn(
+			subscription
 		);
 
 		Mockito.when(
