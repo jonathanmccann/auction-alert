@@ -1,7 +1,12 @@
-eBay Webapp
+Auction Alert
 ========
 
 This Java webapp will hook into eBay's API in order to serve custom search results via email or text message to recipients on a set interval.
+
+In Action
+========
+
+See a demo of this web application at http://test-auctionalert.rhcloud.com/
 
 Configuration
 ========
@@ -13,7 +18,21 @@ Running Tests
 
 In order to run the tests, the application ID, eBay token, and JDBC connection configuration properties need to be specified. The format to run all of the tests is the following, inserting valid information for each property:
 
+```
 gradle test jacocoTestReport -Dapplication.id="${application.id}" -Debay.token="${ebay.token}" -Djdbc.default.password="${jdbc.default.password}" -Djdbc.default.url="${jdbc.default.url}" -Djdbc.default.username="${jdbc.default.username}"
+```
+
+To test a single class, append this to the end of your test command:
+
+```
+-Dtest.single=${nameOfTestClass}
+```
+
+To debug the test, append the following to the end of your test command:
+
+```
+-Dtest.debug
+```
 
 License
 ========
