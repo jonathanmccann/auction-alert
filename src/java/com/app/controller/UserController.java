@@ -179,9 +179,14 @@ public class UserController {
 			return "redirect:create_account";
 		}
 
-		MailSender mailSender = MailSenderFactory.getInstance();
+		try {
+			MailSender mailSender = MailSenderFactory.getInstance();
 
-		mailSender.sendWelcomeMessage(emailAddress);
+			mailSender.sendWelcomeMessage(emailAddress);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send welcome email", e.getMessage());
+		}
 
 		return logIn(
 			emailAddress, password, "home", "", request, redirectAttributes);
@@ -201,13 +206,13 @@ public class UserController {
 			try {
 				StripeUtil.deleteSubscription(subscriptionId);
 
+				redirectAttributes.addFlashAttribute(
+					"success", LanguageUtil.getMessage("subscription-updated"));
+
 				MailSender mailSender = MailSenderFactory.getInstance();
 
 				mailSender.sendCancellationMessage(
 					currentUser.getEmailAddress());
-
-				redirectAttributes.addFlashAttribute(
-					"success", LanguageUtil.getMessage("subscription-updated"));
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -479,13 +484,13 @@ public class UserController {
 				StripeUtil.resubscribe(
 					currentUser.getCustomerId(), subscriptionId, stripeToken);
 
+				redirectAttributes.addFlashAttribute(
+					"success", LanguageUtil.getMessage("subscription-updated"));
+
 				MailSender mailSender = MailSenderFactory.getInstance();
 
 				mailSender.sendResubscribeMessage(
 					currentUser.getEmailAddress());
-
-				redirectAttributes.addFlashAttribute(
-					"success", LanguageUtil.getMessage("subscription-updated"));
 			}
 			catch (Exception e) {
 				_log.error(e.getMessage());
@@ -551,12 +556,12 @@ public class UserController {
 			StripeUtil.updateSubscription(
 				stripeToken, currentUser.getCustomerId());
 
+			redirectAttributes.addFlashAttribute(
+				"success", LanguageUtil.getMessage("subscription-updated"));
+
 			MailSender mailSender = MailSenderFactory.getInstance();
 
 			mailSender.sendCardDetailsMessage(currentUser.getEmailAddress());
-
-			redirectAttributes.addFlashAttribute(
-				"success", LanguageUtil.getMessage("subscription-updated"));
 		}
 		catch (Exception e) {
 			_log.error(e.getMessage());
