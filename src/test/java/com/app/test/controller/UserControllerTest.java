@@ -1357,6 +1357,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testUpdateSubscription() throws Exception {
 		setUpCustomer();
+		setUpMailSender();
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(

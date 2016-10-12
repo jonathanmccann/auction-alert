@@ -541,7 +541,14 @@ public class UserController {
 		String stripeToken, RedirectAttributes redirectAttributes) {
 
 		try {
-			StripeUtil.updateSubscription(stripeToken);
+			User currentUser = UserUtil.getCurrentUser();
+
+			StripeUtil.updateSubscription(
+				stripeToken, currentUser.getCustomerId());
+
+			MailSender mailSender = MailSenderFactory.getInstance();
+
+			mailSender.sendCardDetailsMessage(currentUser.getEmailAddress());
 
 			redirectAttributes.addFlashAttribute(
 				"success", LanguageUtil.getMessage("subscription-updated"));

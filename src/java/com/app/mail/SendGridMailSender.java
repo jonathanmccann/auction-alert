@@ -57,6 +57,15 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
+	public void sendCardDetailsMessage(String emailAddress)
+		throws IOException {
+
+		Mail mail = _populateCardDetailsMessage(emailAddress);
+
+		_sendEmail(mail);
+	}
+
+	@Override
 	public void sendContactMessage(String emailAddress, String message)
 		throws IOException {
 
@@ -138,6 +147,23 @@ public class SendGridMailSender implements MailSender {
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/cancellation_email.vm", "UTF-8", rootMap);
+
+		Content content = new Content("text/html", messageBody);
+
+		return new Mail(emailFrom, subject, emailTo, content);
+	}
+
+	private Mail _populateCardDetailsMessage(String emailAddress) {
+		Email emailTo = new Email(emailAddress);
+		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		String subject = "Card Details Updated";
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/card_details_email.vm", "UTF-8", rootMap);
 
 		Content content = new Content("text/html", messageBody);
 

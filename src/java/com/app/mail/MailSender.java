@@ -30,6 +30,8 @@ public interface MailSender {
 
 	public void sendCancellationMessage(String emailAddress) throws Exception;
 
+	public void sendCardDetailsMessage(String emailAddress) throws Exception;
+
 	public void sendContactMessage(String emailAddress, String message)
 		throws Exception;
 

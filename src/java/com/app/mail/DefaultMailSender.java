@@ -60,6 +60,16 @@ public class DefaultMailSender implements MailSender {
 	}
 
 	@Override
+	public void sendCardDetailsMessage(String emailAddress) throws Exception {
+		Session session = _authenticateOutboundEmailAddress();
+
+		Message emailMessage = _populateCardDetailsMessage(
+			emailAddress, session);
+
+		Transport.send(emailMessage);
+	}
+
+	@Override
 	public void sendContactMessage(String emailAddress, String message)
 		throws Exception {
 
@@ -172,6 +182,32 @@ public class DefaultMailSender implements MailSender {
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/cancellation_email.vm", "UTF-8", rootMap);
+
+		message.setContent(messageBody, "text/html");
+
+		return message;
+	}
+
+	private Message _populateCardDetailsMessage(
+			String emailAddress, Session session)
+		throws Exception {
+
+		Message message = new MimeMessage(session);
+
+		message.setFrom(
+			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+
+		message.addRecipient(
+			Message.RecipientType.TO, new InternetAddress(emailAddress));
+
+		message.setSubject("Card Details Updated");
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/card_details_email.vm", "UTF-8", rootMap);
 
 		message.setContent(messageBody, "text/html");
 

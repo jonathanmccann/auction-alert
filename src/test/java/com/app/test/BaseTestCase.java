@@ -192,6 +192,44 @@ public abstract class BaseTestCase {
 
 	protected static final int _USER_ID = 1;
 
+	protected static final String _CANCELLATION_EMAIL = "<html>\n" +
+		"\t<body>\n" +
+		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
+		"\t\t\t<tr>\n" +
+		"\t\t\t\t<td align=\"center\">\n" +
+		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">We're sorry to see you go</h2>\n" +
+		"\n" +
+		"\t\t\t\t\t<p style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;\">\n" +
+		"\t\t\t\t\t\tYour cancellation request has been processed successfully. We hope you enjoyed your time at Auction Alert. Please resubscribe at any time to enjoy its benefits once again.\n" +
+		"\t\t\t\t\t</p>\n" +
+		"\t\t\t\t</td>\n" +
+		"\t\t\t</tr>\n" +
+		"\t\t</table>\n" +
+		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
+		"\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
+		"\t\t</footer>\n" +
+		"\t</body>\n" +
+		"</html>";
+
+	protected static final String _CARD_DETAILS_EMAIL = "<html>\n" +
+		"\t<body>\n" +
+		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
+		"\t\t\t<tr>\n" +
+		"\t\t\t\t<td align=\"center\">\n" +
+		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">Card Details Updated</h2>\n" +
+		"\n" +
+		"\t\t\t\t\t<p style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;\">\n" +
+		"\t\t\t\t\t\tYour card details have been successfully updated. Please look for the charge to appear on the new card starting on your next billing cycle.\n" +
+		"\t\t\t\t\t</p>\n" +
+		"\t\t\t\t</td>\n" +
+		"\t\t\t</tr>\n" +
+		"\t\t</table>\n" +
+		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
+		"\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
+		"\t\t</footer>\n" +
+		"\t</body>\n" +
+		"</html>";
+
 	protected static final String _EMAIL_CONTENT = "<html>\n" +
 		"\t<body>\n" +
 		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
@@ -245,25 +283,6 @@ public abstract class BaseTestCase {
 		"\t\t\t\t\t\t<li><a href=\"http://www.test.com/monitor\">Monitor a favorite search in real time</a></li>\n" +
 		"\t\t\t\t\t\t<li><a href=\"http://www.test.com/faq\">Learn more in the FAQ</a></li>\n" +
 		"\t\t\t\t\t</ul>\n" +
-		"\t\t\t\t</td>\n" +
-		"\t\t\t</tr>\n" +
-		"\t\t</table>\n" +
-		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
-		"\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
-		"\t\t</footer>\n" +
-		"\t</body>\n" +
-		"</html>";
-
-	protected static final String _CANCELLATION_EMAIL = "<html>\n" +
-		"\t<body>\n" +
-		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
-		"\t\t\t<tr>\n" +
-		"\t\t\t\t<td align=\"center\">\n" +
-		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">We're sorry to see you go</h2>\n" +
-		"\n" +
-		"\t\t\t\t\t<p style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;\">\n" +
-		"\t\t\t\t\t\tYour cancellation request has been processed successfully. We hope you enjoyed your time at Auction Alert. Please resubscribe at any time to enjoy its benefits once again.\n" +
-		"\t\t\t\t\t</p>\n" +
 		"\t\t\t\t</td>\n" +
 		"\t\t\t</tr>\n" +
 		"\t\t</table>\n" +

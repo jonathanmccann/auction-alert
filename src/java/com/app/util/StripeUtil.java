@@ -168,16 +168,14 @@ public class StripeUtil {
 		customer.update(customerParams);
 	}
 
-	public static void updateSubscription(String stripeToken)
+	public static void updateSubscription(String stripeToken, String customerId)
 		throws Exception {
 
 		Map<String, Object> customerParams = new HashMap<>();
 
 		customerParams.put("source", stripeToken);
 
-		User user = UserUtil.getCurrentUser();
-
-		Customer customer = Customer.retrieve(user.getCustomerId());
+		Customer customer = Customer.retrieve(customerId);
 
 		customer.update(customerParams);
 	}

@@ -75,6 +75,30 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulateCardDetailsMessage() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populateCardDetailsMessageMethod = _clazz.getDeclaredMethod(
+			"_populateCardDetailsMessage", String.class);
+
+		populateCardDetailsMessageMethod.setAccessible(true);
+
+		Mail mail =
+			(Mail) populateCardDetailsMessageMethod.invoke(
+				_classInstance, "test@test.com");
+
+		Assert.assertEquals(
+			"Card Details Updated", mail.getSubject());
+
+		List<Content> mailContent = mail.getContent();
+
+		Content content = mailContent.get(0);
+
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals(_CARD_DETAILS_EMAIL, content.getValue());
+	}
+
+	@Test
 	public void testPopulateContactMessage() throws Exception {
 		Method populateContactMessageMethod = _clazz.getDeclaredMethod(
 			"_populateContactMessage", String.class, String.class);
