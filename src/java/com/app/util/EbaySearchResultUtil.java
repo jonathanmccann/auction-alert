@@ -137,7 +137,7 @@ public class EbaySearchResultUtil {
 	private static FindItemsAdvancedRequest _setUpAdvancedRequest(
 		SearchQuery searchQuery) {
 
-		_log.info("Setting up advanced request");
+		_log.debug("Setting up advanced request");
 
 		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
 

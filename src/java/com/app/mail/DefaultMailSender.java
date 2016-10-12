@@ -96,7 +96,7 @@ public class DefaultMailSender implements MailSender {
 			return;
 		}
 
-		_log.info(
+		_log.debug(
 			"Sending search results for {} queries for userId: {}",
 			searchQueryResultMap.size(), userId);
 

@@ -116,7 +116,7 @@ public class SearchResultUtil {
 
 		long endTime = System.nanoTime();
 
-		_log.debug(
+		_log.info(
 			"Performing searches for {} users took {} seconds", userIds.size(),
 			(endTime - startTime) / 1000000);
 	}

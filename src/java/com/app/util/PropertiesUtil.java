@@ -46,7 +46,7 @@ public class PropertiesUtil {
 	public static void loadConfigurationProperties(String propertiesFilePath)
 		throws IOException {
 
-		_log.debug("Reading properties from {}", propertiesFilePath);
+		_log.info("Reading properties from {}", propertiesFilePath);
 
 		Properties properties = new Properties();
 

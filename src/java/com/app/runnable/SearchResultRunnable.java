@@ -50,13 +50,13 @@ public class SearchResultRunnable implements Runnable {
 				_userId, true);
 
 			if (searchQueries.isEmpty()) {
-				_log.info(
+				_log.debug(
 					"There are no search queries for userId: {}", _userId);
 
 				return;
 			}
 
-			_log.info(
+			_log.debug(
 				"Getting eBay search results for {} search queries",
 				searchQueries.size());
 
@@ -84,7 +84,7 @@ public class SearchResultRunnable implements Runnable {
 
 			long endTime = System.nanoTime();
 
-			_log.debug(
+			_log.info(
 				"Performing searches for userId: {} with {} queries took {} " +
 					"milliseconds",
 				_userId, searchQueries.size(), (endTime - startTime) / 1000000);
