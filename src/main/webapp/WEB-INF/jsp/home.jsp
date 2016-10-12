@@ -140,7 +140,7 @@
 							<i class="icon fa-dollar major"></i>
 							<h3>Pricing</h3>
 							<p>
-								<b>$10 per month</b> <br> <br>
+								<b>$1 per month</b> <br> <br>
 								10 search queries <br>
 								30 emails a day <br>
 								Unlimited monitoring
