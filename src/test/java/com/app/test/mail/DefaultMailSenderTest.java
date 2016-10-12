@@ -169,6 +169,31 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulateResubscribeMessage() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populateResubscribeMessage = _clazz.getDeclaredMethod(
+			"_populateResubscribeMessage", String.class, Session.class);
+
+		populateResubscribeMessage.setAccessible(true);
+
+		Message message = (Message)populateResubscribeMessage.invoke(
+			_classInstance, "test@test.com", _session);
+
+		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Resubscribe Successful", message.getSubject());
+		Assert.assertEquals(_RESUBSCRIBE_EMAIL, message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("test@test.com");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
+	}
+
+	@Test
 	public void testPopulateWelcomeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 

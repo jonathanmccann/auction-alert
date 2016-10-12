@@ -161,6 +161,30 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulateResubscribeMessage() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populateResubscribeMessageMethod = _clazz.getDeclaredMethod(
+			"_populateResubscribeMessage", String.class);
+
+		populateResubscribeMessageMethod.setAccessible(true);
+
+		Mail mail =
+			(Mail) populateResubscribeMessageMethod.invoke(
+				_classInstance, "test@test.com");
+
+		Assert.assertEquals(
+			"Resubscribe Successful", mail.getSubject());
+
+		List<Content> mailContent = mail.getContent();
+
+		Content content = mailContent.get(0);
+
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals(_RESUBSCRIBE_EMAIL, content.getValue());
+	}
+
+	@Test
 	public void testPopulateWelcomeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 

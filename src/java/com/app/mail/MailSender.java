@@ -39,6 +39,8 @@ public interface MailSender {
 			String emailAddress, String passwordResetToken)
 		throws Exception;
 
+	public void sendResubscribeMessage(String emailAddress) throws Exception;
+
 	public void sendSearchResultsToRecipient(
 			int userId,
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)

@@ -1076,6 +1076,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testResubscribeWithInactiveUser() throws Exception {
 		setUpCustomer();
+		setUpMailSender();
 		setUpSubscription();
 		setUpUserUtil();
 
@@ -1129,6 +1130,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testResubscribeWithPendingCancellationUser() throws Exception {
 		setUpCustomer();
+		setUpMailSender();
 		setUpSubscription();
 		setUpUserUtil();
 

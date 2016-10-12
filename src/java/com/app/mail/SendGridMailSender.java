@@ -86,6 +86,15 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
+	public void sendResubscribeMessage(String emailAddress)
+		throws IOException {
+
+		Mail mail = _populateResubscribeMessage(emailAddress);
+
+		_sendEmail(mail);
+	}
+
+	@Override
 	public void sendSearchResultsToRecipient(
 			int userId,
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
@@ -219,6 +228,23 @@ public class SendGridMailSender implements MailSender {
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
+
+		Content content = new Content("text/html", messageBody);
+
+		return new Mail(emailFrom, subject, emailTo, content);
+	}
+
+	private Mail _populateResubscribeMessage(String emailAddress) {
+		Email emailTo = new Email(emailAddress);
+		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		String subject = "Resubscribe Successful";
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/resubscribe_email.vm", "UTF-8", rootMap);
 
 		Content content = new Content("text/html", messageBody);
 

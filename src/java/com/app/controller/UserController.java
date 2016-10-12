@@ -479,6 +479,11 @@ public class UserController {
 				StripeUtil.resubscribe(
 					currentUser.getCustomerId(), subscriptionId, stripeToken);
 
+				MailSender mailSender = MailSenderFactory.getInstance();
+
+				mailSender.sendResubscribeMessage(
+					currentUser.getEmailAddress());
+
 				redirectAttributes.addFlashAttribute(
 					"success", LanguageUtil.getMessage("subscription-updated"));
 			}
