@@ -91,6 +91,12 @@ public abstract class BaseTestCase {
 			Mockito.anyString(), Mockito.anyString()
 		);
 
+		Mockito.doNothing().when(
+			mockMailSender
+		).sendWelcomeMessage(
+			Mockito.anyString()
+		);
+
 		PowerMockito.spy(MailSenderFactory.class);
 
 		Mockito.when(

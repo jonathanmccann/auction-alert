@@ -127,7 +127,7 @@ public class UserController {
 	public String createAccount(
 			String emailAddress, String password, String stripeToken,
 			HttpServletRequest request, RedirectAttributes redirectAttributes)
-		throws DatabaseConnectionException, SQLException {
+		throws Exception {
 
 		if (UserUtil.exceedsMaximumNumberOfUsers()) {
 			return "redirect:create_account";
@@ -178,6 +178,10 @@ public class UserController {
 
 			return "redirect:create_account";
 		}
+
+		MailSender mailSender = MailSenderFactory.getInstance();
+
+		mailSender.sendWelcomeMessage(emailAddress);
 
 		return logIn(
 			emailAddress, password, "home", "", request, redirectAttributes);

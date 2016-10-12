@@ -109,6 +109,15 @@ public class SendGridMailSender implements MailSender {
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
 	}
 
+	@Override
+	public void sendWelcomeMessage(String emailAddress)
+		throws IOException {
+
+		Mail mail = _populateWelcomeMessage(emailAddress);
+
+		_sendEmail(mail);
+	}
+
 	private Mail _populateContactMessage(String emailAddress, String message) {
 		Email emailTo = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
@@ -158,6 +167,23 @@ public class SendGridMailSender implements MailSender {
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
+
+		Content content = new Content("text/html", messageBody);
+
+		return new Mail(emailFrom, subject, emailTo, content);
+	}
+
+	private Mail _populateWelcomeMessage(String emailAddress) {
+		Email emailTo = new Email(emailAddress);
+		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		String subject = "Welcome";
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/welcome_email.vm", "UTF-8", rootMap);
 
 		Content content = new Content("text/html", messageBody);
 

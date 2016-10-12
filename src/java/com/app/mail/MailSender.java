@@ -40,4 +40,6 @@ public interface MailSender {
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
 		throws DatabaseConnectionException, SQLException;
 
+	public void sendWelcomeMessage(String emailAddress) throws Exception;
+
 }

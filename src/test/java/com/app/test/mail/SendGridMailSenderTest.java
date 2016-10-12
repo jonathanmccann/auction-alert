@@ -74,26 +74,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 	@Test
 	public void testPopulateEmailMessage() throws Exception {
-		Field velocityEngine = _clazz.getDeclaredField("velocityEngine");
-
-		velocityEngine.setAccessible(true);
-
-		VelocityEngineFactoryBean velocityEngineFactoryBean =
-			new VelocityEngineFactoryBean();
-
-		Map<String, Object> velocityPropertiesMap = new HashMap<>();
-
-		velocityPropertiesMap.put("resource.loader", "class");
-		velocityPropertiesMap.put(
-			"class.resource.loader.class",
-			"org.apache.velocity.runtime.resource.loader." +
-				"ClasspathResourceLoader");
-
-		velocityEngineFactoryBean.setVelocityPropertiesMap(
-			velocityPropertiesMap);
-
-		velocityEngine.set(
-			_classInstance, velocityEngineFactoryBean.createVelocityEngine());
+		_initializeVelocityTemplate();
 
 		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
 			"_populateEmailMessage", Map.class,	String.class, String.class);
@@ -129,6 +110,53 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Assert.assertEquals("text/html", content.getType());
 		Assert.assertEquals(_EMAIL_CONTENT, content.getValue());
+	}
+
+	@Test
+	public void testPopulateWelcomeMessage() throws Exception {
+		_initializeVelocityTemplate();
+
+		Method populateWelcomeMessageMethod = _clazz.getDeclaredMethod(
+			"_populateWelcomeMessage", String.class);
+
+		populateWelcomeMessageMethod.setAccessible(true);
+
+		Mail mail =
+			(Mail)populateWelcomeMessageMethod.invoke(
+				_classInstance, "test@test.com");
+
+		Assert.assertEquals(
+			"Welcome", mail.getSubject());
+
+		List<Content> mailContent = mail.getContent();
+
+		Content content = mailContent.get(0);
+
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals(_WELCOME_EMAIL, content.getValue());
+	}
+
+	private void _initializeVelocityTemplate() throws Exception {
+		Field velocityEngine = _clazz.getDeclaredField("velocityEngine");
+
+		velocityEngine.setAccessible(true);
+
+		VelocityEngineFactoryBean velocityEngineFactoryBean =
+			new VelocityEngineFactoryBean();
+
+		Map<String, Object> velocityPropertiesMap = new HashMap<>();
+
+		velocityPropertiesMap.put("resource.loader", "class");
+		velocityPropertiesMap.put(
+			"class.resource.loader.class",
+			"org.apache.velocity.runtime.resource.loader." +
+				"ClasspathResourceLoader");
+
+		velocityEngineFactoryBean.setVelocityPropertiesMap(
+			velocityPropertiesMap);
+
+		velocityEngine.set(
+			_classInstance, velocityEngineFactoryBean.createVelocityEngine());
 	}
 
 	private static Object _classInstance;
@@ -169,6 +197,29 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		"\t\t\t<p style=\"text-align: center\">\n" +
 		"\t\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
 		"\t\t\t</p>\n" +
+		"\t\t</footer>\n" +
+		"\t</body>\n" +
+		"</html>";
+
+	private static final String _WELCOME_EMAIL = "<html>\n" +
+		"\t<body>\n" +
+		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
+		"\t\t\t<tr>\n" +
+		"\t\t\t\t<td align=\"center\">\n" +
+		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">Welcome to Auction Alert</h2>\n" +
+		"\n" +
+		"\t\t\t\t\t<h3 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">What can you do now?</h3>\n" +
+		"\n" +
+		"\t\t\t\t\t<ul style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;\">\n" +
+		"\t\t\t\t\t\t<li><a href=\"http://www.test.com/add_search_query\">Start adding search queries</a></li>\n" +
+		"\t\t\t\t\t\t<li><a href=\"http://www.test.com/monitor\">Monitor a favorite search in real time</a></li>\n" +
+		"\t\t\t\t\t\t<li><a href=\"http://www.test.com/faq\">Learn more in the FAQ</a></li>\n" +
+		"\t\t\t\t\t</ul>\n" +
+		"\t\t\t\t</td>\n" +
+		"\t\t\t</tr>\n" +
+		"\t\t</table>\n" +
+		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
+		"\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
 		"\t\t</footer>\n" +
 		"\t</body>\n" +
 		"</html>";

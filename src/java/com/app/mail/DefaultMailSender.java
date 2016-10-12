@@ -119,6 +119,15 @@ public class DefaultMailSender implements MailSender {
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
 	}
 
+	@Override
+	public void sendWelcomeMessage(String emailAddress) throws Exception {
+		Session session = _authenticateOutboundEmailAddress();
+
+		Message emailMessage = _populateWelcomeMessage(emailAddress, session);
+
+		Transport.send(emailMessage);
+	}
+
 	private static Session _authenticateOutboundEmailAddress() {
 		return Session.getInstance(
 			PropertiesUtil.getConfigurationProperties(),
@@ -208,6 +217,32 @@ public class DefaultMailSender implements MailSender {
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
+
+		message.setContent(messageBody, "text/html");
+
+		return message;
+	}
+
+	private Message _populateWelcomeMessage(
+			String emailAddress, Session session)
+		throws Exception {
+
+		Message message = new MimeMessage(session);
+
+		message.setFrom(
+			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+
+		message.addRecipient(
+			Message.RecipientType.TO, new InternetAddress(emailAddress));
+
+		message.setSubject("Welcome");
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/welcome_email.vm", "UTF-8", rootMap);
 
 		message.setContent(messageBody, "text/html");
 

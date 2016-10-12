@@ -1,0 +1,22 @@
+<html>
+	<body>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size: 16px">
+			<tr>
+				<td align="center">
+					<h2 style="color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;">Welcome to Auction Alert</h2>
+
+					<h3 style="color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;">What can you do now?</h3>
+
+					<ul style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;">
+						<li><a href="${rootDomainName}/add_search_query">Start adding search queries</a></li>
+						<li><a href="${rootDomainName}/monitor">Monitor a favorite search in real time</a></li>
+						<li><a href="${rootDomainName}/faq">Learn more in the FAQ</a></li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+		<footer style="background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb">
+			© <a href="${rootDomainName}">Auction Alert</a>. All rights reserved.
+		</footer>
+	</body>
+</html>

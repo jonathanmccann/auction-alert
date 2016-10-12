@@ -95,6 +95,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testCreateAccount() throws Exception {
 		setUpCustomer();
+		setUpMailSender();
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
