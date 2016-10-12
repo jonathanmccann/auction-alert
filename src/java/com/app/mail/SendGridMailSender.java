@@ -51,7 +51,8 @@ public class SendGridMailSender implements MailSender {
 	public void sendCancellationMessage(String emailAddress)
 		throws IOException {
 
-		Mail mail = _populateCancellationMessage(emailAddress);
+		Mail mail = _populateMessage(
+			emailAddress, "Cancellation Successful", "cancellation_email.vm");
 
 		_sendEmail(mail);
 	}
@@ -60,7 +61,8 @@ public class SendGridMailSender implements MailSender {
 	public void sendCardDetailsMessage(String emailAddress)
 		throws IOException {
 
-		Mail mail = _populateCardDetailsMessage(emailAddress);
+		Mail mail = _populateMessage(
+			emailAddress, "Card Details Updated", "card_details_email.vm");
 
 		_sendEmail(mail);
 	}
@@ -89,7 +91,8 @@ public class SendGridMailSender implements MailSender {
 	public void sendResubscribeMessage(String emailAddress)
 		throws IOException {
 
-		Mail mail = _populateResubscribeMessage(emailAddress);
+		Mail mail = _populateMessage(
+			emailAddress, "Resubscribe Successful", "resubscribe_email.vm");
 
 		_sendEmail(mail);
 	}
@@ -140,43 +143,10 @@ public class SendGridMailSender implements MailSender {
 	public void sendWelcomeMessage(String emailAddress)
 		throws IOException {
 
-		Mail mail = _populateWelcomeMessage(emailAddress);
+		Mail mail = _populateMessage(
+			emailAddress, "Welcome", "welcome_email.vm");
 
 		_sendEmail(mail);
-	}
-
-	private Mail _populateCancellationMessage(String emailAddress) {
-		Email emailTo = new Email(emailAddress);
-		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		String subject = "Cancellation Successful";
-
-		Map<String, Object> rootMap = new HashMap<>();
-
-		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
-
-		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/cancellation_email.vm", "UTF-8", rootMap);
-
-		Content content = new Content("text/html", messageBody);
-
-		return new Mail(emailFrom, subject, emailTo, content);
-	}
-
-	private Mail _populateCardDetailsMessage(String emailAddress) {
-		Email emailTo = new Email(emailAddress);
-		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		String subject = "Card Details Updated";
-
-		Map<String, Object> rootMap = new HashMap<>();
-
-		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
-
-		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/card_details_email.vm", "UTF-8", rootMap);
-
-		Content content = new Content("text/html", messageBody);
-
-		return new Mail(emailFrom, subject, emailTo, content);
 	}
 
 	private Mail _populateContactMessage(String emailAddress, String message) {
@@ -214,6 +184,24 @@ public class SendGridMailSender implements MailSender {
 		return new Mail(emailFrom, subject, emailTo, content);
 	}
 
+	private Mail _populateMessage(
+		String emailAddress, String subject, String template) {
+
+		Email emailTo = new Email(emailAddress);
+		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/" + template, "UTF-8", rootMap);
+
+		Content content = new Content("text/html", messageBody);
+
+		return new Mail(emailFrom, subject, emailTo, content);
+	}
+
 	private Mail _populatePasswordResetToken(
 		String emailAddress, String passwordResetToken) {
 
@@ -228,40 +216,6 @@ public class SendGridMailSender implements MailSender {
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
 			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
-
-		Content content = new Content("text/html", messageBody);
-
-		return new Mail(emailFrom, subject, emailTo, content);
-	}
-
-	private Mail _populateResubscribeMessage(String emailAddress) {
-		Email emailTo = new Email(emailAddress);
-		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		String subject = "Resubscribe Successful";
-
-		Map<String, Object> rootMap = new HashMap<>();
-
-		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
-
-		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/resubscribe_email.vm", "UTF-8", rootMap);
-
-		Content content = new Content("text/html", messageBody);
-
-		return new Mail(emailFrom, subject, emailTo, content);
-	}
-
-	private Mail _populateWelcomeMessage(String emailAddress) {
-		Email emailTo = new Email(emailAddress);
-		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		String subject = "Welcome";
-
-		Map<String, Object> rootMap = new HashMap<>();
-
-		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
-
-		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/welcome_email.vm", "UTF-8", rootMap);
 
 		Content content = new Content("text/html", messageBody);
 

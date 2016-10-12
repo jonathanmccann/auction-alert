@@ -62,13 +62,15 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	public void testPopulateCancellationMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateCancellationMessage = _clazz.getDeclaredMethod(
-			"_populateCancellationMessage", String.class, Session.class);
+		Method populateMessage = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class,
+			Session.class);
 
-		populateCancellationMessage.setAccessible(true);
+		populateMessage.setAccessible(true);
 
-		Message message = (Message)populateCancellationMessage.invoke(
-			_classInstance, "test@test.com", _session);
+		Message message = (Message)populateMessage.invoke(
+			_classInstance, "test@test.com", "Cancellation Successful",
+			"cancellation_email.vm", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertEquals(
@@ -87,13 +89,15 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	public void testPopulateCardDetailsMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateCancellationMessage = _clazz.getDeclaredMethod(
-			"_populateCardDetailsMessage", String.class, Session.class);
+		Method populateMessage = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class,
+			Session.class);
 
-		populateCancellationMessage.setAccessible(true);
+		populateMessage.setAccessible(true);
 
-		Message message = (Message)populateCancellationMessage.invoke(
-			_classInstance, "test@test.com", _session);
+		Message message = (Message)populateMessage.invoke(
+			_classInstance, "test@test.com", "Card Details Updated",
+			"card_details_email.vm", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertEquals(
@@ -172,13 +176,15 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	public void testPopulateResubscribeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateResubscribeMessage = _clazz.getDeclaredMethod(
-			"_populateResubscribeMessage", String.class, Session.class);
+		Method populateMessage = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class,
+			Session.class);
 
-		populateResubscribeMessage.setAccessible(true);
+		populateMessage.setAccessible(true);
 
-		Message message = (Message)populateResubscribeMessage.invoke(
-			_classInstance, "test@test.com", _session);
+		Message message = (Message)populateMessage.invoke(
+			_classInstance, "test@test.com", "Resubscribe Successful",
+			"resubscribe_email.vm", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertEquals(
@@ -197,13 +203,15 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	public void testPopulateWelcomeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateWelcomeMessage = _clazz.getDeclaredMethod(
-			"_populateWelcomeMessage", String.class, Session.class);
+		Method populateMessage = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class,
+			Session.class);
 
-		populateWelcomeMessage.setAccessible(true);
+		populateMessage.setAccessible(true);
 
-		Message message = (Message)populateWelcomeMessage.invoke(
-			_classInstance, "test@test.com", _session);
+		Message message = (Message)populateMessage.invoke(
+			_classInstance, "test@test.com", "Welcome", "welcome_email.vm",
+			_session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertEquals(

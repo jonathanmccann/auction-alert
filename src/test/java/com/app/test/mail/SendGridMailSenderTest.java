@@ -54,14 +54,15 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	public void testPopulateCancellationMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateCancellationMessageMethod = _clazz.getDeclaredMethod(
-			"_populateCancellationMessage", String.class);
+		Method populateMessageMethod = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class);
 
-		populateCancellationMessageMethod.setAccessible(true);
+		populateMessageMethod.setAccessible(true);
 
 		Mail mail =
-			(Mail) populateCancellationMessageMethod.invoke(
-				_classInstance, "test@test.com");
+			(Mail) populateMessageMethod.invoke(
+				_classInstance, "test@test.com", "Cancellation Successful",
+				"cancellation_email.vm");
 
 		Assert.assertEquals(
 			"Cancellation Successful", mail.getSubject());
@@ -78,14 +79,15 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	public void testPopulateCardDetailsMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateCardDetailsMessageMethod = _clazz.getDeclaredMethod(
-			"_populateCardDetailsMessage", String.class);
+		Method populateMessageMethod = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class);
 
-		populateCardDetailsMessageMethod.setAccessible(true);
+		populateMessageMethod.setAccessible(true);
 
 		Mail mail =
-			(Mail) populateCardDetailsMessageMethod.invoke(
-				_classInstance, "test@test.com");
+			(Mail) populateMessageMethod.invoke(
+				_classInstance, "test@test.com", "Card Details Updated",
+				"card_details_email.vm");
 
 		Assert.assertEquals(
 			"Card Details Updated", mail.getSubject());
@@ -164,14 +166,15 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	public void testPopulateResubscribeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateResubscribeMessageMethod = _clazz.getDeclaredMethod(
-			"_populateResubscribeMessage", String.class);
+		Method populateMessageMethod = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class);
 
-		populateResubscribeMessageMethod.setAccessible(true);
+		populateMessageMethod.setAccessible(true);
 
 		Mail mail =
-			(Mail) populateResubscribeMessageMethod.invoke(
-				_classInstance, "test@test.com");
+			(Mail) populateMessageMethod.invoke(
+				_classInstance, "test@test.com", "Resubscribe Successful",
+				"resubscribe_email.vm");
 
 		Assert.assertEquals(
 			"Resubscribe Successful", mail.getSubject());
@@ -188,14 +191,14 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	public void testPopulateWelcomeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		Method populateWelcomeMessageMethod = _clazz.getDeclaredMethod(
-			"_populateWelcomeMessage", String.class);
+		Method populateMessageMethod = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class);
 
-		populateWelcomeMessageMethod.setAccessible(true);
+		populateMessageMethod.setAccessible(true);
 
 		Mail mail =
-			(Mail)populateWelcomeMessageMethod.invoke(
-				_classInstance, "test@test.com");
+			(Mail)populateMessageMethod.invoke(
+				_classInstance, "test@test.com", "Welcome", "welcome_email.vm");
 
 		Assert.assertEquals(
 			"Welcome", mail.getSubject());
