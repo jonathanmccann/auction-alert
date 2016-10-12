@@ -189,7 +189,7 @@ public class UserController {
 
 	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
 	public String deleteSubscription(RedirectAttributes redirectAttributes)
-		throws DatabaseConnectionException, SQLException {
+		throws Exception {
 
 		User currentUser = UserUtil.getCurrentUser();
 
@@ -200,6 +200,11 @@ public class UserController {
 
 			try {
 				StripeUtil.deleteSubscription(subscriptionId);
+
+				MailSender mailSender = MailSenderFactory.getInstance();
+
+				mailSender.sendCancellationMessage(
+					currentUser.getEmailAddress());
 
 				redirectAttributes.addFlashAttribute(
 					"success", LanguageUtil.getMessage("subscription-updated"));

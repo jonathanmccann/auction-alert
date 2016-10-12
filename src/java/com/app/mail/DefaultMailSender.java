@@ -50,6 +50,16 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 public class DefaultMailSender implements MailSender {
 
 	@Override
+	public void sendCancellationMessage(String emailAddress) throws Exception {
+		Session session = _authenticateOutboundEmailAddress();
+
+		Message emailMessage = _populateCancellationMessage(
+			emailAddress, session);
+
+		Transport.send(emailMessage);
+	}
+
+	@Override
 	public void sendContactMessage(String emailAddress, String message)
 		throws Exception {
 
@@ -140,6 +150,32 @@ public class DefaultMailSender implements MailSender {
 				}
 
 			});
+	}
+
+	private Message _populateCancellationMessage(
+			String emailAddress, Session session)
+		throws Exception {
+
+		Message message = new MimeMessage(session);
+
+		message.setFrom(
+			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+
+		message.addRecipient(
+			Message.RecipientType.TO, new InternetAddress(emailAddress));
+
+		message.setSubject("Cancellation Successful");
+
+		Map<String, Object> rootMap = new HashMap<>();
+
+		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
+
+		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
+			velocityEngine, "template/cancellation_email.vm", "UTF-8", rootMap);
+
+		message.setContent(messageBody, "text/html");
+
+		return message;
 	}
 
 	private static Message _populateContactMessage(

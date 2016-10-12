@@ -81,6 +81,12 @@ public abstract class BaseTestCase {
 
 		Mockito.doNothing().when(
 			mockMailSender
+		).sendCancellationMessage(
+			Mockito.anyString()
+		);
+
+		Mockito.doNothing().when(
+			mockMailSender
 		).sendContactMessage(
 			Mockito.anyString(), Mockito.anyString()
 		);

@@ -59,6 +59,31 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulateCancellationMessage() throws Exception {
+		_initializeVelocityTemplate();
+
+		Method populateCancellationMessage = _clazz.getDeclaredMethod(
+			"_populateCancellationMessage", String.class, Session.class);
+
+		populateCancellationMessage.setAccessible(true);
+
+		Message message = (Message)populateCancellationMessage.invoke(
+			_classInstance, "test@test.com", _session);
+
+		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Cancellation Successful", message.getSubject());
+		Assert.assertEquals(_CANCELLATION_EMAIL, message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("test@test.com");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
+	}
+
+	@Test
 	public void testPopulateContactMessage() throws Exception {
 		Method populateContactMessage = _clazz.getDeclaredMethod(
 			"_populateContactMessage", String.class, String.class,
@@ -223,6 +248,25 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		"\t\t\t\t\t\t<li><a href=\"http://www.test.com/monitor\">Monitor a favorite search in real time</a></li>\n" +
 		"\t\t\t\t\t\t<li><a href=\"http://www.test.com/faq\">Learn more in the FAQ</a></li>\n" +
 		"\t\t\t\t\t</ul>\n" +
+		"\t\t\t\t</td>\n" +
+		"\t\t\t</tr>\n" +
+		"\t\t</table>\n" +
+		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
+		"\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
+		"\t\t</footer>\n" +
+		"\t</body>\n" +
+		"</html>";
+
+	private static final String _CANCELLATION_EMAIL = "<html>\n" +
+		"\t<body>\n" +
+		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
+		"\t\t\t<tr>\n" +
+		"\t\t\t\t<td align=\"center\">\n" +
+		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">We're sorry to see you go</h2>\n" +
+		"\n" +
+		"\t\t\t\t\t<p style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;\">\n" +
+		"\t\t\t\t\t\tYour cancellation request has been processed successfully. We hope you enjoyed your time at Auction Alert. Please resubscribe at any time to enjoy its benefits once again.\n" +
+		"\t\t\t\t\t</p>\n" +
 		"\t\t\t\t</td>\n" +
 		"\t\t\t</tr>\n" +
 		"\t\t</table>\n" +

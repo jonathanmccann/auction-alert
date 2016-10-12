@@ -205,6 +205,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSubscription() throws Exception {
+		setUpMailSender();
 		setUpUserUtil();
 		setUpSubscription();
 
