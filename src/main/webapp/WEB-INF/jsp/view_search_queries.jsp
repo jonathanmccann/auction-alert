@@ -34,6 +34,14 @@
 			<link rel="stylesheet" href="/resources/css/style.css" />
 			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
 		</noscript>
+
+		<c:if test="${not empty currentSearchQueryId}">
+			<script type="text/javascript">
+				$(window).load(function() {
+					getSearchQueryResults(${currentSearchQueryId}, ${isCurrentSearchQueryActive});
+				});
+			</script>
+		</c:if>
 	</head>
 	<body>
 		<%@ include file="header.jspf" %>

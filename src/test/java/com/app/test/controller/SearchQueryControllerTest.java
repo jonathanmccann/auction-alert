@@ -88,7 +88,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		this.mockMvc.perform(post("/activate_search_query")
 			.param("searchQueryId", String.valueOf(searchQueryId)))
 			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:view_search_queries"));
+			.andExpect(view().name("redirect:view_search_queries"))
+			.andExpect(flash().attribute("currentSearchQueryId", searchQueryId))
+			.andExpect(flash().attribute("isCurrentSearchQueryActive", true));
 
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
@@ -128,7 +130,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		this.mockMvc.perform(post("/deactivate_search_query")
 			.param("searchQueryId", String.valueOf(searchQueryId)))
 			.andExpect(status().isFound())
-			.andExpect(view().name("redirect:view_search_queries"));
+			.andExpect(view().name("redirect:view_search_queries"))
+			.andExpect(flash().attribute("currentSearchQueryId", searchQueryId))
+			.andExpect(flash().attribute("isCurrentSearchQueryActive", false));
 
 		searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
@@ -472,7 +476,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:view_search_queries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("info"))
-			.andExpect(model().attributeDoesNotExist("isAdd"));
+			.andExpect(model().attributeDoesNotExist("isAdd"))
+			.andExpect(flash().attributeExists("currentSearchQueryId"))
+			.andExpect(flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -506,7 +512,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:view_search_queries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("info"))
-			.andExpect(model().attributeDoesNotExist("isAdd"));
+			.andExpect(model().attributeDoesNotExist("isAdd"))
+			.andExpect(flash().attributeExists("currentSearchQueryId"))
+			.andExpect(flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -557,6 +565,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+		resultActions.andExpect(flash().attributeExists("currentSearchQueryId"));
+		resultActions.andExpect(
+			flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -596,7 +607,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(view().name("redirect:view_search_queries"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("info"))
-			.andExpect(model().attributeDoesNotExist("isAdd"));
+			.andExpect(model().attributeDoesNotExist("isAdd"))
+			.andExpect(flash().attributeExists("currentSearchQueryId"))
+			.andExpect(flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -631,6 +644,9 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+		resultActions.andExpect(flash().attributeExists("currentSearchQueryId"));
+		resultActions.andExpect(
+			flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -785,6 +801,10 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+		resultActions.andExpect(
+			flash().attribute("currentSearchQueryId", searchQueryId));
+		resultActions.andExpect(
+			flash().attribute("isCurrentSearchQueryActive", true));
 
 		searchQueries = SearchQueryUtil.getSearchQueries(_USER_ID, true);
 
@@ -840,6 +860,10 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+		resultActions.andExpect(
+			flash().attribute("currentSearchQueryId", searchQueryId));
+		resultActions.andExpect(
+			flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -896,6 +920,10 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+		resultActions.andExpect(
+			flash().attribute("currentSearchQueryId", searchQueryId));
+		resultActions.andExpect(
+			flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -952,6 +980,10 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+		resultActions.andExpect(
+			flash().attribute("currentSearchQueryId", searchQueryId));
+		resultActions.andExpect(
+			flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -1008,6 +1040,10 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		resultActions.andExpect(model().attributeDoesNotExist("disabled"));
 		resultActions.andExpect(model().attributeDoesNotExist("info"));
 		resultActions.andExpect(model().attributeDoesNotExist("isAdd"));
+		resultActions.andExpect(
+			flash().attribute("currentSearchQueryId", searchQueryId));
+		resultActions.andExpect(
+			flash().attribute("isCurrentSearchQueryActive", true));
 
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
@@ -1053,13 +1089,17 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	public void testViewSearchQueries() throws Exception {
 		setUpUserUtil();
 
-		this.mockMvc.perform(get("/view_search_queries"))
+		this.mockMvc.perform(get("/view_search_queries")
+				.param("currentSearchQueryId", "100")
+				.param("isCurrentSearchQueryActive", "true"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("view_search_queries"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/view_search_queries.jsp"))
 			.andExpect(model().attributeExists("activeSearchQueries"))
 			.andExpect(model().attributeExists("inactiveSearchQueries"))
-			.andExpect(model().attributeDoesNotExist("isAdd"));
+			.andExpect(model().attributeDoesNotExist("isAdd"))
+			.andExpect(model().attribute("currentSearchQueryId", "100"))
+			.andExpect(model().attribute("isCurrentSearchQueryActive", "true"));
 	}
 
 	private MockMvc mockMvc;

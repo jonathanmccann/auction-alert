@@ -54,11 +54,17 @@ public class SearchQueryController {
 		value = "/activate_search_query", method = RequestMethod.POST
 	)
 	public String activateSearchQuery(
-			@RequestParam("searchQueryId")int searchQueryId)
+			@RequestParam("searchQueryId")int searchQueryId,
+			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		SearchQueryUtil.activateSearchQuery(
 			UserUtil.getCurrentUserId(), searchQueryId);
+
+		redirectAttributes.addFlashAttribute(
+			"currentSearchQueryId", searchQueryId);
+		redirectAttributes.addFlashAttribute(
+			"isCurrentSearchQueryActive", true);
 
 		return "redirect:view_search_queries";
 	}
@@ -70,7 +76,12 @@ public class SearchQueryController {
 		throws DatabaseConnectionException, SQLException {
 
 		try {
-			SearchQueryUtil.addSearchQuery(searchQuery);
+			int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+			redirectAttributes.addFlashAttribute(
+				"currentSearchQueryId", searchQueryId);
+			redirectAttributes.addFlashAttribute(
+				"isCurrentSearchQueryActive", true);
 		}
 		catch (SearchQueryException sqe) {
 			redirectAttributes.addFlashAttribute(
@@ -119,11 +130,17 @@ public class SearchQueryController {
 		value = "/deactivate_search_query", method = RequestMethod.POST
 	)
 	public String deactivateSearchQuery(
-			@RequestParam("searchQueryId")int searchQueryId)
+			@RequestParam("searchQueryId")int searchQueryId,
+			RedirectAttributes redirectAttributes)
 		throws DatabaseConnectionException, SQLException {
 
 		SearchQueryUtil.deactivateSearchQuery(
 			UserUtil.getCurrentUserId(), searchQueryId);
+
+		redirectAttributes.addFlashAttribute(
+			"currentSearchQueryId", searchQueryId);
+		redirectAttributes.addFlashAttribute(
+			"isCurrentSearchQueryActive", false);
 
 		return "redirect:view_search_queries";
 	}
@@ -158,6 +175,11 @@ public class SearchQueryController {
 		try {
 			SearchQueryUtil.updateSearchQuery(
 				UserUtil.getCurrentUserId(), searchQuery);
+
+			redirectAttributes.addFlashAttribute(
+				"currentSearchQueryId", searchQuery.getSearchQueryId());
+			redirectAttributes.addFlashAttribute(
+				"isCurrentSearchQueryActive", searchQuery.isActive());
 		}
 		catch (SearchQueryException sqe) {
 			redirectAttributes.addAttribute(
@@ -192,7 +214,11 @@ public class SearchQueryController {
 	}
 
 	@RequestMapping(value = "/view_search_queries", method = RequestMethod.GET)
-	public String viewSearchQueries(Map<String, Object> model)
+	public String viewSearchQueries(
+			@ModelAttribute("currentSearchQueryId")String currentSearchQueryId,
+			@ModelAttribute("isCurrentSearchQueryActive")
+				String isCurrentSearchQueryActive,
+			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
 		List<SearchQuery> activeSearchQueries =
@@ -204,6 +230,8 @@ public class SearchQueryController {
 
 		model.put("activeSearchQueries", activeSearchQueries);
 		model.put("inactiveSearchQueries", inactiveSearchQueries);
+		model.put("currentSearchQueryId", currentSearchQueryId);
+		model.put("isCurrentSearchQueryActive", isCurrentSearchQueryActive);
 
 		return "view_search_queries";
 	}
