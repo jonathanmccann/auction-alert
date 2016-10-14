@@ -7,6 +7,10 @@ $(window).load(function() {
 
 	var searchQuery = $("#searchQuery");
 
+	var startMonitoring = $('#startMonitoring');
+
+	var stopMonitoring = $("#stopMonitoring");
+
 	var contentDiv = document.getElementById('content');
 
 	var imageRegex = new RegExp("<img src='([^']+)");
@@ -128,7 +132,7 @@ $(window).load(function() {
 		contentDiv.innerHTML = "<h5>Please start monitoring in order to display results.</h5>";
 	});
 
-	$('#startMonitoring').click(function() {
+	startMonitoring.click(function() {
 		var valid = $("#searchQueryForm").valid();
 
 		if (!valid) {
@@ -146,6 +150,9 @@ $(window).load(function() {
 		if (searchQuery.is(':visible')) {
 			collapseSearchQuery();
 		}
+
+		startMonitoring.hide();
+		stopMonitoring.show();
 
 		contentDiv.innerHTML = "";
 
@@ -207,11 +214,14 @@ $(window).load(function() {
 		}, 5000);
 	});
 
-	$("#stopMonitoring").click(function() {
+	stopMonitoring.click(function() {
 		if (intervalId) {
 			clearInterval(intervalId);
 
 			intervalId = null;
 		}
+
+		startMonitoring.show();
+		stopMonitoring.hide();
 	});
 });

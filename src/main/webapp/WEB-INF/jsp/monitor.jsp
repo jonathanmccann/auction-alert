@@ -115,7 +115,7 @@
 
 			<div>
 				<button class="button special" id="startMonitoring">Start Monitoring</button>
-				<button class="button special" id="stopMonitoring">Stop Monitoring</button>
+				<button class="button special hidden" id="stopMonitoring">Stop Monitoring</button>
 				<button class="button special" id="clearResults">Clear Results</button>
 
 				<div class="padding-top" id="notificationOptions">
