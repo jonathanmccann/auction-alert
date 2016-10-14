@@ -154,7 +154,7 @@ $(window).load(function() {
 		startMonitoring.hide();
 		stopMonitoring.show();
 
-		contentDiv.innerHTML = "";
+		contentDiv.innerHTML = "<h5>Results will begin populating here as soon as they are found.</h5>";
 
 		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 
