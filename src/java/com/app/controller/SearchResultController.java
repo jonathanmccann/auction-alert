@@ -20,6 +20,7 @@ import com.app.util.SearchResultUtil;
 
 import java.sql.SQLException;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,12 @@ public class SearchResultController {
 			int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		return SearchResultUtil.getSearchQueryResults(searchQueryId);
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
+
+		Collections.reverse(searchResults);
+
+		return searchResults;
 	}
 
 }
