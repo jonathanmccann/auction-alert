@@ -34,7 +34,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class ErrorController {
 
-	@RequestMapping(value = "/error", method = RequestMethod.GET)
+	@RequestMapping(
+		value = "/error", method = {RequestMethod.GET, RequestMethod.HEAD}
+	)
 	public String getError(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 

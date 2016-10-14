@@ -276,7 +276,10 @@ public class UserController {
 		return "redirect:forgot_password";
 	}
 
-	@RequestMapping(value = { "", "/", "/home" }, method = RequestMethod.GET)
+	@RequestMapping(
+		value = { "", "/", "/home" },
+		method = {RequestMethod.GET, RequestMethod.HEAD}
+	)
 	public String home(Map<String, Object> model) throws Exception {
 		Subject currentUser = SecurityUtils.getSubject();
 
