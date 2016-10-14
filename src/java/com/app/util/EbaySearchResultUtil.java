@@ -130,7 +130,9 @@ public class EbaySearchResultUtil {
 			searchResult.setFixedPrice(buyItNowPrice.getValue());
 		}
 		else {
-			_log.error("Unknown type of auction: {}", typeOfAuction);
+			_log.error(
+				"Unknown type of auction: {} for item ID: {}", typeOfAuction,
+				searchResult.getItemId());
 		}
 	}
 
