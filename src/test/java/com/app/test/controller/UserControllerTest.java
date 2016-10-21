@@ -32,6 +32,7 @@ import com.app.util.UserUtil;
 
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSubscriptionCollection;
+import com.stripe.model.DeletedCustomer;
 import com.stripe.model.Event;
 import com.stripe.model.Subscription;
 
@@ -374,6 +375,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteUser() throws Exception {
+		setUpCustomer();
 		setUpUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery();
@@ -1578,6 +1580,14 @@ public class UserControllerTest extends BaseTestCase {
 			customer.getId()
 		).thenReturn(
 			"testCustomerId"
+		);
+
+		DeletedCustomer deletedCustomer = new DeletedCustomer();
+
+		Mockito.when(
+			customer.delete()
+		).thenReturn(
+			deletedCustomer
 		);
 	}
 
