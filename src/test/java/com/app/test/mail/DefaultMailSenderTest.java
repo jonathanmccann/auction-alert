@@ -59,6 +59,33 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulateAccountDeletionMessage() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populateMessage = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class,
+			Session.class);
+
+		populateMessage.setAccessible(true);
+
+		Message message = (Message)populateMessage.invoke(
+			_classInstance, "test@test.com", "Account Deletion Successful",
+			"account_deletion_email.vm", _session);
+
+		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Account Deletion Successful", message.getSubject());
+		Assert.assertEquals(_ACCOUNT_DELETION_EMAIL, message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("test@test.com");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
+	}
+
+	@Test
 	public void testPopulateCancellationMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 

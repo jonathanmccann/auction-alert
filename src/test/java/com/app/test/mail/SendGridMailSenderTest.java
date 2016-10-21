@@ -51,6 +51,31 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulateAccountDeletionMessage() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populateMessageMethod = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class);
+
+		populateMessageMethod.setAccessible(true);
+
+		Mail mail =
+			(Mail) populateMessageMethod.invoke(
+				_classInstance, "test@test.com", "Account Deletion Successful",
+				"account_deletion_email.vm");
+
+		Assert.assertEquals(
+			"Account Deletion Successful", mail.getSubject());
+
+		List<Content> mailContent = mail.getContent();
+
+		Content content = mailContent.get(0);
+
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals(_ACCOUNT_DELETION_EMAIL, content.getValue());
+	}
+
+	@Test
 	public void testPopulateCancellationMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 

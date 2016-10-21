@@ -46,7 +46,6 @@ import org.apache.http.HttpStatus;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.CredentialsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
@@ -198,7 +197,9 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/delete_user", method = RequestMethod.POST)
-	public String deleteUser(String emailAddress, String password)
+	public String deleteUser(
+			String emailAddress, String password,
+			RedirectAttributes redirectAttributes)
 		throws Exception {
 
 		User currentUser = UserUtil.getCurrentUser();
@@ -229,6 +230,21 @@ public class UserController {
 				"Unable to delete user with email address: {}. The current " +
 					"user's email address is: {}",
 				emailAddress, currentUser.getEmailAddress());
+
+			redirectAttributes.addFlashAttribute(
+				"error",
+				LanguageUtil.getMessage("user-deletion-failure"));
+
+			return "redirect:my_account";
+		}
+
+		try {
+			MailSender mailSender = MailSenderFactory.getInstance();
+
+			mailSender.sendAccountDeletionMessage(emailAddress);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send deletion email", e.getMessage());
 		}
 
 		return "redirect:log_out";

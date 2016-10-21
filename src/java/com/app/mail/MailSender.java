@@ -28,6 +28,9 @@ import java.util.Map;
  */
 public interface MailSender {
 
+	public void sendAccountDeletionMessage(String emailAddress)
+		throws Exception;
+
 	public void sendCancellationMessage(String emailAddress) throws Exception;
 
 	public void sendCardDetailsMessage(String emailAddress) throws Exception;

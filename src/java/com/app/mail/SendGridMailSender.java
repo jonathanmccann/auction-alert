@@ -48,6 +48,17 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 public class SendGridMailSender implements MailSender {
 
 	@Override
+	public void sendAccountDeletionMessage(String emailAddress)
+		throws IOException {
+
+		Mail mail = _populateMessage(
+			emailAddress, "Account Deletion Successful",
+			"account_deletion_email.vm");
+
+		_sendEmail(mail);
+	}
+
+	@Override
 	public void sendCancellationMessage(String emailAddress)
 		throws IOException {
 

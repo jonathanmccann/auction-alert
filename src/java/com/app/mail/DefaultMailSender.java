@@ -50,6 +50,19 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 public class DefaultMailSender implements MailSender {
 
 	@Override
+	public void sendAccountDeletionMessage(String emailAddress)
+		throws Exception {
+
+		Session session = _authenticateOutboundEmailAddress();
+
+		Message emailMessage = _populateMessage(
+			emailAddress, "Account Deletion Successful",
+			"account_deletion_email.vm", session);
+
+		Transport.send(emailMessage);
+	}
+
+	@Override
 	public void sendCancellationMessage(String emailAddress) throws Exception {
 		Session session = _authenticateOutboundEmailAddress();
 
