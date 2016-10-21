@@ -183,14 +183,9 @@ public class UserController {
 			return "redirect:create_account";
 		}
 
-		try {
-			MailSender mailSender = MailSenderFactory.getInstance();
+		MailSender mailSender = MailSenderFactory.getInstance();
 
-			mailSender.sendWelcomeMessage(emailAddress);
-		}
-		catch (Exception e) {
-			_log.error("Unable to send welcome email", e.getMessage());
-		}
+		mailSender.sendWelcomeMessage(emailAddress);
 
 		return logIn(
 			emailAddress, password, "home", "", request, redirectAttributes);
@@ -238,14 +233,9 @@ public class UserController {
 			return "redirect:my_account";
 		}
 
-		try {
-			MailSender mailSender = MailSenderFactory.getInstance();
+		MailSender mailSender = MailSenderFactory.getInstance();
 
-			mailSender.sendAccountDeletionMessage(emailAddress);
-		}
-		catch (Exception e) {
-			_log.error("Unable to send deletion email", e.getMessage());
-		}
+		mailSender.sendAccountDeletionMessage(emailAddress);
 
 		return "redirect:log_out";
 	}

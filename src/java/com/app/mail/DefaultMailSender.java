@@ -30,6 +30,7 @@ import java.util.Map;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -50,38 +51,52 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 public class DefaultMailSender implements MailSender {
 
 	@Override
-	public void sendAccountDeletionMessage(String emailAddress)
-		throws Exception {
+	public void sendAccountDeletionMessage(String emailAddress) {
 
 		Session session = _authenticateOutboundEmailAddress();
 
-		Message emailMessage = _populateMessage(
-			emailAddress, "Account Deletion Successful",
-			"account_deletion_email.vm", session);
-
-		Transport.send(emailMessage);
-	}
-
-	@Override
-	public void sendCancellationMessage(String emailAddress) throws Exception {
-		Session session = _authenticateOutboundEmailAddress();
-
-		Message emailMessage = _populateMessage(
-			emailAddress, "Cancellation Successful", "cancellation_email.vm",
-			session);
+		try {
+			Message emailMessage = _populateMessage(
+				emailAddress, "Account Deletion Successful",
+				"account_deletion_email.vm", session);
 
 			Transport.send(emailMessage);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send account deletion message", e);
+		}
 	}
 
 	@Override
-	public void sendCardDetailsMessage(String emailAddress) throws Exception {
+	public void sendCancellationMessage(String emailAddress) {
 		Session session = _authenticateOutboundEmailAddress();
 
-		Message emailMessage = _populateMessage(
-			emailAddress, "Card Details Updated", "card_details_email.vm",
-			session);
+		try {
+			Message emailMessage = _populateMessage(
+				emailAddress, "Cancellation Successful", "cancellation_email.vm",
+				session);
 
-		Transport.send(emailMessage);
+			Transport.send(emailMessage);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send cancellation message", e);
+		}
+	}
+
+	@Override
+	public void sendCardDetailsMessage(String emailAddress) {
+		Session session = _authenticateOutboundEmailAddress();
+
+		try {
+			Message emailMessage = _populateMessage(
+				emailAddress, "Card Details Updated", "card_details_email.vm",
+				session);
+
+			Transport.send(emailMessage);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send card details message", e);
+		}
 	}
 
 	@Override
@@ -98,26 +113,35 @@ public class DefaultMailSender implements MailSender {
 
 	@Override
 	public void sendPasswordResetToken(
-			String emailAddress, String passwordResetToken)
-		throws Exception {
+		String emailAddress, String passwordResetToken) {
 
 		Session session = _authenticateOutboundEmailAddress();
 
-		Message message = _populatePasswordResetToken(
-			emailAddress, passwordResetToken, session);
+		try {
+			Message emailMessage = _populatePasswordResetToken(
+				emailAddress, passwordResetToken, session);
 
-		Transport.send(message);
+			Transport.send(emailMessage);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send password reset token", e);
+		}
 	}
 
 	@Override
-	public void sendResubscribeMessage(String emailAddress) throws Exception {
+	public void sendResubscribeMessage(String emailAddress) {
 		Session session = _authenticateOutboundEmailAddress();
 
-		Message emailMessage = _populateMessage(
-			emailAddress, "Resubscribe Successful", "resubscribe_email.vm",
-			session);
+		try {
+			Message emailMessage = _populateMessage(
+				emailAddress, "Resubscribe Successful", "resubscribe_email.vm",
+				session);
 
-		Transport.send(emailMessage);
+			Transport.send(emailMessage);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send resubscribe message", e);
+		}
 	}
 
 	@Override
@@ -166,13 +190,18 @@ public class DefaultMailSender implements MailSender {
 	}
 
 	@Override
-	public void sendWelcomeMessage(String emailAddress) throws Exception {
+	public void sendWelcomeMessage(String emailAddress) {
 		Session session = _authenticateOutboundEmailAddress();
 
-		Message emailMessage = _populateMessage(
-			emailAddress, "Welcome", "welcome_email.vm", session);
+		try {
+			Message emailMessage = _populateMessage(
+				emailAddress, "Welcome", "welcome_email.vm", session);
 
-		Transport.send(emailMessage);
+			Transport.send(emailMessage);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send welcome message", e);
+		}
 	}
 
 	private static Session _authenticateOutboundEmailAddress() {

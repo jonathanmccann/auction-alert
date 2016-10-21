@@ -48,9 +48,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 public class SendGridMailSender implements MailSender {
 
 	@Override
-	public void sendAccountDeletionMessage(String emailAddress)
-		throws IOException {
-
+	public void sendAccountDeletionMessage(String emailAddress) {
 		Mail mail = _populateMessage(
 			emailAddress, "Account Deletion Successful",
 			"account_deletion_email.vm");
@@ -59,9 +57,7 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
-	public void sendCancellationMessage(String emailAddress)
-		throws IOException {
-
+	public void sendCancellationMessage(String emailAddress) {
 		Mail mail = _populateMessage(
 			emailAddress, "Cancellation Successful", "cancellation_email.vm");
 
@@ -69,9 +65,7 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
-	public void sendCardDetailsMessage(String emailAddress)
-		throws IOException {
-
+	public void sendCardDetailsMessage(String emailAddress) {
 		Mail mail = _populateMessage(
 			emailAddress, "Card Details Updated", "card_details_email.vm");
 
@@ -84,13 +78,20 @@ public class SendGridMailSender implements MailSender {
 
 		Mail mail = _populateContactMessage(emailAddress, message);
 
-		_sendEmail(mail);
+		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
+
+		Request request = new Request();
+
+		request.method = Method.POST;
+		request.endpoint = "mail/send";
+		request.body = mail.build();
+
+		sendgrid.api(request);
 	}
 
 	@Override
 	public void sendPasswordResetToken(
-			String emailAddress, String passwordResetToken)
-		throws IOException {
+		String emailAddress, String passwordResetToken) {
 
 		Mail mail = _populatePasswordResetToken(
 			emailAddress, passwordResetToken);
@@ -99,9 +100,7 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
-	public void sendResubscribeMessage(String emailAddress)
-		throws IOException {
-
+	public void sendResubscribeMessage(String emailAddress) {
 		Mail mail = _populateMessage(
 			emailAddress, "Resubscribe Successful", "resubscribe_email.vm");
 
@@ -151,9 +150,7 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
-	public void sendWelcomeMessage(String emailAddress)
-		throws IOException {
-
+	public void sendWelcomeMessage(String emailAddress) {
 		Mail mail = _populateMessage(
 			emailAddress, "Welcome", "welcome_email.vm");
 
@@ -233,16 +230,21 @@ public class SendGridMailSender implements MailSender {
 		return new Mail(emailFrom, subject, emailTo, content);
 	}
 
-	private void _sendEmail(Mail mail) throws IOException {
-		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
+	private void _sendEmail(Mail mail) {
+		try {
+			SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
 
-		Request request = new Request();
+			Request request = new Request();
 
-		request.method = Method.POST;
-		request.endpoint = "mail/send";
-		request.body = mail.build();
+			request.method = Method.POST;
+			request.endpoint = "mail/send";
+			request.body = mail.build();
 
-		sendgrid.api(request);
+			sendgrid.api(request);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send email", e);
+		}
 	}
 
 	@Autowired

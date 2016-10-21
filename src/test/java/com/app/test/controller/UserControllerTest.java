@@ -447,8 +447,11 @@ public class UserControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:log_out"));
-		resultActions.andExpect(redirectedUrl("log_out"));
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("user-deletion-failure")));
 
 		user = UserUtil.getUserByUserId(_USER_ID);
 

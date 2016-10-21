@@ -28,27 +28,25 @@ import java.util.Map;
  */
 public interface MailSender {
 
-	public void sendAccountDeletionMessage(String emailAddress)
-		throws Exception;
+	public void sendAccountDeletionMessage(String emailAddress);
 
-	public void sendCancellationMessage(String emailAddress) throws Exception;
+	public void sendCancellationMessage(String emailAddress);
 
-	public void sendCardDetailsMessage(String emailAddress) throws Exception;
+	public void sendCardDetailsMessage(String emailAddress);
 
 	public void sendContactMessage(String emailAddress, String message)
 		throws Exception;
 
 	public void sendPasswordResetToken(
-			String emailAddress, String passwordResetToken)
-		throws Exception;
+		String emailAddress, String passwordResetToken);
 
-	public void sendResubscribeMessage(String emailAddress) throws Exception;
+	public void sendResubscribeMessage(String emailAddress);
 
 	public void sendSearchResultsToRecipient(
 			int userId,
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
 		throws DatabaseConnectionException, SQLException;
 
-	public void sendWelcomeMessage(String emailAddress) throws Exception;
+	public void sendWelcomeMessage(String emailAddress);
 
 }
