@@ -19,10 +19,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.app.language.LanguageUtil;
+import com.app.model.SearchQuery;
+import com.app.model.SearchResult;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
+import com.app.util.SearchQueryPreviousResultUtil;
+import com.app.util.SearchQueryUtil;
+import com.app.util.SearchResultUtil;
 import com.app.util.UserUtil;
 
 import com.stripe.model.Customer;
@@ -62,6 +67,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -370,6 +376,23 @@ public class UserControllerTest extends BaseTestCase {
 	public void testDeleteUser() throws Exception {
 		setUpUserUtil();
 
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setActive(true);
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
+			searchQueryId, "1234");
+
+		SearchResult searchResult = new SearchResult(
+			searchQueryId, "1234", "First Item", 10.00, 14.99,
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+
+		SearchResultUtil.addSearchResult(searchResult);
+
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
 		Assert.assertNotNull(user);
@@ -388,6 +411,24 @@ public class UserControllerTest extends BaseTestCase {
 		user = UserUtil.getUserByUserId(_USER_ID);
 
 		Assert.assertNull(user);
+
+		try {
+			SearchQueryUtil.getSearchQuery(searchQueryId);
+		}
+		catch (SQLException sqle) {
+			Assert.assertEquals(SQLException.class, sqle.getClass());
+		}
+
+		int searchQueryPreviousResultCount =
+			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
+				searchQueryId);
+
+		Assert.assertEquals(0, searchQueryPreviousResultCount);
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
+
+		Assert.assertEquals(0, searchResults.size());
 	}
 
 	@Test

@@ -22,9 +22,13 @@ import com.app.exception.RecaptchaException;
 import com.app.language.LanguageUtil;
 import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
+import com.app.model.SearchQuery;
 import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
+import com.app.util.SearchQueryPreviousResultUtil;
+import com.app.util.SearchQueryUtil;
+import com.app.util.SearchResultUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
@@ -32,6 +36,7 @@ import com.app.util.ValidatorUtil;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -200,6 +205,22 @@ public class UserController {
 
 		try {
 			UserUtil.deleteUser(password, currentUser);
+
+			int userId = currentUser.getUserId();
+
+			List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+				userId);
+
+			for (SearchQuery searchQuery : searchQueries) {
+				int searchQueryId = searchQuery.getSearchQueryId();
+
+				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
+					searchQueryId);
+
+				SearchResultUtil.deleteSearchQueryResults(searchQueryId);
+
+				SearchQueryUtil.deleteSearchQuery(userId, searchQueryId);
+			}
 
 			StripeUtil.deleteCustomer(currentUser.getCustomerId());
 		}

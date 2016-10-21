@@ -160,6 +160,30 @@ public class SearchQueryDAO {
 		}
 	}
 
+	public List<SearchQuery> getSearchQueries(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Getting all search queries for userId: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_SEARCH_QUERIES_BY_USER_ID_SQL)) {
+
+			preparedStatement.setInt(1, userId);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			List<SearchQuery> searchQueries = new ArrayList<>();
+
+			while (resultSet.next()) {
+				searchQueries.add(_createSearchQueryFromResultSet(resultSet));
+			}
+
+			return searchQueries;
+		}
+	}
+
 	@Cacheable(value = "searchQueries", key = "#userId + #active.toString()")
 	public List<SearchQuery> getSearchQueries(int userId, boolean active)
 		throws DatabaseConnectionException, SQLException {
@@ -342,6 +366,9 @@ public class SearchQueryDAO {
 
 	private static final String _DELETE_SEARCH_QUERY_SQL =
 		"DELETE FROM SearchQuery WHERE searchQueryId = ? AND userId = ?";
+
+	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_SQL =
+		"SELECT * FROM SearchQuery WHERE userId = ?";
 
 	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_AND_ACTIVE_SQL =
 		"SELECT * FROM SearchQuery WHERE userId = ? and active = ?";
