@@ -1114,7 +1114,7 @@
 		cursor: pointer;
 	}
 
-	#login {
+	#popup {
 		display: none;
 		position: fixed;
 		z-index: 2;
@@ -1126,7 +1126,7 @@
 		background-color: rgba(0,0,0,0.4);
 	}
 
-	.login-content {
+	.popup-content {
 		position: relative;
 		background-color: #fefefe;
 		margin: 10% auto;
@@ -1140,11 +1140,11 @@
 		animation-duration: 0.4s
 	}
 
-	.login-header {
+	.popup-header {
 		padding: 0px 16px;
 	}
 
-	.login-body {
+	.popup-body {
 		padding: 0px 16px;
 	}
 
@@ -1293,4 +1293,19 @@
 
 	.faq-paragraph {
 		margin-left: 50px;
+	}
+
+/* Delete Button */
+
+	.button.delete {
+		background-color: #df323c;
+		color: #ffffff !important;
+	}
+
+	.button.delete:hover {
+		background-color: #e55a62;
+	}
+
+	.button.delete:active {
+		background-color: #e55a62;
 	}

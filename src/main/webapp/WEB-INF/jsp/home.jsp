@@ -29,7 +29,7 @@
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
-		<script src="/resources/js/login.js" type="text/javascript"></script>
+		<script src="/resources/js/popup.js" type="text/javascript"></script>
 		<script src="/resources/js/scroll.js" type="text/javascript"></script>
 		<noscript>
 			<link rel="stylesheet" href="/resources/css/skel.css" />
@@ -38,13 +38,13 @@
 		</noscript>
 	</head>
 	<body>
-		<div id="login">
-			<div class="login-content">
-				<div class="login-header">
+		<div id="popup">
+			<div class="popup-content">
+				<div class="popup-header">
 					<span id="close">X</span>
 					<h2>Log In</h2>
 				</div>
-				<div class="login-body">
+				<div class="popup-body">
 					<form:form action="log_in" commandName="logIn" method="post">
 						<div>
 							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email"/>
