@@ -24,6 +24,10 @@
 
 											#if ($searchResult.auctionPrice > 0)
 												Auction Price: $$numberTool.format("#0.00", $searchResult.auctionPrice)
+
+												#if ($searchResult.fixedPrice > 0)
+													<br> <br>
+												#end
 											#end
 
 											#if ($searchResult.fixedPrice > 0)
