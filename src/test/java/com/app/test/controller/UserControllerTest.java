@@ -367,6 +367,54 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testDeleteUser() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user);
+
+		MockHttpServletRequestBuilder request = post("/delete_user");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:log_out"));
+		resultActions.andExpect(redirectedUrl("log_out"));
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNull(user);
+	}
+
+	@Test
+	public void testDeleteUserWithIncorrectPassword() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user);
+
+		MockHttpServletRequestBuilder request = post("/delete_user");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "incorrectPassword");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:log_out"));
+		resultActions.andExpect(redirectedUrl("log_out"));
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user);
+	}
+
+	@Test
 	public void testGetContactWithAuthenticatedUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();

@@ -71,6 +71,16 @@ public class UserUtil {
 		_userDAO.deactivateUser(customerId);
 	}
 
+	public static void deleteUser(String password, User currentUser)
+		throws DatabaseConnectionException, SQLException {
+
+		_validateCredentials(
+			currentUser.getEmailAddress(), currentUser.getPassword(),
+			password, currentUser.getSalt());
+
+		_userDAO.deleteUserByUserId(currentUser.getUserId());
+	}
+
 	public static void deleteUserByUserId(int userId)
 		throws DatabaseConnectionException, SQLException {
 

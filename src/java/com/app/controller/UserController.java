@@ -192,6 +192,27 @@ public class UserController {
 			emailAddress, password, "home", "", request, redirectAttributes);
 	}
 
+	@RequestMapping(value = "/delete_user", method = RequestMethod.POST)
+	public String deleteUser(String emailAddress, String password)
+		throws Exception {
+
+		User currentUser = UserUtil.getCurrentUser();
+
+		try {
+			UserUtil.deleteUser(password, currentUser);
+
+			StripeUtil.deleteCustomer(currentUser.getCustomerId());
+		}
+		catch (Exception e) {
+			_log.error(
+				"Unable to delete user with email address: {}. The current " +
+					"user's email address is: {}",
+				emailAddress, currentUser.getEmailAddress());
+		}
+
+		return "redirect:log_out";
+	}
+
 	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
 	public String deleteSubscription(RedirectAttributes redirectAttributes)
 		throws Exception {

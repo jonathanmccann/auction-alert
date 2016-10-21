@@ -57,6 +57,12 @@ public class StripeUtil {
 			customerId, subscription.getId(), true, false);
 	}
 
+	public static void deleteCustomer(String customerId) throws Exception {
+		Customer customer = Customer.retrieve(customerId);
+
+		customer.delete();
+	}
+
 	public static void deleteSubscription(String subscriptionId)
 		throws Exception {
 
