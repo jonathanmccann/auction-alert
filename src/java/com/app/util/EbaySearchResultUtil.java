@@ -49,7 +49,8 @@ public class EbaySearchResultUtil {
 
 		_log.debug("Searching for: {}", searchQuery.getKeywords());
 
-		FindingServicePortType serviceClient = EbayAPIUtil.getServiceClient();
+		FindingServicePortType serviceClient = EbayAPIUtil.getServiceClient(
+			searchQuery.getGlobalId());
 
 		com.ebay.services.finding.SearchResult searchResults = null;
 

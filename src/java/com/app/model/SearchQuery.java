@@ -43,13 +43,14 @@ public class SearchQuery {
 		boolean freeShippingOnly, boolean newCondition, boolean usedCondition,
 		boolean unspecifiedCondition, boolean auctionListing,
 		boolean fixedPriceListing, double minPrice, double maxPrice,
-		boolean active) {
+		String globalId, boolean active) {
 
 		_active = active;
 		_auctionListing = auctionListing;
 		_categoryId = categoryId;
 		_fixedPriceListing = fixedPriceListing;
 		_freeShippingOnly = freeShippingOnly;
+		_globalId = globalId;
 		_keywords = keywords;
 		_maxPrice = maxPrice;
 		_minPrice = minPrice;
@@ -64,6 +65,10 @@ public class SearchQuery {
 
 	public String getCategoryId() {
 		return _categoryId;
+	}
+
+	public String getGlobalId() {
+		return _globalId;
 	}
 
 	public String getKeywords() {
@@ -142,6 +147,10 @@ public class SearchQuery {
 		this._freeShippingOnly = freeShippingOnly;
 	}
 
+	public void setGlobalId(String globalId) {
+		_globalId = globalId;
+	}
+
 	public void setKeywords(String keywords) {
 		_keywords = keywords;
 	}
@@ -187,6 +196,7 @@ public class SearchQuery {
 	private String _categoryId;
 	private boolean _fixedPriceListing;
 	private boolean _freeShippingOnly;
+	private String _globalId;
 	private String _keywords;
 	private double _maxPrice;
 	private double _minPrice;

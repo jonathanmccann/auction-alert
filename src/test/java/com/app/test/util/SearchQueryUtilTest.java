@@ -62,7 +62,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testActivateSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -77,7 +77,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testAddSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
-			true, true, true, 5.00, 10.00, true);
+			true, true, true, 5.00, 10.00, "EBAY-US", true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -96,6 +96,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
@@ -151,7 +152,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testAddSearchQueryWithNormalizedValues() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", true, true, false,
-			false, false, false, false, 5.00, 10.00, true);
+			false, false, false, false, 5.00, 10.00, "EBAY-US", true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -170,6 +171,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
@@ -177,7 +179,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testDeactivateSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, true);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -544,7 +546,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testUpdateSearchQuery() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -563,11 +565,13 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertFalse(searchQuery.isActive());
 
 		searchQuery = new SearchQuery(
 			searchQueryId, _USER_ID, "New test keywords", "101", "201", true,
-			true, true, false, false, true, false, 5.00, 10.00, true);
+			true, true, false, false, true, false, 5.00, 10.00, "EBAY-CA",
+			true);
 
 		SearchQueryUtil.updateSearchQuery(_USER_ID, searchQuery);
 
@@ -586,6 +590,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-CA", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 

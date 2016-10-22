@@ -35,7 +35,7 @@ public class SearchQueryTest {
 	public void testAdvancedConstructor() {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
-			true, true, true, 5.00, 10.00, false);
+			true, true, true, 5.00, 10.00, "EBAY-US", false);
 
 		Assert.assertEquals(1, searchQuery.getSearchQueryId());
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
@@ -51,6 +51,7 @@ public class SearchQueryTest {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertFalse(searchQuery.isActive());
 	}
 
@@ -135,6 +136,13 @@ public class SearchQueryTest {
 		_searchQuery.setUsedCondition(true);
 
 		Assert.assertTrue(_searchQuery.isUsedCondition());
+	}
+
+	@Test
+	public void testSetAndGetGlobalId() {
+		_searchQuery.setGlobalId("EBAY-US");
+
+		Assert.assertEquals("EBAY-US", _searchQuery.getGlobalId());
 	}
 
 	@Test

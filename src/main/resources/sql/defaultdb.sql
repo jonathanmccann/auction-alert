@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS SearchQuery(
 	fixedPriceListing BOOLEAN,
 	minPrice DOUBLE,
 	maxPrice DOUBLE,
+	globalId VARCHAR(15),
 	active BOOLEAN NOT NULL DEFAULT 1
 );
 

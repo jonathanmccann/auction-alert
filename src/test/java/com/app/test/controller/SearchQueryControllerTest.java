@@ -81,7 +81,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -103,7 +103,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -123,7 +123,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, true);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -145,7 +145,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, true);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -676,7 +676,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -700,6 +700,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertFalse(searchQuery.isActive());
 
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
@@ -715,6 +716,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
+		request.param("globalId", "EBAY-CA");
 		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -744,6 +746,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertFalse(searchQuery.isActive());
 	}
 
@@ -753,7 +756,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -777,6 +780,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertTrue(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(0.00, searchQuery.getMaxPrice(), 0);
 		Assert.assertEquals(0.00, searchQuery.getMinPrice(), 0);
+		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertFalse(searchQuery.isActive());
 
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(
@@ -792,6 +796,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
+		request.param("globalId", "EBAY-CA");
 		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -825,6 +830,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-CA", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
@@ -834,7 +840,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -851,6 +857,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
+		request.param("globalId", "EBAY-CA");
 		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -885,6 +892,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-CA", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
@@ -894,7 +902,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -911,6 +919,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
+		request.param("globalId", "EBAY-CA");
 		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -945,6 +954,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-CA", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
@@ -954,7 +964,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -971,6 +981,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
+		request.param("globalId", "EBAY-CA");
 		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -1005,6 +1016,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-CA", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 
@@ -1014,7 +1026,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, false);
+			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -1031,6 +1043,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		request.param("auctionListing", "true");
 		request.param("minPrice", "5.00");
 		request.param("maxPrice", "10.00");
+		request.param("globalId", "EBAY-CA");
 		request.param("active", "true");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -1065,6 +1078,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		Assert.assertFalse(searchQuery.isFixedPriceListing());
 		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
 		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
+		Assert.assertEquals("EBAY-CA", searchQuery.getGlobalId());
 		Assert.assertTrue(searchQuery.isActive());
 	}
 

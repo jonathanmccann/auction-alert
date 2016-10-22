@@ -21,6 +21,9 @@ import com.ebay.services.client.FindingServiceClientFactory;
 import com.ebay.services.finding.FindingServicePortType;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Jonathan McCann
  */
@@ -30,8 +33,23 @@ public class EbayAPIUtil {
 		return _apiContext;
 	}
 
-	public static FindingServicePortType getServiceClient() {
-		return _serviceClient;
+	public static FindingServicePortType getServiceClient(String globalId) {
+		FindingServicePortType serviceClient = _serviceClients.get(globalId);
+
+		if (null != serviceClient) {
+			return serviceClient;
+		}
+
+		ClientConfig config = new ClientConfig();
+
+		config.setApplicationId(PropertiesValues.APPLICATION_ID);
+		config.setGlobalId(globalId);
+
+		serviceClient = FindingServiceClientFactory.getServiceClient(config);
+
+		_serviceClients.put(globalId, serviceClient);
+
+		return serviceClient;
 	}
 
 	public static void loadApiContext() {
@@ -57,11 +75,15 @@ public class EbayAPIUtil {
 		ClientConfig config = new ClientConfig();
 
 		config.setApplicationId(applicationId);
+		config.setGlobalId("EBAY-US");
 
-		_serviceClient = FindingServiceClientFactory.getServiceClient(config);
+		_serviceClients.put(
+			"EBAY-US", FindingServiceClientFactory.getServiceClient(config));
 	}
 
+	private static Map<String, FindingServicePortType> _serviceClients =
+		new HashMap<>();
+
 	private static ApiContext _apiContext;
-	private static FindingServicePortType _serviceClient;
 
 }

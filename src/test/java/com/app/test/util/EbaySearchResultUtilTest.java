@@ -207,7 +207,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequest() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "", false, false, true,
-			true, true, true, true, 0.00, 0.00, false);
+			true, true, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -237,7 +237,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithAuctionListing() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
-			true, true, false, 0.00, 0.00, false);
+			true, true, false, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -256,7 +256,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithCategoryId() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "", false, false, true, true,
-			true, true, true, 0.00, 0.00, false);
+			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -274,7 +274,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", true, false, true, true, true,
-			true, true, 0.00, 0.00, false);
+			true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -289,7 +289,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
-			true, false, true, 0.00, 0.00, false);
+			true, false, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -310,7 +310,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, true, true, true, true,
-			true, true, 0.00, 0.00, false);
+			true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -329,7 +329,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithMaxPrice() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
-			true, true, true, 0.00, 10.00, false);
+			true, true, true, 0.00, 10.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -347,7 +347,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithMinPrice() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
-			true, true, true, 5.00, 0.00, false);
+			true, true, true, 5.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -367,7 +367,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
-			false, true, false, 5.00, 10.00, false);
+			false, true, false, 5.00, 10.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -432,7 +432,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, false,
-			true, true, true, 0.00, 0.00, false);
+			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -457,7 +457,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
-			false, true, true, 0.00, 0.00, false);
+			false, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -480,7 +480,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithNewCondition() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, false,
-			false, true, true, 0.00, 0.00, false);
+			false, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -498,7 +498,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithSubcategoryId() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "100", "200", false, false, true, true,
-			true, true, true, 0.00, 0.00, false);
+			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -516,7 +516,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, false, false,
-			true, true, true, 0.00, 0.00, false);
+			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -536,7 +536,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, false, true,
-			true, true, true, 0.00, 0.00, false);
+			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -559,7 +559,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithUsedCondition() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, false, true,
-			false, true, true, 0.00, 0.00, false);
+			false, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
@@ -577,7 +577,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testSetUpAdvancedRequestWithoutCategoryId() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
-			true, true, true, 0.00, 0.00, false);
+			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
 		FindItemsAdvancedRequest findItemsAdvancedRequest =
 			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
