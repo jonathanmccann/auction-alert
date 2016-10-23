@@ -121,6 +121,12 @@
 								</form:select>
 							</li>
 							<li>
+								<b>Location:</b>
+								<form:select path="globalId">
+									<form:options items="${globalIds}" />
+								</form:select>
+							</li>
+							<li>
 								<b>Search Options:</b>
 
 								<div>

@@ -16,7 +16,6 @@ package com.app.test;
 
 import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
-import com.app.mail.SendGridMailSender;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.UserUtil;
@@ -143,7 +142,7 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpServiceClient() {
-		EbayAPIUtil.loadEbayServiceClient(System.getProperty("application.id"));
+		EbayAPIUtil.loadEbayServiceClients(System.getProperty("application.id"));
 	}
 
 	protected static void setUpUserUtil() throws Exception {

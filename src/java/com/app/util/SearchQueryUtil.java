@@ -21,7 +21,9 @@ import com.app.model.SearchQuery;
 
 import java.sql.SQLException;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +72,10 @@ public class SearchQueryUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		_searchQueryDAO.deleteSearchQuery(userId, searchQueryId);
+	}
+
+	public static Map<String, String> getGlobalIds() {
+		return _GLOBAL_IDS;
 	}
 
 	public static List<SearchQuery> getSearchQueries(int userId)
@@ -171,9 +177,27 @@ public class SearchQueryUtil {
 		}
 	}
 
+	private static final Map<String, String> _GLOBAL_IDS = new LinkedHashMap<>();
+
 	private static final Pattern _KEYWORDS_INVALID_CHARACTERS_PATTERN =
 		Pattern.compile("[<>]");
 
 	private static SearchQueryDAO _searchQueryDAO;
+
+	static {
+		_GLOBAL_IDS.put("EBAY-US", "United States");
+		_GLOBAL_IDS.put("EBAY-ENCA", "Canada");
+		_GLOBAL_IDS.put("EBAY-GB", "United Kingdom");
+		_GLOBAL_IDS.put("EBAY-AT", "Austria");
+		_GLOBAL_IDS.put("EBAY-AU", "Australia");
+		_GLOBAL_IDS.put("EBAY-FRBE", "Belgium");
+		_GLOBAL_IDS.put("EBAY-CH", "Switzerland");
+		_GLOBAL_IDS.put("EBAY-DE", "Germany");
+		_GLOBAL_IDS.put("EBAY-ES", "Spain");
+		_GLOBAL_IDS.put("EBAY-FR", "France");
+		_GLOBAL_IDS.put("EBAY-IE", "Ireland");
+		_GLOBAL_IDS.put("EBAY-IT", "Italy");
+		_GLOBAL_IDS.put("EBAY-NL", "Netherlands");
+	}
 
 }

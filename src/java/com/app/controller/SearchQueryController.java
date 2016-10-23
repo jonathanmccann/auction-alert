@@ -121,6 +121,8 @@ public class SearchQueryController {
 
 		populateCategories(model);
 
+		model.put("globalIds", SearchQueryUtil.getGlobalIds());
+
 		model.put("isAdd", true);
 
 		return "add_search_query";
@@ -206,6 +208,8 @@ public class SearchQueryController {
 			model.put("searchQuery", searchQuery);
 
 			populateCategories(model);
+
+			model.put("globalIds", SearchQueryUtil.getGlobalIds());
 		}
 
 		model.put("error", error);
@@ -273,6 +277,8 @@ public class SearchQueryController {
 		}
 
 		populateCategories(model);
+
+		model.put("globalIds", SearchQueryUtil.getGlobalIds());
 
 		model.put("campaignId", PropertiesValues.EBAY_CAMPAIGN_ID);
 

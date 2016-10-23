@@ -23,6 +23,7 @@ import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Jonathan McCann
@@ -67,18 +68,25 @@ public class EbayAPIUtil {
 		_apiContext.setSite(SiteCodeType.US);
 	}
 
-	public static void loadEbayServiceClient() {
-		loadEbayServiceClient(PropertiesValues.APPLICATION_ID);
+	public static void loadEbayServiceClients() {
+		loadEbayServiceClients(PropertiesValues.APPLICATION_ID);
 	}
 
-	public static void loadEbayServiceClient(String applicationId) {
+	public static void loadEbayServiceClients(String applicationId) {
 		ClientConfig config = new ClientConfig();
 
 		config.setApplicationId(applicationId);
-		config.setGlobalId("EBAY-US");
 
-		_serviceClients.put(
-			"EBAY-US", FindingServiceClientFactory.getServiceClient(config));
+		Map<String, String> globalIds = SearchQueryUtil.getGlobalIds();
+
+		Set<String> keys = globalIds.keySet();
+
+		for (String key : keys) {
+			config.setGlobalId(key);
+
+			_serviceClients.put(
+				key, FindingServiceClientFactory.getServiceClient(config));
+		}
 	}
 
 	private static Map<String, FindingServicePortType> _serviceClients =
