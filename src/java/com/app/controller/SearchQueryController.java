@@ -278,7 +278,7 @@ public class SearchQueryController {
 
 		populateCategories(model);
 
-		model.put("globalIds", SearchQueryUtil.getGlobalIds());
+		model.put("rssGlobalIds", SearchQueryUtil.getRssGlobalIds());
 
 		model.put("campaignId", PropertiesValues.EBAY_CAMPAIGN_ID);
 

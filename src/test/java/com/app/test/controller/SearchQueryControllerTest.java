@@ -312,6 +312,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("info"))
+			.andExpect(model().attributeExists("globalIds"))
 			.andExpect(model().attributeExists("isAdd"));
 	}
 
@@ -343,6 +344,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attribute("disabled", true))
 			.andExpect(model().attributeExists("info"))
+			.andExpect(model().attributeExists("globalIds"))
 			.andExpect(model().attributeExists("isAdd"));
 	}
 
@@ -355,6 +357,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("campaignId"))
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attributeExists("searchQuery"))
+			.andExpect(model().attributeExists("rssGlobalIds"))
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))));
 	}
@@ -394,6 +397,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(searchQueryId))))
 			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("globalIds"))
 			.andExpect(model().attributeDoesNotExist("disabled"))
 			.andExpect(model().attributeDoesNotExist("info"))
 			.andExpect(model().attributeDoesNotExist("isAdd"));

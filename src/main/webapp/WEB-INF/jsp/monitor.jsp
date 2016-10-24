@@ -78,6 +78,12 @@
 							</form:select>
 						</li>
 						<li>
+							<b>Location:</b>
+							<form:select path="globalId">
+								<form:options items="${rssGlobalIds}" />
+							</form:select>
+						</li>
+						<li>
 							<b>Search Options:</b>
 
 							<div>

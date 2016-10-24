@@ -19,7 +19,7 @@ $(window).load(function() {
 
 	var itemUrl = "http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&toolid=10001&campid=" + campaignId + "&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=";
 
-	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?programid=1&toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&campaignid=" + campaignId + "&keyword=";
+	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&campaignid=" + campaignId + "&keyword=";
 
 	if (typeof Notification !== 'function') {
 		$('#notificationOptions').hide();
@@ -167,6 +167,8 @@ $(window).load(function() {
 		else if (categoryId && (categoryId != "All Categories")) {
 			url += "&categoryId1=" + categoryId
 		}
+
+		url += "&programid=" + $("#globalId").val();
 
 		if ($("#searchDescription").is(":checked")) {
 			url += "&descriptionSearch=true";

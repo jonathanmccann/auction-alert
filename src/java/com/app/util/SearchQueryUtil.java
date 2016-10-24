@@ -78,6 +78,10 @@ public class SearchQueryUtil {
 		return _GLOBAL_IDS;
 	}
 
+	public static Map<String, String> getRssGlobalIds() {
+		return _RSS_GLOBAL_IDS;
+	}
+
 	public static List<SearchQuery> getSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -178,6 +182,8 @@ public class SearchQueryUtil {
 	}
 
 	private static final Map<String, String> _GLOBAL_IDS = new LinkedHashMap<>();
+	private static final Map<String, String> _RSS_GLOBAL_IDS =
+		new LinkedHashMap<>();
 
 	private static final Pattern _KEYWORDS_INVALID_CHARACTERS_PATTERN =
 		Pattern.compile("[<>]");
@@ -198,6 +204,20 @@ public class SearchQueryUtil {
 		_GLOBAL_IDS.put("EBAY-IE", "Ireland");
 		_GLOBAL_IDS.put("EBAY-IT", "Italy");
 		_GLOBAL_IDS.put("EBAY-NL", "Netherlands");
+
+		_RSS_GLOBAL_IDS.put("1", "United States");
+		_RSS_GLOBAL_IDS.put("7", "Canada");
+		_RSS_GLOBAL_IDS.put("15", "United Kingdom");
+		_RSS_GLOBAL_IDS.put("3", "Austria");
+		_RSS_GLOBAL_IDS.put("4", "Australia");
+		_RSS_GLOBAL_IDS.put("5", "Belgium");
+		_RSS_GLOBAL_IDS.put("14", "Switzerland");
+		_RSS_GLOBAL_IDS.put("11", "Germany");
+		_RSS_GLOBAL_IDS.put("13", "Spain");
+		_RSS_GLOBAL_IDS.put("10", "France");
+		_RSS_GLOBAL_IDS.put("2", "Ireland");
+		_RSS_GLOBAL_IDS.put("12", "Italy");
+		_RSS_GLOBAL_IDS.put("16", "Netherlands");
 	}
 
 }
