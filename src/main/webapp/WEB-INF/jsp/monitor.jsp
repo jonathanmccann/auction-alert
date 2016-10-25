@@ -61,6 +61,8 @@
 
 					<input id="initialSubcategoryId" type="hidden" value="${searchQuery.subcategoryId}" />
 
+					<input id="preferredDomain" type="hidden" value="${preferredDomain}" />
+
 					<fmt:formatNumber pattern="0.00" value="${searchQuery.minPrice}" var="minPrice" />
 					<fmt:formatNumber pattern="0.00" value="${searchQuery.maxPrice}" var="maxPrice" />
 

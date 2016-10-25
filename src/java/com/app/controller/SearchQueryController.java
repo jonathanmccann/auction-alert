@@ -19,6 +19,7 @@ import com.app.exception.SearchQueryException;
 import com.app.language.LanguageUtil;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
+import com.app.model.User;
 import com.app.util.CategoryUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.SearchQueryPreviousResultUtil;
@@ -276,9 +277,13 @@ public class SearchQueryController {
 			model.put("searchQuery", new SearchQuery());
 		}
 
-		populateCategories(model);
+		User currentUser = UserUtil.getCurrentUser();
+
+		model.put("preferredDomain", currentUser.getPreferredDomain());
 
 		model.put("rssGlobalIds", SearchQueryUtil.getRssGlobalIds());
+
+		populateCategories(model);
 
 		return "monitor";
 	}

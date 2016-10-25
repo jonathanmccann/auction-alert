@@ -15,7 +15,7 @@ $(window).load(function() {
 
 	var intervalId;
 
-	var itemUrl = "http://www.ebay.com/itm/";
+	var itemUrl = $("#preferredDomain").val();
 
 	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&keyword=";
 

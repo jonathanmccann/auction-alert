@@ -14,9 +14,11 @@
 
 package com.app.util;
 
+import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 
+import com.app.model.User;
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
 import com.ebay.services.finding.FindItemsAdvancedResponse;
@@ -29,6 +31,7 @@ import com.ebay.services.finding.SearchItem;
 import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
 
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
@@ -45,7 +48,8 @@ import org.slf4j.LoggerFactory;
 public class EbaySearchResultUtil {
 
 	public static List<SearchResult> getEbaySearchResults(
-		SearchQuery searchQuery) {
+			SearchQuery searchQuery)
+		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Searching for: {}", searchQuery.getKeywords());
 
@@ -67,11 +71,16 @@ public class EbaySearchResultUtil {
 
 		List<SearchItem> searchItems = searchResults.getItem();
 
+		User user = UserUtil.getUserByUserId(searchQuery.getUserId());
+
 		return _createSearchResults(
-			searchItems, searchQuery.getSearchQueryId());
+			searchItems, searchQuery.getSearchQueryId(),
+			user.getPreferredDomain());
 	}
 
-	private static SearchResult _createSearchResult(SearchItem item) {
+	private static SearchResult _createSearchResult(
+		SearchItem item, String preferredDomain) {
+
 		SearchResult searchResult = new SearchResult();
 
 		ListingInfo listingInfo = item.getListingInfo();
@@ -79,7 +88,7 @@ public class EbaySearchResultUtil {
 		searchResult.setItemId(item.getItemId());
 		searchResult.setItemTitle(
 			_ITEM_TITLE_PATTERN.matcher(item.getTitle()).replaceAll(""));
-		searchResult.setItemURL(_EBAY_URL_PREFIX + searchResult.getItemId());
+		searchResult.setItemURL(preferredDomain + searchResult.getItemId());
 		searchResult.setGalleryURL(item.getGalleryURL());
 
 		_setPrice(
@@ -90,14 +99,16 @@ public class EbaySearchResultUtil {
 	}
 
 	private static List<SearchResult> _createSearchResults(
-		List<SearchItem> searchItems, int searchQueryId) {
+		List<SearchItem> searchItems, int searchQueryId,
+		String preferredDomain) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
 		Collections.reverse(searchItems);
 
 		for (SearchItem searchItem : searchItems) {
-			SearchResult searchResult = _createSearchResult(searchItem);
+			SearchResult searchResult = _createSearchResult(
+				searchItem, preferredDomain);
 
 			searchResult.setSearchQueryId(searchQueryId);
 
@@ -246,8 +257,6 @@ public class EbaySearchResultUtil {
 
 	private static final Pattern _ITEM_TITLE_PATTERN =
 		Pattern.compile("\\P{Print}");
-
-	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		EbaySearchResultUtil.class);
