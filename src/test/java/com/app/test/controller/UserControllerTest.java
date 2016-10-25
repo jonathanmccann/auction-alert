@@ -1531,6 +1531,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("preferredDomains"))
 			.andExpect(model().attributeExists("stripePublishableKey"));
 	}
 

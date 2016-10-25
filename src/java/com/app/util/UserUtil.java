@@ -28,7 +28,9 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.CredentialsException;
@@ -119,6 +121,10 @@ public class UserUtil {
 		Session session = subject.getSession();
 
 		return (int)session.getAttribute("userId");
+	}
+
+	public static Map<String, String> getPreferredDomains() {
+		return _PREFERRED_DOMAINS;
 	}
 
 	public static User getUserByEmailAddress(String emailAddress)
@@ -350,8 +356,27 @@ public class UserUtil {
 		}
 	}
 
+	private static final Map<String, String> _PREFERRED_DOMAINS =
+		new LinkedHashMap<>();
+
 	private static HashedCredentialsMatcher _hashedCredentialsMatcher;
 
 	private static UserDAO _userDAO;
+
+	static {
+		_PREFERRED_DOMAINS.put("http://www.ebay.com/itm/", ".com");
+		_PREFERRED_DOMAINS.put("http://www.ebay.ca/itm/", ".ca");
+		_PREFERRED_DOMAINS.put("http://www.ebay.co.uk/itm/", ".co.uk");
+		_PREFERRED_DOMAINS.put("http://www.ebay.at/itm/", ".at");
+		_PREFERRED_DOMAINS.put("http://www.ebay.com.au/itm/", ".com.au");
+		_PREFERRED_DOMAINS.put("http://www.befr.ebay.be/itm/", ".be");
+		_PREFERRED_DOMAINS.put("http://www.ebay.ch/itm/", ".ch");
+		_PREFERRED_DOMAINS.put("http://www.ebay.de/itm/", ".de");
+		_PREFERRED_DOMAINS.put("http://www.ebay.es/itm/", ".es");
+		_PREFERRED_DOMAINS.put("http://www.ebay.fr/itm/", ".fr");
+		_PREFERRED_DOMAINS.put("http://www.ebay.ie/itm/", ".ie");
+		_PREFERRED_DOMAINS.put("http://www.ebay.it/itm/", ".it");
+		_PREFERRED_DOMAINS.put("http://www.ebay.nl/itm/", ".nl");
+	}
 
 }

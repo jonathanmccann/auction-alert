@@ -401,6 +401,7 @@ public class UserDAO {
 		user.setUserId(resultSet.getInt("userId"));
 		user.setPassword(resultSet.getString("password"));
 		user.setSalt(resultSet.getString("salt"));
+		user.setPreferredDomain(resultSet.getString("preferredDomain"));
 		user.setEmailNotification(resultSet.getBoolean("emailNotification"));
 		user.setUnsubscribeToken(resultSet.getString("unsubscribeToken"));
 		user.setEmailsSent(resultSet.getInt("emailsSent"));

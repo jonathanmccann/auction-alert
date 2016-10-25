@@ -67,6 +67,10 @@ public class User {
 		return _password;
 	}
 
+	public String getPreferredDomain() {
+		return _preferredDomain;
+	}
+
 	public String getSalt() {
 		return _salt;
 	}
@@ -155,6 +159,10 @@ public class User {
 		_pendingCancellation = pendingCancellation;
 	}
 
+	public void setPreferredDomain(String preferredDomain) {
+		_preferredDomain = preferredDomain;
+	}
+
 	public void setSalt(String salt) {
 		_salt = salt;
 	}
@@ -184,6 +192,7 @@ public class User {
 	private String _passwordResetToken;
 	private Timestamp _passwordResetExpiration;
 	private boolean _pendingCancellation;
+	private String _preferredDomain;
 	private String _salt;
 	private String _subscriptionId;
 	private String _unsubscribeToken;

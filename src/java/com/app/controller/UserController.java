@@ -678,6 +678,7 @@ public class UserController {
 		model.put("isActive", UserUtil.isCurrentUserActive());
 		model.put("success", success);
 		model.put("user", UserUtil.getCurrentUser());
+		model.put("preferredDomains", UserUtil.getPreferredDomains());
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 

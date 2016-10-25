@@ -124,6 +124,12 @@
 					<b>New Password: </b><form:input path="newPassword" type="password" />
 				</div>
 				<div class="padding-top">
+					<b>Preferred Domain:</b>
+					<form:select path="preferredDomain">
+						<form:options items="${preferredDomains}" />
+					</form:select>
+				</div>
+				<div class="padding-top">
 					<form:checkbox id="emailNotification" label="Send Email Notifications" path="emailNotification" value="${emailNotification}" />
 				</div>
 				<div class="padding-top">
