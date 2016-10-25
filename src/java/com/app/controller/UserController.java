@@ -634,7 +634,8 @@ public class UserController {
 		try {
 			UserUtil.updateUserDetails(
 				user.getEmailAddress(), user.getCurrentPassword(),
-				user.getNewPassword(), user.isEmailNotification());
+				user.getNewPassword(), user.getPreferredDomain(),
+				user.isEmailNotification());
 
 			StripeUtil.updateCustomerEmailAddress();
 

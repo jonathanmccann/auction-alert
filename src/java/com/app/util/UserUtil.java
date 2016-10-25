@@ -234,7 +234,7 @@ public class UserUtil {
 
 	public static void updateUserDetails(
 			String emailAddress, String currentPassword, String newPassword,
-			boolean emailNotification)
+			String preferredDomain, boolean emailNotification)
 		throws
 			CredentialsException, DatabaseConnectionException,
 			DuplicateEmailAddressException, InvalidEmailAddressException,
@@ -258,11 +258,12 @@ public class UserUtil {
 
 			_userDAO.updateUserDetails(
 				user.getUserId(), emailAddress, passwordAndSalt.get(0),
-				passwordAndSalt.get(1), emailNotification);
+				passwordAndSalt.get(1), preferredDomain, emailNotification);
 		}
 		else {
 			_userDAO.updateUserEmailDetails(
-				user.getUserId(), emailAddress, emailNotification);
+				user.getUserId(), emailAddress, preferredDomain,
+				emailNotification);
 		}
 	}
 

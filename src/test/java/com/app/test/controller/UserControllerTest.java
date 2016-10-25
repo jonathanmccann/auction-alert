@@ -1416,6 +1416,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		request.param("userId", String.valueOf(_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
+		request.param("preferredDomain", "http://www.ebay.ca/itm/");
 		request.param("emailNotification", "false");
 		request.param("currentPassword", "password");
 		request.param("newPassword", "short");
@@ -1632,6 +1633,8 @@ public class UserControllerTest extends BaseTestCase {
 		User user = UserUtil.getUserByUserId(_USER.getUserId());
 
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
+		Assert.assertEquals(
+			"http://www.ebay.com/itm/", user.getPreferredDomain());
 		Assert.assertTrue(user.isEmailNotification());
 	}
 
@@ -1639,6 +1642,8 @@ public class UserControllerTest extends BaseTestCase {
 		User user = UserUtil.getUserByUserId(_USER.getUserId());
 
 		Assert.assertEquals("test2@test.com", user.getEmailAddress());
+		Assert.assertEquals(
+			"http://www.ebay.ca/itm/", user.getPreferredDomain());
 		Assert.assertFalse(user.isEmailNotification());
 	}
 
@@ -1648,6 +1653,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		request.param("userId", String.valueOf(_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
+		request.param("preferredDomain", "http://www.ebay.ca/itm/");
 		request.param("emailNotification", "false");
 		request.param("currentPassword", "password");
 		request.param("newPassword", "updatedPassword");

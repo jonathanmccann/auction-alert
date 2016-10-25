@@ -272,12 +272,15 @@ public class UserUtilTest extends BaseTestCase {
 		String salt = user.getSalt();
 
 		UserUtil.updateUserDetails(
-			"update@test.com", "password", "newPassword", false);
+			"update@test.com", "password", "newPassword",
+			"http://www.ebay.ca/itm/", false);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
+		Assert.assertEquals(
+			"http://www.ebay.ca/itm/", user.getPreferredDomain());
 		Assert.assertFalse(user.isEmailNotification());
 		Assert.assertNotEquals(password, user.getPassword());
 		Assert.assertNotEquals(salt, user.getSalt());
@@ -293,12 +296,15 @@ public class UserUtilTest extends BaseTestCase {
 		String salt = user.getSalt();
 
 		UserUtil.updateUserDetails(
-			"update@test.com", "password", "short", false);
+			"update@test.com", "password", "short", "http://www.ebay.ca/itm/",
+			false);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
+		Assert.assertEquals(
+			"http://www.ebay.ca/itm/", user.getPreferredDomain());
 		Assert.assertFalse(user.isEmailNotification());
 		Assert.assertNotEquals(password, user.getPassword());
 		Assert.assertNotEquals(salt, user.getSalt());
@@ -313,12 +319,15 @@ public class UserUtilTest extends BaseTestCase {
 		String password = user.getPassword();
 		String salt = user.getSalt();
 
-		UserUtil.updateUserDetails("update@test.com", "", "", false);
+		UserUtil.updateUserDetails(
+			"update@test.com", "", "", "http://www.ebay.ca/itm/", false);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
+		Assert.assertEquals(
+			"http://www.ebay.ca/itm/", user.getPreferredDomain());
 		Assert.assertFalse(user.isEmailNotification());
 		Assert.assertEquals(password, user.getPassword());
 		Assert.assertEquals(salt, user.getSalt());
