@@ -56,8 +56,6 @@
 			</div>
 
 			<div id="searchQuery" class="container padding-top">
-				<input id="campaignId" type="hidden" value="${campaignId}">
-
 				<form:form commandName="searchQuery" id="searchQueryForm">
 					<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
 

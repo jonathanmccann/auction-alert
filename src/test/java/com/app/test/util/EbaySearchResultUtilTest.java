@@ -643,10 +643,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private static final Calendar _CALENDAR = Calendar.getInstance();
 
-	private static final String _EBAY_URL_PREFIX =
-		"http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2" +
-			"&pub=5575196328&toolid=10001&campid=" + PropertiesValues.EBAY_CAMPAIGN_ID +
-			"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=";
+	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
 	private static final String _FIXED_PRICE = "FixedPrice";
 

@@ -354,7 +354,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isOk())
 			.andExpect(view().name("monitor"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor.jsp"))
-			.andExpect(model().attributeExists("campaignId"))
 			.andExpect(model().attributeExists("searchQueryCategories"))
 			.andExpect(model().attributeExists("searchQuery"))
 			.andExpect(model().attributeExists("rssGlobalIds"))

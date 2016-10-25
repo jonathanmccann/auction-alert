@@ -280,8 +280,6 @@ public class SearchQueryController {
 
 		model.put("rssGlobalIds", SearchQueryUtil.getRssGlobalIds());
 
-		model.put("campaignId", PropertiesValues.EBAY_CAMPAIGN_ID);
-
 		return "monitor";
 	}
 
