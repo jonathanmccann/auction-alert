@@ -1,4 +1,6 @@
 $(window).load(function() {
+	var currencyMap = {1: "USD", 7: "CAD", 15: "GBP", 3: "EUR", 4: "AUD", 5: "EUR", 14: "CHF", 13: "EUR", 10: "EUR", 2: "EUR", 12: "EUR", 16: "EUR"};
+
 	var itemIds = [];
 
 	var search = $("#search");
@@ -16,6 +18,8 @@ $(window).load(function() {
 	var intervalId;
 
 	var itemUrl = $("#preferredDomain").val();
+
+	var preferredCurrency = $("#preferredCurrency").val();
 
 	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&keyword=";
 
@@ -122,6 +126,28 @@ $(window).load(function() {
 		search.toggleClass("fa-angle-down fa-angle-right")
 	}
 
+	function setMinAndMaxPrices(url, globalId, minPrice, maxPrice) {
+		var itemCurrency = currencyMap[globalId];
+
+		var request = new XMLHttpRequest();
+
+		request.open("GET", "http://api.fixer.io/latest?base=" + preferredCurrency + "&symbols=" + itemCurrency, false );
+
+		request.send(null);
+
+		var conversionRate = JSON.parse(request.responseText).rates[itemCurrency];
+
+		if (minPrice && (minPrice > 0)) {
+			url += "&minPrice=" + (minPrice * conversionRate);
+		}
+
+		if (maxPrice && (maxPrice > 0)) {
+			url += "&maxPrice=" + (maxPrice * conversionRate);
+		}
+
+		return url;
+	}
+
 	search.click(function() {
 		collapseSearchQuery();
 	});
@@ -154,6 +180,8 @@ $(window).load(function() {
 
 		contentDiv.innerHTML = "<h5>Results will begin populating here as soon as they are found.</h5>";
 
+		var globalId = $("#globalId").val();
+
 		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 
 		var subcategoryId = $('#subcategoryId').val();
@@ -166,7 +194,7 @@ $(window).load(function() {
 			url += "&categoryId1=" + categoryId
 		}
 
-		url += "&programid=" + $("#globalId").val();
+		url += "&programid=" + globalId;
 
 		if ($("#searchDescription").is(":checked")) {
 			url += "&descriptionSearch=true";
@@ -199,12 +227,8 @@ $(window).load(function() {
 		var minPrice = $("#minPrice").val();
 		var maxPrice = $("#maxPrice").val();
 
-		if (minPrice && (minPrice > 0)) {
-			url += "&minPrice=" + minPrice;
-		}
-
-		if (maxPrice && (maxPrice > 0)) {
-			url += "&maxPrice=" + maxPrice;
+		if ((minPrice && (minPrice > 0)) || (maxPrice && (maxPrice > 0))) {
+			url = setMinAndMaxPrices(url, globalId, minPrice, maxPrice);
 		}
 
 		fetchRss(encodeURIComponent(url + "&" + new Date().getTime()));

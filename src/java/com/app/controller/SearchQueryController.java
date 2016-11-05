@@ -279,7 +279,13 @@ public class SearchQueryController {
 
 		User currentUser = UserUtil.getCurrentUser();
 
-		model.put("preferredDomain", currentUser.getPreferredDomain());
+		String preferredDomain = currentUser.getPreferredDomain();
+
+		model.put(
+			"preferredCurrency",
+			UserUtil.getPreferredCurrency(preferredDomain));
+
+		model.put("preferredDomain", preferredDomain);
 
 		model.put("rssGlobalIds", SearchQueryUtil.getRssGlobalIds());
 

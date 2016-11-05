@@ -28,6 +28,7 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +122,10 @@ public class UserUtil {
 		Session session = subject.getSession();
 
 		return (int)session.getAttribute("userId");
+	}
+
+	public static String getPreferredCurrency(String preferredDomain) {
+		return _PREFERRED_CURRENCIES.get(preferredDomain);
 	}
 
 	public static Map<String, String> getPreferredDomains() {
@@ -357,6 +362,9 @@ public class UserUtil {
 		}
 	}
 
+	private static final Map<String, String> _PREFERRED_CURRENCIES =
+		new HashMap<>();
+
 	private static final Map<String, String> _PREFERRED_DOMAINS =
 		new LinkedHashMap<>();
 
@@ -365,6 +373,20 @@ public class UserUtil {
 	private static UserDAO _userDAO;
 
 	static {
+		_PREFERRED_CURRENCIES.put("http://www.ebay.com/itm/", "USD");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.ca/itm/", "CAD");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.co.uk/itm/", "GBP");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.at/itm/", "EUR");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.com.au/itm/", "AUD");
+		_PREFERRED_CURRENCIES.put("http://www.befr.ebay.be/itm/", "EUR");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.ch/itm/", "CHF");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.de/itm/", "EUR");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.es/itm/", "EUR");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.fr/itm/", "EUR");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.ie/itm/", "EUR");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.it/itm/", "EUR");
+		_PREFERRED_CURRENCIES.put("http://www.ebay.nl/itm/", "EUR");
+
 		_PREFERRED_DOMAINS.put("http://www.ebay.com/itm/", ".com");
 		_PREFERRED_DOMAINS.put("http://www.ebay.ca/itm/", ".ca");
 		_PREFERRED_DOMAINS.put("http://www.ebay.co.uk/itm/", ".co.uk");

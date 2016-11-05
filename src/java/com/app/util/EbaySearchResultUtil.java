@@ -17,8 +17,8 @@ package com.app.util;
 import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
-
 import com.app.model.User;
+
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
 import com.ebay.services.finding.FindItemsAdvancedResponse;
@@ -53,17 +53,21 @@ public class EbaySearchResultUtil {
 
 		_log.debug("Searching for: {}", searchQuery.getKeywords());
 
+		User user = UserUtil.getUserByUserId(searchQuery.getUserId());
+
+		String preferredDomain = user.getPreferredDomain();
+
+		FindItemsAdvancedRequest request = _setUpAdvancedRequest(
+			searchQuery, UserUtil.getPreferredCurrency(preferredDomain));
+
 		FindingServicePortType serviceClient = EbayAPIUtil.getServiceClient(
 			searchQuery.getGlobalId());
-
-		com.ebay.services.finding.SearchResult searchResults = null;
-
-		FindItemsAdvancedRequest request = _setUpAdvancedRequest(searchQuery);
 
 		FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
 			request);
 
-		searchResults = result.getSearchResult();
+		com.ebay.services.finding.SearchResult searchResults =
+			result.getSearchResult();
 
 		if (searchResults == null) {
 			return new ArrayList<>();
@@ -71,11 +75,8 @@ public class EbaySearchResultUtil {
 
 		List<SearchItem> searchItems = searchResults.getItem();
 
-		User user = UserUtil.getUserByUserId(searchQuery.getUserId());
-
 		return _createSearchResults(
-			searchItems, searchQuery.getSearchQueryId(),
-			user.getPreferredDomain());
+			searchItems, searchQuery.getSearchQueryId(), preferredDomain);
 	}
 
 	private static SearchResult _createSearchResult(
@@ -149,7 +150,7 @@ public class EbaySearchResultUtil {
 	}
 
 	private static FindItemsAdvancedRequest _setUpAdvancedRequest(
-		SearchQuery searchQuery) {
+		SearchQuery searchQuery, String preferredCurrency) {
 
 		_log.debug("Setting up advanced request");
 
@@ -229,6 +230,9 @@ public class EbaySearchResultUtil {
 			minPrice.setName(ItemFilterType.MIN_PRICE);
 			minPrice.getValue().add(
 				_DECIMAL_FORMAT.format(searchQuery.getMinPrice()));
+			minPrice.setParamName(ItemFilterType.CURRENCY.value());
+			minPrice.setParamValue(preferredCurrency);
+
 			request.getItemFilter().add(minPrice);
 		}
 
@@ -238,6 +242,9 @@ public class EbaySearchResultUtil {
 			maxPrice.setName(ItemFilterType.MAX_PRICE);
 			maxPrice.getValue().add(
 				_DECIMAL_FORMAT.format(searchQuery.getMaxPrice()));
+			maxPrice.setParamName(ItemFilterType.CURRENCY.value());
+			maxPrice.setParamValue(preferredCurrency);
+
 			request.getItemFilter().add(maxPrice);
 		}
 
