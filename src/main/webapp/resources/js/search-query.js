@@ -31,12 +31,12 @@ function getSearchQueryResults(searchQueryId, active) {
 					html += '<div class="result-information">';
 					html += '<a href="' + data[i].itemURL + '" target="_blank">' + data[i].itemTitle + '</a> <br>';
 
-					if (data[i].auctionPrice > 0) {
-						html += 'Auction Price: $' + data[i].auctionPrice.toFixed(2) + '<br>';
+					if (data[i].auctionPrice) {
+						html += 'Auction Price: ' + data[i].auctionPrice + '<br>';
 					}
 
-					if (data[i].fixedPrice > 0) {
-						html += 'Fixed Price: $' + data[i].fixedPrice.toFixed(2);
+					if (data[i].fixedPrice) {
+						html += 'Fixed Price: ' + data[i].fixedPrice;
 					}
 
 					html += "</div>";

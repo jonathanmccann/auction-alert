@@ -22,16 +22,16 @@
 										<div style="display: inline-block; text-align: left; vertical-align: top;">
 											<a href="$searchResult.itemURL">$searchResult.itemTitle</a> <br> <br>
 
-											#if ($searchResult.auctionPrice > 0)
-												Auction Price: $$numberTool.format("#0.00", $searchResult.auctionPrice)
+											#if ($searchResult.auctionPrice)
+												Auction Price: $searchResult.auctionPrice
 
-												#if ($searchResult.fixedPrice > 0)
+												#if ($searchResult.fixedPrice)
 													<br> <br>
 												#end
 											#end
 
-											#if ($searchResult.fixedPrice > 0)
-												Fixed Price: $$numberTool.format("#0.00", $searchResult.fixedPrice)
+											#if ($searchResult.fixedPrice)
+												Fixed Price: $searchResult.fixedPrice
 											#end
 										</div>
 									</td>
