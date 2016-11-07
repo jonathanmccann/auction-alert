@@ -21,6 +21,7 @@ import com.app.model.SearchQuery;
 
 import java.sql.SQLException;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,14 @@ public class SearchQueryUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		_searchQueryDAO.deleteSearchQuery(userId, searchQueryId);
+	}
+
+	public static String getCurrencySymbol(int searchQueryId)
+		throws DatabaseConnectionException, SQLException {
+
+		SearchQuery searchQuery = getSearchQuery(searchQueryId);
+
+		return _CURRENCY_SYMBOLS.get(searchQuery.getGlobalId());
 	}
 
 	public static Map<String, String> getGlobalIds() {
@@ -181,6 +190,7 @@ public class SearchQueryUtil {
 		}
 	}
 
+	private static final Map<String, String> _CURRENCY_SYMBOLS = new HashMap<>();
 	private static final Map<String, String> _GLOBAL_IDS = new LinkedHashMap<>();
 	private static final Map<String, String> _RSS_GLOBAL_IDS =
 		new LinkedHashMap<>();
@@ -191,6 +201,20 @@ public class SearchQueryUtil {
 	private static SearchQueryDAO _searchQueryDAO;
 
 	static {
+		_CURRENCY_SYMBOLS.put("EBAY-US", "$");
+		_CURRENCY_SYMBOLS.put("EBAY-ENCA", "C $");
+		_CURRENCY_SYMBOLS.put("EBAY-GB", "£");
+		_CURRENCY_SYMBOLS.put("EBAY-AT", "€");
+		_CURRENCY_SYMBOLS.put("EBAY-AU", "AU $");
+		_CURRENCY_SYMBOLS.put("EBAY-FRBE", "€");
+		_CURRENCY_SYMBOLS.put("EBAY-CH", "CHF ");
+		_CURRENCY_SYMBOLS.put("EBAY-DE", "€");
+		_CURRENCY_SYMBOLS.put("EBAY-ES", "€");
+		_CURRENCY_SYMBOLS.put("EBAY-FR", "€");
+		_CURRENCY_SYMBOLS.put("EBAY-IE", "€");
+		_CURRENCY_SYMBOLS.put("EBAY-IT", "€");
+		_CURRENCY_SYMBOLS.put("EBAY-NL", "€");
+
 		_GLOBAL_IDS.put("EBAY-US", "United States");
 		_GLOBAL_IDS.put("EBAY-ENCA", "Canada");
 		_GLOBAL_IDS.put("EBAY-GB", "United Kingdom");

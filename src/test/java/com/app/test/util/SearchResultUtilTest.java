@@ -82,8 +82,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
-		Assert.assertEquals(10.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$10.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
@@ -130,8 +130,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
-		Assert.assertEquals(10.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$10.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
@@ -164,8 +164,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
-		Assert.assertEquals(10.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$10.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
@@ -344,7 +344,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 	@Test
 	public void testRemovePreviouslyNotifiedResults() throws Exception {
 		SearchResult searchResult = new SearchResult(
-			1, "1234", "First Item", 10.00, 14.99,
+			1, "1234", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		List<SearchResult> searchResults = new ArrayList<>();
@@ -377,7 +377,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	private static int _addSearchResult(String itemId) throws Exception {
 		SearchResult searchResult = new SearchResult(
-			_SEARCH_QUERY_ID, itemId, "First Item", 10.00, 14.99,
+			_SEARCH_QUERY_ID, itemId, "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		return SearchResultUtil.addSearchResult(searchResult);

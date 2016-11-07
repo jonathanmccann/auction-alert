@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 	itemTitle VARCHAR(100),
 	itemURL VARCHAR(250),
 	galleryURL VARCHAR(100),
-	auctionPrice DOUBLE,
-	fixedPrice DOUBLE
+	auctionPrice VARCHAR(30),
+	fixedPrice VARCHAR(30)
 );
 
 CREATE TABLE IF NOT EXISTS SearchQueryPreviousResult(

@@ -126,21 +126,24 @@ public class EbaySearchResultUtil {
 		if ("Auction".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
-			searchResult.setAuctionPrice(currentPrice.getValue());
+			searchResult.setAuctionPrice(
+				String.valueOf(currentPrice.getValue()));
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
 				 "StoreInventory".equals(typeOfAuction)) {
 
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
-			searchResult.setFixedPrice(currentPrice.getValue());
+			searchResult.setFixedPrice(String.valueOf(currentPrice.getValue()));
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 			Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
 
-			searchResult.setAuctionPrice(currentPrice.getValue());
-			searchResult.setFixedPrice(buyItNowPrice.getValue());
+			searchResult.setAuctionPrice(
+				String.valueOf(currentPrice.getValue()));
+			searchResult.setFixedPrice(
+				String.valueOf(buyItNowPrice.getValue()));
 		}
 		else {
 			_log.error(

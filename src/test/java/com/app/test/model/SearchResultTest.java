@@ -33,14 +33,14 @@ public class SearchResultTest {
 	@Test
 	public void testConstructor() {
 		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 14.99,
+			1, "1234", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		Assert.assertEquals(1, searchResult.getSearchQueryId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("itemTitle", searchResult.getItemTitle());
-		Assert.assertEquals(14.99, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(14.99, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$14.99", searchResult.getAuctionPrice());
+		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
 		Assert.assertEquals(
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
@@ -88,16 +88,16 @@ public class SearchResultTest {
 
 	@Test
 	public void testSetAndGetAuctionPrice() {
-		_searchResult.setAuctionPrice(14.99);
+		_searchResult.setAuctionPrice("$14.99");
 
-		Assert.assertEquals(14.99, _searchResult.getAuctionPrice(), 0);
+		Assert.assertEquals("$14.99", _searchResult.getAuctionPrice());
 	}
 
 	@Test
 	public void testSetAndGetFixedPrice() {
-		_searchResult.setFixedPrice(14.99);
+		_searchResult.setFixedPrice("$14.99");
 
-		Assert.assertEquals(14.99, _searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$14.99", _searchResult.getFixedPrice());
 	}
 
 	@Test

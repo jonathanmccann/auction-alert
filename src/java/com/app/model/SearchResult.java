@@ -23,8 +23,8 @@ public class SearchResult {
 	}
 
 	public SearchResult(
-		int searchQueryId, String itemId, String itemTitle, double auctionPrice,
-		double fixedPrice, String itemURL, String galleryURL) {
+		int searchQueryId, String itemId, String itemTitle, String auctionPrice,
+		String fixedPrice, String itemURL, String galleryURL) {
 
 		_searchQueryId = searchQueryId;
 		_itemId = itemId;
@@ -43,11 +43,11 @@ public class SearchResult {
 		return (_itemId.equals(((SearchResult)obj).getItemId()));
 	}
 
-	public double getAuctionPrice() {
+	public String getAuctionPrice() {
 		return _auctionPrice;
 	}
 
-	public double getFixedPrice() {
+	public String getFixedPrice() {
 		return _fixedPrice;
 	}
 
@@ -79,11 +79,11 @@ public class SearchResult {
 		return Integer.parseInt(_itemId);
 	}
 
-	public void setAuctionPrice(double auctionPrice) {
+	public void setAuctionPrice(String auctionPrice) {
 		_auctionPrice = auctionPrice;
 	}
 
-	public void setFixedPrice(double fixedPrice) {
+	public void setFixedPrice(String fixedPrice) {
 		_fixedPrice = fixedPrice;
 	}
 
@@ -111,8 +111,8 @@ public class SearchResult {
 		_searchResultId = searchResultId;
 	}
 
-	private double _auctionPrice;
-	private double _fixedPrice;
+	private String _auctionPrice;
+	private String _fixedPrice;
 	private String _galleryURL;
 	private String _itemId;
 	private String _itemTitle;

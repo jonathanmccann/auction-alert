@@ -99,8 +99,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			_EBAY_URL_PREFIX + searchResult.getItemId(),
 			searchResult.getItemURL());
 		Assert.assertEquals(_GALLERY_URL, searchResult.getGalleryURL());
-		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$0.00", searchResult.getFixedPrice());
 	}
 
 	@Test
@@ -151,8 +151,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			_classInstance, searchResult, _createListingInfo(),
 			_createSellingStatus(), _AUCTION);
 
-		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$0.00", searchResult.getFixedPrice());
 	}
 
 	@Test
@@ -163,8 +163,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			_classInstance, searchResult, _createListingInfo(),
 			_createSellingStatus(), _AUCTION_WITH_BIN);
 
-		Assert.assertEquals(5.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(10.00, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$10.00", searchResult.getFixedPrice());
 	}
 
 	@Test
@@ -175,8 +175,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			_classInstance, searchResult, _createListingInfo(),
 			_createSellingStatus(), _FIXED_PRICE);
 
-		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(5.00, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$0.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$5.00", searchResult.getFixedPrice());
 	}
 
 	@Test
@@ -187,8 +187,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			_classInstance, searchResult, _createListingInfo(),
 			_createSellingStatus(), _STORE_INVENTORY);
 
-		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(5.00, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$0.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$5.00", searchResult.getFixedPrice());
 	}
 
 	@Test
@@ -199,8 +199,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			_classInstance, searchResult, _createListingInfo(),
 			_createSellingStatus(), _UNKNOWN);
 
-		Assert.assertEquals(0.00, searchResult.getAuctionPrice(), 0);
-		Assert.assertEquals(0.00, searchResult.getFixedPrice(), 0);
+		Assert.assertEquals("$0.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$0.00", searchResult.getFixedPrice());
 	}
 
 	@Test

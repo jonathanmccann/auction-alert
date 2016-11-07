@@ -126,8 +126,8 @@ public class SearchResultDAO {
 		searchResult.setItemTitle(resultSet.getString("itemTitle"));
 		searchResult.setItemURL(resultSet.getString("itemURL"));
 		searchResult.setGalleryURL(resultSet.getString("galleryURL"));
-		searchResult.setAuctionPrice(resultSet.getDouble("auctionPrice"));
-		searchResult.setFixedPrice(resultSet.getDouble("fixedPrice"));
+		searchResult.setAuctionPrice(resultSet.getString("auctionPrice"));
+		searchResult.setFixedPrice(resultSet.getString("fixedPrice"));
 
 		return searchResult;
 	}
@@ -141,8 +141,8 @@ public class SearchResultDAO {
 		preparedStatement.setString(3, searchResult.getItemTitle());
 		preparedStatement.setString(4, searchResult.getItemURL());
 		preparedStatement.setString(5, searchResult.getGalleryURL());
-		preparedStatement.setDouble(6, searchResult.getAuctionPrice());
-		preparedStatement.setDouble(7, searchResult.getFixedPrice());
+		preparedStatement.setString(6, searchResult.getAuctionPrice());
+		preparedStatement.setString(7, searchResult.getFixedPrice());
 	}
 
 	private static final String _ADD_SEARCH_RESULT_SQL =
