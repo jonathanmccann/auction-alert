@@ -1,7 +1,11 @@
 $(window).load(function() {
 	var currencyMap = {1: "USD", 7: "CAD", 15: "GBP", 3: "EUR", 4: "AUD", 5: "EUR", 14: "CHF", 13: "EUR", 10: "EUR", 2: "EUR", 12: "EUR", 16: "EUR"};
 
+	var currencySymbolMap = {1: "$", 7: "C $", 15: "£", 3: "€", 4: "AU $", 5: "€", 14: "CHF ", 13: "€", 10: "€", 2: "€", 12: "€", 16: "€"};
+
 	var itemIds = [];
+
+	var globalId;
 
 	var search = $("#search");
 
@@ -65,15 +69,17 @@ $(window).load(function() {
 		if (itemIds.indexOf(itemId) < 0) {
 			var html = '<div align="left" id="' + itemId + '"> <div class="monitor-result-image"> <img src=' + imageUrl + '> </div> <div class="monitor-result-information"> <a href="' + itemUrl + itemId + '" target="_blank">' + title + '</a> <br>';
 
+			var currencySymbol = currencySymbolMap[globalId];
+
 			if (listingType == "Auction") {
-				html += 'Auction Price: $' + Number(currentPrice).toFixed(2);
+				html += 'Auction Price: ' + currencySymbol + Number(currentPrice).toFixed(2);
 			}
 			else if (listingType == "AuctionWithBIN") {
-				html += 'Auction Price: $' + Number(currentPrice).toFixed(2) + '<br>';
-				html += 'Fixed Price: $' + Number(fixedPrice).toFixed(2);
+				html += 'Auction Price: ' + currencySymbol + Number(currentPrice).toFixed(2) + '<br>';
+				html += 'Fixed Price: ' + currencySymbol + Number(fixedPrice).toFixed(2);
 			}
 			else if ((listingType == "FixedPrice") || (listingType == "StoreInventory")) {
-				html += 'Fixed Price: $' + Number(currentPrice).toFixed(2);
+				html += 'Fixed Price: ' + currencySymbol + Number(currentPrice).toFixed(2);
 			}
 
 			contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
@@ -180,7 +186,7 @@ $(window).load(function() {
 
 		contentDiv.innerHTML = "<h5>Results will begin populating here as soon as they are found.</h5>";
 
-		var globalId = $("#globalId").val();
+		globalId = $("#globalId").val();
 
 		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 
