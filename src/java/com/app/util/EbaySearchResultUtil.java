@@ -127,23 +127,24 @@ public class EbaySearchResultUtil {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
 			searchResult.setAuctionPrice(
-				String.valueOf(currentPrice.getValue()));
+				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
 				 "StoreInventory".equals(typeOfAuction)) {
 
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
-			searchResult.setFixedPrice(String.valueOf(currentPrice.getValue()));
+			searchResult.setFixedPrice(
+				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 			Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
 
 			searchResult.setAuctionPrice(
-				String.valueOf(currentPrice.getValue()));
+				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
 			searchResult.setFixedPrice(
-				String.valueOf(buyItNowPrice.getValue()));
+				_DISPLAY_DECIMAL_FORMAT.format(buyItNowPrice.getValue()));
 		}
 		else {
 			_log.error(
@@ -264,6 +265,9 @@ public class EbaySearchResultUtil {
 
 	private static final DecimalFormat _DECIMAL_FORMAT = new DecimalFormat(
 		"0.00");
+
+	private static final DecimalFormat _DISPLAY_DECIMAL_FORMAT =
+		new DecimalFormat("#,##0.00");
 
 	private static final Pattern _ITEM_TITLE_PATTERN =
 		Pattern.compile("\\P{Print}");
