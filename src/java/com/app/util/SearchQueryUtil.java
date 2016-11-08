@@ -75,12 +75,8 @@ public class SearchQueryUtil {
 		_searchQueryDAO.deleteSearchQuery(userId, searchQueryId);
 	}
 
-	public static String getCurrencySymbol(int searchQueryId)
-		throws DatabaseConnectionException, SQLException {
-
-		SearchQuery searchQuery = getSearchQuery(searchQueryId);
-
-		return _CURRENCY_SYMBOLS.get(searchQuery.getGlobalId());
+	public static String getCurrencySymbol(String globalId) {
+		return _CURRENCY_SYMBOLS.get(globalId);
 	}
 
 	public static Map<String, String> getGlobalIds() {

@@ -76,11 +76,12 @@ public class EbaySearchResultUtil {
 		List<SearchItem> searchItems = searchResults.getItem();
 
 		return _createSearchResults(
-			searchItems, searchQuery.getSearchQueryId(), preferredDomain);
+			searchItems, searchQuery.getSearchQueryId(), preferredDomain,
+			searchQuery.getGlobalId());
 	}
 
 	private static SearchResult _createSearchResult(
-		SearchItem item, String preferredDomain) {
+		SearchItem item, String preferredDomain, String globalId) {
 
 		SearchResult searchResult = new SearchResult();
 
@@ -93,7 +94,7 @@ public class EbaySearchResultUtil {
 		searchResult.setGalleryURL(item.getGalleryURL());
 
 		_setPrice(
-			searchResult, listingInfo, item.getSellingStatus(),
+			searchResult, globalId, listingInfo, item.getSellingStatus(),
 			listingInfo.getListingType());
 
 		return searchResult;
@@ -101,7 +102,7 @@ public class EbaySearchResultUtil {
 
 	private static List<SearchResult> _createSearchResults(
 		List<SearchItem> searchItems, int searchQueryId,
-		String preferredDomain) {
+		String preferredDomain, String globalId) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -109,7 +110,7 @@ public class EbaySearchResultUtil {
 
 		for (SearchItem searchItem : searchItems) {
 			SearchResult searchResult = _createSearchResult(
-				searchItem, preferredDomain);
+				searchItem, preferredDomain, globalId);
 
 			searchResult.setSearchQueryId(searchQueryId);
 
@@ -120,14 +121,15 @@ public class EbaySearchResultUtil {
 	}
 
 	private static void _setPrice(
-		SearchResult searchResult, ListingInfo listingInfo,
+		SearchResult searchResult, String globalId, ListingInfo listingInfo,
 		SellingStatus sellingStatus, String typeOfAuction) {
 
 		if ("Auction".equals(typeOfAuction)) {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
 			searchResult.setAuctionPrice(
-				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
+				SearchQueryUtil.getCurrencySymbol(globalId) +
+					_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
 				 "StoreInventory".equals(typeOfAuction)) {
@@ -135,6 +137,7 @@ public class EbaySearchResultUtil {
 			Amount currentPrice = sellingStatus.getCurrentPrice();
 
 			searchResult.setFixedPrice(
+				SearchQueryUtil.getCurrencySymbol(globalId) +
 				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
@@ -142,8 +145,10 @@ public class EbaySearchResultUtil {
 			Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
 
 			searchResult.setAuctionPrice(
+				SearchQueryUtil.getCurrencySymbol(globalId) +
 				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
 			searchResult.setFixedPrice(
+				SearchQueryUtil.getCurrencySymbol(globalId) +
 				_DISPLAY_DECIMAL_FORMAT.format(buyItNowPrice.getValue()));
 		}
 		else {
