@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.util.UserUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -173,7 +174,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			activeSearchQuery);
 
 		SearchResult firstSearchResult = new SearchResult(
-			activeSearchQueryId, "1234", "itemTitle", 14.99, 14.99,
+			activeSearchQueryId, "1234", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		SearchResultUtil.addSearchResult(firstSearchResult);
@@ -191,7 +192,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			inactiveSearchQuery);
 
 		SearchResult secondSearchResult = new SearchResult(
-			inactiveSearchQueryId, "2345", "itemTitle", 14.99, 14.99,
+			inactiveSearchQueryId, "2345", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg");
 
 		SearchResultUtil.addSearchResult(secondSearchResult);
@@ -259,7 +260,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		SearchResult searchResult = new SearchResult(
-			searchQueryId, "1234", "itemTitle", 14.99, 14.99,
+			searchQueryId, "1234", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		SearchResultUtil.addSearchResult(searchResult);
@@ -350,6 +351,10 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetMonitor() throws Exception {
+		setUpUserUtil();
+
+		UserUtil.addUser("test@test.com", "password");
+
 		this.mockMvc.perform(get("/monitor"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("monitor"))

@@ -390,7 +390,7 @@ public class UserControllerTest extends BaseTestCase {
 			searchQueryId, "1234");
 
 		SearchResult searchResult = new SearchResult(
-			searchQueryId, "1234", "First Item", 10.00, 14.99,
+			searchQueryId, "1234", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		SearchResultUtil.addSearchResult(searchResult);

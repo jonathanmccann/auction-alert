@@ -172,8 +172,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
 
 		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", 14.99, 29.99,"http://www.ebay.com/itm/1234",
-			"http://www.ebay.com/123.jpg");
+			1, "1234", "itemTitle", "$14.99", "$29.99",
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
 		searchResults.add(searchResult);
 
