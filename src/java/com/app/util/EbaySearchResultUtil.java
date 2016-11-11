@@ -57,8 +57,11 @@ public class EbaySearchResultUtil {
 
 		String preferredDomain = user.getPreferredDomain();
 
+		String preferredCurrency = UserUtil.getPreferredCurrency(
+			preferredDomain);
+
 		FindItemsAdvancedRequest request = _setUpAdvancedRequest(
-			searchQuery, UserUtil.getPreferredCurrency(preferredDomain));
+			searchQuery, preferredCurrency);
 
 		FindingServicePortType serviceClient = EbayAPIUtil.getServiceClient(
 			searchQuery.getGlobalId());
@@ -77,11 +80,12 @@ public class EbaySearchResultUtil {
 
 		return _createSearchResults(
 			searchItems, searchQuery.getSearchQueryId(), preferredDomain,
-			searchQuery.getGlobalId());
+			preferredCurrency, searchQuery.getGlobalId());
 	}
 
 	private static SearchResult _createSearchResult(
-		SearchItem item, String preferredDomain, String globalId) {
+		SearchItem item, String preferredDomain, String preferredCurrency,
+		String globalId) {
 
 		SearchResult searchResult = new SearchResult();
 
@@ -94,15 +98,15 @@ public class EbaySearchResultUtil {
 		searchResult.setGalleryURL(item.getGalleryURL());
 
 		_setPrice(
-			searchResult, globalId, listingInfo, item.getSellingStatus(),
-			listingInfo.getListingType());
+			searchResult, preferredCurrency, globalId, listingInfo,
+			item.getSellingStatus(), listingInfo.getListingType());
 
 		return searchResult;
 	}
 
 	private static List<SearchResult> _createSearchResults(
 		List<SearchItem> searchItems, int searchQueryId,
-		String preferredDomain, String globalId) {
+		String preferredDomain, String preferredCurrency, String globalId) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -110,7 +114,7 @@ public class EbaySearchResultUtil {
 
 		for (SearchItem searchItem : searchItems) {
 			SearchResult searchResult = _createSearchResult(
-				searchItem, preferredDomain, globalId);
+				searchItem, preferredDomain, preferredCurrency, globalId);
 
 			searchResult.setSearchQueryId(searchQueryId);
 
@@ -121,35 +125,40 @@ public class EbaySearchResultUtil {
 	}
 
 	private static void _setPrice(
-		SearchResult searchResult, String globalId, ListingInfo listingInfo,
-		SellingStatus sellingStatus, String typeOfAuction) {
+		SearchResult searchResult, String preferredCurrency, String globalId,
+		ListingInfo listingInfo, SellingStatus sellingStatus,
+		String typeOfAuction) {
+
+		Amount currentPrice = sellingStatus.getCurrentPrice();
+		Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
+
+		double auctionPrice = ExchangeRateUtil.convertCurrency(
+			currentPrice.getCurrencyId(), preferredCurrency,
+			currentPrice.getValue());
 
 		if ("Auction".equals(typeOfAuction)) {
-			Amount currentPrice = sellingStatus.getCurrentPrice();
-
 			searchResult.setAuctionPrice(
 				SearchQueryUtil.getCurrencySymbol(globalId) +
-					_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
+					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
 				 "StoreInventory".equals(typeOfAuction)) {
 
-			Amount currentPrice = sellingStatus.getCurrentPrice();
-
 			searchResult.setFixedPrice(
 				SearchQueryUtil.getCurrencySymbol(globalId) +
-				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
+				_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
-			Amount currentPrice = sellingStatus.getCurrentPrice();
-			Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
+			double fixedPrice = ExchangeRateUtil.convertCurrency(
+				buyItNowPrice.getCurrencyId(), preferredCurrency,
+				buyItNowPrice.getValue());
 
 			searchResult.setAuctionPrice(
 				SearchQueryUtil.getCurrencySymbol(globalId) +
-				_DISPLAY_DECIMAL_FORMAT.format(currentPrice.getValue()));
+				_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 			searchResult.setFixedPrice(
 				SearchQueryUtil.getCurrencySymbol(globalId) +
-				_DISPLAY_DECIMAL_FORMAT.format(buyItNowPrice.getValue()));
+				_DISPLAY_DECIMAL_FORMAT.format(fixedPrice));
 		}
 		else {
 			_log.error(

@@ -15,6 +15,7 @@
 package com.app.schedule;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.util.ExchangeRateUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.UserUtil;
 
@@ -48,7 +49,17 @@ public class Scheduler {
 			UserUtil.resetEmailsSent();
 		}
 		catch (DatabaseConnectionException | SQLException e) {
-			_log.error("Unable to perform eBay search", e);
+			_log.error("Unable to reset emails sent", e);
+		}
+	}
+
+	@Scheduled(cron = "0 0 0 * * *")
+	public static void updateExchangeRates() {
+		try {
+			ExchangeRateUtil.updateExchangeRates();
+		}
+		catch (Exception e) {
+			_log.error("Unable to update exchange rates", e);
 		}
 	}
 
