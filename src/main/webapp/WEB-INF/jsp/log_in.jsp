@@ -65,7 +65,7 @@
 				<input id="redirect" name="redirect" type="hidden" value="${redirect}" />
 
 				<div>
-					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email"/>
+					<b>Email Address: </b><input autofocus id="emailAddress" name="emailAddress" type="email"/>
 				</div>
 				<div>
 					<b>Password: </b><input id="password" name="password" type="password" />

@@ -12,6 +12,8 @@ $(document).ready(function() {
 		e.preventDefault();
 
 		popup.style.display = "block";
+
+		$("#emailAddress").focus();
 	});
 
 	close.onclick = function() {
