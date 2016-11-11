@@ -124,14 +124,6 @@ public class UserUtil {
 		return (int)session.getAttribute("userId");
 	}
 
-	public static String getPreferredCurrency(String preferredDomain) {
-		return _PREFERRED_CURRENCIES.get(preferredDomain);
-	}
-
-	public static Map<String, String> getPreferredDomains() {
-		return _PREFERRED_DOMAINS;
-	}
-
 	public static User getUserByEmailAddress(String emailAddress)
 		throws DatabaseConnectionException, SQLException {
 
@@ -362,44 +354,8 @@ public class UserUtil {
 		}
 	}
 
-	private static final Map<String, String> _PREFERRED_CURRENCIES =
-		new HashMap<>();
-
-	private static final Map<String, String> _PREFERRED_DOMAINS =
-		new LinkedHashMap<>();
-
 	private static HashedCredentialsMatcher _hashedCredentialsMatcher;
 
 	private static UserDAO _userDAO;
-
-	static {
-		_PREFERRED_CURRENCIES.put("http://www.ebay.com/itm/", "USD");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.ca/itm/", "CAD");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.co.uk/itm/", "GBP");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.at/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.com.au/itm/", "AUD");
-		_PREFERRED_CURRENCIES.put("http://www.befr.ebay.be/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.ch/itm/", "CHF");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.de/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.es/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.fr/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.ie/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.it/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.nl/itm/", "EUR");
-
-		_PREFERRED_DOMAINS.put("http://www.ebay.com/itm/", ".com");
-		_PREFERRED_DOMAINS.put("http://www.ebay.ca/itm/", ".ca");
-		_PREFERRED_DOMAINS.put("http://www.ebay.co.uk/itm/", ".co.uk");
-		_PREFERRED_DOMAINS.put("http://www.ebay.at/itm/", ".at");
-		_PREFERRED_DOMAINS.put("http://www.ebay.com.au/itm/", ".com.au");
-		_PREFERRED_DOMAINS.put("http://www.befr.ebay.be/itm/", ".be");
-		_PREFERRED_DOMAINS.put("http://www.ebay.ch/itm/", ".ch");
-		_PREFERRED_DOMAINS.put("http://www.ebay.de/itm/", ".de");
-		_PREFERRED_DOMAINS.put("http://www.ebay.es/itm/", ".es");
-		_PREFERRED_DOMAINS.put("http://www.ebay.fr/itm/", ".fr");
-		_PREFERRED_DOMAINS.put("http://www.ebay.ie/itm/", ".ie");
-		_PREFERRED_DOMAINS.put("http://www.ebay.it/itm/", ".it");
-		_PREFERRED_DOMAINS.put("http://www.ebay.nl/itm/", ".nl");
-	}
 
 }

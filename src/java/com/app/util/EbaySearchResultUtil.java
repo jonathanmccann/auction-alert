@@ -57,7 +57,7 @@ public class EbaySearchResultUtil {
 
 		String preferredDomain = user.getPreferredDomain();
 
-		String preferredCurrency = UserUtil.getPreferredCurrency(
+		String preferredCurrency = ConstantsUtil.getPreferredCurrency(
 			preferredDomain);
 
 		FindItemsAdvancedRequest request = _setUpAdvancedRequest(
@@ -138,14 +138,14 @@ public class EbaySearchResultUtil {
 
 		if ("Auction".equals(typeOfAuction)) {
 			searchResult.setAuctionPrice(
-				SearchQueryUtil.getCurrencySymbol(globalId) +
+				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
 					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 		}
 		else if ("FixedPrice".equals(typeOfAuction) ||
 				 "StoreInventory".equals(typeOfAuction)) {
 
 			searchResult.setFixedPrice(
-				SearchQueryUtil.getCurrencySymbol(globalId) +
+				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
 				_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
@@ -154,10 +154,10 @@ public class EbaySearchResultUtil {
 				buyItNowPrice.getValue());
 
 			searchResult.setAuctionPrice(
-				SearchQueryUtil.getCurrencySymbol(globalId) +
+				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
 				_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 			searchResult.setFixedPrice(
-				SearchQueryUtil.getCurrencySymbol(globalId) +
+				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
 				_DISPLAY_DECIMAL_FORMAT.format(fixedPrice));
 		}
 		else {

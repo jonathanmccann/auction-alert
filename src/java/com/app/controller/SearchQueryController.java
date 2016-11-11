@@ -21,7 +21,7 @@ import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.model.User;
 import com.app.util.CategoryUtil;
-import com.app.util.PropertiesValues;
+import com.app.util.ConstantsUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
@@ -122,7 +122,7 @@ public class SearchQueryController {
 
 		populateCategories(model);
 
-		model.put("globalIds", SearchQueryUtil.getGlobalIds());
+		model.put("globalIds", ConstantsUtil.getGlobalIds());
 
 		model.put("isAdd", true);
 
@@ -210,7 +210,7 @@ public class SearchQueryController {
 
 			populateCategories(model);
 
-			model.put("globalIds", SearchQueryUtil.getGlobalIds());
+			model.put("globalIds", ConstantsUtil.getGlobalIds());
 		}
 
 		model.put("error", error);
@@ -283,11 +283,11 @@ public class SearchQueryController {
 
 		model.put(
 			"preferredCurrency",
-			UserUtil.getPreferredCurrency(preferredDomain));
+			ConstantsUtil.getPreferredCurrency(preferredDomain));
 
 		model.put("preferredDomain", preferredDomain);
 
-		model.put("rssGlobalIds", SearchQueryUtil.getRssGlobalIds());
+		model.put("rssGlobalIds", ConstantsUtil.getRssGlobalIds());
 
 		populateCategories(model);
 

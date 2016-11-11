@@ -77,7 +77,7 @@ public class EbayAPIUtil {
 
 		config.setApplicationId(applicationId);
 
-		Map<String, String> globalIds = SearchQueryUtil.getGlobalIds();
+		Map<String, String> globalIds = ConstantsUtil.getGlobalIds();
 
 		Set<String> keys = globalIds.keySet();
 

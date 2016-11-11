@@ -24,6 +24,7 @@ import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
 import com.app.model.SearchQuery;
 import com.app.model.User;
+import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
@@ -679,7 +680,7 @@ public class UserController {
 		model.put("isActive", UserUtil.isCurrentUserActive());
 		model.put("success", success);
 		model.put("user", UserUtil.getCurrentUser());
-		model.put("preferredDomains", UserUtil.getPreferredDomains());
+		model.put("preferredDomains", ConstantsUtil.getPreferredDomains());
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
