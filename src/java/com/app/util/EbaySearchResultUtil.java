@@ -32,6 +32,7 @@ import com.ebay.services.finding.SellingStatus;
 import com.ebay.services.finding.SortOrderType;
 
 import java.sql.SQLException;
+
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
@@ -80,12 +81,11 @@ public class EbaySearchResultUtil {
 
 		return _createSearchResults(
 			searchItems, searchQuery.getSearchQueryId(), preferredDomain,
-			preferredCurrency, searchQuery.getGlobalId());
+			preferredCurrency);
 	}
 
 	private static SearchResult _createSearchResult(
-		SearchItem item, String preferredDomain, String preferredCurrency,
-		String globalId) {
+		SearchItem item, String preferredDomain, String preferredCurrency) {
 
 		SearchResult searchResult = new SearchResult();
 
@@ -98,15 +98,15 @@ public class EbaySearchResultUtil {
 		searchResult.setGalleryURL(item.getGalleryURL());
 
 		_setPrice(
-			searchResult, preferredCurrency, globalId, listingInfo,
+			searchResult, preferredCurrency, listingInfo,
 			item.getSellingStatus(), listingInfo.getListingType());
 
 		return searchResult;
 	}
 
 	private static List<SearchResult> _createSearchResults(
-		List<SearchItem> searchItems, int searchQueryId,
-		String preferredDomain, String preferredCurrency, String globalId) {
+		List<SearchItem> searchItems, int searchQueryId, String preferredDomain,
+		String preferredCurrency) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -114,7 +114,7 @@ public class EbaySearchResultUtil {
 
 		for (SearchItem searchItem : searchItems) {
 			SearchResult searchResult = _createSearchResult(
-				searchItem, preferredDomain, preferredCurrency, globalId);
+				searchItem, preferredDomain, preferredCurrency);
 
 			searchResult.setSearchQueryId(searchQueryId);
 
@@ -125,7 +125,7 @@ public class EbaySearchResultUtil {
 	}
 
 	private static void _setPrice(
-		SearchResult searchResult, String preferredCurrency, String globalId,
+		SearchResult searchResult, String preferredCurrency,
 		ListingInfo listingInfo, SellingStatus sellingStatus,
 		String typeOfAuction) {
 
@@ -146,7 +146,7 @@ public class EbaySearchResultUtil {
 
 			searchResult.setFixedPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-				_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
+					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 		}
 		else if ("AuctionWithBIN".equals(typeOfAuction)) {
 			double fixedPrice = ExchangeRateUtil.convertCurrency(
@@ -155,10 +155,10 @@ public class EbaySearchResultUtil {
 
 			searchResult.setAuctionPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-				_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
+					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
 			searchResult.setFixedPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-				_DISPLAY_DECIMAL_FORMAT.format(fixedPrice));
+					_DISPLAY_DECIMAL_FORMAT.format(fixedPrice));
 		}
 		else {
 			_log.error(
@@ -272,6 +272,7 @@ public class EbaySearchResultUtil {
 			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
 
 		request.setPaginationInput(paginationInput);
+
 		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
 
 		return request;
@@ -283,8 +284,8 @@ public class EbaySearchResultUtil {
 	private static final DecimalFormat _DISPLAY_DECIMAL_FORMAT =
 		new DecimalFormat("#,##0.00");
 
-	private static final Pattern _ITEM_TITLE_PATTERN =
-		Pattern.compile("\\P{Print}");
+	private static final Pattern _ITEM_TITLE_PATTERN = Pattern.compile(
+		"\\P{Print}");
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		EbaySearchResultUtil.class);

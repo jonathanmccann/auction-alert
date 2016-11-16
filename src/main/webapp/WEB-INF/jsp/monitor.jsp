@@ -25,37 +25,43 @@
 <html>
 	<head>
 		<title>Monitor</title>
+
 		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
-		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/validate-search-query.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/skel.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/skel-layers.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/init.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/rss.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/subcategory.js" />" type="text/javascript"></script>
+
+		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-tooltipster-3.0.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-validate-1.14.0.min.js" type="text/javascript"></script>
+
+		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
+		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
+		<script src="/resources/js/init.js" type="text/javascript"></script>
+
+		<script src="/resources/js/rss.js" type="text/javascript"></script>
+		<script src="/resources/js/subcategory.js" type="text/javascript"></script>
+		<script src="/resources/js/validate-search-query.js" type="text/javascript"></script>
+
 		<noscript>
-			<link rel="stylesheet" href="/resources/css/skel.css" />
-			<link rel="stylesheet" href="/resources/css/style.css" />
-			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+			<link href="/resources/css/skel.css" rel="stylesheet" />
+			<link href="/resources/css/style.css" rel="stylesheet" />
+			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
 		</noscript>
 	</head>
+
 	<body>
 		<%@ include file="header.jspf" %>
 
-		<section id="banner" class="minor">
+		<section class="minor" id="banner">
 			<div class="inner">
 				<h2>Monitor</h2>
 			</div>
 		</section>
 
 		<div class="container padding-top">
-			<div id="search" class="icon fa-angle-down">
+			<div class="fa-angle-down icon" id="search">
 				<span class="monitor-header">Search Query</span>
 			</div>
 
-			<div id="searchQuery" class="container padding-top">
+			<div class="container padding-top" id="searchQuery">
 				<form:form commandName="searchQuery" id="searchQueryForm">
 					<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
 
@@ -75,6 +81,7 @@
 								<form:option value="All Categories"></form:option>
 								<form:options items="${searchQueryCategories}" />
 							</form:select>
+
 							<form:select disabled="true" id="subcategoryId" path="subcategoryId">
 								<form:option value="All Subcategories"></form:option>
 							</form:select>
@@ -123,7 +130,7 @@
 
 			<div>
 				<button class="button special" id="startMonitoring">Start Monitoring</button>
-				<button class="button special hidden" id="stopMonitoring">Stop Monitoring</button>
+				<button class="button hidden special" id="stopMonitoring">Stop Monitoring</button>
 				<button class="button special" id="clearResults">Clear Results</button>
 
 				<div class="padding-top" id="notificationOptions">
@@ -132,7 +139,7 @@
 				</div>
 			</div>
 
-			<section class="special box">
+			<section class="box special">
 				<h2 class="align-left">Results</h2>
 				<div id="content">
 					<h5>Please start monitoring in order to display results.</h5>

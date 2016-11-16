@@ -25,6 +25,7 @@ import com.stripe.model.StripeObject;
 import com.stripe.model.Subscription;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,8 +54,8 @@ public class StripeUtil {
 		String customerId = customer.getId();
 
 		UserUtil.updateUserSubscription(
-			userId, UserUtil.generateUnsubscribeToken(customerId),
-			customerId, subscription.getId(), true, false);
+			userId, UserUtil.generateUnsubscribeToken(customerId), customerId,
+			subscription.getId(), true, false);
 	}
 
 	public static void deleteCustomer(String customerId) throws Exception {
@@ -79,6 +80,22 @@ public class StripeUtil {
 		UserUtil.updateUserSubscription(
 			user.getUserId(), user.getUnsubscribeToken(), user.getCustomerId(),
 			user.getSubscriptionId(), true, true);
+	}
+
+	public static String getNextChargeDate() throws Exception {
+		User user = UserUtil.getCurrentUser();
+
+		String subscriptionId = user.getSubscriptionId();
+
+		if (ValidatorUtil.isNotNull(subscriptionId)) {
+			Subscription subscription = Subscription.retrieve(subscriptionId);
+
+			return _NEXT_CHARGE_DATE_FORMAT.format(
+				new Date(subscription.getCurrentPeriodEnd() * 1000));
+		}
+		else {
+			return "";
+		}
 	}
 
 	public static void handleStripeEvent(String stripeJsonEvent)
@@ -106,22 +123,6 @@ public class StripeUtil {
 			Invoice invoice = (Invoice)stripeObject;
 
 			UserUtil.deactivateUser(invoice.getCustomer());
-		}
-	}
-
-	public static String getNextChargeDate() throws Exception {
-		User user = UserUtil.getCurrentUser();
-
-		String subscriptionId = user.getSubscriptionId();
-
-		if (ValidatorUtil.isNotNull(subscriptionId)) {
-			Subscription subscription = Subscription.retrieve(subscriptionId);
-
-			return _NEXT_CHARGE_DATE_FORMAT.format(
-				new Date(subscription.getCurrentPeriodEnd() * 1000));
-		}
-		else {
-			return "";
 		}
 	}
 
@@ -186,12 +187,15 @@ public class StripeUtil {
 		customer.update(customerParams);
 	}
 
+	private static final String _CHARGE_FAILED = "charge.failed";
+
+	private static final String _CUSTOMER_SUBSCRIPTION_DELETED =
+		"customer.subscription.deleted";
+
+	private static final String _INVOICE_PAYMENT_FAILED =
+		"invoice.payment_failed";
+
 	private static final SimpleDateFormat _NEXT_CHARGE_DATE_FORMAT =
 		new SimpleDateFormat("MMMM d");
 
-	public static final String _CHARGE_FAILED = "charge.failed";
-	public static final String _CUSTOMER_SUBSCRIPTION_DELETED =
-		"customer.subscription.deleted";
-	public static final String _INVOICE_PAYMENT_FAILED =
-		"invoice.payment_failed";
 }

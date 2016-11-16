@@ -148,7 +148,7 @@ public class SearchResultDAO {
 	private static final String _ADD_SEARCH_RESULT_SQL =
 		"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, itemURL, " +
 			"galleryURL, auctionPrice, fixedPrice) " +
-				"VALUES(?, ? , ?, ?, ?, ?, ?)";
+				"VALUES(?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _DELETE_SEARCH_QUERY_RESULTS_SQL =
 		"DELETE FROM SearchResult WHERE searchQueryId = ?";
@@ -158,9 +158,6 @@ public class SearchResultDAO {
 
 	private static final String _GET_SEARCH_QUERY_RESULTS_SQL =
 		"SELECT * FROM SearchResult WHERE searchQueryId = ?";
-
-	private static final String _GET_SEARCH_RESULT_SQL =
-		"SELECT * FROM SearchResult WHERE searchResultId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultDAO.class);

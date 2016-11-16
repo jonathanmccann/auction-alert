@@ -24,18 +24,22 @@
 <html>
 	<head>
 		<title>Email Unsubscribe</title>
-		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
+
+		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
+
 		<noscript>
-			<link rel="stylesheet" href="/resources/css/skel.css" />
-			<link rel="stylesheet" href="/resources/css/style.css" />
-			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+			<link href="/resources/css/skel.css" rel="stylesheet" />
+			<link href="/resources/css/style.css" rel="stylesheet" />
+			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
 		</noscript>
 	</head>
+
 	<body>
-		<header id="header" class="skel-layers-fixed">
+		<header class="skel-layers-fixed" id="header">
 			<h1><a href="/home">Auction Alert</a></h1>
 			<nav id="nav">
 				<ul>
@@ -43,6 +47,7 @@
 						<li><a href="log_in">Log In</a></li>
 						<li><a href="create_account" class="button special">Sign Up</a></li>
 					</shiro:guest>
+
 					<shiro:user>
 						<c:if test="${isActive}">
 							<li><a href="add_search_query">Add Search Query</a></li>
@@ -57,13 +62,13 @@
 			</nav>
 		</header>
 
-		<section id="banner" class="minor">
+		<section class="minor" id="banner">
 			<div class="inner">
 				<h2>Email Unsubscribe</h2>
 			</div>
 		</section>
 
-		<section class="wrapper style1">
+		<section class="style1 wrapper">
 			<div class="container">
 				<div class="align-center">
 					<h2>${unsubscribeMessage}</h2>

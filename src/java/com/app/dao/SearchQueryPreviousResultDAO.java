@@ -148,7 +148,8 @@ public class SearchQueryPreviousResultDAO {
 		"DELETE FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
 
 	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_COUNT_SQL =
-		"SELECT COUNT(*) FROM SearchQueryPreviousResult WHERE searchQueryId = ?";
+		"SELECT COUNT(*) FROM SearchQueryPreviousResult WHERE " +
+			"searchQueryId = ?";
 
 	private static final String _GET_SEARCH_QUERY_PREVIOUS_RESULTS_SQL =
 		"SELECT * FROM SearchQueryPreviousResult WHERE searchQueryId = ?";

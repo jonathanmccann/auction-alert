@@ -21,10 +21,7 @@ import com.app.model.SearchQuery;
 
 import java.sql.SQLException;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +72,20 @@ public class SearchQueryUtil {
 		_searchQueryDAO.deleteSearchQuery(userId, searchQueryId);
 	}
 
+	public static boolean exceedsMaximumNumberOfSearchQueries(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		int searchQueryCount = _searchQueryDAO.getSearchQueryCount(userId);
+
+		if ((searchQueryCount + 1) >
+				PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public static List<SearchQuery> getSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -91,20 +102,6 @@ public class SearchQueryUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		return _searchQueryDAO.getSearchQuery(searchQueryId);
-	}
-
-	public static boolean exceedsMaximumNumberOfSearchQueries(int userId)
-		throws DatabaseConnectionException, SQLException {
-
-		int searchQueryCount = _searchQueryDAO.getSearchQueryCount(userId);
-
-		if ((searchQueryCount + 1) >
-				PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES) {
-
-			return true;
-		}
-
-		return false;
 	}
 
 	public static void updateSearchQuery(int userId, SearchQuery searchQuery)
@@ -126,7 +123,8 @@ public class SearchQueryUtil {
 		String keywords = searchQuery.getKeywords();
 
 		searchQuery.setKeywords(
-			_KEYWORDS_INVALID_CHARACTERS_PATTERN.matcher(keywords).replaceAll(""));
+			_KEYWORDS_INVALID_CHARACTERS_PATTERN.matcher(
+				keywords).replaceAll(""));
 	}
 
 	private static void _normalizeSearchQuery(SearchQuery searchQuery) {
@@ -163,7 +161,7 @@ public class SearchQueryUtil {
 	}
 
 	private static void _validateSearchQuery(SearchQuery searchQuery)
-		throws SearchQueryException{
+		throws SearchQueryException {
 
 		if (ValidatorUtil.isNull(searchQuery.getKeywords())) {
 			throw new SearchQueryException();

@@ -34,18 +34,15 @@ public class PropertiesValues {
 	public static final String JDBC_DEFAULT_USERNAME =
 		PropertiesUtil.getConfigurationProperty("jdbc.default.username");
 
-	public static final int LOGIN_ATTEMPT_LIMIT =
-		Integer.parseInt(PropertiesUtil.getConfigurationProperty(
-			"login.attempt.limit"));
+	public static final int LOGIN_ATTEMPT_LIMIT = Integer.parseInt(
+		PropertiesUtil.getConfigurationProperty("login.attempt.limit"));
 
-	public static final int MAXIMUM_NUMBER_OF_SEARCH_QUERIES =
-		Integer.parseInt(
-			PropertiesUtil.getConfigurationProperty(
-				"maximum.number.of.search.queries"));
+	public static final int MAXIMUM_NUMBER_OF_SEARCH_QUERIES = Integer.parseInt(
+		PropertiesUtil.getConfigurationProperty(
+			"maximum.number.of.search.queries"));
 
-	public static final int MAXIMUM_NUMBER_OF_USERS =
-		Integer.parseInt(
-			PropertiesUtil.getConfigurationProperty("maximum.number.of.users"));
+	public static final int MAXIMUM_NUMBER_OF_USERS = Integer.parseInt(
+		PropertiesUtil.getConfigurationProperty("maximum.number.of.users"));
 
 	public static final int NUMBER_OF_EMAILS_PER_DAY = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty("number.of.emails.per.day"));

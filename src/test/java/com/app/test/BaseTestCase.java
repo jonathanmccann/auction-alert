@@ -162,7 +162,7 @@ public abstract class BaseTestCase {
 			Class clazz, Object classInstance)
 		throws Exception {
 
-		Field velocityEngine = clazz.getDeclaredField("velocityEngine");
+		Field velocityEngine = clazz.getDeclaredField("_velocityEngine");
 
 		velocityEngine.setAccessible(true);
 

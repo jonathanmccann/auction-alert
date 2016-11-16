@@ -33,25 +33,30 @@
 			</c:otherwise>
 		</c:choose>
 
-		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
-		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/validate-search-query.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/skel.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/skel-layers.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/init.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/subcategory.js" />" type="text/javascript"></script>
+		<link href="/resources/css/tooltipster.css" rel="stylesheet">
+
+		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-tooltipster-3.0.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-validate-1.14.0.min.js" type="text/javascript"></script>
+
+		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
+		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
+		<script src="/resources/js/init.js" type="text/javascript"></script>
+
+		<script src="/resources/js/subcategory.js" type="text/javascript"></script>
+		<script src="/resources/js/validate-search-query.js" type="text/javascript"></script>
+
 		<noscript>
-			<link rel="stylesheet" href="/resources/css/skel.css" />
-			<link rel="stylesheet" href="/resources/css/style.css" />
-			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+			<link href="/resources/css/skel.css" rel="stylesheet" />
+			<link href="/resources/css/style.css" rel="stylesheet" />
+			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
 		</noscript>
 	</head>
+
 	<body>
 		<%@ include file="header.jspf" %>
 
-		<section id="banner" class="minor">
+		<section class="minor" id="banner">
 			<c:choose>
 				<c:when test="${isAdd}">
 					<div class="inner">
@@ -69,14 +74,14 @@
 		<div class="container padding-top">
 			<c:if test="${not empty error}">
 				<div id="error">
-					<i class="icon fa-times-circle"></i>
+					<i class="fa-times-circle icon"></i>
 					${error}
 				</div>
 			</c:if>
 
 			<c:if test="${not empty info}">
 				<div id="info">
-					<i class="icon fa-info-circle"></i>
+					<i class="fa-info-circle icon"></i>
 					${info}
 				</div>
 			</c:if>
@@ -116,6 +121,7 @@
 									<form:option value="All Categories"></form:option>
 									<form:options items="${searchQueryCategories}" />
 								</form:select>
+
 								<form:select disabled="true" id="subcategoryId" path="subcategoryId">
 									<form:option value="All Subcategories"></form:option>
 								</form:select>

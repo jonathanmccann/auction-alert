@@ -70,30 +70,6 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
-	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
-	public String addSearchQuery(
-			@ModelAttribute("searchQuery")SearchQuery searchQuery,
-			RedirectAttributes redirectAttributes)
-		throws DatabaseConnectionException, SQLException {
-
-		try {
-			int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
-
-			redirectAttributes.addFlashAttribute(
-				"currentSearchQueryId", searchQueryId);
-			redirectAttributes.addFlashAttribute(
-				"isCurrentSearchQueryActive", true);
-		}
-		catch (SearchQueryException sqe) {
-			redirectAttributes.addFlashAttribute(
-				"error", LanguageUtil.getMessage("invalid-search-query"));
-
-			return "redirect:add_search_query";
-		}
-
-		return "redirect:view_search_queries";
-	}
-
 	@RequestMapping(value = "/add_search_query", method = RequestMethod.GET)
 	public String addSearchQuery(
 			@ModelAttribute("error")String error, Map<String, Object> model)
@@ -120,13 +96,38 @@ public class SearchQueryController {
 				LanguageUtil.getMessage("reached-maximum-search-queries"));
 		}
 
-		populateCategories(model);
+		_populateCategories(model);
 
 		model.put("globalIds", ConstantsUtil.getGlobalIds());
 
 		model.put("isAdd", true);
 
 		return "add_search_query";
+	}
+
+	@RequestMapping(value = "/add_search_query", method = RequestMethod.POST)
+	public String addSearchQuery(
+			@ModelAttribute("searchQuery")SearchQuery searchQuery,
+			RedirectAttributes redirectAttributes)
+		throws DatabaseConnectionException, SQLException {
+
+		try {
+			int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+			redirectAttributes.addFlashAttribute(
+				"currentSearchQueryId", searchQueryId);
+
+			redirectAttributes.addFlashAttribute(
+				"isCurrentSearchQueryActive", true);
+		}
+		catch (SearchQueryException sqe) {
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("invalid-search-query"));
+
+			return "redirect:add_search_query";
+		}
+
+		return "redirect:view_search_queries";
 	}
 
 	@RequestMapping(
@@ -167,78 +168,6 @@ public class SearchQueryController {
 		}
 
 		return "redirect:view_search_queries";
-	}
-
-	@RequestMapping(value = "/update_search_query", method = RequestMethod.POST)
-	public String updateSearchQuery(
-			@ModelAttribute("searchQuery")SearchQuery searchQuery,
-			RedirectAttributes redirectAttributes)
-		throws DatabaseConnectionException, SQLException {
-
-		try {
-			SearchQueryUtil.updateSearchQuery(
-				UserUtil.getCurrentUserId(), searchQuery);
-
-			redirectAttributes.addFlashAttribute(
-				"currentSearchQueryId", searchQuery.getSearchQueryId());
-			redirectAttributes.addFlashAttribute(
-				"isCurrentSearchQueryActive", searchQuery.isActive());
-		}
-		catch (SearchQueryException sqe) {
-			redirectAttributes.addAttribute(
-				"searchQueryId", searchQuery.getSearchQueryId());
-			redirectAttributes.addFlashAttribute(
-				"error", LanguageUtil.getMessage("invalid-search-query"));
-
-			return "redirect:update_search_query";
-		}
-
-		return "redirect:view_search_queries";
-	}
-
-	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
-	public String updateSearchQuery(
-			@ModelAttribute("error")String error,
-			@RequestParam("searchQueryId")int searchQueryId,
-			Map<String, Object> model)
-		throws DatabaseConnectionException, SQLException {
-
-		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
-
-		if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
-			model.put("searchQuery", searchQuery);
-
-			populateCategories(model);
-
-			model.put("globalIds", ConstantsUtil.getGlobalIds());
-		}
-
-		model.put("error", error);
-
-		return "add_search_query";
-	}
-
-	@RequestMapping(value = "/view_search_queries", method = RequestMethod.GET)
-	public String viewSearchQueries(
-			@ModelAttribute("currentSearchQueryId")String currentSearchQueryId,
-			@ModelAttribute("isCurrentSearchQueryActive")
-				String isCurrentSearchQueryActive,
-			Map<String, Object> model)
-		throws DatabaseConnectionException, SQLException {
-
-		List<SearchQuery> activeSearchQueries =
-			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), true);
-
-		List<SearchQuery> inactiveSearchQueries =
-			SearchQueryUtil.getSearchQueries(
-				UserUtil.getCurrentUserId(), false);
-
-		model.put("activeSearchQueries", activeSearchQueries);
-		model.put("inactiveSearchQueries", inactiveSearchQueries);
-		model.put("currentSearchQueryId", currentSearchQueryId);
-		model.put("isCurrentSearchQueryActive", isCurrentSearchQueryActive);
-
-		return "view_search_queries";
 	}
 
 	@RequestMapping(value = "/subcategories", method = RequestMethod.GET)
@@ -289,28 +218,101 @@ public class SearchQueryController {
 
 		model.put("rssGlobalIds", ConstantsUtil.getRssGlobalIds());
 
-		populateCategories(model);
+		_populateCategories(model);
 
 		return "monitor";
 	}
 
-	private void populateCategories(Map<String, Object> model)
+	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
+	public String updateSearchQuery(
+			@ModelAttribute("error")String error,
+			@RequestParam("searchQueryId")int searchQueryId,
+			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		if (_CATEGORIES.isEmpty()) {
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
+
+		if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
+			model.put("searchQuery", searchQuery);
+
+			_populateCategories(model);
+
+			model.put("globalIds", ConstantsUtil.getGlobalIds());
+		}
+
+		model.put("error", error);
+
+		return "add_search_query";
+	}
+
+	@RequestMapping(value = "/update_search_query", method = RequestMethod.POST)
+	public String updateSearchQuery(
+			@ModelAttribute("searchQuery")SearchQuery searchQuery,
+			RedirectAttributes redirectAttributes)
+		throws DatabaseConnectionException, SQLException {
+
+		try {
+			SearchQueryUtil.updateSearchQuery(
+				UserUtil.getCurrentUserId(), searchQuery);
+
+			redirectAttributes.addFlashAttribute(
+				"currentSearchQueryId", searchQuery.getSearchQueryId());
+			redirectAttributes.addFlashAttribute(
+				"isCurrentSearchQueryActive", searchQuery.isActive());
+		}
+		catch (SearchQueryException sqe) {
+			redirectAttributes.addAttribute(
+				"searchQueryId", searchQuery.getSearchQueryId());
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("invalid-search-query"));
+
+			return "redirect:update_search_query";
+		}
+
+		return "redirect:view_search_queries";
+	}
+
+	@RequestMapping(value = "/view_search_queries", method = RequestMethod.GET)
+	public String viewSearchQueries(
+			@ModelAttribute("currentSearchQueryId")String currentSearchQueryId,
+			@ModelAttribute("isCurrentSearchQueryActive")
+				String isCurrentSearchQueryActive,
+			Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		List<SearchQuery> activeSearchQueries =
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), true);
+
+		List<SearchQuery> inactiveSearchQueries =
+			SearchQueryUtil.getSearchQueries(
+				UserUtil.getCurrentUserId(), false);
+
+		model.put("activeSearchQueries", activeSearchQueries);
+		model.put("inactiveSearchQueries", inactiveSearchQueries);
+		model.put("currentSearchQueryId", currentSearchQueryId);
+		model.put("isCurrentSearchQueryActive", isCurrentSearchQueryActive);
+
+		return "view_search_queries";
+	}
+
+	private void _populateCategories(Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		if (_categories.isEmpty()) {
 			for (Category parentCategory : CategoryUtil.getParentCategories()) {
-				_CATEGORIES.put(
+				_categories.put(
 					parentCategory.getCategoryId(),
 					parentCategory.getCategoryName());
 			}
 		}
 
-		model.put("searchQueryCategories", _CATEGORIES);
+		model.put("searchQueryCategories", _categories);
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryController.class);
 
-	private static final Map<String, String> _CATEGORIES = new LinkedHashMap<>();
+	private static final Map<String, String> _categories =
+		new LinkedHashMap<>();
 
 }

@@ -27,9 +27,9 @@ public class Category {
 		int categoryLevel) {
 
 		_categoryId = categoryId;
-		_categoryLevel = categoryLevel;
 		_categoryName = categoryName;
 		_categoryParentId = categoryParentId;
+		_categoryLevel = categoryLevel;
 	}
 
 	public String getCategoryId() {
@@ -64,9 +64,8 @@ public class Category {
 		_categoryParentId = categoryParentId;
 	}
 
-	private int _categoryLevel;
-
 	private String _categoryId;
+	private int _categoryLevel;
 	private String _categoryName;
 	private String _categoryParentId;
 

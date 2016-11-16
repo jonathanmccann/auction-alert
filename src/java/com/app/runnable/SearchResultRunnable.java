@@ -19,9 +19,9 @@ import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
+import com.app.util.EbaySearchResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
-import com.app.util.EbaySearchResultUtil;
 
 import java.sql.SQLException;
 

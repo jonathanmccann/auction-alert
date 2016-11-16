@@ -35,6 +35,10 @@ public class User {
 		_emailNotification = emailNotification;
 	}
 
+	public String getCurrentPassword() {
+		return _currentPassword;
+	}
+
 	public String getCustomerId() {
 		return _customerId;
 	}
@@ -55,16 +59,20 @@ public class User {
 		return _lastLoginIpAddress;
 	}
 
-	public String getCurrentPassword() {
-		return _currentPassword;
-	}
-
 	public String getNewPassword() {
 		return _newPassword;
 	}
 
 	public String getPassword() {
 		return _password;
+	}
+
+	public Timestamp getPasswordResetExpiration() {
+		return _passwordResetExpiration;
+	}
+
+	public String getPasswordResetToken() {
+		return _passwordResetToken;
 	}
 
 	public String getPreferredDomain() {
@@ -87,14 +95,6 @@ public class User {
 		return _userId;
 	}
 
-	public String getPasswordResetToken() {
-		return _passwordResetToken;
-	}
-
-	public Timestamp getPasswordResetExpiration() {
-		return _passwordResetExpiration;
-	}
-
 	public boolean isActive() {
 		return _active;
 	}
@@ -109,6 +109,10 @@ public class User {
 
 	public void setActive(boolean active) {
 		_active = active;
+	}
+
+	public void setCurrentPassword(String currentPassword) {
+		_currentPassword = currentPassword;
 	}
 
 	public void setCustomerId(String customerId) {
@@ -135,10 +139,6 @@ public class User {
 		_lastLoginIpAddress = lastLoginIpAddress;
 	}
 
-	public void setCurrentPassword(String currentPassword) {
-		_currentPassword = currentPassword;
-	}
-
 	public void setNewPassword(String newPassword) {
 		_newPassword = newPassword;
 	}
@@ -147,12 +147,12 @@ public class User {
 		_password = password;
 	}
 
-	public void setPasswordResetToken(String passwordResetToken) {
-		_passwordResetToken = passwordResetToken;
-	}
-
 	public void setPasswordResetExpiration(Timestamp passwordResetExpiration) {
 		_passwordResetExpiration = passwordResetExpiration;
+	}
+
+	public void setPasswordResetToken(String passwordResetToken) {
+		_passwordResetToken = passwordResetToken;
 	}
 
 	public void setPendingCancellation(boolean pendingCancellation) {
@@ -180,17 +180,17 @@ public class User {
 	}
 
 	private boolean _active;
+	private String _currentPassword;
 	private String _customerId;
 	private String _emailAddress;
-	private int _emailsSent;
 	private boolean _emailNotification;
+	private int _emailsSent;
 	private Timestamp _lastLoginDate;
 	private String _lastLoginIpAddress;
-	private String _currentPassword;
 	private String _newPassword;
 	private String _password;
-	private String _passwordResetToken;
 	private Timestamp _passwordResetExpiration;
+	private String _passwordResetToken;
 	private boolean _pendingCancellation;
 	private String _preferredDomain;
 	private String _salt;

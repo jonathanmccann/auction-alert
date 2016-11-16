@@ -24,22 +24,28 @@
 <html>
 	<head>
 		<title>Reset Password</title>
+
 		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
-		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
+
+		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-tooltipster-3.0.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-validate-1.14.0.min.js" type="text/javascript"></script>
+
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/validate-user.js" />" type="text/javascript"></script>
+
+		<script src="/resources/js/validate-user.js" type="text/javascript"></script>
+
 		<noscript>
-			<link rel="stylesheet" href="/resources/css/skel.css" />
-			<link rel="stylesheet" href="/resources/css/style.css" />
-			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+			<link href="/resources/css/skel.css" rel="stylesheet" />
+			<link href="/resources/css/style.css" rel="stylesheet" />
+			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
 		</noscript>
 	</head>
+
 	<body>
-		<header id="header" class="skel-layers-fixed">
+		<header class="skel-layers-fixed" id="header">
 			<h1><a href="/home">Auction Alert</a></h1>
 			<nav id="nav">
 				<ul>
@@ -49,7 +55,7 @@
 			</nav>
 		</header>
 
-		<section id="banner" class="minor">
+		<section class="minor" id="banner">
 			<div class="inner">
 				<h2>Reset Password</h2>
 			</div>
@@ -58,14 +64,14 @@
 		<div id="user-details">
 			<c:if test="${not empty error}">
 				<div id="error">
-					<i class="icon fa-times-circle"></i>
+					<i class="fa-times-circle icon"></i>
 					${error}
 				</div>
 			</c:if>
 
 			<c:if test="${not empty success}">
 				<div id="success">
-					<i class="icon fa-check-circle"></i>
+					<i class="fa-check-circle icon"></i>
 					${success}
 				</div>
 			</c:if>
@@ -74,12 +80,15 @@
 				<div>
 					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email" />
 				</div>
+
 				<div>
 					<b>Password: </b><input id="password" name="password" type="password" />
 				</div>
+
 				<div>
 					<b>Password Reset Token: </b><input id="passwordResetToken" name="passwordResetToken" type="text" />
 				</div>
+
 				<div class="padding-top">
 					<input class="button special" formaction="reset_password" formmethod="post" id="resetPasswordSubmit" type="submit" value="Reset Password" />
 				</div>

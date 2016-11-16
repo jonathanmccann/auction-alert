@@ -15,6 +15,7 @@
 package com.app.language;
 
 import java.text.MessageFormat;
+
 import java.util.ResourceBundle;
 
 /**
@@ -22,15 +23,15 @@ import java.util.ResourceBundle;
  */
 public class LanguageUtil {
 
-	public static String getMessage(String messageKey) {
-		return _resourceBundle.getString(messageKey);
-	}
-
 	public static String formatMessage(
 		String messageKey, Object... parameters) {
 
 		return MessageFormat.format(
 			_resourceBundle.getString(messageKey), parameters);
+	}
+
+	public static String getMessage(String messageKey) {
+		return _resourceBundle.getString(messageKey);
 	}
 
 	private static final ResourceBundle _resourceBundle =

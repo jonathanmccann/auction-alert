@@ -411,7 +411,8 @@ public class UserDAO {
 		user.setCustomerId(resultSet.getString("customerId"));
 		user.setSubscriptionId(resultSet.getString("subscriptionId"));
 		user.setActive(resultSet.getBoolean("active"));
-		user.setPendingCancellation(resultSet.getBoolean("pendingCancellation"));
+		user.setPendingCancellation(
+			resultSet.getBoolean("pendingCancellation"));
 		user.setLastLoginDate(resultSet.getTimestamp("lastLoginDate"));
 		user.setLastLoginIpAddress(resultSet.getString("lastLoginIpAddress"));
 		user.setPasswordResetToken(resultSet.getString("passwordResetToken"));
@@ -424,7 +425,7 @@ public class UserDAO {
 	private static final String _ADD_USER_SQL =
 		"INSERT INTO User_(emailAddress, password, salt) VALUES(?, ?, ?)";
 
-	public static final String _DEACTIVATE_USER_SQL =
+	private static final String _DEACTIVATE_USER_SQL =
 		"UPDATE User_ SET active = false, pendingCancellation = false WHERE " +
 			"customerId = ?";
 
@@ -443,27 +444,22 @@ public class UserDAO {
 	private static final String _GET_USER_IDS =
 		"SELECT userId FROM User_ WHERE active = ? ORDER BY userId";
 
-	public static final String _RESET_EMAILS_SENT_SQL =
+	private static final String _RESET_EMAILS_SENT_SQL =
 		"UPDATE User_ SET emailsSent = 0";
 
-	public static final String _UPDATE_PASSWORD_RESET_TOKEN_SQL =
+	private static final String _UNSUBSCRIBE_USER_FROM_EMAIL_NOTIFICATIONS_SQL =
+		"UPDATE User_ SET emailNotification = false WHERE emailAddress = ?";
+
+	private static final String _UPDATE_EMAILS_SENT_SQL =
+		"UPDATE User_ SET emailsSent = ? where userId = ?";
+
+	private static final String _UPDATE_PASSWORD_RESET_TOKEN_SQL =
 		"UPDATE User_ SET passwordResetToken = ?, passwordResetExpiration= ? " +
 			"WHERE userId = ?";
 
-	public static final String _UNSUBSCRIBE_USER_FROM_EMAIL_NOTIFICATIONS_SQL =
-		"UPDATE User_ SET emailNotification = false WHERE emailAddress = ?";
-
-	public static final String _UPDATE_EMAILS_SENT_SQL =
-		"UPDATE User_ SET emailsSent = ? where userId = ?";
-
-	public static final String _UPDATE_PASSWORD_SQL =
+	private static final String _UPDATE_PASSWORD_SQL =
 		"UPDATE User_ SET password = ?, salt = ?, passwordResetToken = NULL " +
 			"WHERE userId = ?";
-
-	private static final String _UPDATE_USER_SQL =
-		"UPDATE User_ SET emailAddress = ?, emailNotification = ?, " +
-			"customerId = ?, subscriptionId = ?, active = ?, " +
-				"pendingCancellation = ? WHERE userId = ?";
 
 	private static final String _UPDATE_USER_DETAILS_SQL =
 		"UPDATE User_ SET emailAddress = ?, password = ?, salt = ?, " +
@@ -473,9 +469,14 @@ public class UserDAO {
 		"UPDATE User_ SET emailAddress = ?, preferredDomain = ?, " +
 			"emailNotification = ? WHERE userId = ?";
 
-	public static final String _UPDATE_USER_LOGIN_DETAILS_SQL =
+	private static final String _UPDATE_USER_LOGIN_DETAILS_SQL =
 		"UPDATE User_ SET lastLoginDate = ?, lastLoginIpAddress = ? WHERE " +
 			"userId = ?";
+
+	private static final String _UPDATE_USER_SQL =
+		"UPDATE User_ SET emailAddress = ?, emailNotification = ?, " +
+			"customerId = ?, subscriptionId = ?, active = ?, " +
+				"pendingCancellation = ? WHERE userId = ?";
 
 	private static final String _UPDATE_USER_SUBSCRIPTION_SQL =
 		"UPDATE User_ SET unsubscribeToken = ?, customerId = ?, " +

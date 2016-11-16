@@ -30,7 +30,6 @@ import java.util.Map;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -42,6 +41,7 @@ import org.apache.velocity.tools.generic.NumberTool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -52,7 +52,6 @@ public class DefaultMailSender implements MailSender {
 
 	@Override
 	public void sendAccountDeletionMessage(String emailAddress) {
-
 		Session session = _authenticateOutboundEmailAddress();
 
 		try {
@@ -73,8 +72,8 @@ public class DefaultMailSender implements MailSender {
 
 		try {
 			Message emailMessage = _populateMessage(
-				emailAddress, "Cancellation Successful", "cancellation_email.vm",
-				session);
+				emailAddress, "Cancellation Successful",
+				"cancellation_email.vm", session);
 
 			Transport.send(emailMessage);
 		}
@@ -183,7 +182,8 @@ public class DefaultMailSender implements MailSender {
 			emailsSent++;
 		}
 		catch (Exception e) {
-			_log.error("Unable to send search results to userId: {}", userId, e);
+			_log.error(
+				"Unable to send search results to userId: {}", userId, e);
 		}
 
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
@@ -251,8 +251,7 @@ public class DefaultMailSender implements MailSender {
 			Message.RecipientType.TO,
 			new InternetAddress(recipientEmailAddress));
 
-		message.setSubject(
-			"New Search Results - " + MailUtil.getCurrentDate());
+		message.setSubject("New Search Results - " + MailUtil.getCurrentDate());
 
 		Map<String, Object> rootMap = new HashMap<>();
 
@@ -265,7 +264,7 @@ public class DefaultMailSender implements MailSender {
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
+			_velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
 
 		message.setContent(messageBody, "text/html");
 
@@ -292,7 +291,7 @@ public class DefaultMailSender implements MailSender {
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/" + template, "UTF-8", rootMap);
+			_velocityEngine, "template/" + template, "UTF-8", rootMap);
 
 		message.setContent(messageBody, "text/html");
 
@@ -319,17 +318,17 @@ public class DefaultMailSender implements MailSender {
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
+			_velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
 
 		message.setContent(messageBody, "text/html");
 
 		return message;
 	}
 
-	@Autowired
-	private VelocityEngine velocityEngine;
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		DefaultMailSender.class);
+
+	@Autowired
+	private VelocityEngine _velocityEngine;
 
 }

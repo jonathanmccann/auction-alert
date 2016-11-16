@@ -18,9 +18,12 @@ import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
 import java.net.URL;
 import java.net.URLConnection;
+
 import java.text.MessageFormat;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +39,7 @@ public class ExchangeRateUtil {
 			return price;
 		}
 
-		double exchangeRate = _EXCHANGE_RATES.get(fromCurrency).get(toCurrency);
+		double exchangeRate = _exchangeRates.get(fromCurrency).get(toCurrency);
 
 		return price * exchangeRate;
 	}
@@ -53,10 +56,10 @@ public class ExchangeRateUtil {
 
 			Gson gson = new Gson();
 
-			Map<Object, Object> response =
-				gson.fromJson(bufferedReader, Map.class);
+			Map<Object, Object> response = gson.fromJson(
+				bufferedReader, Map.class);
 
-			_EXCHANGE_RATES.put(
+			_exchangeRates.put(
 				currencyId, (Map<String, Double>)response.get("rates"));
 		}
 	}
@@ -65,10 +68,10 @@ public class ExchangeRateUtil {
 		"AUD", "CAD", "CHF", "EUR", "GBP", "USD"
 	};
 
-	private static Map<String, Map<String, Double>> _EXCHANGE_RATES =
-		new HashMap<>();
-
 	private static final String _EXCHANGE_RATE_URL =
 		"http://api.fixer.io/latest?base={0}&symbols=AUD,CAD,CHF,EUR,GBP,USD";
+
+	private static final Map<String, Map<String, Double>> _exchangeRates =
+		new HashMap<>();
 
 }

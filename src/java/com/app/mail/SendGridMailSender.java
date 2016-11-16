@@ -29,6 +29,7 @@ import com.sendgrid.Request;
 import com.sendgrid.SendGrid;
 
 import java.io.IOException;
+
 import java.sql.SQLException;
 
 import java.util.HashMap;
@@ -37,8 +38,10 @@ import java.util.Map;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.NumberTool;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -143,7 +146,8 @@ public class SendGridMailSender implements MailSender {
 			emailsSent++;
 		}
 		catch (Exception e) {
-			_log.error("Unable to send search results to userId: {}", userId, e);
+			_log.error(
+				"Unable to send search results to userId: {}", userId, e);
 		}
 
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
@@ -185,7 +189,7 @@ public class SendGridMailSender implements MailSender {
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String message = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
+			_velocityEngine, "template/email_body.vm", "UTF-8", rootMap);
 
 		Content content = new Content("text/html", message);
 
@@ -203,7 +207,7 @@ public class SendGridMailSender implements MailSender {
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/" + template, "UTF-8", rootMap);
+			_velocityEngine, "template/" + template, "UTF-8", rootMap);
 
 		Content content = new Content("text/html", messageBody);
 
@@ -223,7 +227,7 @@ public class SendGridMailSender implements MailSender {
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 
 		String messageBody = VelocityEngineUtils.mergeTemplateIntoString(
-			velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
+			_velocityEngine, "template/password_token.vm", "UTF-8", rootMap);
 
 		Content content = new Content("text/html", messageBody);
 
@@ -247,10 +251,10 @@ public class SendGridMailSender implements MailSender {
 		}
 	}
 
-	@Autowired
-	private VelocityEngine velocityEngine;
-
 	private static final Logger _log = LoggerFactory.getLogger(
 		SendGridMailSender.class);
+
+	@Autowired
+	private VelocityEngine _velocityEngine;
 
 }

@@ -64,8 +64,12 @@ public class SearchQueryDAO {
 
 	@Caching(
 		evict = {
-			@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'true'"),
-			@CacheEvict(value = "searchQueries", key = "#searchQuery.userId + 'false'")
+			@CacheEvict(
+				value = "searchQueries", key = "#searchQuery.userId + 'true'"
+			),
+			@CacheEvict(
+				value = "searchQueries", key = "#searchQuery.userId + 'false'"
+			)
 		}
 	)
 	public int addSearchQuery(SearchQuery searchQuery)
@@ -76,10 +80,9 @@ public class SearchQueryDAO {
 			searchQuery.getKeywords());
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement =
-				connection.prepareStatement(
-					_ADD_ADVANCED_SEARCH_QUERY_SQL,
-					Statement.RETURN_GENERATED_KEYS)) {
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_ADD_ADVANCED_SEARCH_QUERY_SQL,
+				Statement.RETURN_GENERATED_KEYS)) {
 
 			_populateAddSearchQueryPreparedStatement(
 				preparedStatement, searchQuery);
@@ -163,8 +166,7 @@ public class SearchQueryDAO {
 	public List<SearchQuery> getSearchQueries(int userId)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug(
-			"Getting all search queries for userId: {}", userId);
+		_log.debug("Getting all search queries for userId: {}", userId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
@@ -304,7 +306,7 @@ public class SearchQueryDAO {
 			resultSet.getBoolean("fixedPriceListing"));
 		searchQuery.setMaxPrice(resultSet.getDouble("maxPrice"));
 		searchQuery.setMinPrice(resultSet.getDouble("minPrice"));
-		searchQuery.setGlobalId((resultSet.getString("globalId")));
+		searchQuery.setGlobalId(resultSet.getString("globalId"));
 		searchQuery.setActive(resultSet.getBoolean("active"));
 
 		return searchQuery;
@@ -355,14 +357,16 @@ public class SearchQueryDAO {
 	}
 
 	private static final String _ACTIVATION_SEARCH_QUERY_SQL =
-		"UPDATE SearchQuery SET active = ? WHERE searchQueryId = ? and userId = ?";
+		"UPDATE SearchQuery SET active = ? WHERE searchQueryId = ? and " +
+			"userId = ?";
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
-		"INSERT INTO SearchQuery(userId, keywords, categoryId, subcategoryId, " +
-			"searchDescription, freeShippingOnly, newCondition, " +
-				"usedCondition, unspecifiedCondition, auctionListing, " +
-					"fixedPriceListing, maxPrice, minPrice, globalId, active) " +
-						"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO SearchQuery(userId, keywords, categoryId, " +
+			"subcategoryId, searchDescription, freeShippingOnly, " +
+				"newCondition, usedCondition, unspecifiedCondition, " +
+					"auctionListing, fixedPriceListing, maxPrice, minPrice, " +
+						"globalId, active) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+							"?, ?, ?, ?, ?, ?)";
 
 	private static final String _DELETE_SEARCH_QUERIES_SQL =
 		"DELETE FROM SearchQuery WHERE userId = ?";
@@ -370,11 +374,11 @@ public class SearchQueryDAO {
 	private static final String _DELETE_SEARCH_QUERY_SQL =
 		"DELETE FROM SearchQuery WHERE searchQueryId = ? AND userId = ?";
 
-	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_SQL =
-		"SELECT * FROM SearchQuery WHERE userId = ?";
-
 	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_AND_ACTIVE_SQL =
 		"SELECT * FROM SearchQuery WHERE userId = ? and active = ?";
+
+	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_SQL =
+		"SELECT * FROM SearchQuery WHERE userId = ?";
 
 	private static final String _GET_SEARCH_QUERY_COUNT_SQL =
 		"SELECT COUNT(*) FROM SearchQuery WHERE userId = ?";
@@ -383,12 +387,13 @@ public class SearchQueryDAO {
 		"SELECT * FROM SearchQuery WHERE searchQueryId = ?";
 
 	private static final String _UPDATE_ADVANCED_SEARCH_QUERY_SQL =
-		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, subcategoryId = ?, " +
-			"searchDescription = ?, freeShippingOnly = ?, newCondition = ?, " +
-				"usedCondition = ?, unspecifiedCondition = ?, " +
-					"auctionListing = ?, fixedPriceListing = ?, maxPrice = ?, " +
-						"minPrice = ?, globalId = ?, active = ? WHERE searchQueryId = ? " +
-							"AND userId = ?";
+		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, " +
+			"subcategoryId = ?, searchDescription = ?, freeShippingOnly = ?, " +
+				"newCondition = ?, usedCondition = ?, " +
+					"unspecifiedCondition = ?, auctionListing = ?, " +
+						"fixedPriceListing = ?, maxPrice = ?, minPrice = ?, " +
+							"globalId = ?, active = ? WHERE " +
+								"searchQueryId = ? AND userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryDAO.class);

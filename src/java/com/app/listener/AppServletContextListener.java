@@ -16,10 +16,10 @@ package com.app.listener;
 
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
+import com.app.util.EbayAPIUtil;
 import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
-import com.app.util.EbayAPIUtil;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 

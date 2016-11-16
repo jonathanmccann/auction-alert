@@ -28,10 +28,7 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.CredentialsException;
@@ -78,8 +75,8 @@ public class UserUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		_validateCredentials(
-			currentUser.getEmailAddress(), currentUser.getPassword(),
-			password, currentUser.getSalt());
+			currentUser.getEmailAddress(), currentUser.getPassword(), password,
+			currentUser.getSalt());
 
 		_userDAO.deleteUserByUserId(currentUser.getUserId());
 	}
@@ -223,8 +220,7 @@ public class UserUtil {
 
 		String passwordResetToken = randomBytes.toString();
 
-		_userDAO.updatePasswordResetToken(
-			userId, passwordResetToken);
+		_userDAO.updatePasswordResetToken(userId, passwordResetToken);
 
 		return passwordResetToken;
 	}
@@ -278,8 +274,8 @@ public class UserUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		_userDAO.updateUserSubscription(
-			userId, unsubscribeToken, customerId, subscriptionId,
-			active, pendingCancellation);
+			userId, unsubscribeToken, customerId, subscriptionId, active,
+			pendingCancellation);
 	}
 
 	@Autowired
@@ -355,7 +351,6 @@ public class UserUtil {
 	}
 
 	private static HashedCredentialsMatcher _hashedCredentialsMatcher;
-
 	private static UserDAO _userDAO;
 
 }

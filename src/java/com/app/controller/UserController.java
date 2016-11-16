@@ -95,7 +95,8 @@ public class UserController {
 		try {
 			mailSender.sendContactMessage(emailAddress, message);
 
-			model.put("success", LanguageUtil.getMessage("message-send-success"));
+			model.put(
+				"success", LanguageUtil.getMessage("message-send-success"));
 		}
 		catch (Exception e) {
 			_log.error("Unable to deliver contact message");
@@ -122,7 +123,8 @@ public class UserController {
 				"exceedsMaximumNumberOfUsers",
 				UserUtil.exceedsMaximumNumberOfUsers());
 			model.put(
-				"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
+				"stripePublishableKey",
+				PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
 			return "create_account";
 		}
@@ -192,55 +194,6 @@ public class UserController {
 			emailAddress, password, "home", "", request, redirectAttributes);
 	}
 
-	@RequestMapping(value = "/delete_user", method = RequestMethod.POST)
-	public String deleteUser(
-			String emailAddress, String password,
-			RedirectAttributes redirectAttributes)
-		throws Exception {
-
-		User currentUser = UserUtil.getCurrentUser();
-
-		try {
-			UserUtil.deleteUser(password, currentUser);
-
-			int userId = currentUser.getUserId();
-
-			List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
-				userId);
-
-			for (SearchQuery searchQuery : searchQueries) {
-				int searchQueryId = searchQuery.getSearchQueryId();
-
-				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
-					searchQueryId);
-
-				SearchResultUtil.deleteSearchQueryResults(searchQueryId);
-
-				SearchQueryUtil.deleteSearchQuery(userId, searchQueryId);
-			}
-
-			StripeUtil.deleteCustomer(currentUser.getCustomerId());
-		}
-		catch (Exception e) {
-			_log.error(
-				"Unable to delete user with email address: {}. The current " +
-					"user's email address is: {}",
-				emailAddress, currentUser.getEmailAddress());
-
-			redirectAttributes.addFlashAttribute(
-				"error",
-				LanguageUtil.getMessage("user-deletion-failure"));
-
-			return "redirect:my_account";
-		}
-
-		MailSender mailSender = MailSenderFactory.getInstance();
-
-		mailSender.sendAccountDeletionMessage(emailAddress);
-
-		return "redirect:log_out";
-	}
-
 	@RequestMapping(value = "/delete_subscription", method = RequestMethod.POST)
 	public String deleteSubscription(RedirectAttributes redirectAttributes)
 		throws Exception {
@@ -280,21 +233,59 @@ public class UserController {
 		return "redirect:my_account";
 	}
 
+	@RequestMapping(value = "/delete_user", method = RequestMethod.POST)
+	public String deleteUser(
+			String emailAddress, String password,
+			RedirectAttributes redirectAttributes)
+		throws Exception {
+
+		User currentUser = UserUtil.getCurrentUser();
+
+		try {
+			UserUtil.deleteUser(password, currentUser);
+
+			int userId = currentUser.getUserId();
+
+			List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
+				userId);
+
+			for (SearchQuery searchQuery : searchQueries) {
+				int searchQueryId = searchQuery.getSearchQueryId();
+
+				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
+					searchQueryId);
+
+				SearchResultUtil.deleteSearchQueryResults(searchQueryId);
+
+				SearchQueryUtil.deleteSearchQuery(userId, searchQueryId);
+			}
+
+			StripeUtil.deleteCustomer(currentUser.getCustomerId());
+		}
+		catch (Exception e) {
+			_log.error(
+				"Unable to delete user with email address: {}. The current " +
+					"user's email address is: {}",
+				emailAddress, currentUser.getEmailAddress());
+
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("user-deletion-failure"));
+
+			return "redirect:my_account";
+		}
+
+		MailSender mailSender = MailSenderFactory.getInstance();
+
+		mailSender.sendAccountDeletionMessage(emailAddress);
+
+		return "redirect:log_out";
+	}
+
 	@RequestMapping(value ="/faq", method = RequestMethod.GET)
 	public String faq(Map<String, Object> model) throws Exception {
 		model.put("isActive", UserUtil.isCurrentUserActive());
 
 		return "faq";
-	}
-
-	@RequestMapping(value ="/forgot_password", method = RequestMethod.GET)
-	public String forgotPassword(
-		@ModelAttribute("success")String success, Map<String, Object> model) {
-
-		model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
-		model.put("success", success);
-
-		return "forgot_password";
 	}
 
 	@RequestMapping(value ="/forgot_password", method = RequestMethod.POST)
@@ -325,8 +316,18 @@ public class UserController {
 		return "redirect:forgot_password";
 	}
 
+	@RequestMapping(value ="/forgot_password", method = RequestMethod.GET)
+	public String forgotPassword(
+		@ModelAttribute("success")String success, Map<String, Object> model) {
+
+		model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
+		model.put("success", success);
+
+		return "forgot_password";
+	}
+
 	@RequestMapping(
-		value = { "", "/", "/home" },
+		value = {"", "/", "/home"},
 		method = {RequestMethod.GET, RequestMethod.HEAD}
 	)
 	public String home(Map<String, Object> model) throws Exception {
@@ -390,11 +391,10 @@ public class UserController {
 		model.put(
 			"redirect", WebUtils.getSessionAttribute(request, "redirect"));
 
-		int loginAttempts = getLoginAttempts();
+		int loginAttempts = _getLoginAttempts();
 
 		if (loginAttempts >= PropertiesValues.LOGIN_ATTEMPT_LIMIT) {
-			model.put(
-				"recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
+			model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
 		}
 
 		return "log_in";
@@ -412,7 +412,7 @@ public class UserController {
 		if (!currentUser.isAuthenticated()) {
 			Session session = currentUser.getSession();
 
-			int loginAttempts = getLoginAttempts(session);
+			int loginAttempts = _getLoginAttempts(session);
 
 			session.setAttribute("loginAttempts", loginAttempts + 1);
 
@@ -562,7 +562,7 @@ public class UserController {
 		return "redirect:my_account";
 	}
 
-	@RequestMapping(value="/stripe", method=RequestMethod.POST)
+	@RequestMapping(value ="/stripe", method= RequestMethod.POST)
 	public void stripeWebhookEndpoint(
 			@RequestBody String stripeJsonEvent, HttpServletResponse response)
 		throws Exception {
@@ -594,43 +594,12 @@ public class UserController {
 				"unsubscribeMessage",
 				LanguageUtil.getMessage("unsubscribe-failure"));
 		}
-
-		return;
-	}
-
-	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)
-	public String updateSubscription(
-		String stripeToken, RedirectAttributes redirectAttributes) {
-
-		try {
-			User currentUser = UserUtil.getCurrentUser();
-
-			StripeUtil.updateSubscription(
-				stripeToken, currentUser.getCustomerId());
-
-			redirectAttributes.addFlashAttribute(
-				"success", LanguageUtil.getMessage("subscription-updated"));
-
-			MailSender mailSender = MailSenderFactory.getInstance();
-
-			mailSender.sendCardDetailsMessage(currentUser.getEmailAddress());
-		}
-		catch (Exception e) {
-			_log.error(e.getMessage());
-
-			redirectAttributes.addFlashAttribute(
-				"error",
-				LanguageUtil.getMessage("incorrect-payment-information"));
-		}
-
-		return "redirect:my_account";
 	}
 
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
-			@ModelAttribute("user")User user,
-			RedirectAttributes redirectAttributes)
-		throws DatabaseConnectionException, SQLException {
+		@ModelAttribute("user")User user,
+		RedirectAttributes redirectAttributes) {
 
 		try {
 			UserUtil.updateUserDetails(
@@ -667,6 +636,34 @@ public class UserController {
 		return "redirect:my_account";
 	}
 
+	@RequestMapping(value = "/update_subscription", method = RequestMethod.POST)
+	public String updateSubscription(
+		String stripeToken, RedirectAttributes redirectAttributes) {
+
+		try {
+			User currentUser = UserUtil.getCurrentUser();
+
+			StripeUtil.updateSubscription(
+				stripeToken, currentUser.getCustomerId());
+
+			redirectAttributes.addFlashAttribute(
+				"success", LanguageUtil.getMessage("subscription-updated"));
+
+			MailSender mailSender = MailSenderFactory.getInstance();
+
+			mailSender.sendCardDetailsMessage(currentUser.getEmailAddress());
+		}
+		catch (Exception e) {
+			_log.error(e.getMessage());
+
+			redirectAttributes.addFlashAttribute(
+				"error",
+				LanguageUtil.getMessage("incorrect-payment-information"));
+		}
+
+		return "redirect:my_account";
+	}
+
 	@RequestMapping(value = "/my_account", method = RequestMethod.GET)
 	public String viewMyAccount(
 			@ModelAttribute("error")String error,
@@ -675,8 +672,7 @@ public class UserController {
 		throws DatabaseConnectionException, SQLException {
 
 		model.put("error", error);
-		model.put(
-			"info", WebUtils.getSessionAttribute(request, "info"));
+		model.put("info", WebUtils.getSessionAttribute(request, "info"));
 		model.put("isActive", UserUtil.isCurrentUserActive());
 		model.put("success", success);
 		model.put("user", UserUtil.getCurrentUser());
@@ -687,15 +683,15 @@ public class UserController {
 		return "my_account";
 	}
 
-	private static int getLoginAttempts() {
+	private static int _getLoginAttempts() {
 		Subject currentUser = SecurityUtils.getSubject();
 
 		Session session = currentUser.getSession();
 
-		return getLoginAttempts(session);
+		return _getLoginAttempts(session);
 	}
 
-	private static int getLoginAttempts(Session session) {
+	private static int _getLoginAttempts(Session session) {
 		try {
 			return (int)session.getAttribute("loginAttempts");
 		}

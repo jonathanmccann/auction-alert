@@ -24,15 +24,19 @@
 <html>
 	<head>
 		<title>Search Queries and Results</title>
-		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/skel.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/skel-layers.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/init.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/search-query.js" />" type="text/javascript"></script>
+
+		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+
+		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
+		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
+		<script src="/resources/js/init.js" type="text/javascript"></script>
+
+		<script src="/resources/js/search-query.js" type="text/javascript"></script>
+
 		<noscript>
-			<link rel="stylesheet" href="/resources/css/skel.css" />
-			<link rel="stylesheet" href="/resources/css/style.css" />
-			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+			<link href="/resources/css/skel.css" rel="stylesheet" />
+			<link href="/resources/css/style.css" rel="stylesheet" />
+			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
 		</noscript>
 
 		<c:if test="${not empty currentSearchQueryId}">
@@ -43,26 +47,28 @@
 			</script>
 		</c:if>
 	</head>
+
 	<body>
 		<%@ include file="header.jspf" %>
 
-		<section id="banner" class="minor">
+		<section class="minor" id="banner">
 			<div class="inner">
 				<h2>Search Queries and Results</h2>
 			</div>
 		</section>
 
-		<section class="wrapper style1">
+		<section class="style1 wrapper">
 			<div class="container">
 				<div class="row">
 					<div class="4u">
-						<section class="special box">
+						<section class="box special">
 							<h2 class="align-left">Active</h2>
 							<c:forEach items="${activeSearchQueries}" var="activeSearchQuery">
 								<div>
 									<a href="javascript:void(0)" onclick="getSearchQueryResults(${activeSearchQuery.searchQueryId}, true);">${activeSearchQuery.keywords}</a>
 								</div>
 							</c:forEach>
+
 							<h2 class="align-left">Inactive</h2>
 							<c:forEach items="${inactiveSearchQueries}" var="inactiveSearchQuery">
 								<div>
@@ -71,6 +77,7 @@
 							</c:forEach>
 						</section>
 					</div>
+
 					<div class="8u">
 						<form:form class="hidden" commandName="searchQuery" id="searchQueryForm">
 							<input id="searchQueryId" name="searchQueryId" type="hidden" />
@@ -81,7 +88,8 @@
 							<input class="button special" formaction="monitor" formmethod="get" id="monitorButton" type="submit" value="Monitor" />
 							<input class="button special" formaction="delete_search_query" formmethod="post" id="deleteButton" type="submit" value="Delete" />
 						</form:form>
-						<section class="special box">
+
+						<section class="box special">
 							<h2 class="align-left">Results</h2>
 
 							<div id="results">

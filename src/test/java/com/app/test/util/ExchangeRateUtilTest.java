@@ -55,7 +55,7 @@ public class ExchangeRateUtilTest extends BaseTestCase {
 	private static void setUpExchangeRateUtil() throws Exception {
 		Class clazz = Class.forName(ExchangeRateUtil.class.getName());
 
-		Field exchangeRates = clazz.getDeclaredField("_EXCHANGE_RATES");
+		Field exchangeRates = clazz.getDeclaredField("_exchangeRates");
 
 		exchangeRates.setAccessible(true);
 

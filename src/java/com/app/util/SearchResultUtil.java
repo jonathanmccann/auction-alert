@@ -143,9 +143,8 @@ public class SearchResultUtil {
 					PropertiesValues.
 						TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS) {
 
-				SearchQueryPreviousResultUtil.
-					deleteSearchQueryPreviousResult(
-						searchResult.getSearchQueryId());
+				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResult(
+					searchResult.getSearchQueryId());
 			}
 
 			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
@@ -177,7 +176,7 @@ public class SearchResultUtil {
 			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
 				searchQueryId);
 
-		if (searchQueryPreviousResults.size() > 0) {
+		if (!searchQueryPreviousResults.isEmpty()) {
 			Iterator iterator = newSearchResults.iterator();
 
 			while (iterator.hasNext()) {

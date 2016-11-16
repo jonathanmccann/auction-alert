@@ -27,104 +27,104 @@ import org.springframework.stereotype.Service;
 public class ConstantsUtil {
 
 	public static String getCurrencySymbol(String currency) {
-		return _CURRENCY_SYMBOLS.get(currency);
+		return _currencySymbols.get(currency);
 	}
 
 	public static Map<String, String> getGlobalIds() {
-		return _GLOBAL_IDS;
+		return _globalIds;
 	}
 
 	public static String getPreferredCurrency(String preferredDomain) {
-		return _PREFERRED_CURRENCIES.get(preferredDomain);
+		return _preferredCurrencies.get(preferredDomain);
 	}
 
 	public static Map<String, String> getPreferredDomains() {
-		return _PREFERRED_DOMAINS;
+		return _preferredDomains;
 	}
 
 	public static Map<String, String> getRssGlobalIds() {
-		return _RSS_GLOBAL_IDS;
+		return _rssGlobalIds;
 	}
 
-	private static final Map<String, String> _CURRENCY_SYMBOLS = new HashMap<>();
-	private static final Map<String, String> _GLOBAL_IDS = new LinkedHashMap<>();
-	private static final Map<String, String> _PREFERRED_CURRENCIES =
+	private static final Map<String, String> _currencySymbols = new HashMap<>();
+	private static final Map<String, String> _globalIds = new LinkedHashMap<>();
+	private static final Map<String, String> _preferredCurrencies =
 		new HashMap<>();
-	private static final Map<String, String> _PREFERRED_DOMAINS =
+	private static final Map<String, String> _preferredDomains =
 		new LinkedHashMap<>();
-	private static final Map<String, String> _RSS_GLOBAL_IDS =
+	private static final Map<String, String> _rssGlobalIds =
 		new LinkedHashMap<>();
 
 	static {
-		_CURRENCY_SYMBOLS.put("USD", "$");
-		_CURRENCY_SYMBOLS.put("CAD", "C $");
-		_CURRENCY_SYMBOLS.put("GBP", "£");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
-		_CURRENCY_SYMBOLS.put("AUD", "AU $");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
-		_CURRENCY_SYMBOLS.put("CHF", "CHF ");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
-		_CURRENCY_SYMBOLS.put("EUR", "€");
+		_currencySymbols.put("USD", "$");
+		_currencySymbols.put("CAD", "C $");
+		_currencySymbols.put("GBP", "£");
+		_currencySymbols.put("EUR", "€");
+		_currencySymbols.put("AUD", "AU $");
+		_currencySymbols.put("EUR", "€");
+		_currencySymbols.put("CHF", "CHF ");
+		_currencySymbols.put("EUR", "€");
+		_currencySymbols.put("EUR", "€");
+		_currencySymbols.put("EUR", "€");
+		_currencySymbols.put("EUR", "€");
+		_currencySymbols.put("EUR", "€");
+		_currencySymbols.put("EUR", "€");
 
-		_GLOBAL_IDS.put("EBAY-US", "United States");
-		_GLOBAL_IDS.put("EBAY-ENCA", "Canada");
-		_GLOBAL_IDS.put("EBAY-GB", "United Kingdom");
-		_GLOBAL_IDS.put("EBAY-AT", "Austria");
-		_GLOBAL_IDS.put("EBAY-AU", "Australia");
-		_GLOBAL_IDS.put("EBAY-FRBE", "Belgium");
-		_GLOBAL_IDS.put("EBAY-CH", "Switzerland");
-		_GLOBAL_IDS.put("EBAY-DE", "Germany");
-		_GLOBAL_IDS.put("EBAY-ES", "Spain");
-		_GLOBAL_IDS.put("EBAY-FR", "France");
-		_GLOBAL_IDS.put("EBAY-IE", "Ireland");
-		_GLOBAL_IDS.put("EBAY-IT", "Italy");
-		_GLOBAL_IDS.put("EBAY-NL", "Netherlands");
+		_globalIds.put("EBAY-US", "United States");
+		_globalIds.put("EBAY-ENCA", "Canada");
+		_globalIds.put("EBAY-GB", "United Kingdom");
+		_globalIds.put("EBAY-AT", "Austria");
+		_globalIds.put("EBAY-AU", "Australia");
+		_globalIds.put("EBAY-FRBE", "Belgium");
+		_globalIds.put("EBAY-CH", "Switzerland");
+		_globalIds.put("EBAY-DE", "Germany");
+		_globalIds.put("EBAY-ES", "Spain");
+		_globalIds.put("EBAY-FR", "France");
+		_globalIds.put("EBAY-IE", "Ireland");
+		_globalIds.put("EBAY-IT", "Italy");
+		_globalIds.put("EBAY-NL", "Netherlands");
 
-		_PREFERRED_CURRENCIES.put("http://www.ebay.com/itm/", "USD");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.ca/itm/", "CAD");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.co.uk/itm/", "GBP");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.at/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.com.au/itm/", "AUD");
-		_PREFERRED_CURRENCIES.put("http://www.befr.ebay.be/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.ch/itm/", "CHF");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.de/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.es/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.fr/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.ie/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.it/itm/", "EUR");
-		_PREFERRED_CURRENCIES.put("http://www.ebay.nl/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.com/itm/", "USD");
+		_preferredCurrencies.put("http://www.ebay.ca/itm/", "CAD");
+		_preferredCurrencies.put("http://www.ebay.co.uk/itm/", "GBP");
+		_preferredCurrencies.put("http://www.ebay.at/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.com.au/itm/", "AUD");
+		_preferredCurrencies.put("http://www.befr.ebay.be/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.ch/itm/", "CHF");
+		_preferredCurrencies.put("http://www.ebay.de/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.es/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.fr/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.ie/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.it/itm/", "EUR");
+		_preferredCurrencies.put("http://www.ebay.nl/itm/", "EUR");
 
-		_PREFERRED_DOMAINS.put("http://www.ebay.com/itm/", ".com");
-		_PREFERRED_DOMAINS.put("http://www.ebay.ca/itm/", ".ca");
-		_PREFERRED_DOMAINS.put("http://www.ebay.co.uk/itm/", ".co.uk");
-		_PREFERRED_DOMAINS.put("http://www.ebay.at/itm/", ".at");
-		_PREFERRED_DOMAINS.put("http://www.ebay.com.au/itm/", ".com.au");
-		_PREFERRED_DOMAINS.put("http://www.befr.ebay.be/itm/", ".be");
-		_PREFERRED_DOMAINS.put("http://www.ebay.ch/itm/", ".ch");
-		_PREFERRED_DOMAINS.put("http://www.ebay.de/itm/", ".de");
-		_PREFERRED_DOMAINS.put("http://www.ebay.es/itm/", ".es");
-		_PREFERRED_DOMAINS.put("http://www.ebay.fr/itm/", ".fr");
-		_PREFERRED_DOMAINS.put("http://www.ebay.ie/itm/", ".ie");
-		_PREFERRED_DOMAINS.put("http://www.ebay.it/itm/", ".it");
-		_PREFERRED_DOMAINS.put("http://www.ebay.nl/itm/", ".nl");
+		_preferredDomains.put("http://www.ebay.com/itm/", ".com");
+		_preferredDomains.put("http://www.ebay.ca/itm/", ".ca");
+		_preferredDomains.put("http://www.ebay.co.uk/itm/", ".co.uk");
+		_preferredDomains.put("http://www.ebay.at/itm/", ".at");
+		_preferredDomains.put("http://www.ebay.com.au/itm/", ".com.au");
+		_preferredDomains.put("http://www.befr.ebay.be/itm/", ".be");
+		_preferredDomains.put("http://www.ebay.ch/itm/", ".ch");
+		_preferredDomains.put("http://www.ebay.de/itm/", ".de");
+		_preferredDomains.put("http://www.ebay.es/itm/", ".es");
+		_preferredDomains.put("http://www.ebay.fr/itm/", ".fr");
+		_preferredDomains.put("http://www.ebay.ie/itm/", ".ie");
+		_preferredDomains.put("http://www.ebay.it/itm/", ".it");
+		_preferredDomains.put("http://www.ebay.nl/itm/", ".nl");
 
-		_RSS_GLOBAL_IDS.put("1", "United States");
-		_RSS_GLOBAL_IDS.put("7", "Canada");
-		_RSS_GLOBAL_IDS.put("15", "United Kingdom");
-		_RSS_GLOBAL_IDS.put("3", "Austria");
-		_RSS_GLOBAL_IDS.put("4", "Australia");
-		_RSS_GLOBAL_IDS.put("5", "Belgium");
-		_RSS_GLOBAL_IDS.put("14", "Switzerland");
-		_RSS_GLOBAL_IDS.put("11", "Germany");
-		_RSS_GLOBAL_IDS.put("13", "Spain");
-		_RSS_GLOBAL_IDS.put("10", "France");
-		_RSS_GLOBAL_IDS.put("2", "Ireland");
-		_RSS_GLOBAL_IDS.put("12", "Italy");
-		_RSS_GLOBAL_IDS.put("16", "Netherlands");
+		_rssGlobalIds.put("1", "United States");
+		_rssGlobalIds.put("7", "Canada");
+		_rssGlobalIds.put("15", "United Kingdom");
+		_rssGlobalIds.put("3", "Austria");
+		_rssGlobalIds.put("4", "Australia");
+		_rssGlobalIds.put("5", "Belgium");
+		_rssGlobalIds.put("14", "Switzerland");
+		_rssGlobalIds.put("11", "Germany");
+		_rssGlobalIds.put("13", "Spain");
+		_rssGlobalIds.put("10", "France");
+		_rssGlobalIds.put("2", "Ireland");
+		_rssGlobalIds.put("12", "Italy");
+		_rssGlobalIds.put("16", "Netherlands");
 	}
 
 }

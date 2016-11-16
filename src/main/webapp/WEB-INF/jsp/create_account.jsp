@@ -25,23 +25,30 @@
 <html>
 	<head>
 		<title>Create Account</title>
-		<link href="<c:url value="/resources/css/tooltipster.css" />" rel="stylesheet">
-		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-tooltipster-3.0.min.js" />" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/jquery-validate-1.14.0.min.js" />" type="text/javascript"></script>
+
+		<link href="/resources/css/tooltipster.css" rel="stylesheet">
+
+		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-tooltipster-3.0.min.js" type="text/javascript"></script>
+		<script src="/resources/js/jquery-validate-1.14.0.min.js" type="text/javascript"></script>
+
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
+
 		<script src="https://checkout.stripe.com/checkout.js" type="text/javascript"></script>
-		<script src="<c:url value="/resources/js/create-account.js" />" type="text/javascript"></script>
+
+		<script src="/resources/js/create-account.js" type="text/javascript"></script>
+
 		<noscript>
-			<link rel="stylesheet" href="/resources/css/skel.css" />
-			<link rel="stylesheet" href="/resources/css/style.css" />
-			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+			<link href="/resources/css/skel.css" rel="stylesheet" />
+			<link href="/resources/css/style.css" rel="stylesheet" />
+			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
 		</noscript>
 	</head>
+
 	<body>
-		<header id="header" class="skel-layers-fixed">
+		<header class="skel-layers-fixed" id="header">
 			<h1><a href="home">Auction Alert</a></h1>
 			<nav id="nav">
 				<ul>
@@ -51,7 +58,7 @@
 			</nav>
 		</header>
 
-		<section id="banner" class="minor">
+		<section class="minor" id="banner">
 			<div class="inner">
 				<h2>Create Account</h2>
 			</div>
@@ -65,22 +72,24 @@
 				<c:otherwise>
 					<c:if test="${not empty error}">
 						<div id="error">
-							<i class="icon fa-times-circle"></i>
+							<i class="fa-times-circle icon"></i>
 							${error}
 						</div>
 					</c:if>
 
 					<form:form action="create_account" commandName="createAccount" id="createAccountForm" method="post">
-						<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}"/>
+						<input id="stripePublishableKey" type="hidden" value="${stripePublishableKey}" />
 
 						<input id="redirect" name="redirect" type="hidden" value="${redirect}" />
 
 						<div>
-							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email"/>
+							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email" />
 						</div>
+
 						<div>
 							<b>Password: </b><input id="password" name="password" type="password" />
 						</div>
+
 						<div class="padding-top">
 							<input class="button special" id="createAccountSubmit" type="submit" value="Create Account" />
 						</div>

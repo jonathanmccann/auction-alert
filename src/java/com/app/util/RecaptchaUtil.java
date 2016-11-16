@@ -19,8 +19,11 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.net.URL;
+
 import java.util.Map;
+
 import javax.net.ssl.HttpsURLConnection;
 
 /**
@@ -48,8 +51,8 @@ public class RecaptchaUtil {
 
 			Gson gson = new Gson();
 
-			Map<Object, Object> response =
-				gson.fromJson(bufferedReader, Map.class);
+			Map<Object, Object> response = gson.fromJson(
+				bufferedReader, Map.class);
 
 			return (boolean)response.get("success");
 		}

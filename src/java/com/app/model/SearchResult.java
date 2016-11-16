@@ -40,7 +40,7 @@ public class SearchResult {
 			return false;
 		}
 
-		return (_itemId.equals(((SearchResult)obj).getItemId()));
+		return _itemId.equals(((SearchResult)obj).getItemId());
 	}
 
 	public String getAuctionPrice() {

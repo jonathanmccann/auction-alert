@@ -25,18 +25,23 @@
 <html>
 	<head>
 		<title>Home</title>
-		<script src="<c:url value="/resources/js/jquery-2.1.3.min.js" />" type="text/javascript"></script>
+
+		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
+
 		<script src="/resources/js/popup.js" type="text/javascript"></script>
 		<script src="/resources/js/scroll.js" type="text/javascript"></script>
+
 		<noscript>
-			<link rel="stylesheet" href="/resources/css/skel.css" />
-			<link rel="stylesheet" href="/resources/css/style.css" />
-			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
+			<link href="/resources/css/skel.css" rel="stylesheet" />
+			<link href="/resources/css/style.css" rel="stylesheet" />
+			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
 		</noscript>
 	</head>
+
 	<body>
 		<div id="popup">
 			<div class="popup-content">
@@ -44,14 +49,17 @@
 					<span id="close">X</span>
 					<h2>Log In</h2>
 				</div>
+
 				<div class="popup-body">
 					<form:form action="log_in" commandName="logIn" method="post">
 						<div>
-							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email"/>
+							<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email" />
 						</div>
+
 						<div>
 							<b>Password: </b><input id="password" name="password" type="password" />
 						</div>
+
 						<div class="padding-top">
 							<input class="button special" type="submit" value="Log In" />
 						</div>
@@ -61,7 +69,8 @@
 				</div>
 			</div>
 		</div>
-		<header id="header" class="skel-layers-fixed">
+
+		<header class="skel-layers-fixed" id="header">
 			<h1><a href="/home">Auction Alert</a></h1>
 			<nav id="nav">
 				<ul>
@@ -69,6 +78,7 @@
 						<li><a href="log_in" id="loginLink">Log In</a></li>
 						<li><a href="create_account" class="button special">Sign Up</a></li>
 					</shiro:guest>
+
 					<shiro:user>
 						<c:if test="${isActive}">
 							<li><a href="add_search_query">Add Search Query</a></li>
@@ -85,7 +95,7 @@
 
 		<shiro:guest>
 			<div>
-				<section id="banner" class="major">
+				<section class="major" id="banner">
 					<div class="inner">
 						<h2>This is Auction Alert</h2>
 						<p>The simple way to stay informed with eBay</p>
@@ -96,26 +106,28 @@
 					</div>
 				</section>
 
-				<section id="about" class="wrapper style1">
+				<section class="style1 wrapper" id="about">
 					<div class="container">
 						<div class="row">
 							<div class="4u">
-								<section class="special box">
-									<i class="icon fa-save major"></i>
+								<section class="box special">
+									<i class="fa-save icon major"></i>
 									<h3>Save</h3>
 									<p>Search queries are saved to be edited, searched, and monitored.</p>
 								</section>
 							</div>
+
 							<div class="4u">
-								<section class="special box">
-									<i class="icon fa-search major"></i>
+								<section class="box special">
+									<i class="fa-search icon major"></i>
 									<h3>Search</h3>
 									<p>Each search query is searched every minute.</p>
 								</section>
 							</div>
+
 							<div class="4u">
-								<section class="special box">
-									<i class="icon fa-send major"></i>
+								<section class="box special">
+									<i class="fa-send icon major"></i>
 									<h3>Send</h3>
 									<p>New results are sent directly to your email.</p>
 								</section>
@@ -124,20 +136,20 @@
 					</div>
 				</section>
 
-				<section id="monitor" class="wrapper style2">
+				<section class="style2 wrapper" id="monitor">
 					<div class="container">
-						<section class="special box">
-							<i class="icon fa-refresh major"></i>
+						<section class="box special">
+							<i class="fa-refresh icon major"></i>
 							<h3>Monitoring</h3>
 							<p>Keep tabs on a search query with five second searches and desktop notifications.</p>
 						</section>
 					</div>
 				</section>
 
-				<section id="pricing" class="wrapper style1">
+				<section class="style1 wrapper" id="pricing">
 					<div class="container">
-						<section class="special box">
-							<i class="icon fa-dollar major"></i>
+						<section class="box special">
+							<i class="fa-dollar icon major"></i>
 							<h3>Pricing</h3>
 							<p>
 								<b>$1 per month</b> <br> <br>
@@ -145,7 +157,8 @@
 								30 emails a day <br>
 								Unlimited monitoring
 							</p>
-							<a href="create_account" class="button special">Sign Up</a>
+
+							<a class="button special" href="create_account">Sign Up</a>
 						</section>
 					</div>
 				</section>
@@ -154,7 +167,7 @@
 
 		<shiro:user>
 			<div>
-				<section id="banner" class="minor">
+				<section class="minor" id="banner">
 					<div class="inner">
 						<h2>Welcome</h2>
 					</div>
@@ -162,29 +175,31 @@
 
 				<c:choose>
 					<c:when test="${isActive}">
-						<section id="user" class="wrapper style1">
+						<section class="style1 wrapper" id="user">
 							<div class="container">
 								<div class="row">
 									<div class="4u">
 										<a href="add_search_query">
-											<section class="special box">
-												<i class="icon fa-search major"></i>
+											<section class="box special">
+												<i class="fa-search icon major"></i>
 												<h3>Add New Query</h3>
 											</section>
 										</a>
 									</div>
+
 									<div class="4u">
 										<a href="view_search_queries">
-											<section class="special box">
-												<i class="icon fa-archive major"></i>
+											<section class="box special">
+												<i class="fa-archive icon major"></i>
 												<h3>Queries and Results</h3>
 											</section>
 										</a>
 									</div>
+
 									<div class="4u">
 										<a href="my_account">
-											<section class="special box">
-												<i class="icon fa-gear major"></i>
+											<section class="box special">
+												<i class="fa-gear icon major"></i>
 												<h3>My Account</h3>
 											</section>
 										</a>
@@ -193,21 +208,22 @@
 							</div>
 						</section>
 
-						<section id="action" class="wrapper style2">
+						<section class="style2 wrapper" id="action">
 							<div class="container">
 								<div class="row">
 									<div class="6u">
 										<a href="view_search_queries">
-											<section class="special box">
-												<i class="icon fa-send major"></i>
+											<section class="box special">
+												<i class="fa-send icon major"></i>
 												<h3>${emailsSent}</h3>
 											</section>
 										</a>
 									</div>
+
 									<div class="6u">
 										<a href="my_account">
-											<section class="special box">
-												<i class="icon fa-calendar major"></i>
+											<section class="box special">
+												<i class="fa-calendar icon major"></i>
 												<h3>${nextChargeDate}</h3>
 											</section>
 										</a>
@@ -219,8 +235,8 @@
 					<c:otherwise>
 						<div class="container padding-top">
 							<a href="my_account">
-								<section class="special box">
-									<i class="icon fa-calendar major"></i>
+								<section class="box special">
+									<i class="fa-calendar icon major"></i>
 									<h3>${nextChargeDate}</h3>
 									<h5>Please resubscribe to access these features</h5>
 								</section>

@@ -63,6 +63,7 @@ public class EbayAPIUtil {
 		apiCredential.seteBayToken(ebayToken);
 
 		_apiContext = new ApiContext();
+
 		_apiContext.setApiCredential(apiCredential);
 		_apiContext.setApiServerUrl("https://api.ebay.com/wsapi");
 		_apiContext.setSite(SiteCodeType.US);
@@ -89,9 +90,8 @@ public class EbayAPIUtil {
 		}
 	}
 
-	private static Map<String, FindingServicePortType> _serviceClients =
-		new HashMap<>();
-
 	private static ApiContext _apiContext;
+	private static final Map<String, FindingServicePortType> _serviceClients =
+		new HashMap<>();
 
 }

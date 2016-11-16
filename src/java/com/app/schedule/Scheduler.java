@@ -63,7 +63,6 @@ public class Scheduler {
 		}
 	}
 
-	private static final Logger _log = LoggerFactory.getLogger(
-		Scheduler.class);
+	private static final Logger _log = LoggerFactory.getLogger(Scheduler.class);
 
 }

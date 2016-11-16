@@ -45,22 +45,22 @@ public class SearchQuery {
 		boolean fixedPriceListing, double minPrice, double maxPrice,
 		String globalId, boolean active) {
 
-		_active = active;
-		_auctionListing = auctionListing;
-		_categoryId = categoryId;
-		_fixedPriceListing = fixedPriceListing;
-		_freeShippingOnly = freeShippingOnly;
-		_globalId = globalId;
-		_keywords = keywords;
-		_maxPrice = maxPrice;
-		_minPrice = minPrice;
-		_newCondition = newCondition;
-		_searchDescription = searchDescription;
 		_searchQueryId = searchQueryId;
-		_subcategoryId = subcategoryId;
-		_unspecifiedCondition = unspecifiedCondition;
-		_usedCondition = usedCondition;
 		_userId = userId;
+		_keywords = keywords;
+		_categoryId = categoryId;
+		_subcategoryId = subcategoryId;
+		_searchDescription = searchDescription;
+		_freeShippingOnly = freeShippingOnly;
+		_newCondition = newCondition;
+		_usedCondition = usedCondition;
+		_unspecifiedCondition = unspecifiedCondition;
+		_auctionListing = auctionListing;
+		_fixedPriceListing = fixedPriceListing;
+		_minPrice = minPrice;
+		_maxPrice = maxPrice;
+		_globalId = globalId;
+		_active = active;
 	}
 
 	public String getCategoryId() {
@@ -132,7 +132,7 @@ public class SearchQuery {
 	}
 
 	public void setAuctionListing(boolean auctionListing) {
-		this._auctionListing = auctionListing;
+		_auctionListing = auctionListing;
 	}
 
 	public void setCategoryId(String categoryId) {
@@ -140,11 +140,11 @@ public class SearchQuery {
 	}
 
 	public void setFixedPriceListing(boolean fixedPriceListing) {
-		this._fixedPriceListing = fixedPriceListing;
+		_fixedPriceListing = fixedPriceListing;
 	}
 
 	public void setFreeShippingOnly(boolean freeShippingOnly) {
-		this._freeShippingOnly = freeShippingOnly;
+		_freeShippingOnly = freeShippingOnly;
 	}
 
 	public void setGlobalId(String globalId) {
@@ -156,19 +156,19 @@ public class SearchQuery {
 	}
 
 	public void setMaxPrice(double maxPrice) {
-		this._maxPrice = maxPrice;
+		_maxPrice = maxPrice;
 	}
 
 	public void setMinPrice(double minPrice) {
-		this._minPrice = minPrice;
+		_minPrice = minPrice;
 	}
 
 	public void setNewCondition(boolean newCondition) {
-		this._newCondition = newCondition;
+		_newCondition = newCondition;
 	}
 
 	public void setSearchDescription(boolean searchDescription) {
-		this._searchDescription = searchDescription;
+		_searchDescription = searchDescription;
 	}
 
 	public void setSearchQueryId(int searchQueryId) {
@@ -180,11 +180,11 @@ public class SearchQuery {
 	}
 
 	public void setUnspecifiedCondition(boolean unspecifiedCondition) {
-		this._unspecifiedCondition = unspecifiedCondition;
+		_unspecifiedCondition = unspecifiedCondition;
 	}
 
 	public void setUsedCondition(boolean usedCondition) {
-		this._usedCondition = usedCondition;
+		_usedCondition = usedCondition;
 	}
 
 	public void setUserId(int userId) {
