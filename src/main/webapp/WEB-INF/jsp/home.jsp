@@ -141,7 +141,7 @@
 						<section class="box special">
 							<i class="fa-refresh icon major"></i>
 							<h3>Monitoring</h3>
-							<p>Keep tabs on a search query with five second searches and desktop notifications.</p>
+							<p>Keep tabs on a search query with real time updates and desktop notifications.</p>
 						</section>
 					</div>
 				</section>
