@@ -281,13 +281,6 @@ public class UserController {
 		return "redirect:log_out";
 	}
 
-	@RequestMapping(value ="/faq", method = RequestMethod.GET)
-	public String faq(Map<String, Object> model) throws Exception {
-		model.put("isActive", UserUtil.isCurrentUserActive());
-
-		return "faq";
-	}
-
 	@RequestMapping(value ="/forgot_password", method = RequestMethod.POST)
 	public String forgotPassword(
 			String emailAddress,

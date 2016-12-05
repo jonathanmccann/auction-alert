@@ -33,12 +33,11 @@
 		<script src="/resources/js/init.js" type="text/javascript"></script>
 
 		<noscript>
-			<link href="/resources/css/skel.css" rel="stylesheet" />
-			<link href="/resources/css/style.css" rel="stylesheet" />
-			<link href="/resources/css/style-xlarge.css" rel="stylesheet" />
+			<link rel="stylesheet" href="/resources/css/skel.css" />
+			<link rel="stylesheet" href="/resources/css/style.css" />
+			<link rel="stylesheet" href="/resources/css/style-xlarge.css" />
 		</noscript>
 	</head>
-
 	<body>
 		<header class="skel-layers-fixed" id="header">
 			<h1><a href="/home">Auction Alert</a></h1>
@@ -48,7 +47,6 @@
 						<li><a href="log_in" id="loginLink">Log In</a></li>
 						<li><a href="create_account" class="button special">Sign Up</a></li>
 					</shiro:guest>
-
 					<shiro:user>
 						<c:if test="${isActive}">
 							<li><a href="add_search_query">Add Search Query</a></li>
@@ -69,50 +67,87 @@
 			</div>
 		</section>
 
-		<section class="style1 wrapper" id="about">
+		<section class="wrapper style1">
 			<div class="container">
-				<div>
-					<h2>What do I receive when I sign up?</h2>
-					<h4>Email Notifications</h4>
-					<p class="faq-paragraph">
-						As a subscriber, you have the ability to save 10 search queries that will be searched on the US eBay site every minute.
-						Whenever a new result is found, an email notification is sent immediately to you, up to 30 emails a day.
-					</p>
-
-					<h4>Real Time Monitoring</h4>
-					<p class="faq-paragraph">
-						You will also have the added benefit of having real time monitoring of a single search query.
-						The query will be searched every five seconds and the results will be populated on the web page. Optionally, desktop notifications can be delivered for each new result.
-						Please note that desktop notifications are subject to the operating system and browser and may not be supported.
-					</p>
-
-					<h2>What regions does this application service?</h2>
-					<p class="faq-paragraph">
-						While anyone can register for an account, this application currently only searches the US eBay site.
-						However, this feature could be implemented in the future so please send your feedback to us.
-					</p>
-
-					<h2>How secure is my card information?</h2>
-					<p class="faq-paragraph">
-						Your card information is sent securely to Stripe and those details are not stored anywhere in this application.
-						For more information about Stripe's security and how they are keeping your information secure, please visit <a href="https://stripe.com/docs/security/stripe" target="_blank">their site</a>.
-					</p>
-
-					<h2>Is Javascript required for using this website?</h2>
-					<p class="faq-paragraph">
-						Yes. Javascript is essential to the use of this website and its services.
-					</p>
-
-					<h2>Who do I contact if I have further questions?</h2>
-					<p class="faq-paragraph">
-						Please feel free to use our <a href="/contact">contact</a> page to get in touch with us.
-					</p>
-
-					<h2>CSS Design</h2>
-					<p class="faq-paragraph">
-						The CSS on this site was significantly sourced from <a href="https://templated.co/">TEMPLATED</a>.
-					</p>
+				<div class="row">
+					<div class="4u">
+						<section class="special box">
+							<h3><a href="/new_faq">New to Auction Alert?</a></h3>
+							<div class="align-left">
+								<li><a href="/new_faq#what">What does this site do?</a></li>
+								<li><a href="/new_faq#who">Who is this application for?</a></li>
+								<li><a href="/new_faq#competitors">How do you compare to competitors?</a></li>
+							</div>
+						</section>
+					</div>
+					<div class="4u">
+						<section class="special box">
+							<h3><a href="/general_faq">General</a></h3>
+							<div class="align-left">
+								<li><a href="/general_faq#no_emails">I am not receiving any emails!</a></li>
+								<li><a href="/general_faq#emails">I am receiving too many emails!</a></li>
+								<li><a href="/general_faq#item">The item was sold before I could buy it!</a></li>
+								<li><a href="/general_faq#limit">Why am I limited to 10 queries and 30 emails?</a></li>
+								<li><a href="/general_faq#charge">When is my account charged?</a></li>
+								<li><a href="/general_faq#unsubscribe">What happens when I unsubscribe?</a></li>
+							</div>
+						</section>
+					</div>
+					<div class="4u">
+						<section class="special box">
+							<h3><a href="/account_faq">My Account</a></h3>
+							<div class="align-left">
+								<li><a href="/account_faq#credit_card">How do I change my credit card details?</a></li>
+								<li><a href="/account_faq#cancel">How do I cancel my subscription?</a></li>
+								<li><a href="/account_faq#account">How do I change my account details?</a></li>
+								<li><a href="/account_faq#notifications">How do I turn off email notifications?</a></li>
+								<li><a href="/account_faq#safety">How safe is my credit card and password?</a></li>
+								<li><a href="/account_faq#domain">What is the preferred domain?</a></li>
+								<li><a href="/account_faq#currency">What currency are the prices in?</a></li>
+							</div>
+						</section>
+					</div>
 				</div>
+				<div class="row">
+					<div class="4u">
+						<section class="special box">
+							<h3><a href="/query_faq">Search Query</a></h3>
+							<div class="align-left">
+								<li><a href="/query_faq#add">How do I add a search query?</a></li>
+								<li><a href="/query_faq#edit">How do I edit a search query?</a></li>
+								<li><a href="/query_faq#boolean">Can I use boolean logic?</a></li>
+								<li><a href="/query_faq#after">What happens after I save a search query?</a></li>
+								<li><a href="/query_faq#often">How often are queries searched?</a></li>
+								<li><a href="/query_faq#active">What's the difference between active and inactive queries?</a></li>
+							</div>
+						</section>
+					</div>
+					<div class="4u">
+						<section class="special box">
+							<h3><a href="/result_faq">Search Result</a></h3>
+							<div class="align-left">
+								<li><a href="/result_faq#view">How do I view the results?</a></li>
+								<li><a href="/result_faq#number">How many results are stored?</a></li>
+								<li><a href="/result_faq#order">How are the results ordered?</a></li>
+							</div>
+						</section>
+					</div>
+					<div class="4u">
+						<section class="special box">
+							<h3><a href="/monitor_faq">Monitoring</a></h3>
+							<div class="align-left">
+								<li><a href="/monitor_faq#how">How do I monitor a query?</a></li>
+								<li><a href="/monitor_faq#save">Can I save a monitored query?</a></li>
+								<li><a href="/monitor_faq#often">How often is the monitored query searched?</a></li>
+								<li><a href="/monitor_faq#notifications">Why aren't desktop notifications working?</a></li>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+			<div align="center" class="container">
+				<h2>Have a question not answered here?</h2>
+				Please use our <a href="/contact">contact</a> page to get in touch with us with any other questions you may have.
 			</div>
 		</section>
 

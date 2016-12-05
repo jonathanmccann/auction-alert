@@ -1294,8 +1294,19 @@
 
 /* FAQ */
 
+	.anchor {
+		display: block;
+		height: 75px;
+		margin-top: -75px;
+		visibility: hidden;
+	}
+
 	.faq-paragraph {
 		margin-left: 50px;
+	}
+
+	.faq-paragraph-indent {
+		margin-left: 100px;
 	}
 
 /* Delete Button */

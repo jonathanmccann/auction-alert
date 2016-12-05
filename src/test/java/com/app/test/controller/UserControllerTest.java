@@ -523,17 +523,6 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetFaq() throws Exception {
-		setUpUserUtil();
-
-		this.mockMvc.perform(get("/faq"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("faq"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/faq.jsp"))
-			.andExpect(model().attribute("isActive", true));
-	}
-
-	@Test
 	public void testGetForgotPassword() throws Exception {
 		this.mockMvc.perform(get("/forgot_password"))
 			.andExpect(status().isOk())
