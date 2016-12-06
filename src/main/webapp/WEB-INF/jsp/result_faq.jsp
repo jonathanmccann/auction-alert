@@ -84,8 +84,8 @@
 					<span class="anchor" id="number"></span>
 					<h2>How many results are stored?</h2>
 					<p class="faq-paragraph">
-						The application will store up to 20 results for viewing on <a href="/view_search_queries">view search queries</a>.
-						If there are already 20 results stored and a new result is found, the oldest result is removed and the newest result is added.
+						The application will store up to 10 results for viewing on <a href="/view_search_queries">view search queries</a>.
+						If there are already 10 results stored and a new result is found, the oldest result is removed and the newest result is added.
 					</p>
 
 					<span class="anchor" id="order"></span>

@@ -157,7 +157,8 @@ public class SearchResultUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		int numberOfSearchResultsToRemove =
-			existingSearchResults.size() + newSearchResultsSize - 5;
+			existingSearchResults.size() + newSearchResultsSize -
+				PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_RESULTS;
 
 		if (numberOfSearchResultsToRemove > 0) {
 			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {

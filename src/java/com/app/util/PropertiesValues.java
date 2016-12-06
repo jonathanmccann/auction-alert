@@ -37,6 +37,10 @@ public class PropertiesValues {
 	public static final int LOGIN_ATTEMPT_LIMIT = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty("login.attempt.limit"));
 
+	public static final int MAXIMUM_NUMBER_OF_SEARCH_RESULTS = Integer.parseInt(
+		PropertiesUtil.getConfigurationProperty(
+			"maximum.number.of.search.results"));
+
 	public static final int MAXIMUM_NUMBER_OF_SEARCH_QUERIES = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty(
 			"maximum.number.of.search.queries"));
