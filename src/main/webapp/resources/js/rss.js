@@ -7,6 +7,8 @@ $(window).load(function() {
 
 	var globalId;
 
+	var resultsPhrase = "Results will begin populating here as soon as they are found.";
+
 	var search = $("#search");
 
 	var searchQuery = $("#searchQuery");
@@ -67,6 +69,10 @@ $(window).load(function() {
 
 	function populateResults(itemId, imageUrl, title, listingType, currentPrice, fixedPrice) {
 		if (itemIds.indexOf(itemId) < 0) {
+			if (contentDiv.innerHTML.indexOf(resultsPhrase) != -1) {
+				contentDiv.innerHTML = "";
+			}
+
 			var html = '<div align="left" id="' + itemId + '"> <div class="monitor-result-image"> <img src=' + imageUrl + '> </div> <div class="monitor-result-information"> <a href="' + itemUrl + itemId + '" target="_blank">' + title + '</a> <br>';
 
 			var currencySymbol = currencySymbolMap[globalId];
@@ -184,7 +190,7 @@ $(window).load(function() {
 		startMonitoring.hide();
 		stopMonitoring.show();
 
-		contentDiv.innerHTML = "<h5>Results will begin populating here as soon as they are found.</h5>";
+		contentDiv.innerHTML = "<h5>" + resultsPhrase + "</h5>";
 
 		globalId = $("#globalId").val();
 
