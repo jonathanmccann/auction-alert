@@ -109,15 +109,15 @@
 				<section class="style1 wrapper" id="about">
 					<div class="container">
 						<div class="row">
-							<div class="4u">
+							<div class="3u">
 								<section class="box special">
 									<i class="fa-save icon major"></i>
 									<h3>Save</h3>
-									<p>Search queries are saved to be edited, searched, and monitored.</p>
+									<p>Search queries are saved to be searched and monitored.</p>
 								</section>
 							</div>
 
-							<div class="4u">
+							<div class="3u">
 								<section class="box special">
 									<i class="fa-search icon major"></i>
 									<h3>Search</h3>
@@ -125,40 +125,91 @@
 								</section>
 							</div>
 
-							<div class="4u">
+							<div class="3u">
 								<section class="box special">
 									<i class="fa-send icon major"></i>
 									<h3>Send</h3>
 									<p>New results are sent directly to your email.</p>
 								</section>
 							</div>
+
+							<div class="3u">
+								<section class="box special">
+									<i class="fa-refresh icon major"></i>
+									<h3>Monitor</h3>
+									<p>Keep tabs on a search query with real time updates.</p>
+								</section>
+							</div>
 						</div>
 					</div>
 				</section>
 
-				<section class="style2 wrapper" id="monitor">
+				<section class="style2 wrapper" id="how">
+					<header class="major">
+						<h2>How does this all work?</h2>
+					</header>
+
 					<div class="container">
-						<section class="box special">
-							<i class="fa-refresh icon major"></i>
-							<h3>Monitoring</h3>
-							<p>Keep tabs on a search query with real time updates and desktop notifications.</p>
-						</section>
+						<div class="row">
+							<div class="6u">
+								<div class="image fit">
+									<img alt="Adding Search Query" src="resources/images/adding_search_query.png">
+								</div>
+							</div>
+							<div class="6u">
+								<h3 align="left">Searching</h3>
+								<p align="left">
+									You will have the ability to craft search queries that will then be run against eBay and any new results are sent directly to your email.<br><br>
+									These queries are run every minute so you are up to date with every new listing that is posted on eBay.<br><br>
+									Many options are available to you so you can narrow down the items by category, type of listing, price, and even location.
+								</p>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="6u">
+								<h3 align="left">Monitoring</h3>
+								<p align="left">
+									Utilizing the monitoring tool, you can have real time updates for newly listed items on eBay, complete with desktop notifications.<br><br>
+									With this, gone are the days of manually refreshing the eBay site, looking for good deals. All the work is done for you. Just tell us what you're looking for.
+								</p>
+							</div>
+							<div class="6u">
+								<div class="image fit">
+									<img alt="Monitoring Results" src="resources/images/monitoring.png">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="6u">
+								<div class="image fit">
+									<img alt="Email Notification" src="resources/images/email_notification.png">
+								</div>
+							</div>
+							<div class="6u">
+								<h3 align="left">Email Notifications</h3>
+								<p align="left">
+									Every new result is sent immediately to your email address. From there, you are free to access the item's listing and bid or purchase.<br><br>
+									In addition, up to 20 results are saved on the site so that you can look at the previous results without having to sift through your emails.
+								</p>
+							</div>
+						</div>
 					</div>
 				</section>
 
 				<section class="style1 wrapper" id="pricing">
 					<div class="container">
 						<section class="box special">
-							<i class="fa-dollar icon major"></i>
-							<h3>Pricing</h3>
+							<h2>Auction Alert is priced with you in mind.</h2>
+							<h3>Just $1 per month gives you access to:</h3>
 							<p>
-								<b>$1 per month</b> <br> <br>
-								10 search queries <br>
-								30 emails a day <br>
-								Unlimited monitoring
+								<b>10 search queries</b> <br>
+								<b>30 emails a day</b> <br>
+								<b>Unlimited monitoring</b>
 							</p>
 
-							<a class="button special" href="create_account">Sign Up</a>
+							<a class="button special" href="create_account">Sign Up Now</a>
 						</section>
 					</div>
 				</section>
