@@ -344,6 +344,10 @@
 				width: 1.65em;
 			}
 
+			input[type="checkbox"]:disabled + label {
+				cursor: default;
+			}
+
 		input[type="checkbox"]:checked + label:before,
 		input[type="radio"]:checked + label:before {
 			background: #629dd1;
