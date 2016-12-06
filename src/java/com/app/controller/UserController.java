@@ -233,13 +233,34 @@ public class UserController {
 		return "redirect:my_account";
 	}
 
-	@RequestMapping(value = "/delete_user", method = RequestMethod.POST)
-	public String deleteUser(
+	@RequestMapping(value = "/delete_account", method = RequestMethod.GET)
+	public String deleteAccount(Map<String, Object> model)
+		throws DatabaseConnectionException, SQLException {
+
+		model.put("isActive", UserUtil.isCurrentUserActive());
+
+		return "delete_account";
+	}
+
+	@RequestMapping(value = "/delete_account", method = RequestMethod.POST)
+	public String deleteAccount(
 			String emailAddress, String password,
 			RedirectAttributes redirectAttributes)
 		throws Exception {
 
 		User currentUser = UserUtil.getCurrentUser();
+
+		if (!currentUser.getEmailAddress().equalsIgnoreCase(emailAddress)) {
+			_log.error(
+				"Unable to delete user with email address: {}. The current " +
+					"user's email address is: {}",
+				emailAddress, currentUser.getEmailAddress());
+
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("user-deletion-failure"));
+
+			return "redirect:my_account";
+		}
 
 		try {
 			UserUtil.deleteUser(password, currentUser);

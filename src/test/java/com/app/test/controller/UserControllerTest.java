@@ -374,7 +374,7 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testDeleteUser() throws Exception {
+	public void testDeleteAccount() throws Exception {
 		setUpCustomer();
 		setUpUserUtil();
 
@@ -399,7 +399,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		Assert.assertNotNull(user);
 
-		MockHttpServletRequestBuilder request = post("/delete_user");
+		MockHttpServletRequestBuilder request = post("/delete_account");
 
 		request.param("emailAddress", "test@test.com");
 		request.param("password", "password");
@@ -434,14 +434,41 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testDeleteUserWithIncorrectPassword() throws Exception {
+	public void testDeleteAccountWithIncorrectEmailAddress() throws Exception {
 		setUpUserUtil();
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
 		Assert.assertNotNull(user);
 
-		MockHttpServletRequestBuilder request = post("/delete_user");
+		MockHttpServletRequestBuilder request = post("/delete_account");
+
+		request.param("emailAddress", "incorrect@test.com");
+		request.param("password", "password");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:my_account"));
+		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("user-deletion-failure")));
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user);
+	}
+
+	@Test
+	public void testDeleteAccountWithIncorrectPassword() throws Exception {
+		setUpUserUtil();
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user);
+
+		MockHttpServletRequestBuilder request = post("/delete_account");
 
 		request.param("emailAddress", "test@test.com");
 		request.param("password", "incorrectPassword");

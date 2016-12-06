@@ -2,27 +2,23 @@ $(document).ready(function() {
 	var popup = document.getElementById('popup');
 	var close = document.getElementById("close");
 
-	$("#deleteAccount").click(function(e) {
-		e.preventDefault();
-
-		popup.style.display = "block";
-	});
-
 	$("#loginLink").click(function(e) {
-		e.preventDefault();
+		if (($(window).width() > 980) && ($(window).height() > 400)) {
+			e.preventDefault();
 
-		popup.style.display = "block";
+			popup.style.display = "block";
 
-		$("#emailAddress").focus();
-	});
+			$("#emailAddress").focus();
 
-	close.onclick = function() {
-		popup.style.display = "none";
-	};
+			close.onclick = function() {
+				popup.style.display = "none";
+			};
 
-	window.onclick = function(event) {
-		if (event.target == popup) {
-			popup.style.display = "none";
+			window.onclick = function(event) {
+				if (event.target == popup) {
+					popup.style.display = "none";
+				}
+			}
 		}
-	}
+	});
 });
