@@ -1,8 +1,16 @@
+var previousSearchQueryId;
+
 function getSearchQueryResults(searchQueryId, active) {
 	$.ajax({
 		url: '/search_query_results',
 		data: ({searchQueryId : searchQueryId}),
 		success: function(data) {
+			if (searchQueryId != previousSearchQueryId) {
+				$("#" + searchQueryId).css('font-weight', 'bold');
+
+				$("#" + previousSearchQueryId).removeAttr("style");
+			}
+
 			$("#searchQueryId").val(searchQueryId);
 
 			if (active) {
@@ -44,6 +52,8 @@ function getSearchQueryResults(searchQueryId, active) {
 
 				$('#results').hide().html(html).fadeIn('slow');
 			}
+
+			previousSearchQueryId = searchQueryId;
 		}
 	});
 }
