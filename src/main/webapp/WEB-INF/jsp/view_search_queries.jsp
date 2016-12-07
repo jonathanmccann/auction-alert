@@ -63,16 +63,24 @@
 					<div class="4u">
 						<section class="box special">
 							<h2 class="align-left">Active</h2>
-							<c:forEach items="${activeSearchQueries}" var="activeSearchQuery">
+							<c:forEach items="${activeSearchQueries}" var="activeSearchQuery" varStatus="loop">
 								<div id="${activeSearchQuery.searchQueryId}">
 									<a href="javascript:void(0)" onclick="getSearchQueryResults(${activeSearchQuery.searchQueryId}, true);">${activeSearchQuery.keywords}</a>
 								</div>
+
+								<c:if test="${!loop.last}">
+									-
+								</c:if>
 							</c:forEach>
 
 							<h2 class="align-left">Inactive</h2>
-							<c:forEach items="${inactiveSearchQueries}" var="inactiveSearchQuery">
+							<c:forEach items="${inactiveSearchQueries}" var="inactiveSearchQuery" varStatus="loop">
 								<div id="${inactiveSearchQuery.searchQueryId}">
 									<a href="javascript:void(0)" onclick="getSearchQueryResults(${inactiveSearchQuery.searchQueryId}, false);">${inactiveSearchQuery.keywords}</a>
+
+									<c:if test="${!loop.last}">
+										<br>-
+									</c:if>
 								</div>
 							</c:forEach>
 						</section>
