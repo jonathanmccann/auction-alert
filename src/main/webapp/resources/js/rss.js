@@ -1,7 +1,9 @@
 $(window).load(function() {
 	var currencyMap = {1: "USD", 7: "CAD", 15: "GBP", 3: "EUR", 4: "AUD", 5: "EUR", 14: "CHF", 13: "EUR", 10: "EUR", 2: "EUR", 12: "EUR", 16: "EUR"};
 
-	var currencySymbolMap = {1: "$", 7: "C $", 15: "£", 3: "€", 4: "AU $", 5: "€", 14: "CHF ", 13: "€", 10: "€", 2: "€", 12: "€", 16: "€"};
+	var currencySymbolMap = {"USD": "$", "CAD": "C $", "GBP": "£", "EUR": "€", "AUD": "AU $", "CHF": "CHF "};
+
+	var fromConversionRate;
 
 	var itemIds = [];
 
@@ -28,6 +30,8 @@ $(window).load(function() {
 	var preferredCurrency = $("#preferredCurrency").val();
 
 	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&keyword=";
+
+	var toConversionRate;
 
 	if (typeof Notification !== 'function') {
 		$('#notificationOptions').hide();
@@ -75,17 +79,17 @@ $(window).load(function() {
 
 			var html = '<div align="left" id="' + itemId + '"> <div class="monitor-result-image"> <img src=' + imageUrl + '> </div> <div class="monitor-result-information"> <a href="' + itemUrl + itemId + '" target="_blank">' + title + '</a> <br>';
 
-			var currencySymbol = currencySymbolMap[globalId];
+			var currencySymbol = currencySymbolMap[preferredCurrency];
 
 			if (listingType == "Auction") {
-				html += 'Auction Price: ' + currencySymbol + Number(currentPrice).toFixed(2);
+				html += 'Auction Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2);
 			}
 			else if (listingType == "AuctionWithBIN") {
-				html += 'Auction Price: ' + currencySymbol + Number(currentPrice).toFixed(2) + '<br>';
-				html += 'Fixed Price: ' + currencySymbol + Number(fixedPrice).toFixed(2);
+				html += 'Auction Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2) + '<br>';
+				html += 'Fixed Price: ' + currencySymbol + (Number(fixedPrice) * fromConversionRate).toFixed(2);
 			}
 			else if ((listingType == "FixedPrice") || (listingType == "StoreInventory")) {
-				html += 'Fixed Price: ' + currencySymbol + Number(currentPrice).toFixed(2);
+				html += 'Fixed Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2);
 			}
 
 			contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
@@ -138,7 +142,7 @@ $(window).load(function() {
 		search.toggleClass("fa-angle-down fa-angle-right")
 	}
 
-	function setMinAndMaxPrices(url, globalId, minPrice, maxPrice) {
+	function setConversionRate() {
 		var itemCurrency = currencyMap[globalId];
 
 		var request = new XMLHttpRequest();
@@ -147,17 +151,9 @@ $(window).load(function() {
 
 		request.send(null);
 
-		var conversionRate = JSON.parse(request.responseText).rates[itemCurrency];
+		toConversionRate = JSON.parse(request.responseText).rates[itemCurrency];
 
-		if (minPrice && (minPrice > 0)) {
-			url += "&minPrice=" + (minPrice * conversionRate);
-		}
-
-		if (maxPrice && (maxPrice > 0)) {
-			url += "&maxPrice=" + (maxPrice * conversionRate);
-		}
-
-		return url;
+		fromConversionRate = 1 / toConversionRate;
 	}
 
 	search.click(function() {
@@ -193,6 +189,8 @@ $(window).load(function() {
 		contentDiv.innerHTML = "<h5>" + resultsPhrase + "</h5>";
 
 		globalId = $("#globalId").val();
+
+		setConversionRate();
 
 		var url = rssUrl + $("#keywords").val().replace(/ /g, '%20').replace(/"/g, '%22');
 
@@ -239,8 +237,12 @@ $(window).load(function() {
 		var minPrice = $("#minPrice").val();
 		var maxPrice = $("#maxPrice").val();
 
-		if ((minPrice && (minPrice > 0)) || (maxPrice && (maxPrice > 0))) {
-			url = setMinAndMaxPrices(url, globalId, minPrice, maxPrice);
+		if (minPrice && (minPrice > 0)) {
+			url += "&minPrice=" + (minPrice * toConversionRate);
+		}
+
+		if (maxPrice && (maxPrice > 0)) {
+			url += "&maxPrice=" + (maxPrice * toConversionRate);
 		}
 
 		fetchRss(encodeURIComponent(url + "&" + new Date().getTime()));
