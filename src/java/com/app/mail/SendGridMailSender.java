@@ -163,7 +163,7 @@ public class SendGridMailSender implements MailSender {
 
 	private Mail _populateContactMessage(String emailAddress, String message) {
 		Email emailTo = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
-		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+		Email emailFrom = new Email(emailAddress);
 		String subject = "You Have A New Message From " + emailAddress;
 		Content content = new Content("text/html", message);
 

@@ -61,7 +61,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail) populateMessageMethod.invoke(
-				_classInstance, "test@test.com", "Account Deletion Successful",
+				_classInstance, "user@test.com", "Account Deletion Successful",
 				"account_deletion_email.vm");
 
 		Assert.assertEquals(
@@ -86,7 +86,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail) populateMessageMethod.invoke(
-				_classInstance, "test@test.com", "Cancellation Successful",
+				_classInstance, "user@test.com", "Cancellation Successful",
 				"cancellation_email.vm");
 
 		Assert.assertEquals(
@@ -111,7 +111,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail) populateMessageMethod.invoke(
-				_classInstance, "test@test.com", "Card Details Updated",
+				_classInstance, "user@test.com", "Card Details Updated",
 				"card_details_email.vm");
 
 		Assert.assertEquals(
@@ -134,10 +134,10 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail)populateContactMessageMethod.invoke(
-				_classInstance, "test@test.com", "Sample contact message");
+				_classInstance, "user@test.com", "Sample contact message");
 
 		Assert.assertEquals(
-			"You Have A New Message From test@test.com", mail.getSubject());
+			"You Have A New Message From user@test.com", mail.getSubject());
 
 		List<Content> mailContent = mail.getContent();
 
@@ -173,7 +173,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail)populateEmailMessageMethod.invoke(
-				_classInstance, searchQueryResultMap, "test@test.com",
+				_classInstance, searchQueryResultMap, "user@test.com",
 				"unsubscribeToken");
 
 		Assert.assertTrue(
@@ -198,7 +198,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail) populateMessageMethod.invoke(
-				_classInstance, "test@test.com", "Resubscribe Successful",
+				_classInstance, "user@test.com", "Resubscribe Successful",
 				"resubscribe_email.vm");
 
 		Assert.assertEquals(
@@ -223,7 +223,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail)populateMessageMethod.invoke(
-				_classInstance, "test@test.com", "Welcome", "welcome_email.vm");
+				_classInstance, "user@test.com", "Welcome", "welcome_email.vm");
 
 		Assert.assertEquals(
 			"Welcome", mail.getSubject());

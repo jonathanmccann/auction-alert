@@ -69,7 +69,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		populateMessage.setAccessible(true);
 
 		Message message = (Message)populateMessage.invoke(
-			_classInstance, "test@test.com", "Account Deletion Successful",
+			_classInstance, "user@test.com", "Account Deletion Successful",
 			"account_deletion_email.vm", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
@@ -79,7 +79,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];
 
-		internetAddresses[0] = new InternetAddress("test@test.com");
+		internetAddresses[0] = new InternetAddress("user@test.com");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.TO));
@@ -96,7 +96,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		populateMessage.setAccessible(true);
 
 		Message message = (Message)populateMessage.invoke(
-			_classInstance, "test@test.com", "Cancellation Successful",
+			_classInstance, "user@test.com", "Cancellation Successful",
 			"cancellation_email.vm", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
@@ -106,7 +106,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];
 
-		internetAddresses[0] = new InternetAddress("test@test.com");
+		internetAddresses[0] = new InternetAddress("user@test.com");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.TO));
@@ -123,7 +123,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		populateMessage.setAccessible(true);
 
 		Message message = (Message)populateMessage.invoke(
-			_classInstance, "test@test.com", "Card Details Updated",
+			_classInstance, "user@test.com", "Card Details Updated",
 			"card_details_email.vm", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
@@ -133,7 +133,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];
 
-		internetAddresses[0] = new InternetAddress("test@test.com");
+		internetAddresses[0] = new InternetAddress("user@test.com");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.TO));
@@ -148,12 +148,12 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		populateContactMessage.setAccessible(true);
 
 		Message message = (Message)populateContactMessage.invoke(
-			_classInstance, "test@test.com", "Sample contact message",
+			_classInstance, "user@test.com", "Sample contact message",
 			_session);
 
-		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals("user@test.com", message.getFrom()[0].toString());
 		Assert.assertEquals(
-			"You Have A New Message From test@test.com", message.getSubject());
+			"You Have A New Message From user@test.com", message.getSubject());
 		Assert.assertEquals("Sample contact message", message.getContent());
 	}
 
@@ -163,7 +163,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
 			"_populateEmailMessage", Map.class, String.class, String.class,
-			String.class, Session.class);
+			Session.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -183,8 +183,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		searchQueryResultMap.put(searchQuery, searchResults);
 
 		Message message = (Message)populateEmailMessageMethod.invoke(
-			_classInstance, searchQueryResultMap, "test@test.com",
-			"test@test.com", "unsubscribeToken", _session);
+			_classInstance, searchQueryResultMap, "user@test.com",
+			"unsubscribeToken", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
 		Assert.assertTrue(
@@ -193,7 +193,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];
 
-		internetAddresses[0] = new InternetAddress("test@test.com");
+		internetAddresses[0] = new InternetAddress("user@test.com");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.TO));
@@ -210,7 +210,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		populateMessage.setAccessible(true);
 
 		Message message = (Message)populateMessage.invoke(
-			_classInstance, "test@test.com", "Resubscribe Successful",
+			_classInstance, "user@test.com", "Resubscribe Successful",
 			"resubscribe_email.vm", _session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
@@ -220,7 +220,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];
 
-		internetAddresses[0] = new InternetAddress("test@test.com");
+		internetAddresses[0] = new InternetAddress("user@test.com");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.TO));
@@ -237,7 +237,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		populateMessage.setAccessible(true);
 
 		Message message = (Message)populateMessage.invoke(
-			_classInstance, "test@test.com", "Welcome", "welcome_email.vm",
+			_classInstance, "user@test.com", "Welcome", "welcome_email.vm",
 			_session);
 
 		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
@@ -247,7 +247,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];
 
-		internetAddresses[0] = new InternetAddress("test@test.com");
+		internetAddresses[0] = new InternetAddress("user@test.com");
 
 		Assert.assertArrayEquals(
 			internetAddresses, message.getRecipients(Message.RecipientType.TO));
