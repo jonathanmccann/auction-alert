@@ -536,13 +536,15 @@ public class UserController {
 			Subject currentUser = SecurityUtils.getSubject();
 
 			currentUser.logout();
+
+			return "redirect:log_in";
 		}
 		catch (Exception e) {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("password-reset-fail"));
-		}
 
-		return "redirect:reset_password";
+			return "redirect:reset_password";
+		}
 	}
 
 	@RequestMapping(value = "/resubscribe", method = RequestMethod.POST)

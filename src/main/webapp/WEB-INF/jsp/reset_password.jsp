@@ -69,13 +69,6 @@
 				</div>
 			</c:if>
 
-			<c:if test="${not empty success}">
-				<div id="success">
-					<i class="fa-check-circle icon"></i>
-					${success}
-				</div>
-			</c:if>
-
 			<form:form commandName="resetPassword" id="resetPasswordForm">
 				<div>
 					<b>Email Address: </b><input id="emailAddress" name="emailAddress" type="email" />

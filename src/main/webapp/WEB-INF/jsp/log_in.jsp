@@ -66,6 +66,13 @@
 				</div>
 			</c:if>
 
+			<c:if test="${not empty success}">
+				<div id="success">
+					<i class="fa-check-circle icon"></i>
+					${success}
+				</div>
+			</c:if>
+
 			<form:form action="log_in" commandName="logIn" method="post">
 				<input id="redirect" name="redirect" type="hidden" value="${redirect}" />
 
