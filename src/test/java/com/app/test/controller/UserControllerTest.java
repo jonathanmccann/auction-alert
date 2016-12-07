@@ -97,6 +97,8 @@ public class UserControllerTest extends BaseTestCase {
 
 		setUpDatabase();
 
+		ConstantsUtil.init();
+
 		_USER = UserUtil.addUser("test@test.com", "password");
 	}
 

@@ -66,7 +66,7 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"test", PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 		Assert.assertEquals(
-			10, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_RESULTS);
+			5, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_RESULTS);
 		Assert.assertEquals(
 			2, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES);
 		Assert.assertEquals(2, PropertiesValues.MAXIMUM_NUMBER_OF_USERS);
