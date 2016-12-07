@@ -32,9 +32,7 @@ public class ExceptionHandlerController {
 	public String exceptionHandler(
 		HttpServletRequest request, Exception exception) {
 
-		_log.error(
-			"Request: {}, Error: {}", request.getRequestURL(),
-			exception.getMessage());
+		_log.error(exception.getMessage(), exception);
 
 		return "redirect:error";
 	}

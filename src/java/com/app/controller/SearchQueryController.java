@@ -121,6 +121,8 @@ public class SearchQueryController {
 				"isCurrentSearchQueryActive", true);
 		}
 		catch (SearchQueryException sqe) {
+			_log.error(sqe.getMessage(), sqe);
+
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-search-query"));
 

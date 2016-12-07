@@ -182,7 +182,7 @@ public class DefaultMailSender implements MailSender {
 		}
 		catch (Exception e) {
 			_log.error(
-				"Unable to send search results to userId: {}", userId, e);
+				"Unable to send search results to userId: " + userId, e);
 		}
 
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);

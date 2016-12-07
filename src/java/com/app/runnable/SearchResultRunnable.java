@@ -90,7 +90,7 @@ public class SearchResultRunnable implements Runnable {
 				_userId, searchQueries.size(), (endTime - startTime) / 1000000);
 		}
 		catch (DatabaseConnectionException | SQLException e) {
-			_log.error("Unable to perform search for userId: {}", _userId, e);
+			_log.error("Unable to perform search for userId: " + _userId, e);
 		}
 	}
 

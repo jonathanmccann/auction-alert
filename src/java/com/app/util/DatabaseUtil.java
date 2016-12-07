@@ -46,9 +46,7 @@ public class DatabaseUtil {
 				_databaseURL, _databaseUsername, _databasePassword);
 		}
 		catch (SQLException sqle) {
-			_log.error(
-				"Could not get a database connection. Please check your " +
-					"database settings in 'config.properties'");
+			_log.error(sqle.getMessage(), sqle);
 
 			throw new DatabaseConnectionException(sqle);
 		}

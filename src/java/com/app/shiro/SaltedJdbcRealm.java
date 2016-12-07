@@ -52,7 +52,7 @@ public class SaltedJdbcRealm extends JdbcRealm {
 
 			if (user == null) {
 				_log.error(
-					"No account found for emailAddress {}", emailAddress);
+					"No account found for emailAddress: {}", emailAddress);
 
 				return null;
 			}

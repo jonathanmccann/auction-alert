@@ -99,7 +99,7 @@ public class UserController {
 				"success", LanguageUtil.getMessage("message-send-success"));
 		}
 		catch (Exception e) {
-			_log.error("Unable to deliver contact message");
+			_log.error(e.getMessage(), e);
 
 			model.put("error", LanguageUtil.getMessage("message-send-fail"));
 		}
@@ -146,7 +146,7 @@ public class UserController {
 			user = UserUtil.addUser(emailAddress, password);
 		}
 		catch (DuplicateEmailAddressException deae) {
-			_log.error(deae.getMessage());
+			_log.error(deae.getMessage(), deae);
 
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("duplicate-email-address"));
@@ -154,7 +154,7 @@ public class UserController {
 			return "redirect:create_account";
 		}
 		catch (InvalidEmailAddressException ieae) {
-			_log.error(ieae.getMessage());
+			_log.error(ieae.getMessage(), ieae);
 
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-email-address"));
@@ -162,7 +162,7 @@ public class UserController {
 			return "redirect:create_account";
 		}
 		catch (PasswordLengthException ple) {
-			_log.error(ple.getMessage());
+			_log.error(ple.getMessage(), ple);
 
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("invalid-password-length"));
@@ -175,7 +175,7 @@ public class UserController {
 				user.getUserId(), emailAddress, stripeToken);
 		}
 		catch (Exception e) {
-			_log.error(e.getMessage());
+			_log.error(e.getMessage(), e);
 
 			redirectAttributes.addFlashAttribute(
 				"error",
@@ -217,7 +217,7 @@ public class UserController {
 					currentUser.getEmailAddress());
 			}
 			catch (Exception e) {
-				_log.error(e.getMessage());
+				_log.error(e.getMessage(), e);
 
 				redirectAttributes.addFlashAttribute(
 					"error",
@@ -262,9 +262,9 @@ public class UserController {
 
 		if (!currentUser.getEmailAddress().equalsIgnoreCase(emailAddress)) {
 			_log.error(
-				"Unable to delete user with email address: {}. The current " +
-					"user's email address is: {}",
-				emailAddress, currentUser.getEmailAddress());
+				"User with email address: {} is trying to delete user with " +
+					"email address: {}",
+				currentUser.getEmailAddress(), emailAddress);
 
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("user-deletion-failure"));
@@ -294,6 +294,8 @@ public class UserController {
 			StripeUtil.deleteCustomer(currentUser.getCustomerId());
 		}
 		catch (Exception e) {
+			_log.error(e.getMessage(), e);
+
 			_log.error(
 				"Unable to delete user with email address: {}. The current " +
 					"user's email address is: {}",
@@ -568,7 +570,7 @@ public class UserController {
 					currentUser.getEmailAddress());
 			}
 			catch (Exception e) {
-				_log.error(e.getMessage());
+				_log.error(e.getMessage(), e);
 
 				redirectAttributes.addFlashAttribute(
 					"error",
@@ -652,7 +654,7 @@ public class UserController {
 				"error", LanguageUtil.getMessage("invalid-password-length"));
 		}
 		catch (Exception e) {
-			_log.error(e.getMessage());
+			_log.error(e.getMessage(), e);
 
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("account-update-fail"));
@@ -679,7 +681,7 @@ public class UserController {
 			mailSender.sendCardDetailsMessage(currentUser.getEmailAddress());
 		}
 		catch (Exception e) {
-			_log.error(e.getMessage());
+			_log.error(e.getMessage(), e);
 
 			redirectAttributes.addFlashAttribute(
 				"error",
