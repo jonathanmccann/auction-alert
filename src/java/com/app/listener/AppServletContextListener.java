@@ -15,6 +15,7 @@
 package com.app.listener;
 
 import com.app.util.CategoryUtil;
+import com.app.util.ConstantsUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.EbayAPIUtil;
 import com.app.util.ExchangeRateUtil;
@@ -64,6 +65,10 @@ public class AppServletContextListener implements ServletContextListener {
 			_log.info("Loading configuration properties");
 
 			PropertiesUtil.loadConfigurationProperties();
+
+			_log.info("Loading constants");
+
+			ConstantsUtil.init();
 
 			_log.info("Loading eBay service client");
 

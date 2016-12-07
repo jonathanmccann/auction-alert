@@ -62,7 +62,8 @@ public class UserUtil {
 			plainTextPassword);
 
 		return _userDAO.addUser(
-			emailAddress, passwordAndSalt.get(0), passwordAndSalt.get(1));
+			emailAddress, passwordAndSalt.get(0), passwordAndSalt.get(1),
+			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN);
 	}
 
 	public static void deactivateUser(String customerId)

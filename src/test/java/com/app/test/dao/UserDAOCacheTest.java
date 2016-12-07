@@ -53,7 +53,8 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 		StatisticsGateway statistics = cache.getStatistics();
 
-		_userDAO.addUser("test@test.com", "password", "salt");
+		_userDAO.addUser(
+			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
 
 		User user = _userDAO.getUserByUserId(1);
 
@@ -103,8 +104,11 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 		StatisticsGateway statistics = cache.getStatistics();
 
-		_userDAO.addUser("test@test.com", "password", "salt");
-		_userDAO.addUser("test2@test.com", "password", "salt");
+		_userDAO.addUser(
+			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
+
+		_userDAO.addUser(
+			"test2@test.com", "password", "salt", "http://www.ebay.com/itm/");
 
 		List<Integer> userIds = _userDAO.getUserIds(false);
 
@@ -117,7 +121,8 @@ public class UserDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(1, statistics.cacheMissCount());
 		Assert.assertEquals(1, statistics.cacheHitCount());
 
-		_userDAO.addUser("test3@test.com", "password", "salt");
+		_userDAO.addUser(
+			"test3@test.com", "password", "salt", "http://www.ebay.com/itm/");
 
 		userIds = _userDAO.getUserIds(false);
 

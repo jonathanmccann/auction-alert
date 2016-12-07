@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConstantsUtil {
 
+	public static String DEFAULT_PREFERRED_DOMAIN;
+
 	public static String getCurrencySymbol(String currency) {
 		return _currencySymbols.get(currency);
 	}
@@ -46,16 +48,13 @@ public class ConstantsUtil {
 		return _rssGlobalIds;
 	}
 
-	private static final Map<String, String> _currencySymbols = new HashMap<>();
-	private static final Map<String, String> _globalIds = new LinkedHashMap<>();
-	private static final Map<String, String> _preferredCurrencies =
-		new HashMap<>();
-	private static final Map<String, String> _preferredDomains =
-		new LinkedHashMap<>();
-	private static final Map<String, String> _rssGlobalIds =
-		new LinkedHashMap<>();
+	public static void init() {
+		DEFAULT_PREFERRED_DOMAIN =
+			"http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=";
 
-	static {
 		_currencySymbols.put("USD", "$");
 		_currencySymbols.put("CAD", "C $");
 		_currencySymbols.put("GBP", "£");
@@ -84,33 +83,163 @@ public class ConstantsUtil {
 		_globalIds.put("EBAY-IT", "Italy");
 		_globalIds.put("EBAY-NL", "Netherlands");
 
-		_preferredCurrencies.put("http://www.ebay.com/itm/", "USD");
-		_preferredCurrencies.put("http://www.ebay.ca/itm/", "CAD");
-		_preferredCurrencies.put("http://www.ebay.co.uk/itm/", "GBP");
-		_preferredCurrencies.put("http://www.ebay.at/itm/", "EUR");
-		_preferredCurrencies.put("http://www.ebay.com.au/itm/", "AUD");
-		_preferredCurrencies.put("http://www.befr.ebay.be/itm/", "EUR");
-		_preferredCurrencies.put("http://www.ebay.ch/itm/", "CHF");
-		_preferredCurrencies.put("http://www.ebay.de/itm/", "EUR");
-		_preferredCurrencies.put("http://www.ebay.es/itm/", "EUR");
-		_preferredCurrencies.put("http://www.ebay.fr/itm/", "EUR");
-		_preferredCurrencies.put("http://www.ebay.ie/itm/", "EUR");
-		_preferredCurrencies.put("http://www.ebay.it/itm/", "EUR");
-		_preferredCurrencies.put("http://www.ebay.nl/itm/", "EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"USD");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/706-53473-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229529&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"CAD");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/710-53481-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229508&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"GBP");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/5221-53469-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229473&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/705-53470-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229515&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"AUD");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/1553-53471-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229522&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/5222-53480-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229536&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"CHF");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/707-53477-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229487&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/1185-53479-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229501&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/709-53476-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229480&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/5282-53468-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229543&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/724-53478-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229494&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
+		_preferredCurrencies.put(
+			"http://rover.ebay.com/rover/1/1346-53482-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229557&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"EUR");
 
-		_preferredDomains.put("http://www.ebay.com/itm/", ".com");
-		_preferredDomains.put("http://www.ebay.ca/itm/", ".ca");
-		_preferredDomains.put("http://www.ebay.co.uk/itm/", ".co.uk");
-		_preferredDomains.put("http://www.ebay.at/itm/", ".at");
-		_preferredDomains.put("http://www.ebay.com.au/itm/", ".com.au");
-		_preferredDomains.put("http://www.befr.ebay.be/itm/", ".be");
-		_preferredDomains.put("http://www.ebay.ch/itm/", ".ch");
-		_preferredDomains.put("http://www.ebay.de/itm/", ".de");
-		_preferredDomains.put("http://www.ebay.es/itm/", ".es");
-		_preferredDomains.put("http://www.ebay.fr/itm/", ".fr");
-		_preferredDomains.put("http://www.ebay.ie/itm/", ".ie");
-		_preferredDomains.put("http://www.ebay.it/itm/", ".it");
-		_preferredDomains.put("http://www.ebay.nl/itm/", ".nl");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".com");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/706-53473-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229529&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".ca");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/710-53481-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229508&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".co.uk");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/5221-53469-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229473&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".at");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/705-53470-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229515&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".com.au");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/1553-53471-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229522&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".be");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/5222-53480-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229536&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".ch");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/707-53477-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229487&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".de");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/1185-53479-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229501&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".es");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/709-53476-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229480&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".fr");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/5282-53468-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229543&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".ie");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/724-53478-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229494&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".it");
+		_preferredDomains.put(
+			"http://rover.ebay.com/rover/1/1346-53482-19255-0/1?icep_ff3=2&pub=" +
+				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID +
+				"&customid=&ipn=psmain&icep_vectorid=229557&kwid=902099&mtid=824&kw=lg&icep_item=",
+			".nl");
 
 		_rssGlobalIds.put("1", "United States");
 		_rssGlobalIds.put("7", "Canada");
@@ -126,5 +255,14 @@ public class ConstantsUtil {
 		_rssGlobalIds.put("12", "Italy");
 		_rssGlobalIds.put("16", "Netherlands");
 	}
+
+	private static final Map<String, String> _currencySymbols = new HashMap<>();
+	private static final Map<String, String> _globalIds = new LinkedHashMap<>();
+	private static final Map<String, String> _preferredCurrencies =
+		new HashMap<>();
+	private static final Map<String, String> _preferredDomains =
+		new LinkedHashMap<>();
+	private static final Map<String, String> _rssGlobalIds =
+		new LinkedHashMap<>();
 
 }

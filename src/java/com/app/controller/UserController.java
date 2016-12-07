@@ -643,6 +643,8 @@ public class UserController {
 				"error", LanguageUtil.getMessage("invalid-password-length"));
 		}
 		catch (Exception e) {
+			_log.error(e.getMessage());
+
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("account-update-fail"));
 		}

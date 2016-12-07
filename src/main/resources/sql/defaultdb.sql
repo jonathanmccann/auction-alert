@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS User_(
 	emailAddress VARCHAR(100) NOT NULL UNIQUE,
 	password VARCHAR(128),
 	salt VARCHAR(128),
-	preferredDomain VARCHAR(30) NOT NULL DEFAULT 'http://www.ebay.com/itm/',
+	preferredDomain VARCHAR(250) NOT NULL,
 	emailNotification BOOLEAN DEFAULT TRUE,
 	unsubscribeToken VARCHAR(128),
 	emailsSent INT DEFAULT 0,

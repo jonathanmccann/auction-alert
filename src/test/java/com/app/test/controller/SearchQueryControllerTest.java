@@ -26,6 +26,7 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
+import com.app.util.ConstantsUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
@@ -74,6 +75,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		setUpDatabase();
 		setUpProperties();
+
+		ConstantsUtil.init();
 	}
 
 	@Test

@@ -43,7 +43,9 @@ import org.springframework.cache.annotation.Caching;
 public class UserDAO {
 
 	@CacheEvict(value = "userIds", allEntries = true)
-	public User addUser(String emailAddress, String password, String salt)
+	public User addUser(
+			String emailAddress, String password, String salt,
+			String preferredDomain)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Adding user with emailAddress: {}", emailAddress);
@@ -55,6 +57,7 @@ public class UserDAO {
 			preparedStatement.setString(1, emailAddress);
 			preparedStatement.setString(2, password);
 			preparedStatement.setString(3, salt);
+			preparedStatement.setString(4, preferredDomain);
 
 			preparedStatement.executeUpdate();
 
@@ -423,7 +426,8 @@ public class UserDAO {
 	}
 
 	private static final String _ADD_USER_SQL =
-		"INSERT INTO User_(emailAddress, password, salt) VALUES(?, ?, ?)";
+		"INSERT INTO User_(emailAddress, password, salt, preferredDomain) " +
+			"VALUES(?, ?, ?, ?)";
 
 	private static final String _DEACTIVATE_USER_SQL =
 		"UPDATE User_ SET active = false, pendingCancellation = false WHERE " +

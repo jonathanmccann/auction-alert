@@ -23,6 +23,7 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
+import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
 import com.app.util.SearchQueryPreviousResultUtil;
@@ -1650,7 +1651,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertEquals(
-			"http://www.ebay.com/itm/", user.getPreferredDomain());
+			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN, user.getPreferredDomain());
 		Assert.assertTrue(user.isEmailNotification());
 	}
 

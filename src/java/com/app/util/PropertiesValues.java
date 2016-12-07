@@ -22,6 +22,12 @@ public class PropertiesValues {
 	public static final String APPLICATION_ID =
 		PropertiesUtil.getConfigurationProperty("application.id");
 
+	public static final String EBAY_CAMPAIGN_ID =
+		PropertiesUtil.getConfigurationProperty("ebay.campaign.id");
+
+	public static final String EBAY_PUBLISHER_ID =
+		PropertiesUtil.getConfigurationProperty("ebay.publisher.id");
+
 	public static final String EBAY_TOKEN =
 		PropertiesUtil.getConfigurationProperty("ebay.token");
 
