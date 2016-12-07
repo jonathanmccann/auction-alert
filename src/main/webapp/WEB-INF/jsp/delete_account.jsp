@@ -32,6 +32,8 @@
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
 
+		<script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script>
+
 		<noscript>
 			<link href="/resources/css/skel.css" rel="stylesheet" />
 			<link href="/resources/css/style.css" rel="stylesheet" />
@@ -63,6 +65,13 @@
 		</section>
 
 		<div id="user-details">
+			<c:if test="${not empty error}">
+				<div id="error">
+					<i class="fa-times-circle icon"></i>
+					${error}
+				</div>
+			</c:if>
+
 			<div id="error">
 				<i class="fa-times-circle icon"></i>
 				Deleting your account will completely remove your information from the application and Stripe. Any remaining time on your subscription will be lost.
@@ -76,6 +85,8 @@
 				<div>
 					<b>Password: </b><input id="password" name="password" type="password" />
 				</div>
+
+				<div class="g-recaptcha padding-top" data-sitekey="${recaptchaSiteKey}"></div>
 
 				<div class="padding-top">
 					<input class="button delete" type="submit" value="Delete Account" />

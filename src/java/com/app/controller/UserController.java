@@ -238,6 +238,7 @@ public class UserController {
 		throws DatabaseConnectionException, SQLException {
 
 		model.put("isActive", UserUtil.isCurrentUserActive());
+		model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
 
 		return "delete_account";
 	}
@@ -245,8 +246,17 @@ public class UserController {
 	@RequestMapping(value = "/delete_account", method = RequestMethod.POST)
 	public String deleteAccount(
 			String emailAddress, String password,
+			@RequestParam(value = "g-recaptcha-response", required = false)
+				String recaptchaResponse,
 			RedirectAttributes redirectAttributes)
 		throws Exception {
+
+		if (!RecaptchaUtil.verifyRecaptchaResponse(recaptchaResponse)) {
+			redirectAttributes.addFlashAttribute(
+				"error", LanguageUtil.getMessage("recaptcha-failure"));
+
+			return "redirect:delete_account";
+		}
 
 		User currentUser = UserUtil.getCurrentUser();
 
@@ -432,10 +442,9 @@ public class UserController {
 
 			try {
 				if (loginAttempts >= PropertiesValues.LOGIN_ATTEMPT_LIMIT) {
-					boolean valid = RecaptchaUtil.verifyRecaptchaResponse(
-						recaptchaResponse);
+					if (!RecaptchaUtil.verifyRecaptchaResponse(
+							recaptchaResponse)) {
 
-					if (!valid) {
 						throw new RecaptchaException();
 					}
 				}
