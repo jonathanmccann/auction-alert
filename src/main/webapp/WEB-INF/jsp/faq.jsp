@@ -129,6 +129,7 @@
 								<li><a href="/result_faq#view">How do I view the results?</a></li>
 								<li><a href="/result_faq#number">How many results are stored?</a></li>
 								<li><a href="/result_faq#order">How are the results ordered?</a></li>
+								<li><a href="/result_faq#currency">Why are the prices in other currencies slightly off?</a></li>
 							</div>
 						</section>
 					</div>

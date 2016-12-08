@@ -93,6 +93,14 @@
 					<p class="faq-paragraph">
 						The results are ordered from the newest to the oldest listed.
 					</p>
+
+					<span class="anchor" id="currency"></span>
+					<h2>Why are the prices in other currencies slightly off?</h2>
+					<p class="faq-paragraph">
+						Converting currencies is tricky because their values can be constantly changing.
+						Unfortunately, this can lead to slight discrepancies between what the site reports as the price and what is displayed on eBay.
+						It should never be off by a significant amount though so you can be confident in the prices shown to you.
+					</p>
 				</div>
 			</div>
 		</section>
