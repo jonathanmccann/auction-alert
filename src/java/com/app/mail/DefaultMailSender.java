@@ -244,7 +244,8 @@ public class DefaultMailSender implements MailSender {
 		Message message = new MimeMessage(session);
 
 		message.setFrom(
-			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+			new InternetAddress(
+				PropertiesValues.OUTBOUND_EMAIL_ADDRESS, "Auction Alert"));
 
 		message.addRecipient(
 			Message.RecipientType.TO,
@@ -278,7 +279,8 @@ public class DefaultMailSender implements MailSender {
 		Message message = new MimeMessage(session);
 
 		message.setFrom(
-			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+			new InternetAddress(
+				PropertiesValues.OUTBOUND_EMAIL_ADDRESS, "Auction Alert"));
 
 		message.addRecipient(
 			Message.RecipientType.TO, new InternetAddress(emailAddress));
@@ -304,7 +306,8 @@ public class DefaultMailSender implements MailSender {
 		Message message = new MimeMessage(session);
 
 		message.setFrom(
-			new InternetAddress(PropertiesValues.OUTBOUND_EMAIL_ADDRESS));
+			new InternetAddress(
+				PropertiesValues.OUTBOUND_EMAIL_ADDRESS, "Auction Alert"));
 
 		message.addRecipient(
 			Message.RecipientType.TO, new InternetAddress(emailAddress));

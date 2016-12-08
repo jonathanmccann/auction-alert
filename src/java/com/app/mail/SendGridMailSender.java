@@ -176,6 +176,9 @@ public class SendGridMailSender implements MailSender {
 
 		Email emailTo = new Email(recipientEmailAddress);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+
+		emailFrom.setName("Auction Alert");
+
 		String subject = "New Search Results - " + MailUtil.getCurrentDate();
 
 		Map<String, Object> rootMap = new HashMap<>();
@@ -202,6 +205,8 @@ public class SendGridMailSender implements MailSender {
 		Email emailTo = new Email(emailAddress);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
 
+		emailFrom.setName("Auction Alert");
+
 		Map<String, Object> rootMap = new HashMap<>();
 
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
@@ -219,6 +224,9 @@ public class SendGridMailSender implements MailSender {
 
 		Email emailTo = new Email(emailAddress);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
+
+		emailFrom.setName("Auction Alert");
+
 		String subject = "Password Reset Token";
 
 		Map<String, Object> rootMap = new HashMap<>();
