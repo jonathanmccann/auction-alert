@@ -233,7 +233,7 @@
 										<a href="add_search_query">
 											<section class="box special">
 												<i class="fa-search icon major"></i>
-												<h3>Add New Query</h3>
+												<h3>Add a New Query</h3>
 											</section>
 										</a>
 									</div>
@@ -242,7 +242,7 @@
 										<a href="view_search_queries">
 											<section class="box special">
 												<i class="fa-archive icon major"></i>
-												<h3>Queries and Results</h3>
+												<h3>View Queries and Results</h3>
 											</section>
 										</a>
 									</div>
@@ -251,7 +251,7 @@
 										<a href="my_account">
 											<section class="box special">
 												<i class="fa-gear icon major"></i>
-												<h3>My Account</h3>
+												<h3>Manage My Account</h3>
 											</section>
 										</a>
 									</div>
