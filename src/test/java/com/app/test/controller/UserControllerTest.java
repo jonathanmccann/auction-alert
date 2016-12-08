@@ -379,6 +379,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAccount() throws Exception {
 		setUpCustomer();
+		setUpRecaptchaUtil(true);
 		setUpUserUtil();
 
 		SearchQuery searchQuery = new SearchQuery();
@@ -439,6 +440,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAccountWithIncorrectEmailAddress() throws Exception {
 		setUpUserUtil();
+		setUpRecaptchaUtil(true);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -452,8 +454,8 @@ public class UserControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(view().name("redirect:delete_account"));
+		resultActions.andExpect(redirectedUrl("delete_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
 		resultActions.andExpect(flash().attribute(
 			"error", LanguageUtil.getMessage("user-deletion-failure")));
@@ -466,6 +468,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAccountWithIncorrectPassword() throws Exception {
 		setUpUserUtil();
+		setUpRecaptchaUtil(true);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -479,11 +482,39 @@ public class UserControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
+		resultActions.andExpect(view().name("redirect:delete_account"));
+		resultActions.andExpect(redirectedUrl("delete_account"));
 		resultActions.andExpect(flash().attributeExists("error"));
 		resultActions.andExpect(flash().attribute(
 			"error", LanguageUtil.getMessage("user-deletion-failure")));
+
+		user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user);
+	}
+
+	@Test
+	public void testDeleteAccountWithInvalidRecaptcha() throws Exception {
+		setUpUserUtil();
+		setUpRecaptchaUtil(false);
+
+		User user = UserUtil.getUserByUserId(_USER_ID);
+
+		Assert.assertNotNull(user);
+
+		MockHttpServletRequestBuilder request = post("/delete_account");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().is3xxRedirection());
+		resultActions.andExpect(view().name("redirect:delete_account"));
+		resultActions.andExpect(redirectedUrl("delete_account"));
+		resultActions.andExpect(flash().attributeExists("error"));
+		resultActions.andExpect(flash().attribute(
+			"error", LanguageUtil.getMessage("recaptcha-failure")));
 
 		user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -1092,8 +1123,8 @@ public class UserControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:reset_password"));
-		resultActions.andExpect(redirectedUrl("reset_password"));
+		resultActions.andExpect(view().name("redirect:log_in"));
+		resultActions.andExpect(redirectedUrl("log_in"));
 		resultActions.andExpect(flash().attributeExists("success"));
 		resultActions.andExpect(flash().attribute(
 			"success", LanguageUtil.getMessage("password-reset-success")));

@@ -269,7 +269,7 @@ public class UserController {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("user-deletion-failure"));
 
-			return "redirect:my_account";
+			return "redirect:delete_account";
 		}
 
 		try {
@@ -304,7 +304,7 @@ public class UserController {
 			redirectAttributes.addFlashAttribute(
 				"error", LanguageUtil.getMessage("user-deletion-failure"));
 
-			return "redirect:my_account";
+			return "redirect:delete_account";
 		}
 
 		MailSender mailSender = MailSenderFactory.getInstance();
