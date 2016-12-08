@@ -103,6 +103,14 @@ public class SendGridMailSender implements MailSender {
 	}
 
 	@Override
+	public void sendPaymentFailedMessage(String emailAddress) {
+		Mail mail = _populateMessage(
+			emailAddress, "Payment Failed", "payment_failed_email.vm");
+
+		_sendEmail(mail);
+	}
+
+	@Override
 	public void sendResubscribeMessage(String emailAddress) {
 		Mail mail = _populateMessage(
 			emailAddress, "Resubscribe Successful", "resubscribe_email.vm");

@@ -188,6 +188,31 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulatePaymentFailedMessage() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populateMessageMethod = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class);
+
+		populateMessageMethod.setAccessible(true);
+
+		Mail mail =
+			(Mail) populateMessageMethod.invoke(
+				_classInstance, "user@test.com", "Payment Failed",
+				"payment_failed_email.vm");
+
+		Assert.assertEquals(
+			"Payment Failed", mail.getSubject());
+
+		List<Content> mailContent = mail.getContent();
+
+		Content content = mailContent.get(0);
+
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals(_PAYMENT_FAILED_EMAIL, content.getValue());
+	}
+
+	@Test
 	public void testPopulateResubscribeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 

@@ -128,6 +128,22 @@ public class DefaultMailSender implements MailSender {
 	}
 
 	@Override
+	public void sendPaymentFailedMessage(String emailAddress) {
+		Session session = _authenticateOutboundEmailAddress();
+
+		try {
+			Message emailMessage = _populateMessage(
+				emailAddress, "Payment Failed", "payment_failed_email.vm",
+				session);
+
+			Transport.send(emailMessage);
+		}
+		catch (Exception e) {
+			_log.error("Unable to send payment failed message", e);
+		}
+	}
+
+	@Override
 	public void sendResubscribeMessage(String emailAddress) {
 		Session session = _authenticateOutboundEmailAddress();
 

@@ -40,6 +40,8 @@ public interface MailSender {
 	public void sendPasswordResetToken(
 		String emailAddress, String passwordResetToken);
 
+	public void sendPaymentFailedMessage(String emailAddress);
+
 	public void sendResubscribeMessage(String emailAddress);
 
 	public void sendSearchResultsToRecipient(

@@ -14,6 +14,8 @@
 
 package com.app.util;
 
+import com.app.mail.MailSender;
+import com.app.mail.MailSenderFactory;
 import com.app.model.User;
 
 import com.stripe.model.Charge;
@@ -112,7 +114,13 @@ public class StripeUtil {
 		if (event.getType().equals(_CHARGE_FAILED)) {
 			Charge charge = (Charge)stripeObject;
 
-			UserUtil.deactivateUser(charge.getCustomer());
+			Customer customer = Customer.retrieve(charge.getCustomer());
+
+			UserUtil.deactivateUser(customer.getId());
+
+			MailSender mailSender = MailSenderFactory.getInstance();
+
+			mailSender.sendPaymentFailedMessage(customer.getEmail());
 		}
 		else if (event.getType().equals(_CUSTOMER_SUBSCRIPTION_DELETED)) {
 			Subscription subscription = (Subscription)stripeObject;
@@ -122,7 +130,13 @@ public class StripeUtil {
 		else if (event.getType().equals(_INVOICE_PAYMENT_FAILED)) {
 			Invoice invoice = (Invoice)stripeObject;
 
-			UserUtil.deactivateUser(invoice.getCustomer());
+			Customer customer = Customer.retrieve(invoice.getCustomer());
+
+			UserUtil.deactivateUser(customer.getId());
+
+			MailSender mailSender = MailSenderFactory.getInstance();
+
+			mailSender.sendPaymentFailedMessage(customer.getEmail());
 		}
 	}
 

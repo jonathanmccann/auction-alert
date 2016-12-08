@@ -72,7 +72,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 			_classInstance, "user@test.com", "Account Deletion Successful",
 			"account_deletion_email.vm", _session);
 
-		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
 		Assert.assertEquals(
 			"Account Deletion Successful", message.getSubject());
 		Assert.assertEquals(_ACCOUNT_DELETION_EMAIL, message.getContent());
@@ -99,7 +100,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 			_classInstance, "user@test.com", "Cancellation Successful",
 			"cancellation_email.vm", _session);
 
-		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
 		Assert.assertEquals(
 			"Cancellation Successful", message.getSubject());
 		Assert.assertEquals(_CANCELLATION_EMAIL, message.getContent());
@@ -126,7 +128,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 			_classInstance, "user@test.com", "Card Details Updated",
 			"card_details_email.vm", _session);
 
-		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
 		Assert.assertEquals(
 			"Card Details Updated", message.getSubject());
 		Assert.assertEquals(_CARD_DETAILS_EMAIL, message.getContent());
@@ -186,10 +189,39 @@ public class DefaultMailSenderTest extends BaseTestCase {
 			_classInstance, searchQueryResultMap, "user@test.com",
 			"unsubscribeToken", _session);
 
-		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
 		Assert.assertTrue(
 			message.getSubject().contains("New Search Results - "));
 		Assert.assertEquals(_EMAIL_CONTENT, message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("user@test.com");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
+	}
+
+	@Test
+	public void testPopulatePaymentFailedMessage() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populateMessage = _clazz.getDeclaredMethod(
+			"_populateMessage", String.class, String.class, String.class,
+			Session.class);
+
+		populateMessage.setAccessible(true);
+
+		Message message = (Message)populateMessage.invoke(
+			_classInstance, "user@test.com", "Payment Failed",
+			"payment_failed_email.vm", _session);
+
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Payment Failed", message.getSubject());
+		Assert.assertEquals(_PAYMENT_FAILED_EMAIL, message.getContent());
 
 		InternetAddress[] internetAddresses = new InternetAddress[1];
 
@@ -213,7 +245,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 			_classInstance, "user@test.com", "Resubscribe Successful",
 			"resubscribe_email.vm", _session);
 
-		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
 		Assert.assertEquals(
 			"Resubscribe Successful", message.getSubject());
 		Assert.assertEquals(_RESUBSCRIBE_EMAIL, message.getContent());
@@ -240,7 +273,8 @@ public class DefaultMailSenderTest extends BaseTestCase {
 			_classInstance, "user@test.com", "Welcome", "welcome_email.vm",
 			_session);
 
-		Assert.assertEquals("test@test.com", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
 		Assert.assertEquals(
 			"Welcome", message.getSubject());
 		Assert.assertEquals(_WELCOME_EMAIL, message.getContent());
