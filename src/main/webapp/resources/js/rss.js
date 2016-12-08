@@ -1,15 +1,29 @@
 $(window).load(function() {
+	var contentDiv = document.getElementById('content');
+
 	var currencyMap = {1: "USD", 7: "CAD", 15: "GBP", 3: "EUR", 4: "AUD", 5: "EUR", 14: "CHF", 13: "EUR", 10: "EUR", 2: "EUR", 12: "EUR", 16: "EUR"};
 
 	var currencySymbolMap = {"USD": "$", "CAD": "C $", "GBP": "£", "EUR": "€", "AUD": "AU $", "CHF": "CHF "};
 
 	var fromConversionRate;
 
+	var imageRegex = new RegExp("<img src='([^']+)");
+
+	var intervalId;
+
 	var itemIds = [];
+
+	var itemUrl = $("#preferredDomain").val();
+
+	var isConvertCurrency = false;
 
 	var globalId;
 
+	var preferredCurrency = $("#preferredCurrency").val();
+
 	var resultsPhrase = "Results will begin populating here as soon as they are found.";
+
+	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&keyword=";
 
 	var search = $("#search");
 
@@ -18,18 +32,6 @@ $(window).load(function() {
 	var startMonitoring = $('#startMonitoring');
 
 	var stopMonitoring = $("#stopMonitoring");
-
-	var contentDiv = document.getElementById('content');
-
-	var imageRegex = new RegExp("<img src='([^']+)");
-
-	var intervalId;
-
-	var itemUrl = $("#preferredDomain").val();
-
-	var preferredCurrency = $("#preferredCurrency").val();
-
-	var rssUrl = "http://rest.ebay.com/epn/v1/find/item.rss?toolid=10039&lgeo=1&feedType=rss&sortOrder=StartTimeNewest&hideDuplicateItems=true&keyword=";
 
 	var toConversionRate;
 
@@ -82,14 +84,30 @@ $(window).load(function() {
 			var currencySymbol = currencySymbolMap[preferredCurrency];
 
 			if (listingType == "Auction") {
-				html += 'Auction Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2);
+				if (isConvertCurrency) {
+					html += 'Auction Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2);
+				}
+				else {
+					html += 'Auction Price: ' + currencySymbol + Number(currentPrice).toFixed(2);
+				}
 			}
 			else if (listingType == "AuctionWithBIN") {
-				html += 'Auction Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2) + '<br>';
-				html += 'Fixed Price: ' + currencySymbol + (Number(fixedPrice) * fromConversionRate).toFixed(2);
+				if (isConvertCurrency) {
+					html += 'Auction Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2) + '<br>';
+					html += 'Fixed Price: ' + currencySymbol + (Number(fixedPrice) * fromConversionRate).toFixed(2);
+				}
+				else {
+					html += 'Auction Price: ' + currencySymbol + Number(currentPrice).toFixed(2) + '<br>';
+					html += 'Fixed Price: ' + currencySymbol + Number(fixedPrice).toFixed(2);
+				}
 			}
 			else if ((listingType == "FixedPrice") || (listingType == "StoreInventory")) {
-				html += 'Fixed Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2);
+				if (isConvertCurrency) {
+					html += 'Fixed Price: ' + currencySymbol + (Number(currentPrice) * fromConversionRate).toFixed(2);
+				}
+				else {
+					html += 'Fixed Price: ' + currencySymbol + Number(currentPrice).toFixed(2);
+				}
 			}
 
 			contentDiv.innerHTML = html + '</div> </div>' + contentDiv.innerHTML;
@@ -145,15 +163,22 @@ $(window).load(function() {
 	function setConversionRate() {
 		var itemCurrency = currencyMap[globalId];
 
-		var request = new XMLHttpRequest();
+		if (preferredCurrency == itemCurrency) {
+			isConvertCurrency = false;
+		}
+		else {
+			isConvertCurrency = true;
 
-		request.open("GET", "http://api.fixer.io/latest?base=" + preferredCurrency + "&symbols=" + itemCurrency, false );
+			var request = new XMLHttpRequest();
 
-		request.send(null);
+			request.open("GET", "http://api.fixer.io/latest?base=" + preferredCurrency + "&symbols=" + itemCurrency, false);
 
-		toConversionRate = JSON.parse(request.responseText).rates[itemCurrency];
+			request.send(null);
 
-		fromConversionRate = 1 / toConversionRate;
+			toConversionRate = JSON.parse(request.responseText).rates[itemCurrency];
+
+			fromConversionRate = 1 / toConversionRate;
+		}
 	}
 
 	search.click(function() {
@@ -238,11 +263,19 @@ $(window).load(function() {
 		var maxPrice = $("#maxPrice").val();
 
 		if (minPrice && (minPrice > 0)) {
-			url += "&minPrice=" + (minPrice * toConversionRate);
+			if (isConvertCurrency) {
+				minPrice = minPrice * toConversionRate;
+			}
+
+			url += "&minPrice=" + minPrice;
 		}
 
 		if (maxPrice && (maxPrice > 0)) {
-			url += "&maxPrice=" + (maxPrice * toConversionRate);
+			if (isConvertCurrency) {
+				maxPrice = maxPrice * toConversionRate;
+			}
+
+			url += "&maxPrice=" + maxPrice;
 		}
 
 		fetchRss(encodeURIComponent(url + "&" + new Date().getTime()));
