@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS User_(
 	subscriptionId VARCHAR(100),
 	active BOOLEAN DEFAULT FALSE,
 	pendingCancellation BOOLEAN DEFAULT FALSE,
-	lastLoginDate TIMESTAMP,
+	lastLoginDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	lastLoginIpAddress VARCHAR(20),
 	passwordResetToken VARCHAR(100),
 	passwordResetExpiration TIMESTAMP
