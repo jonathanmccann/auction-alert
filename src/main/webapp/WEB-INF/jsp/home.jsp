@@ -201,7 +201,7 @@
 				<section class="style1 wrapper" id="pricing">
 					<div class="container">
 						<section class="box special">
-							<h2>Auction Alert is priced with you in mind.</h2>
+							<h2>Priced with you in mind.</h2>
 							<h3>Just $1 per month gives you access to:</h3>
 							<p>
 								<b>10 search queries</b> <br>
