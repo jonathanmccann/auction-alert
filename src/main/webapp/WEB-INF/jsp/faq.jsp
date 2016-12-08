@@ -90,6 +90,7 @@
 								<li><a href="/general_faq#limit">Why am I limited to 10 queries and 30 emails?</a></li>
 								<li><a href="/general_faq#charge">When is my account charged?</a></li>
 								<li><a href="/general_faq#unsubscribe">What happens when I unsubscribe?</a></li>
+								<li><a href="/general_faq#country">What countries do you support?</a></li>
 							</div>
 						</section>
 					</div>

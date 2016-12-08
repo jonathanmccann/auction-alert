@@ -122,6 +122,29 @@
 						Then, on the 10th of February, you decided to unsubscribe. Your account will remain active until the 5th of March.
 						However, once that day comes around, you will not be charged since you have unsubscribed. Your account will now become inactive and you will no longer be able to use the site.
 					</p>
+
+					<span class="anchor" id="country"></span>
+					<h2>What countries do you support?</h2>
+					<p class="faq-paragraph">
+						Currently, we support searching the following eBay sites:
+					</p>
+
+					<p class="faq-paragraph-indent">
+						http://www.ebay.com (United States)<br>
+						http://www.ebay.ca (Canada)<br>
+						http://www.ebay.co.uk (United Kingdom)<br><br>
+
+						http://www.ebay.at (Austria)<br>
+						http://www.ebay.com.au (Australia)<br>
+						http://www.befr.ebay.be (Belgium)<br>
+						http://www.ebay.fr (France)<br>
+						http://www.ebay.de (Germany)<br>
+						http://www.ebay.ie (Ireland)<br>
+						http://www.ebay.it (Italy)<br>
+						http://www.ebay.nl (Netherlands)<br>
+						http://www.ebay.es (Spain)<br>
+						http://www.ebay.ch (Switzerland)
+					</p>
 				</div>
 			</div>
 		</section>
