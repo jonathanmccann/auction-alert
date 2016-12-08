@@ -91,9 +91,9 @@ public class UserUtil {
 	public static boolean exceedsMaximumNumberOfUsers()
 		throws DatabaseConnectionException, SQLException {
 
-		int searchQueryCount = _userDAO.getUserCount();
+		int userCount = _userDAO.getUserCount();
 
-		if ((searchQueryCount + 1) > PropertiesValues.MAXIMUM_NUMBER_OF_USERS) {
+		if ((userCount + 1) > PropertiesValues.MAXIMUM_NUMBER_OF_USERS) {
 			return true;
 		}
 
