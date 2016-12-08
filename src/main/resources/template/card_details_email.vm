@@ -5,8 +5,9 @@
 				<td align="center">
 					<h2 style="color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;">Card Details Updated</h2>
 
-					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;">
-						Your card details have been successfully updated. Please look for the charge to appear on the new card starting on your next billing cycle.
+					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em; width: 75%">
+						Your card details have been successfully updated.<br><br>
+						Please look for the charge to appear on the new card starting on your next billing cycle.
 					</p>
 				</td>
 			</tr>

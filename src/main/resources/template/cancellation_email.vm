@@ -5,8 +5,9 @@
 				<td align="center">
 					<h2 style="color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;">We're sorry to see you go</h2>
 
-					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;">
-						Your cancellation request has been processed successfully. We hope you enjoyed your time at Auction Alert. Please resubscribe at any time to enjoy its benefits once again.
+					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em; width: 75%">
+						Your cancellation request has been processed successfully. We hope you enjoyed your time at Auction Alert.<br><br>
+						Please resubscribe at any time to enjoy its benefits once again.
 					</p>
 				</td>
 			</tr>

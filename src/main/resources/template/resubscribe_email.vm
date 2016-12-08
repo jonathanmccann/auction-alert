@@ -5,8 +5,9 @@
 				<td align="center">
 					<h2 style="color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;">Welcome Back</h2>
 
-					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;">
-						Your resubscription request has been processed successfully. Start enjoying the benefits of email alerts and real time monitoring immediately.
+					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em; width: 75%">
+						Your resubscription request has been processed successfully.<br><br>
+						Start enjoying the benefits of <a href="${rootDomainName}/add_search_query">email alerts</a> and <a href="${rootDomainName}/monitor">real time monitoring</a> immediately.
 					</p>
 				</td>
 			</tr>
