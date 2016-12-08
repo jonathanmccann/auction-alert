@@ -6,7 +6,7 @@ This Java webapp will hook into eBay's API in order to serve custom search resul
 In Action
 ========
 
-See a demo of this web application at http://test-auctionalert.rhcloud.com/
+See this web application in action at http://auctionalert.com/
 
 Configuration
 ========
