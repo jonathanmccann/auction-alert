@@ -77,6 +77,7 @@
 								<li><a href="/new_faq#what">What does this site do?</a></li>
 								<li><a href="/new_faq#who">Who is this application for?</a></li>
 								<li><a href="/new_faq#competitors">How do you compare to competitors?</a></li>
+								<li><a href="/new_faq#location">I am not from the United States, can I still use the site?</a></li>
 							</div>
 						</section>
 					</div>

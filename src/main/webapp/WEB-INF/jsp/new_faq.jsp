@@ -114,6 +114,15 @@
 						You will need to evaluate your needs and choose the best option for your use case. In the end, if you do not need real time notifications, then perhaps one of our competitors would work better for you.
 						If you do need up to the minute notifications or more robust real time monitoring, then this site will fit your needs perfectly.
 					</p>
+
+					<span class="anchor" id="location"></span>
+					<h2>I am not from the United States, can I still use the site?</h2>
+					<p class="faq-paragraph">
+						Yes, of course! We support <a href="/general_faq#country">many different eBay sites</a>.<br><br>
+						In regards to payments, we utilize Stripe for collecting payments and they have <a href="https://support.stripe.com/questions/which-currencies-does-stripe-support">a list</a> of currencies and cards they support.
+						If you are not from the United States, please be aware of those limitations and also potential fees associated with currency conversion and foreign transaction fees.
+						If you have questions about this, feel free to contact Stripe or your bank for more information.
+					</p>
 				</div>
 			</div>
 		</section>
