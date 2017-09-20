@@ -4,5 +4,6 @@
 /.gradle
 /.idea
 /target
-to-do.txt
-openshift.txt
+gradlew
+gradlew.bat
+tips.txt

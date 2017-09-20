@@ -68,6 +68,7 @@ sourceSets {
 
 test {
 	systemProperties System.getProperties()
+	systemProperties['user.dir'] = workingDir
 
 	jvmArgs '-XX:-UseSplitVerifier'
 	jvmArgs '-XX:MaxPermSize=512m'
