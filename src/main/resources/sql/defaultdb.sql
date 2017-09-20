@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS User_(
 	lastLoginDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	lastLoginIpAddress VARCHAR(20),
 	passwordResetToken VARCHAR(100),
-	passwordResetExpiration TIMESTAMP
+	passwordResetExpiration TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS Release_(
