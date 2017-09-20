@@ -58,6 +58,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -591,10 +592,12 @@ public class UserController {
 
 	@RequestMapping(value ="/stripe", method= RequestMethod.POST)
 	public void stripeWebhookEndpoint(
-			@RequestBody String stripeJsonEvent, HttpServletResponse response)
+			@RequestBody String stripeJsonEvent,
+			@RequestHeader("Stripe-Signature") String stripeSignature,
+			HttpServletResponse response)
 		throws Exception {
 
-		StripeUtil.handleStripeEvent(stripeJsonEvent);
+		StripeUtil.handleStripeEvent(stripeJsonEvent, stripeSignature);
 
 		response.setStatus(HttpStatus.SC_OK);
 	}

@@ -85,6 +85,9 @@ public class PropertiesValues {
 	public static final String STRIPE_SECRET_KEY =
 		PropertiesUtil.getConfigurationProperty("stripe.secret.key");
 
+	public static final String STRIPE_SIGNING_SECRET =
+		PropertiesUtil.getConfigurationProperty("stripe.signing.secret");
+
 	public static final String STRIPE_SUBSCRIPTION_PLAN_ID =
 		PropertiesUtil.getConfigurationProperty("stripe.subscription.plan.id");
 

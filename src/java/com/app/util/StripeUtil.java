@@ -25,6 +25,7 @@ import com.stripe.model.EventData;
 import com.stripe.model.Invoice;
 import com.stripe.model.StripeObject;
 import com.stripe.model.Subscription;
+import com.stripe.net.Webhook;
 
 import java.text.SimpleDateFormat;
 
@@ -100,12 +101,13 @@ public class StripeUtil {
 		}
 	}
 
-	public static void handleStripeEvent(String stripeJsonEvent)
+	public static void handleStripeEvent(
+			String stripeJsonEvent, String stripeSignature)
 		throws Exception {
 
-		Event event = Event.GSON.fromJson(stripeJsonEvent, Event.class);
-
-		event = Event.retrieve(event.getId());
+		Event event = Webhook.constructEvent(
+			stripeJsonEvent, stripeSignature,
+			PropertiesValues.STRIPE_SIGNING_SECRET);
 
 		EventData eventData = event.getData();
 
