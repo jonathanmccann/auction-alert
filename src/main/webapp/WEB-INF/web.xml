@@ -40,6 +40,6 @@
 
 	<error-page>
 		<error-code>404</error-code>
-		<location>/WEB-INF/jsp/error.jsp</location>
+		<location>/error</location>
 	</error-page>
 </web-app>
