@@ -73,6 +73,12 @@ test {
 	jvmArgs '-XX:-UseSplitVerifier'
 	jvmArgs '-XX:MaxPermSize=512m'
 
+	testLogging {
+		exceptionFormat = 'full'
+
+        events "skipped", "failed"
+    }
+
 	jacoco {
 		append = false
 		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
