@@ -70,7 +70,12 @@ public class UserDAO {
 		}
 	}
 
-	@CacheEvict(value = "userIds", allEntries = true)
+	@Caching(
+		evict = {
+			@CacheEvict(value = "userByUserId", allEntries = true),
+			@CacheEvict(value = "userIds", allEntries = true)
+		}
+	)
 	public void deactivateUser(String customerId)
 		throws DatabaseConnectionException, SQLException {
 
