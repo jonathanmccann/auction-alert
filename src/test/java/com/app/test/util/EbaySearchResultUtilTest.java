@@ -17,6 +17,7 @@ package com.app.test.util;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
+import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.ValidatorUtil;
 import com.app.util.EbaySearchResultUtil;
@@ -83,6 +84,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		_setUpAdvanceRequestMethod.setAccessible(true);
 
 		setUpProperties();
+
+		ConstantsUtil.init();
 	}
 
 	@Test
