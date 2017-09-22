@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -36,11 +38,18 @@ public class PropertiesUtil {
 		return _properties.getProperty(propertyKey);
 	}
 
-	public static void loadConfigurationProperties() throws IOException {
-		String propertiesFilePath =
-			System.getProperty("catalina.base") + '/' + "config.properties";
+	public static void loadConfigurationProperties() throws Exception {
+		ClassLoader classLoader =
+			Thread.currentThread().getContextClassLoader();
 
-		loadConfigurationProperties(propertiesFilePath);
+		URL resource = classLoader.getResource(_CONFIG_PROPERTIES);
+
+		if (resource == null) {
+			throw new IOException(
+				"Unable to open resource '" + _CONFIG_PROPERTIES + "'");
+		}
+
+		loadConfigurationProperties(Paths.get(resource.toURI()).toString());
 	}
 
 	public static void loadConfigurationProperties(String propertiesFilePath)
@@ -65,6 +74,8 @@ public class PropertiesUtil {
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		PropertiesUtil.class);
+
+	private static final String _CONFIG_PROPERTIES = "config.properties";
 
 	private static Properties _properties;
 

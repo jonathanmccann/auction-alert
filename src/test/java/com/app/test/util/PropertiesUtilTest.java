@@ -14,12 +14,15 @@
 
 package com.app.test.util;
 
+import com.app.mail.DefaultMailSender;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 
 import java.io.IOException;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 
 import java.util.Properties;
@@ -87,11 +90,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Stripe Subscription Plan ID",
 			PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-	}
-
-	@Test(expected = IOException.class)
-	public void testLoadInvalidConfigurationProperties() throws Exception {
-		PropertiesUtil.loadConfigurationProperties();
 	}
 
 	@Test
