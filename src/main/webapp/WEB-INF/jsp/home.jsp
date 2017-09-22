@@ -97,8 +97,8 @@
 			<div>
 				<section class="major" id="banner">
 					<div class="inner">
-						<h2>This is Auction Alert</h2>
-						<p>The simple way to stay informed with eBay</p>
+						<h2>Auction Alert</h2>
+						<p>Receive up to the minute alerts for newly listed items on eBay using highly configurable search queries.</p>
 						<ul class="actions">
 							<li><a href="create_account" class="button big special">Sign Up</a></li>
 							<li><a href="#about" id="learn-more" class="button big alt">Learn More</a></li>
@@ -201,8 +201,8 @@
 				<section class="style1 wrapper" id="pricing">
 					<div class="container">
 						<section class="box special">
-							<h2>Priced with you in mind.</h2>
-							<h3>Just $1 per month gives you access to:</h3>
+							<h2>Simply priced.</h2>
+							<h3>$1 per month gives you access to</h3>
 							<p>
 								<b>10 search queries</b> <br>
 								<b>30 emails a day</b> <br>
