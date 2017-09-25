@@ -72,3 +72,9 @@
 	#user-details {
 		width: 80%;
 	}
+
+/* Home Page */
+
+	.flex {
+		display: inline;
+	}

@@ -1337,3 +1337,13 @@
 	.button.delete:active {
 		background-color: #e55a62;
 	}
+
+/* Home Page */
+
+	.flex {
+		display: flex;
+	}
+
+	.second {
+		order: 2;
+	}

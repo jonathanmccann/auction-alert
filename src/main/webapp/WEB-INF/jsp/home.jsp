@@ -150,13 +150,8 @@
 					</header>
 
 					<div class="container">
-						<div class="row">
-							<div class="6u">
-								<div class="image fit">
-									<img alt="Adding Search Query" src="resources/images/adding_search_query.png">
-								</div>
-							</div>
-							<div class="6u">
+						<div class="row flex">
+							<div class="6u second">
 								<h3 align="left">Searching</h3>
 								<p align="left">
 									You will have the ability to craft search queries that will then be run against eBay and any new results are sent directly to your email.<br><br>
@@ -164,9 +159,14 @@
 									Many options are available to you so you can narrow down the items by category, type of listing, price, and even location.
 								</p>
 							</div>
+							<div class="6u">
+								<div class="image fit">
+									<img alt="Adding Search Query" src="resources/images/adding_search_query.png">
+								</div>
+							</div>
 						</div>
 
-						<div class="row">
+						<div class="row flex">
 							<div class="6u">
 								<h3 align="left">Monitoring</h3>
 								<p align="left">
@@ -181,18 +181,18 @@
 							</div>
 						</div>
 
-						<div class="row">
-							<div class="6u">
-								<div class="image fit">
-									<img alt="Email Notification" src="resources/images/email_notification.png">
-								</div>
-							</div>
-							<div class="6u">
+						<div class="row flex">
+							<div class="6u second">
 								<h3 align="left">Email Notifications</h3>
 								<p align="left">
 									Every new result is sent immediately to your email address. From there, you are free to access the item's listing and bid or purchase.<br><br>
 									In addition, up to 20 results are saved on the site so that you can look at the previous results without having to sift through your emails.
 								</p>
+							</div>
+							<div class="6u">
+								<div class="image fit">
+									<img alt="Email Notification" src="resources/images/email_notification.png">
+								</div>
 							</div>
 						</div>
 					</div>
