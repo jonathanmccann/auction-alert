@@ -218,7 +218,7 @@
 
 		<shiro:user>
 			<div>
-				<section class="minor" id="banner">
+				<section class="minor">
 					<div class="inner">
 						<h2>Welcome</h2>
 					</div>

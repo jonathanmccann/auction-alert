@@ -61,7 +61,7 @@
 			</nav>
 		</header>
 
-		<section class="minor" id="banner">
+		<section class="minor">
 			<div class="inner">
 				<h2>Search Query</h2>
 			</div>

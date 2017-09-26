@@ -50,13 +50,13 @@
 	<body>
 		<%@ include file="header.jspf" %>
 
-		<section class="minor" id="banner">
+		<section class="minor">
 			<div class="inner">
 				<h2>Monitor</h2>
 			</div>
 		</section>
 
-		<div class="container padding-top">
+		<div class="container padding-top-large">
 			<div class="fa-angle-down icon" id="search">
 				<span class="monitor-header">Search Query</span>
 			</div>

@@ -65,13 +65,13 @@
 			</nav>
 		</header>
 
-		<section class="minor" id="banner">
+		<section class="minor narrow">
 			<div class="inner">
 				<h2>My Account</h2>
 			</div>
 		</section>
 
-		<div id="user-details">
+		<div id="user-details" class="padding-top-large">
 			<form:form action="/my_account" commandName="user" id="updateUserForm" method="post">
 				<c:if test="${not empty error}">
 					<div id="error">

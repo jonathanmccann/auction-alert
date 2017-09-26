@@ -61,7 +61,7 @@
 			</nav>
 		</header>
 
-		<section class="minor" id="banner">
+		<section class="minor">
 			<div class="inner">
 				<h2>Frequently Asked Questions</h2>
 			</div>
@@ -71,9 +71,11 @@
 			<div class="container">
 				<div class="row">
 					<div class="4u">
-						<section class="special box">
-							<h3><a href="/new_faq">New to Auction Alert?</a></h3>
-							<div class="align-left">
+						<section class="special hero-box">
+							<div class="hero">
+								<h3><a href="/new_faq">New to Auction Alert?</a></h3>
+							</div>
+							<div class="faq-content align-left">
 								<li><a href="/new_faq#what">What does this site do?</a></li>
 								<li><a href="/new_faq#who">Who is this application for?</a></li>
 								<li><a href="/new_faq#competitors">How do you compare to competitors?</a></li>
@@ -82,9 +84,11 @@
 						</section>
 					</div>
 					<div class="4u">
-						<section class="special box">
-							<h3><a href="/general_faq">General</a></h3>
-							<div class="align-left">
+						<section class="special hero-box">
+							<div class="hero">
+								<h3><a href="/general_faq">General</a></h3>
+							</div>
+							<div class="faq-content align-left">
 								<li><a href="/general_faq#no_emails">I am not receiving any emails!</a></li>
 								<li><a href="/general_faq#emails">I am receiving too many emails!</a></li>
 								<li><a href="/general_faq#item">The item was sold before I could buy it!</a></li>
@@ -96,9 +100,11 @@
 						</section>
 					</div>
 					<div class="4u">
-						<section class="special box">
-							<h3><a href="/account_faq">My Account</a></h3>
-							<div class="align-left">
+						<section class="special hero-box">
+							<div class="hero">
+								<h3><a href="/account_faq">My Account</a></h3>
+							</div>
+							<div class="faq-content align-left">
 								<li><a href="/account_faq#credit_card">How do I change my credit card details?</a></li>
 								<li><a href="/account_faq#cancel">How do I cancel my subscription?</a></li>
 								<li><a href="/account_faq#account">How do I change my account details?</a></li>
@@ -112,9 +118,11 @@
 				</div>
 				<div class="row">
 					<div class="4u">
-						<section class="special box">
-							<h3><a href="/query_faq">Search Query</a></h3>
-							<div class="align-left">
+						<section class="special hero-box">
+							<div class="hero">
+								<h3><a href="/query_faq">Search Query</a></h3>
+							</div>
+							<div class="faq-content align-left">
 								<li><a href="/query_faq#add">How do I add a search query?</a></li>
 								<li><a href="/query_faq#edit">How do I edit a search query?</a></li>
 								<li><a href="/query_faq#boolean">Can I use boolean logic?</a></li>
@@ -125,9 +133,11 @@
 						</section>
 					</div>
 					<div class="4u">
-						<section class="special box">
-							<h3><a href="/result_faq">Search Result</a></h3>
-							<div class="align-left">
+						<section class="special hero-box">
+							<div class="hero">
+								<h3><a href="/result_faq">Search Result</a></h3>
+							</div>
+							<div class="faq-content align-left">
 								<li><a href="/result_faq#view">How do I view the results?</a></li>
 								<li><a href="/result_faq#number">How many results are stored?</a></li>
 								<li><a href="/result_faq#order">How are the results ordered?</a></li>
@@ -136,9 +146,11 @@
 						</section>
 					</div>
 					<div class="4u">
-						<section class="special box">
-							<h3><a href="/monitor_faq">Monitoring</a></h3>
-							<div class="align-left">
+						<section class="special hero-box">
+							<div class="hero">
+								<h3><a href="/monitor_faq">Monitoring</a></h3>
+							</div>
+							<div class="faq-content align-left">
 								<li><a href="/monitor_faq#how">How do I monitor a query?</a></li>
 								<li><a href="/monitor_faq#save">Can I save a monitored query?</a></li>
 								<li><a href="/monitor_faq#often">How often is the monitored query searched?</a></li>
@@ -148,7 +160,7 @@
 					</div>
 				</div>
 			</div>
-			<div align="center" class="container">
+			<div align="center" class="container padding-top">
 				<h2>Have a question not answered here?</h2>
 				Please use our <a href="/contact">contact</a> page to get in touch with us with any other questions you may have.
 			</div>

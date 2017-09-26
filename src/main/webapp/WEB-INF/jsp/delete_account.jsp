@@ -58,7 +58,7 @@
 			</nav>
 		</header>
 
-		<section class="minor" id="banner">
+		<section class="minor narrow">
 			<div class="inner">
 				<h2>Delete Account</h2>
 			</div>

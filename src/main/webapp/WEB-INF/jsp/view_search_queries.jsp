@@ -51,7 +51,7 @@
 	<body>
 		<%@ include file="header.jspf" %>
 
-		<section class="minor" id="banner">
+		<section class="minor">
 			<div class="inner">
 				<h2>Search Queries and Results</h2>
 			</div>

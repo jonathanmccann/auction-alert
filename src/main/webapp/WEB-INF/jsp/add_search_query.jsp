@@ -56,7 +56,7 @@
 	<body>
 		<%@ include file="header.jspf" %>
 
-		<section class="minor" id="banner">
+		<section class="minor">
 			<c:choose>
 				<c:when test="${isAdd}">
 					<div class="inner">
@@ -71,7 +71,7 @@
 			</c:choose>
 		</section>
 
-		<div class="container padding-top">
+		<div class="container padding-top-large">
 			<c:if test="${not empty error}">
 				<div id="error">
 					<i class="fa-times-circle icon"></i>

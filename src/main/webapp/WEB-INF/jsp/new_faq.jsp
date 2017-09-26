@@ -61,7 +61,7 @@
 			</nav>
 		</header>
 
-		<section class="minor" id="banner">
+		<section class="minor">
 			<div class="inner">
 				<h2>New to Auction Alert</h2>
 			</div>
