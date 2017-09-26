@@ -56,8 +56,10 @@
 		</header>
 
 		<section class="minor narrow">
-			<div class="inner">
-				<h2>Reset Password</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Reset Password</h1>
+				</div>
 			</div>
 		</section>
 

@@ -66,12 +66,14 @@
 		</header>
 
 		<section class="minor narrow">
-			<div class="inner">
-				<h2>My Account</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>My Account</h1>
+				</div>
 			</div>
 		</section>
 
-		<div id="user-details" class="padding-top-large">
+		<div id="user-details">
 			<form:form action="/my_account" commandName="user" id="updateUserForm" method="post">
 				<c:if test="${not empty error}">
 					<div id="error">

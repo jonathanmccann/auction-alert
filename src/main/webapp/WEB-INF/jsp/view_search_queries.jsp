@@ -52,8 +52,10 @@
 		<%@ include file="header.jspf" %>
 
 		<section class="minor">
-			<div class="inner">
-				<h2>Search Queries and Results</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Search Queries and Results</h1>
+				</div>
 			</div>
 		</section>
 

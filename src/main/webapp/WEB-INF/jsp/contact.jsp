@@ -64,8 +64,10 @@
 		</header>
 
 		<section class="minor">
-			<div class="inner">
-				<h2>Contact</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Contact</h1>
+				</div>
 			</div>
 		</section>
 

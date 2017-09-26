@@ -59,8 +59,10 @@
 		</header>
 
 		<section class="minor narrow">
-			<div class="inner">
-				<h2>Create Account</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Create Account</h1>
+				</div>
 			</div>
 		</section>
 

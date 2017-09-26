@@ -59,13 +59,17 @@
 		<section class="minor">
 			<c:choose>
 				<c:when test="${isAdd}">
-					<div class="inner">
-						<h2>Add Search Query</h2>
+					<div class="row">
+						<div class="4u">
+							<h1>Add Search Query</h1>
+						</div>
 					</div>
 				</c:when>
 				<c:otherwise>
-					<div class="inner">
-						<h2>Update Search Query</h2>
+					<div class="row">
+						<div class="4u">
+							<h1>Update Search Query</h1>
+						</div>
 					</div>
 				</c:otherwise>
 			</c:choose>

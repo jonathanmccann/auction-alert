@@ -62,8 +62,10 @@
 		</header>
 
 		<section class="minor">
-			<div class="inner">
-				<h2>Search Result</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Search Result</h1>
+				</div>
 			</div>
 		</section>
 

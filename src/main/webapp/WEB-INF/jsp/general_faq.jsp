@@ -62,8 +62,10 @@
 		</header>
 
 		<section class="minor">
-			<div class="inner">
-				<h2>General</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>General</h1>
+				</div>
 			</div>
 		</section>
 

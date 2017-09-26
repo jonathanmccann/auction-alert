@@ -63,8 +63,10 @@
 		</header>
 
 		<section class="minor narrow">
-			<div class="inner">
-				<h2>Email Unsubscribe</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Email Unsubscribe</h1>
+				</div>
 			</div>
 		</section>
 

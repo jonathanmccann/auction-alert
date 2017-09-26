@@ -62,8 +62,10 @@
 		</header>
 
 		<section class="minor">
-			<div class="inner">
-				<h2>Monitoring</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Monitoring</h1>
+				</div>
 			</div>
 		</section>
 

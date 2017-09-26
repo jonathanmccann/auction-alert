@@ -62,8 +62,10 @@
 		</header>
 
 		<section class="minor">
-			<div class="inner">
-				<h2>Frequently Asked Questions</h2>
+			<div class="row">
+				<div class="4u">
+					<h1>Frequently Asked Questions</h1>
+				</div>
 			</div>
 		</section>
 
