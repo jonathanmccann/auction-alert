@@ -62,10 +62,10 @@
 		</header>
 
 		<section class="minor">
-			<div class="row">
-				<div class="4u">
-					<h1>New to Auction Alert</h1>
-				</div>
+			<h1>New to Auction Alert</h1>
+
+			<div class="sub-heading-indent">
+				<h5><a href="/faq">FAQ Home</a></h5>
 			</div>
 		</section>
 

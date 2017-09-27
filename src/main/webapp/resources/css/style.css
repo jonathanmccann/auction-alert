@@ -1115,6 +1115,10 @@
 				text-transform: none;
 			}
 
+			.minor h5 a {
+				color: #629DD1;
+			}
+
 		.minor.narrow {
 			width: 800px;
 		}
@@ -1332,6 +1336,10 @@
 
 	.faq-paragraph-indent {
 		margin-left: 100px;
+	}
+
+	.sub-heading-indent {
+		margin-left: 25px;
 	}
 
 /* Delete Button */
