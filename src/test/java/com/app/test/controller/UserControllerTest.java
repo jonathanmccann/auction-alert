@@ -1660,17 +1660,53 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testViewMyAccount() throws Exception {
+	public void testViewMyAccountAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
-		this.mockMvc.perform(get("/my_account"))
+		this.mockMvc.perform(get("/my_account")
+			.sessionAttr("info", "Info Message")
+			.param("error", "Error Message")
+			.param("success", "Success Message"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("my_account"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
+			.andExpect(model().attributeExists("isActive"))
 			.andExpect(model().attributeExists("user"))
 			.andExpect(model().attributeExists("preferredDomains"))
-			.andExpect(model().attributeExists("stripePublishableKey"));
+			.andExpect(model().attributeExists("stripePublishableKey"))
+			.andExpect(model().attributeExists("error"))
+			.andExpect(model().attributeExists("info"))
+			.andExpect(model().attributeExists("success"))
+			.andExpect(model().attribute("isActive", true))
+			.andExpect(model().attribute("info", "Info Message"))
+			.andExpect(model().attribute("error", "Error Message"))
+			.andExpect(model().attribute("success", "Success Message"));
+	}
+
+	@Test
+	public void testViewMyAccountAsInactiveUser() throws Exception {
+		setUpSecurityUtils(true);
+		setUpUserUtil(false);
+
+		this.mockMvc.perform(get("/my_account")
+			.sessionAttr("info", "Info Message")
+			.param("error", "Error Message")
+			.param("success", "Success Message"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("my_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
+			.andExpect(model().attributeExists("isActive"))
+			.andExpect(model().attributeExists("user"))
+			.andExpect(model().attributeExists("preferredDomains"))
+			.andExpect(model().attributeExists("stripePublishableKey"))
+			.andExpect(model().attributeExists("error"))
+			.andExpect(model().attributeExists("info"))
+			.andExpect(model().attributeExists("success"))
+			.andExpect(model().attribute("isActive", false))
+			.andExpect(model().attribute("info", "Info Message"))
+			.andExpect(model().attribute("error", "Error Message"))
+			.andExpect(model().attribute("success", "Success Message"));
 	}
 
 	protected static void setUpCustomer() throws Exception {
