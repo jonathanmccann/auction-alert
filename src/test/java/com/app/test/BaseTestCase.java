@@ -143,6 +143,10 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpUserUtil() throws Exception {
+		setUpUserUtil(true);
+	}
+
+	protected static void setUpUserUtil(boolean isActive) throws Exception {
 		PowerMockito.spy(UserUtil.class);
 
 		PowerMockito.doReturn(
@@ -152,7 +156,7 @@ public abstract class BaseTestCase {
 		);
 
 		PowerMockito.doReturn(
-			true
+			isActive
 		).when(
 			UserUtil.class, "isCurrentUserActive"
 		);
