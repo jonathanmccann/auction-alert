@@ -16,7 +16,9 @@ package com.app.test;
 
 import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
+import com.app.model.Category;
 import com.app.model.User;
+import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.StripeUtil;
@@ -25,7 +27,9 @@ import com.app.util.EbayAPIUtil;
 
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -56,6 +60,26 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
 public abstract class BaseTestCase {
+
+	protected static void _addCategory() throws Exception {
+		_addCategory(
+			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
+	}
+
+	protected static void _addCategory(
+			String categoryId, String categoryName, String categoryParentId,
+			int categoryLevel)
+		throws Exception {
+
+		List<Category> categories = new ArrayList<>();
+
+		Category category = new Category(
+			categoryId, categoryName, categoryParentId, categoryLevel);
+
+		categories.add(category);
+
+		CategoryUtil.addCategories(categories);
+	}
 
 	protected static void setUpApiContext() {
 		EbayAPIUtil.loadApiContext("ebay.token");
@@ -228,9 +252,19 @@ public abstract class BaseTestCase {
 			classInstance, velocityEngineFactoryBean.createVelocityEngine());
 	}
 
+	protected static final int _CATEGORY_LEVEL = 1;
+
 	protected static final int _INVALID_USER_ID = 2;
 
 	protected static final int _USER_ID = 1;
+
+	protected static final String _CATEGORY_ID = "categoryId";
+
+	protected static final String _CATEGORY_NAME = "categoryName";
+
+	protected static final String _CATEGORY_PARENT_ID = "categoryParentId";
+
+	protected static final String _CATEGORY_RELEASE_NAME = "category";
 
 	protected static final String _ACCOUNT_DELETION_EMAIL = "<html>\n" +
 		"\t<body>\n" +

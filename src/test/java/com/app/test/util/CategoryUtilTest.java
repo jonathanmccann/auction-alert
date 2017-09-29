@@ -163,36 +163,6 @@ public class CategoryUtilTest extends BaseTestCase {
 		Assert.assertTrue((boolean) method.invoke(_classInstance, "200"));
 	}
 
-	private static void _addCategory() throws Exception {
-		_addCategory(
-			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
-	}
-
-	private static void _addCategory(
-			String categoryId, String categoryName, String categoryParentId,
-			int categoryLevel)
-		throws Exception {
-
-		List<Category> categories = new ArrayList<>();
-
-		Category category = new Category(
-			categoryId, categoryName, categoryParentId, categoryLevel);
-
-		categories.add(category);
-
-		CategoryUtil.addCategories(categories);
-	}
-
-	private static final int _CATEGORY_LEVEL = 1;
-
-	private static final String _CATEGORY_ID = "categoryId";
-
-	private static final String _CATEGORY_NAME = "categoryName";
-
-	private static final String _CATEGORY_PARENT_ID = "categoryParentId";
-
-	private static final String _CATEGORY_RELEASE_NAME = "category";
-
 	private static final int _SUB_CATEGORY_LEVEL_LIMIT = 2;
 
 	private static Object _classInstance;

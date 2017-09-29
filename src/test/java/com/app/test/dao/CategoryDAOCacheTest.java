@@ -116,21 +116,6 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(2, statistics.cacheHitCount());
 	}
 
-	private void _addCategory(
-			String categoryId, String categoryName, String categoryParentId,
-			int categoryLevel)
-		throws Exception {
-
-		List<Category> categories = new ArrayList<>();
-
-		Category category = new Category(
-			categoryId, categoryName, categoryParentId, categoryLevel);
-
-		categories.add(category);
-
-		_categoryDAO.addCategories(categories);
-	}
-
 	private void _assertCategories(List<Category> categories) {
 		Assert.assertEquals(2, categories.size());
 

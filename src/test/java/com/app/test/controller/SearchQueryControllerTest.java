@@ -51,6 +51,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -369,6 +370,90 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeExists("rssGlobalIds"))
 			.andExpect(model().attribute(
 				"searchQuery", hasProperty("searchQueryId", is(0))));
+	}
+
+	@Test
+	public void testGetMonitorWithSearchQueryId() throws Exception {
+		setUpUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("First test keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		UserUtil.addUser("test@test.com", "password");
+
+		this.mockMvc.perform(get("/monitor")
+			.param(
+				"searchQueryId", String.valueOf(searchQueryId)))
+			.andExpect(status().isOk())
+			.andExpect(view().name("monitor"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor.jsp"))
+			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("searchQuery"))
+			.andExpect(model().attributeExists("preferredCurrency"))
+			.andExpect(model().attributeExists("preferredDomain"))
+			.andExpect(model().attributeExists("rssGlobalIds"))
+			.andExpect(model().attribute(
+				"searchQuery", hasProperty(
+					"searchQueryId", is(searchQueryId))));
+	}
+
+	@Test
+	public void testGetMonitorWithInvalidSearchQueryId() throws Exception {
+		setUpUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID + 1);
+		searchQuery.setKeywords("First test keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		UserUtil.addUser("test@test.com", "password");
+
+		this.mockMvc.perform(get("/monitor")
+			.param(
+				"searchQueryId", String.valueOf(searchQueryId)))
+			.andExpect(status().isOk())
+			.andExpect(view().name("monitor"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor.jsp"))
+			.andExpect(model().attributeExists("searchQueryCategories"))
+			.andExpect(model().attributeExists("searchQuery"))
+			.andExpect(model().attributeExists("preferredCurrency"))
+			.andExpect(model().attributeExists("preferredDomain"))
+			.andExpect(model().attributeExists("rssGlobalIds"))
+			.andExpect(model().attribute(
+				"searchQuery", hasProperty("searchQueryId", is(0))));
+	}
+
+	@Test
+	public void testGetSubcategories() throws Exception {
+		_addCategory("1", "parentCategory", "1", 1);
+		_addCategory("2", "subcategory", "1", 2);
+
+		MvcResult mvcResult = this.mockMvc.perform(get("/subcategories")
+			.param("categoryParentId", "1")
+			.accept("application/json"))
+			.andReturn();
+
+		Assert.assertEquals(
+			"{\"subcategory\":\"2\"}",
+			mvcResult.getResponse().getContentAsString());
+	}
+
+	@Test
+	public void testGetSubcategoriesWithInvalidCategoryParentId()
+		throws Exception {
+
+		MvcResult mvcResult = this.mockMvc.perform(get("/subcategories")
+			.param("categoryParentId", "1")
+			.accept("application/json"))
+			.andReturn();
+
+		Assert.assertEquals("{}", mvcResult.getResponse().getContentAsString());
 	}
 
 	@Test
