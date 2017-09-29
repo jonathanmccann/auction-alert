@@ -59,6 +59,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -377,6 +378,36 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetDeleteAccountWithActiveUser() throws Exception {
+		setUpUserUtil();
+
+		this.mockMvc.perform(get("/delete_account"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("delete_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/delete_account.jsp"))
+			.andExpect(model().attributeExists("isActive"))
+			.andExpect(model().attribute("isActive", true))
+			.andExpect(model().attributeExists("recaptchaSiteKey"))
+			.andExpect(model().attribute(
+				"recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY));
+	}
+
+	@Test
+	public void testGetDeleteAccountWithInactiveUser() throws Exception {
+		setUpUserUtil(false);
+
+		this.mockMvc.perform(get("/delete_account"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("delete_account"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/delete_account.jsp"))
+			.andExpect(model().attributeExists("isActive"))
+			.andExpect(model().attribute("isActive", false))
+			.andExpect(model().attributeExists("recaptchaSiteKey"))
+			.andExpect(model().attribute(
+				"recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY));
+	}
+
+	@Test
 	public void testDeleteAccount() throws Exception {
 		setUpCustomer();
 		setUpRecaptchaUtil(true);
@@ -522,7 +553,9 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetContactWithAuthenticatedUser() throws Exception {
+	public void testGetContactWithAuthenticatedAndActiveUser()
+		throws Exception {
+
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -537,7 +570,26 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetContactWithUnauthenticatedUser() throws Exception {
+	public void testGetContactWithAuthenticatedAndInactiveUser()
+		throws Exception {
+
+		setUpSecurityUtils(true);
+		setUpUserUtil(false);
+
+		this.mockMvc.perform(get("/contact"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("contact"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
+			.andExpect(model().attributeExists("emailAddress"))
+			.andExpect(model().attribute("emailAddress", "test@test.com"))
+			.andExpect(model().attributeExists("isActive"))
+			.andExpect(model().attribute("isActive", false));
+	}
+
+	@Test
+	public void testGetContactWithUnauthenticatedAndActiveUser()
+		throws Exception {
+
 		setUpSecurityUtils(false);
 		setUpUserUtil();
 
@@ -548,6 +600,22 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(model().attributeDoesNotExist("emailAddress"))
 			.andExpect(model().attributeExists("isActive"))
 			.andExpect(model().attribute("isActive", true));
+	}
+
+	@Test
+	public void testGetContactWithUnauthenticatedAndInactiveUser()
+		throws Exception {
+
+		setUpSecurityUtils(false);
+		setUpUserUtil(false);
+
+		this.mockMvc.perform(get("/contact"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("contact"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
+			.andExpect(model().attributeDoesNotExist("emailAddress"))
+			.andExpect(model().attributeExists("isActive"))
+			.andExpect(model().attribute("isActive", false));
 	}
 
 	@Test
@@ -1327,6 +1395,24 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testStripeWebhookEndpoint() throws Exception {
+		setUpStripeUtil();
+
+		MockHttpServletRequestBuilder request = post(
+			"/stripe");
+
+		request.contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		request.param("stripeJsonEvent", "stripeJsonEvent");
+
+		request.header("Stripe-Signature", "stripeSignature");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+	}
+
+	@Test
 	public void testUnsubscribeFromEmailNotifications() throws Exception {
 		setUpUserUtil();
 
@@ -1575,6 +1661,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewMyAccount() throws Exception {
+		setUpSecurityUtils(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/my_account"))

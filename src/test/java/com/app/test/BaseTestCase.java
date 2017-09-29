@@ -19,6 +19,7 @@ import com.app.mail.MailSenderFactory;
 import com.app.model.User;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
+import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.EbayAPIUtil;
 
@@ -47,7 +48,10 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 /**
  * @author Jonathan McCann
  */
-@PrepareForTest({MailSenderFactory.class, SecurityUtils.class, UserUtil.class})
+@PrepareForTest({
+	MailSenderFactory.class, SecurityUtils.class, StripeUtil.class,
+	UserUtil.class
+})
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
 public abstract class BaseTestCase {
@@ -139,6 +143,15 @@ public abstract class BaseTestCase {
 			subject
 		).when(
 			SecurityUtils.class, "getSubject"
+		);
+	}
+
+	protected static void setUpStripeUtil() throws Exception {
+		PowerMockito.spy(StripeUtil.class);
+
+		PowerMockito.doNothing().when(
+			StripeUtil.class, "handleStripeEvent", Mockito.anyString(),
+			Mockito.anyString()
 		);
 	}
 
