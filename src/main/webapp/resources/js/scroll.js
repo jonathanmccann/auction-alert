@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$("#learn-more").click(function(){
 		$('html, body').animate({
-			scrollTop: $( $(this).attr('href') ).offset().top
+			scrollTop: 500-$( $(this).attr('href') ).offset().top
 		}, 500);
 		return false;
 	});
