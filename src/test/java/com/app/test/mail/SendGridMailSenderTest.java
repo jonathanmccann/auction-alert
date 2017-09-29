@@ -213,6 +213,30 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulatePasswordResetToken() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populatePasswordResetToken = _clazz.getDeclaredMethod(
+			"_populatePasswordResetToken", String.class, String.class);
+
+		populatePasswordResetToken.setAccessible(true);
+
+		Mail mail =
+			(Mail)populatePasswordResetToken.invoke(
+				_classInstance, "user@test.com", "Sample password reset token");
+
+		Assert.assertEquals(
+			"Password Reset Token", mail.getSubject());
+
+		List<Content> mailContent = mail.getContent();
+
+		Content content = mailContent.get(0);
+
+		Assert.assertEquals("text/html", content.getType());
+		Assert.assertEquals(_PASSWORD_RESET_TOKEN_EMAIL, content.getValue());
+	}
+
+	@Test
 	public void testPopulateResubscribeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 

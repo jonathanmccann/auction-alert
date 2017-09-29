@@ -329,6 +329,31 @@ public abstract class BaseTestCase {
 		"\t</body>\n" +
 		"</html>";
 
+	protected static final String _PASSWORD_RESET_TOKEN_EMAIL = "<html>\n" +
+		"\t<body>\n" +
+		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +
+		"\t\t\t<tr>\n" +
+		"\t\t\t\t<td align=\"center\">\n" +
+		"\t\t\t\t\t<h2 style=\"color: #666f77; font-weight: 300; line-height: 1em; margin: 0 0 1em 0; text-transform: uppercase; letter-spacing: 0.125em; font-size: 1.5em; line-height: 1.5em;\">Auction Alert</h2>\n" +
+		"\n" +
+		"\t\t\t\t\tYour requested password reset token is: <br> <br>\n" +
+		"\n" +
+		"\t\t\t\t\tSample password reset token <br> <br>\n" +
+		"\n" +
+		"\t\t\t\t\tPlease use this token to <a href=\"http://www.test.com/reset_password\">reset your password</a>. This token will be valid for one hour. <br>\n" +
+		"\n" +
+		"\t\t\t\t\tIf you did not request this password reset token, please contact the administrator immediately. <br>\n" +
+		"\t\t\t\t</td>\n" +
+		"\t\t\t</tr>\n" +
+		"\t\t</table>\n" +
+		"\t\t<footer style=\"background: #f8f8f8; padding: 4em 0 6em 0; text-align: center; color: #bbb\">\n" +
+		"\t\t\t<p style=\"text-align: center\">\n" +
+		"\t\t\t\t© <a href=\"http://www.test.com\">Auction Alert</a>. All rights reserved.\n" +
+		"\t\t\t</p>\n" +
+		"\t\t</footer>\n" +
+		"\t</body>\n" +
+		"</html>";
+
 	protected static final String _WELCOME_EMAIL = "<html>\n" +
 		"\t<body>\n" +
 		"\t\t<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"font-size: 16px\">\n" +

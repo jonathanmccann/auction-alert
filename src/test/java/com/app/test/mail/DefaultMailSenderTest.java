@@ -232,6 +232,34 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPopulatePasswordResetToken() throws Exception {
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		Method populatePasswordResetToken = _clazz.getDeclaredMethod(
+			"_populatePasswordResetToken", String.class, String.class,
+			Session.class);
+
+		populatePasswordResetToken.setAccessible(true);
+
+		Message message = (Message)populatePasswordResetToken.invoke(
+			_classInstance, "user@test.com", "Sample password reset token",
+			_session);
+
+		Assert.assertEquals(
+			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
+		Assert.assertEquals(
+			"Password Reset Token", message.getSubject());
+		Assert.assertEquals(_PASSWORD_RESET_TOKEN_EMAIL, message.getContent());
+
+		InternetAddress[] internetAddresses = new InternetAddress[1];
+
+		internetAddresses[0] = new InternetAddress("user@test.com");
+
+		Assert.assertArrayEquals(
+			internetAddresses, message.getRecipients(Message.RecipientType.TO));
+	}
+
+	@Test
 	public void testPopulateResubscribeMessage() throws Exception {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
