@@ -7,8 +7,8 @@ version = '1.0'
 
 description = "eBay Webapp"
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
 	compile files('lib/ebaycalls.jar')
@@ -70,8 +70,7 @@ test {
 	systemProperties System.getProperties()
 	systemProperties['user.dir'] = workingDir
 
-	jvmArgs '-XX:-UseSplitVerifier'
-	jvmArgs '-XX:MaxPermSize=512m'
+	jvmArgs '-noverify'
 
 	testLogging {
 		exceptionFormat = 'full'
