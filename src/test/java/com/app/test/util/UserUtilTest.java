@@ -19,6 +19,7 @@ import com.app.exception.InvalidEmailAddressException;
 import com.app.exception.PasswordLengthException;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
+import com.app.util.ConstantsUtil;
 import com.app.util.UserUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +36,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.test.annotation.DirtiesContext;
@@ -55,6 +55,10 @@ public class UserUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpProperties();
+
+		ConstantsUtil.init();
+
 		_clazz = Class.forName(UserUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();
