@@ -64,11 +64,7 @@
 		</header>
 
 		<section class="minor">
-			<div class="row">
-				<div class="4u">
-					<h1>Contact</h1>
-				</div>
-			</div>
+			<h1>Contact</h1>
 		</section>
 
 		<div class="container padding-top-large">

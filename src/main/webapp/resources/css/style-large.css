@@ -43,3 +43,9 @@
 	.result-image {
 		display: inherit;
 	}
+
+/* Banner */
+
+	.minor.narrow {
+		width: 70%;
+	}

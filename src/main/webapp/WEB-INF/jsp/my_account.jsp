@@ -66,11 +66,7 @@
 		</header>
 
 		<section class="minor narrow">
-			<div class="row">
-				<div class="4u">
-					<h1>My Account</h1>
-				</div>
-			</div>
+			<h1>My Account</h1>
 		</section>
 
 		<div id="user-details">

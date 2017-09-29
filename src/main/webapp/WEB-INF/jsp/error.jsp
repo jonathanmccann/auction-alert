@@ -63,11 +63,7 @@
 		</header>
 
 		<section class="minor narrow">
-			<div class="row">
-				<div class="4u">
-					<h1>Error</h1>
-				</div>
-			</div>
+			<h1>Error</h1>
 		</section>
 
 		<section class="align-center style1 wrapper" id="about">

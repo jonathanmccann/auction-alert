@@ -53,11 +53,7 @@
 		</header>
 
 		<section class="minor narrow">
-			<div class="row">
-				<div class="4u">
-					<h1>Log In</h1>
-				</div>
-			</div>
+			<h1>Log In</h1>
 		</section>
 
 		<div id="user-details">

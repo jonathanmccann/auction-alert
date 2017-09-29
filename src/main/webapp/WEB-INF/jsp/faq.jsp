@@ -62,11 +62,7 @@
 		</header>
 
 		<section class="minor">
-			<div class="row">
-				<div class="4u">
-					<h1>Frequently Asked Questions</h1>
-				</div>
-			</div>
+			<h1>Frequently Asked Questions</h1>
 		</section>
 
 		<section class="wrapper style1">

@@ -1097,7 +1097,7 @@
 		margin-left: auto;
 		margin-right: auto;
 		padding-top: 2em;
-		width: 1400px;
+		width: 80%;
 	}
 
 		.minor {
@@ -1120,7 +1120,7 @@
 			}
 
 		.minor.narrow {
-			width: 800px;
+			width: 40%;
 		}
 
 /* Modal Login */
