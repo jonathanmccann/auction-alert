@@ -41,23 +41,7 @@ public class ErrorController {
 	public String getError(Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		Subject currentUser = SecurityUtils.getSubject();
-
-		if (currentUser.isAuthenticated()) {
-			User user = UserUtil.getCurrentUser();
-
-			if (user.isActive() || user.isPendingCancellation()) {
-				model.put("isActive", true);
-			}
-			else {
-				model.put("isActive", false);
-			}
-
-			model.put("emailAddress", user.getEmailAddress());
-		}
-		else {
-			model.put("isActive", false);
-		}
+		model.put("isActive", UserUtil.isCurrentUserActive());
 
 		return "error";
 	}
