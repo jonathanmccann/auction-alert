@@ -156,7 +156,7 @@ public class UserUtil {
 			}
 		}
 		else {
-			return true;
+			return false;
 		}
 	}
 
