@@ -30,6 +30,7 @@ import java.util.Map;
 
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DelegatingSubject;
 import org.junit.runner.RunWith;
@@ -72,6 +73,16 @@ public abstract class BaseTestCase {
 
 		ScriptUtils.executeSqlScript(
 			DatabaseUtil.getDatabaseConnection(), resource);
+	}
+
+	protected static void setUpGetCurrentUserId() throws Exception {
+		PowerMockito.spy(UserUtil.class);
+
+		PowerMockito.doReturn(
+			_USER_ID
+		).when(
+			UserUtil.class, "getCurrentUserId"
+		);
 	}
 
 	protected static void setUpInvalidUserUtil() throws Exception {
@@ -120,6 +131,18 @@ public abstract class BaseTestCase {
 		);
 	}
 
+	protected static void setUpNullSecurityUtils()
+		throws Exception {
+
+		PowerMockito.spy(SecurityUtils.class);
+
+		PowerMockito.doReturn(
+			null
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+	}
+
 	protected static void setUpProperties() throws Exception {
 		Class<?> clazz = BaseTestCase.class;
 
@@ -138,6 +161,10 @@ public abstract class BaseTestCase {
 
 		Subject subject = new DelegatingSubject(
 			null, authenticated, null, null, defaultSecurityManager);
+
+		Session session = subject.getSession(true);
+
+		session.setAttribute("userId", _USER_ID);
 
 		PowerMockito.doReturn(
 			subject
