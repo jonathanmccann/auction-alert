@@ -142,6 +142,8 @@
 				</c:otherwise>
 			</c:choose>
 
+			<br>
+
 			<b>Delete Account:</b> <br>
 
 			<a class="button delete" href="/delete_account" id="deleteAccount" >Delete Account</a>
