@@ -52,7 +52,7 @@ public class ErrorControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetAccountFaqAsActive() throws Exception {
+	public void testGetAccountFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -65,7 +65,7 @@ public class ErrorControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetAccountFaqAsInactive() throws Exception {
+	public void testGetAccountFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil(false);
 
@@ -78,7 +78,7 @@ public class ErrorControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testHeadAccountFaqAsActive() throws Exception {
+	public void testHeadAccountFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -91,7 +91,7 @@ public class ErrorControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testHeadAccountFaqAsInactive() throws Exception {
+	public void testHeadAccountFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil(false);
 

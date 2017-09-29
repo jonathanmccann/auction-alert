@@ -51,7 +51,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetAccountFaqAsActive() throws Exception {
+	public void testGetAccountFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -64,7 +64,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetAccountFaqAsInactive() throws Exception {
+	public void testGetAccountFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(false);
 		setUpUserUtil(false);
 
@@ -77,7 +77,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetFaqAsActive() throws Exception {
+	public void testGetFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -90,7 +90,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetFaqAsInactive() throws Exception {
+	public void testGetFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(false);
 		setUpUserUtil(false);
 
@@ -103,7 +103,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetGeneralFaqAsActive() throws Exception {
+	public void testGetGeneralFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -116,7 +116,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetGeneralFaqAsInactive() throws Exception {
+	public void testGetGeneralFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(false);
 		setUpUserUtil(false);
 
@@ -129,7 +129,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetMonitorFaqAsActive() throws Exception {
+	public void testGetMonitorFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -142,7 +142,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetMonitorFaqAsInactive() throws Exception {
+	public void testGetMonitorFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(false);
 		setUpUserUtil(false);
 
@@ -155,7 +155,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetNewFaqAsActive() throws Exception {
+	public void testGetNewFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -168,7 +168,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetNewFaqAsInactive() throws Exception {
+	public void testGetNewFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(false);
 		setUpUserUtil(false);
 
@@ -181,7 +181,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetQueryFaqAsActive() throws Exception {
+	public void testGetQueryFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -194,7 +194,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetQueryFaqAsInactive() throws Exception {
+	public void testGetQueryFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(false);
 		setUpUserUtil(false);
 
@@ -207,7 +207,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetResultFaqAsActive() throws Exception {
+	public void testGetResultFaqAsActiveUser() throws Exception {
 		setUpSecurityUtils(true);
 		setUpUserUtil();
 
@@ -220,7 +220,7 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetResultFaqAsInactive() throws Exception {
+	public void testGetResultFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtils(false);
 		setUpUserUtil(false);
 
