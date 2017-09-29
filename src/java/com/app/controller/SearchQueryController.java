@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -282,15 +283,15 @@ public class SearchQueryController {
 			Map<String, Object> model)
 		throws DatabaseConnectionException, SQLException {
 
-		List<SearchQuery> activeSearchQueries =
-			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId(), true);
+		List<SearchQuery> searchQueries =
+			SearchQueryUtil.getSearchQueries(UserUtil.getCurrentUserId());
 
-		List<SearchQuery> inactiveSearchQueries =
-			SearchQueryUtil.getSearchQueries(
-				UserUtil.getCurrentUserId(), false);
+		Map<Boolean, List<SearchQuery>> splitSearchQueries =
+			searchQueries.stream().collect(
+				Collectors.partitioningBy(SearchQuery::isActive));
 
-		model.put("activeSearchQueries", activeSearchQueries);
-		model.put("inactiveSearchQueries", inactiveSearchQueries);
+		model.put("activeSearchQueries", splitSearchQueries.get(true));
+		model.put("inactiveSearchQueries", splitSearchQueries.get(false));
 		model.put("currentSearchQueryId", currentSearchQueryId);
 		model.put("isCurrentSearchQueryActive", isCurrentSearchQueryActive);
 
