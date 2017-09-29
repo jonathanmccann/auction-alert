@@ -418,7 +418,7 @@ public class UserController {
 		model.put(
 			"redirect", WebUtils.getSessionAttribute(request, "redirect"));
 
-		int loginAttempts = _getLoginAttempts();
+		int loginAttempts = _getLoginAttempts(currentUser.getSession());
 
 		if (loginAttempts >= PropertiesValues.LOGIN_ATTEMPT_LIMIT) {
 			model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
@@ -713,14 +713,6 @@ public class UserController {
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 
 		return "my_account";
-	}
-
-	private static int _getLoginAttempts() {
-		Subject currentUser = SecurityUtils.getSubject();
-
-		Session session = currentUser.getSession();
-
-		return _getLoginAttempts(session);
 	}
 
 	private static int _getLoginAttempts(Session session) {
