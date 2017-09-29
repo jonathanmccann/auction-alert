@@ -34,10 +34,10 @@ import com.app.util.UserUtil;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.DeletedCustomer;
-import com.stripe.model.Event;
 import com.stripe.model.Subscription;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -997,29 +997,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostLogInWithUnknownAccountException() throws Exception {
-		PowerMockito.spy(SecurityUtils.class);
-
-		Session session = new SimpleSession();
-
-		Subject mockSubject = Mockito.mock(Subject.class);
-
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
-
-		Mockito.doThrow(new UnknownAccountException()).when(
-			mockSubject
-		).login(
-			Mockito.any(AuthenticationToken.class)
-		);
+		_setUpLogInException(new UnknownAccountException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1039,29 +1017,27 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInWithIncorrectCredentialsException()
 		throws Exception {
 
-		PowerMockito.spy(SecurityUtils.class);
+		_setUpLogInException(new IncorrectCredentialsException());
 
-		Session session = new SimpleSession();
+		MockHttpServletRequestBuilder request = post("/log_in");
 
-		Subject mockSubject = Mockito.mock(Subject.class);
+		request.param("emailAddress", "test@test.com");
+		request.param("password", "password");
 
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:log_in"))
+			.andExpect(redirectedUrl("log_in"))
+			.andExpect(flash().attributeExists("error"))
+			.andExpect(flash().attribute(
+				"error", LanguageUtil.getMessage("log-in-failure")));
+	}
 
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
+	@Test
+	public void testPostLogInWithUnknownError()
+		throws Exception {
 
-		Mockito.doThrow(new IncorrectCredentialsException()).when(
-			mockSubject
-		).login(
-			Mockito.any(AuthenticationToken.class)
-		);
+		_setUpLogInException(new AccountException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1832,6 +1808,32 @@ public class UserControllerTest extends BaseTestCase {
 		request.param("newPassword", "updatedPassword");
 
 		return request;
+	}
+
+	private void _setUpLogInException(Exception e) throws Exception {
+		PowerMockito.spy(SecurityUtils.class);
+
+		Session session = new SimpleSession();
+
+		Subject mockSubject = Mockito.mock(Subject.class);
+
+		PowerMockito.doReturn(
+			mockSubject
+		).when(
+			SecurityUtils.class, "getSubject"
+		);
+
+		PowerMockito.doReturn(
+			session
+		).when(
+			mockSubject
+		).getSession();
+
+		Mockito.doThrow(e).when(
+			mockSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
 	}
 
 	private MockMvc mockMvc;
