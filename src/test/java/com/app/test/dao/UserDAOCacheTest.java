@@ -18,6 +18,7 @@ import com.app.dao.UserDAO;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import net.sf.ehcache.Cache;
@@ -45,6 +46,51 @@ public class UserDAOCacheTest extends BaseTestCase {
 	@Before
 	public void setUp() throws Exception {
 		setUpDatabase();
+
+		_userDAO.addUser(
+			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
+	}
+
+	// reset emails
+	// unsubscribe
+	// update emails sent
+	// update password
+	// updatepasswordreset
+	// updateuserdetails
+	// update user email details
+	// update user login details
+	// update user subscription
+
+	@Test
+	public void testAddUserCacheEvict() throws Exception {
+		_assertBeforeCacheEvictUserIds();
+
+		_userDAO.addUser(
+			"test2@test.com", "password", "salt", "http://www.ebay.com/itm/");
+
+		_assertAfterCacheEvictUserIds();
+	}
+
+	@Test
+	public void testDeactivateUserCacheEvict() throws Exception {
+		_assertBeforeCacheEvictUserByUserId();
+		_assertBeforeCacheEvictUserIds();
+
+		_userDAO.deactivateUser("customerId");
+
+		_assertAfterCacheEvictUserByUserId();
+		_assertAfterCacheEvictUserIds();
+	}
+
+	@Test
+	public void testDeleteUserByUserIdCacheEvict() throws Exception {
+		_assertBeforeCacheEvictUserByUserId();
+		_assertBeforeCacheEvictUserIds();
+
+		_userDAO.deleteUserByUserId(1);
+
+		_assertAfterCacheEvictUserByUserId();
+		_assertAfterCacheEvictUserIds();
 	}
 
 	@Test
@@ -52,9 +98,6 @@ public class UserDAOCacheTest extends BaseTestCase {
 		Cache cache = _cacheManager.getCache("userByUserId");
 
 		StatisticsGateway statistics = cache.getStatistics();
-
-		_userDAO.addUser(
-			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
 
 		User user = _userDAO.getUserByUserId(1);
 
@@ -105,9 +148,6 @@ public class UserDAOCacheTest extends BaseTestCase {
 		StatisticsGateway statistics = cache.getStatistics();
 
 		_userDAO.addUser(
-			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
-
-		_userDAO.addUser(
 			"test2@test.com", "password", "salt", "http://www.ebay.com/itm/");
 
 		List<Integer> userIds = _userDAO.getUserIds(false);
@@ -147,6 +187,169 @@ public class UserDAOCacheTest extends BaseTestCase {
 
 		Assert.assertEquals(3, statistics.cacheMissCount());
 		Assert.assertEquals(3, statistics.cacheHitCount());
+	}
+
+	@Test
+	public void testResetEmailsSentCacheEvict() throws Exception {
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.resetEmailsSent();
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUnsubscribeUserFromEmailNotificationsCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.unsubscribeUserFromEmailNotifications("test@test.com");
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUpdateEmailsSentCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.updateEmailsSent(1, 1);
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUpdatePasswordCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.updatePassword(1, "password", "salt");
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUpdatePasswordResetTokenCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.updatePasswordResetToken(1, "passwordResetToken");
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUpdateUserDetailsCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.updateUserDetails(
+			1, "test@test.com", "password", "salt", "http://www.ebay.com/itm/",
+			true);
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUpdateUserEmailDetailsCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.updateUserEmailDetails(
+			1, "test@test.com", "http://www.ebay.com/itm/", true);
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUpdateUserLoginDetailsCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.updateUserLoginDetails(
+			1, new Timestamp(System.currentTimeMillis()), "127.0.0.1");
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	@Test
+	public void testUpdateUserSubscriptionCacheEvict()
+		throws Exception {
+
+		_assertBeforeCacheEvictUserByUserId();
+
+		_userDAO.updateUserSubscription(
+			1, "unsubscribeToken", "customerId", "subscriptionId", true, false);
+
+		_assertAfterCacheEvictUserByUserId();
+	}
+
+	private void _assertAfterCacheEvictUserByUserId() throws Exception {
+		Cache userByUserIdCache = _cacheManager.getCache("userByUserId");
+
+		StatisticsGateway userByUserIdStatistics =
+			userByUserIdCache.getStatistics();
+
+		_userDAO.getUserByUserId(1);
+
+		Assert.assertEquals(2, userByUserIdStatistics.cacheMissCount());
+		Assert.assertEquals(1, userByUserIdStatistics.cacheHitCount());
+	}
+
+	private void _assertAfterCacheEvictUserIds() throws Exception {
+		Cache userIdsCache = _cacheManager.getCache("userIds");
+
+		StatisticsGateway userIdsStatistics =
+			userIdsCache.getStatistics();
+
+		_userDAO.getUserIds(true);
+		_userDAO.getUserIds(false);
+
+		Assert.assertEquals(4, userIdsStatistics.cacheMissCount());
+		Assert.assertEquals(2, userIdsStatistics.cacheHitCount());
+	}
+
+	private void _assertBeforeCacheEvictUserByUserId() throws Exception {
+		Cache userByUserIdCache = _cacheManager.getCache("userByUserId");
+
+		StatisticsGateway userByUserIdStatistics =
+			userByUserIdCache.getStatistics();
+
+		_userDAO.getUserByUserId(1);
+
+		Assert.assertEquals(1, userByUserIdStatistics.cacheMissCount());
+		Assert.assertEquals(0, userByUserIdStatistics.cacheHitCount());
+
+		_userDAO.getUserByUserId(1);
+
+		Assert.assertEquals(1, userByUserIdStatistics.cacheMissCount());
+		Assert.assertEquals(1, userByUserIdStatistics.cacheHitCount());
+	}
+
+	private void _assertBeforeCacheEvictUserIds() throws Exception {
+		Cache userIdsCache = _cacheManager.getCache("userIds");
+
+		StatisticsGateway userIdsStatistics =
+			userIdsCache.getStatistics();
+
+		_userDAO.getUserIds(true);
+		_userDAO.getUserIds(false);
+
+		Assert.assertEquals(2, userIdsStatistics.cacheMissCount());
+		Assert.assertEquals(0, userIdsStatistics.cacheHitCount());
+
+		_userDAO.getUserIds(true);
+		_userDAO.getUserIds(false);
+
+		Assert.assertEquals(2, userIdsStatistics.cacheMissCount());
+		Assert.assertEquals(2, userIdsStatistics.cacheHitCount());
 	}
 
 	private static void _assertUser(
