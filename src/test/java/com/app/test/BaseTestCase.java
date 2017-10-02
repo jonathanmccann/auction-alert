@@ -50,12 +50,14 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
+import javax.mail.Transport;
+
 /**
  * @author Jonathan McCann
  */
 @PrepareForTest({
 	MailSenderFactory.class, SecurityUtils.class, StripeUtil.class,
-	UserUtil.class
+	Transport.class, UserUtil.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -203,6 +205,14 @@ public abstract class BaseTestCase {
 		PowerMockito.doNothing().when(
 			StripeUtil.class, "handleStripeEvent", Mockito.anyString(),
 			Mockito.anyString()
+		);
+	}
+
+	protected void setUpTransport() throws Exception {
+		PowerMockito.spy(Transport.class);
+
+		PowerMockito.doNothing().when(
+			Transport.class, "send", Mockito.anyObject()
 		);
 	}
 
