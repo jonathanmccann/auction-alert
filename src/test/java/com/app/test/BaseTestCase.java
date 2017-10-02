@@ -16,8 +16,8 @@ package com.app.test;
 
 import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
+import com.app.mail.SendGridMailSender;
 import com.app.model.Category;
-import com.app.model.User;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
@@ -56,8 +56,8 @@ import javax.mail.Transport;
  * @author Jonathan McCann
  */
 @PrepareForTest({
-	MailSenderFactory.class, SecurityUtils.class, StripeUtil.class,
-	Transport.class, UserUtil.class
+	MailSenderFactory.class, SecurityUtils.class, SendGridMailSender.class,
+	StripeUtil.class, Transport.class, UserUtil.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -196,6 +196,14 @@ public abstract class BaseTestCase {
 			subject
 		).when(
 			SecurityUtils.class, "getSubject"
+		);
+	}
+
+	protected static void setUpSendGridMailSender() throws Exception {
+		PowerMockito.spy(SendGridMailSender.class);
+
+		PowerMockito.doNothing().when(
+			SendGridMailSender.class, "_sendEmail", Mockito.anyObject()
 		);
 	}
 

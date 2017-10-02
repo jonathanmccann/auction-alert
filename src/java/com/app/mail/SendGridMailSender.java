@@ -81,15 +81,7 @@ public class SendGridMailSender implements MailSender {
 
 		Mail mail = _populateContactMessage(emailAddress, message);
 
-		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
-
-		Request request = new Request();
-
-		request.method = Method.POST;
-		request.endpoint = "mail/send";
-		request.body = mail.build();
-
-		sendgrid.api(request);
+		_sendEmail(mail);
 	}
 
 	@Override
@@ -148,15 +140,9 @@ public class SendGridMailSender implements MailSender {
 			searchQueryResultMap, user.getEmailAddress(),
 			user.getUnsubscribeToken());
 
-		try {
-			_sendEmail(mail);
+		_sendEmail(mail);
 
-			emailsSent++;
-		}
-		catch (Exception e) {
-			_log.error(
-				"Unable to send search results to userId: " + userId, e);
-		}
+		emailsSent++;
 
 		UserUtil.updateEmailsSent(user.getUserId(), emailsSent);
 	}
@@ -250,7 +236,7 @@ public class SendGridMailSender implements MailSender {
 		return new Mail(emailFrom, subject, emailTo, content);
 	}
 
-	private void _sendEmail(Mail mail) {
+	private static void _sendEmail(Mail mail) {
 		try {
 			SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
 
