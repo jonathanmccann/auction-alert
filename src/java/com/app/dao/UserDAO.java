@@ -42,7 +42,12 @@ import org.springframework.cache.annotation.Caching;
  */
 public class UserDAO {
 
-	@CacheEvict(value = "userIds", allEntries = true)
+	@Caching(
+		evict = {
+			@CacheEvict(value = "userIds", key = "true"),
+			@CacheEvict(value = "userIds", key = "false")
+		}
+	)
 	public User addUser(
 			String emailAddress, String password, String salt,
 			String preferredDomain)
@@ -73,7 +78,8 @@ public class UserDAO {
 	@Caching(
 		evict = {
 			@CacheEvict(value = "userByUserId", allEntries = true),
-			@CacheEvict(value = "userIds", allEntries = true)
+			@CacheEvict(value = "userIds", key = "true"),
+			@CacheEvict(value = "userIds", key = "false")
 		}
 	)
 	public void deactivateUser(String customerId)
@@ -94,7 +100,8 @@ public class UserDAO {
 	@Caching(
 		evict = {
 			@CacheEvict(value = "userByUserId", key = "#userId"),
-			@CacheEvict(value = "userIds", allEntries = true)
+			@CacheEvict(value = "userIds", key = "true"),
+			@CacheEvict(value = "userIds", key = "false")
 		}
 	)
 	public void deleteUserByUserId(int userId)
@@ -176,7 +183,7 @@ public class UserDAO {
 		}
 	}
 
-	@Cacheable(value = "userIds")
+	@Cacheable(value = "userIds", key = "#active")
 	public List<Integer> getUserIds(boolean active)
 		throws DatabaseConnectionException, SQLException {
 

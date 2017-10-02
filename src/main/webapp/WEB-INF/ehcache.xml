@@ -15,5 +15,5 @@
 	<!-- UserDAO -->
 
 	<cache eternal="false" maxEntriesLocalHeap="100" memoryStoreEvictionPolicy="LFU" name="userByUserId" timeToIdleSeconds="300" timeToLiveSeconds="600" />
-	<cache eternal="false" maxEntriesLocalHeap="1" memoryStoreEvictionPolicy="LFU" name="userIds" timeToIdleSeconds="300" timeToLiveSeconds="600" />
+	<cache eternal="false" maxEntriesLocalHeap="2" memoryStoreEvictionPolicy="LFU" name="userIds" timeToIdleSeconds="300" timeToLiveSeconds="600" />
 </ehcache>
