@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/cache
+		http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<mvc:annotation-driven />
+
+	<context:component-scan	base-package="com.app" />
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="categoryDAO" class="com.app.dao.CategoryDAO" />
+	<bean id="mailSender" class="com.app.mail.SendGridMailSender" />
+	<bean id="releaseDao" class="com.app.dao.ReleaseDAO" />
+	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
+	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
+	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
+	<bean id="userDAO" class="com.app.dao.UserDAO" />
+
+	<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher" id="sha512Matcher">
+		<property name="hashAlgorithmName" value="SHA-512" />
+		<property name="storedCredentialsHexEncoded" value="false" />
+		<property name="hashIterations" value="1024" />
+	</bean>
+
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<value>
+				resource.loader=class
+				class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+			</value>
+		</property>
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/activate_search_query" />
+			<mvc:mapping path="/add_search_query" />
+			<mvc:mapping path="/deactivate_search_query" />
+			<mvc:mapping path="/delete_account" />
+			<mvc:mapping path="/delete_search_query" />
+			<mvc:mapping path="/delete_subscription" />
+			<mvc:mapping path="/monitor" />
+			<mvc:mapping path="/my_account" />
+			<mvc:mapping path="/resubscribe" />
+			<mvc:mapping path="/search_query_results" />
+			<mvc:mapping path="/update_search_query" />
+			<mvc:mapping path="/update_subscription" />
+			<mvc:mapping path="/view_search_queries" />
+
+			<bean class="com.app.controller.interceptor.AuthenticationInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>
