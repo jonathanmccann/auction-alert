@@ -16,9 +16,11 @@ package com.app.test.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 
+import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -63,6 +65,17 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetSearchQueryResults() throws Exception {
+		setUpProperties();
+		setUpUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test Keywords");
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
+
 		SearchResult searchResult = new SearchResult(
 			_SEARCH_QUERY_ID, "Item ID 1", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
@@ -109,6 +122,40 @@ public class SearchResultControllerTest extends BaseTestCase {
 		Assert.assertEquals("http://www.ebay.com/itm/1234", jsonSearchResult.getItemURL());
 		Assert.assertEquals(1, jsonSearchResult.getSearchQueryId());
 		Assert.assertEquals(1, jsonSearchResult.getSearchResultId());
+	}
+
+	@Test
+	public void testGetSearchQueryResultsWithInvalidSearchQueryId()
+		throws Exception {
+
+		setUpProperties();
+		setUpUserUtil();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchQuery.setUserId(_USER_ID + 1);
+		searchQuery.setKeywords("Test Keywords");
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
+
+		SearchResult searchResult = new SearchResult(
+			_SEARCH_QUERY_ID, "Item ID 1", "First Item", "$10.00", "$14.99",
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+
+		SearchResultUtil.addSearchResult(searchResult);
+
+		searchResult = new SearchResult(
+			_SEARCH_QUERY_ID, "Item ID 2", "Second Item", "$20.00", "$24.99",
+			"http://www.ebay.com/itm/5678", "http://www.ebay.com/567.jpg");
+
+		SearchResultUtil.addSearchResult(searchResult);
+
+		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
+			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))
+			.andReturn();
+
+		Assert.assertEquals("[]", mvcResult.getResponse().getContentAsString());
 	}
 
 	private static class JsonSearchResult {
