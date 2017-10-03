@@ -18,9 +18,15 @@ import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
 import com.app.mail.SendGridMailSender;
 import com.app.model.Category;
+import com.app.model.SearchQuery;
+import com.app.model.SearchResult;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
+import com.app.util.EbaySearchResultUtil;
 import com.app.util.PropertiesUtil;
+import com.app.util.SearchQueryPreviousResultUtil;
+import com.app.util.SearchQueryUtil;
+import com.app.util.SearchResultUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.EbayAPIUtil;
@@ -122,28 +128,28 @@ public abstract class BaseTestCase {
 	}
 
 	protected void setUpMailSender() throws Exception {
-		MailSender mockMailSender = Mockito.mock(MailSender.class);
+		_mockMailSender = Mockito.mock(MailSender.class);
 
 		Mockito.doNothing().when(
-			mockMailSender
+			_mockMailSender
 		).sendCancellationMessage(
 			Mockito.anyString()
 		);
 
 		Mockito.doNothing().when(
-			mockMailSender
+			_mockMailSender
 		).sendContactMessage(
 			Mockito.anyString(), Mockito.anyString()
 		);
 
 		Mockito.doNothing().when(
-			mockMailSender
+			_mockMailSender
 		).sendPasswordResetToken(
 			Mockito.anyString(), Mockito.anyString()
 		);
 
 		Mockito.doNothing().when(
-			mockMailSender
+			_mockMailSender
 		).sendWelcomeMessage(
 			Mockito.anyString()
 		);
@@ -153,7 +159,7 @@ public abstract class BaseTestCase {
 		Mockito.when(
 			MailSenderFactory.getInstance()
 		).thenReturn(
-			mockMailSender
+			_mockMailSender
 		);
 	}
 
@@ -269,6 +275,8 @@ public abstract class BaseTestCase {
 		velocityEngine.set(
 			classInstance, velocityEngineFactoryBean.createVelocityEngine());
 	}
+
+	protected static MailSender _mockMailSender;
 
 	protected static final int _CATEGORY_LEVEL = 1;
 
