@@ -20,6 +20,8 @@ import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 
 import com.app.util.SearchResultUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,6 +39,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Jonathan McCann
  */
@@ -52,7 +58,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 	public void setUp() throws Exception {
 		setUpDatabase();
 
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();////
 	}
 
 	@Test
@@ -73,8 +79,79 @@ public class SearchResultControllerTest extends BaseTestCase {
 			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))
 			.andReturn();
 
-		Assert.assertEquals(
-			_SEARCH_RESULTS_JSON, mvcResult.getResponse().getContentAsString());
+		Gson gson = new Gson();
+
+		Type listType = new TypeToken<ArrayList<JsonSearchResult>>(){}.getType();
+
+		List<JsonSearchResult> searchResults = gson.fromJson(
+			mvcResult.getResponse().getContentAsString(), listType);
+
+		Assert.assertEquals(2, searchResults.size());
+
+		JsonSearchResult jsonSearchResult = searchResults.get(0);
+
+		Assert.assertEquals("$20.00", jsonSearchResult.getAuctionPrice());
+		Assert.assertEquals("$24.99", jsonSearchResult.getFixedPrice());
+		Assert.assertEquals("http://www.ebay.com/567.jpg", jsonSearchResult.getGalleryURL());
+		Assert.assertEquals("Item ID 2", jsonSearchResult.getItemId());
+		Assert.assertEquals("Second Item", jsonSearchResult.getItemTitle());
+		Assert.assertEquals("http://www.ebay.com/itm/5678", jsonSearchResult.getItemURL());
+		Assert.assertEquals(1, jsonSearchResult.getSearchQueryId());
+		Assert.assertEquals(2, jsonSearchResult.getSearchResultId());
+
+		jsonSearchResult = searchResults.get(1);
+
+		Assert.assertEquals("$10.00", jsonSearchResult.getAuctionPrice());
+		Assert.assertEquals("$14.99", jsonSearchResult.getFixedPrice());
+		Assert.assertEquals("http://www.ebay.com/123.jpg", jsonSearchResult.getGalleryURL());
+		Assert.assertEquals("Item ID 1", jsonSearchResult.getItemId());
+		Assert.assertEquals("First Item", jsonSearchResult.getItemTitle());
+		Assert.assertEquals("http://www.ebay.com/itm/1234", jsonSearchResult.getItemURL());
+		Assert.assertEquals(1, jsonSearchResult.getSearchQueryId());
+		Assert.assertEquals(1, jsonSearchResult.getSearchResultId());
+	}
+
+	private static class JsonSearchResult {
+		public String getAuctionPrice() {
+		return auctionPrice;
+	}
+
+		public String getFixedPrice() {
+			return fixedPrice;
+		}
+
+		public String getGalleryURL() {
+			return galleryURL;
+		}
+
+		public String getItemId() {
+			return itemId;
+		}
+
+		public String getItemTitle() {
+			return itemTitle;
+		}
+
+		public String getItemURL() {
+			return itemURL;
+		}
+
+		public int getSearchQueryId() {
+			return searchQueryId;
+		}
+
+		public int getSearchResultId() {
+			return searchResultId;
+		}
+
+		private String auctionPrice;
+		private String fixedPrice;
+		private String galleryURL;
+		private String itemId;
+		private String itemTitle;
+		private String itemURL;
+		private int searchQueryId;
+		private int searchResultId;
 	}
 
 	private MockMvc mockMvc;
@@ -83,8 +160,5 @@ public class SearchResultControllerTest extends BaseTestCase {
 	private WebApplicationContext wac;
 
 	private static final int _SEARCH_QUERY_ID = 1;
-
-	private static final String _SEARCH_RESULTS_JSON =
-		"[{\"searchQueryId\":1,\"itemId\":\"Item ID 2\",\"searchResultId\":2,\"itemTitle\":\"Second Item\",\"itemURL\":\"http://www.ebay.com/itm/5678\",\"galleryURL\":\"http://www.ebay.com/567.jpg\",\"auctionPrice\":\"$20.00\",\"fixedPrice\":\"$24.99\"},{\"searchQueryId\":1,\"itemId\":\"Item ID 1\",\"searchResultId\":1,\"itemTitle\":\"First Item\",\"itemURL\":\"http://www.ebay.com/itm/1234\",\"galleryURL\":\"http://www.ebay.com/123.jpg\",\"auctionPrice\":\"$10.00\",\"fixedPrice\":\"$14.99\"}]";
 
 }
