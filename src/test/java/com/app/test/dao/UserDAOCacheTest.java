@@ -51,16 +51,6 @@ public class UserDAOCacheTest extends BaseTestCase {
 			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
 	}
 
-	// reset emails
-	// unsubscribe
-	// update emails sent
-	// update password
-	// updatepasswordreset
-	// updateuserdetails
-	// update user email details
-	// update user login details
-	// update user subscription
-
 	@Test
 	public void testAddUserCacheEvict() throws Exception {
 		_assertBeforeCacheEvictUserIds();
