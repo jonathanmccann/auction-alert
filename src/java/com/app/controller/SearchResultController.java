@@ -15,7 +15,9 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
+import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
 import java.sql.SQLException;
@@ -23,6 +25,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
+import com.app.util.UserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,12 +45,20 @@ public class SearchResultController {
 			int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(searchQueryId);
+		SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(searchQueryId);
 
-		Collections.reverse(searchResults);
+		int userId = UserUtil.getCurrentUserId();
 
-		return searchResults;
+		if (searchQuery.getUserId() == userId) {
+			List<SearchResult> searchResults =
+				SearchResultUtil.getSearchQueryResults(searchQueryId);
+
+			Collections.reverse(searchResults);
+
+			return searchResults;
+		}
+
+		return Collections.emptyList();
 	}
 
 }
