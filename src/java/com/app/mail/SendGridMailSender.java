@@ -81,7 +81,15 @@ public class SendGridMailSender implements MailSender {
 
 		Mail mail = _populateContactMessage(emailAddress, message);
 
-		_sendEmail(mail);
+		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
+
+		Request request = new Request();
+
+		request.method = Method.POST;
+		request.endpoint = "mail/send";
+		request.body = mail.build();
+
+		sendgrid.api(request);
 	}
 
 	@Override

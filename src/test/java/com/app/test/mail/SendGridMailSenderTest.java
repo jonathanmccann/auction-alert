@@ -27,6 +27,7 @@ import com.sendgrid.Content;
 import com.sendgrid.Mail;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sendgrid.SendGrid;
+import org.apache.http.client.HttpResponseException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -117,9 +119,25 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 	@Test
 	public void testSendContactMessage() throws Exception {
-		setUpSendGridMailSender();
+		SendGrid sendGrid = Mockito.mock(SendGrid.class);
 
-		_initializeVelocityTemplate(_clazz, _classInstance);
+		Mockito.doReturn(
+			null
+		).when(
+			sendGrid
+		).api(
+			Mockito.anyObject()
+		);
+
+		PowerMockito.spy(SendGrid.class);
+
+		PowerMockito.whenNew(
+			SendGrid.class
+		).withArguments(
+			Mockito.anyString()
+		).thenReturn(
+			sendGrid
+		);
 
 		Method sendContactMessage = _clazz.getDeclaredMethod(
 			"sendContactMessage", String.class, String.class);
@@ -127,7 +145,26 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		sendContactMessage.invoke(
 			_classInstance, "test@test.com", "Contact Message");
 
-		_assertSendGridCalled(1);
+		Mockito.verify(
+			sendGrid, Mockito.times(1)
+		).api(
+			Mockito.anyObject()
+		);
+	}
+
+	@Test
+	public void testSendContactMessageWithException() throws Exception {
+		Method sendContactMessage = _clazz.getDeclaredMethod(
+			"sendContactMessage", String.class, String.class);
+
+		try {
+			sendContactMessage.invoke(
+				_classInstance, "test@test.com", "Contact Message");
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(
+				ite.getCause() instanceof HttpResponseException);
+		}
 	}
 
 	@Test
