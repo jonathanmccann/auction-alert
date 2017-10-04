@@ -118,8 +118,6 @@ public class CategoryUtil {
 	private static void _populateCategories(GetCategoriesCall getCategoriesCall)
 		throws Exception {
 
-		CategoryType[] ebayCategories = getCategoriesCall.getCategories();
-
 		String version = getCategoriesCall.getReturnedCategoryVersion();
 
 		if (_isNewerCategoryVersion(version)) {
@@ -129,6 +127,8 @@ public class CategoryUtil {
 				version);
 
 			deleteCategories();
+
+			CategoryType[] ebayCategories = getCategoriesCall.getCategories();
 
 			List<Category> categories = new ArrayList<>();
 
