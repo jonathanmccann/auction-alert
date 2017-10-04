@@ -60,14 +60,7 @@ public class ConstantsUtil {
 		_currencySymbols.put("GBP", "£");
 		_currencySymbols.put("EUR", "€");
 		_currencySymbols.put("AUD", "AU $");
-		_currencySymbols.put("EUR", "€");
 		_currencySymbols.put("CHF", "CHF ");
-		_currencySymbols.put("EUR", "€");
-		_currencySymbols.put("EUR", "€");
-		_currencySymbols.put("EUR", "€");
-		_currencySymbols.put("EUR", "€");
-		_currencySymbols.put("EUR", "€");
-		_currencySymbols.put("EUR", "€");
 
 		_globalIds.put("EBAY-US", "United States");
 		_globalIds.put("EBAY-ENCA", "Canada");
