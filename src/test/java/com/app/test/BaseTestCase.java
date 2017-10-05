@@ -86,10 +86,6 @@ public abstract class BaseTestCase {
 		CategoryUtil.addCategories(categories);
 	}
 
-	protected static void setUpApiContext() {
-		EbayAPIUtil.loadApiContext("ebay.token");
-	}
-
 	protected static void setUpDatabase() throws Exception {
 		String databasePassword = System.getProperty("jdbc.default.password");
 		String databaseURL = System.getProperty("jdbc.default.url");

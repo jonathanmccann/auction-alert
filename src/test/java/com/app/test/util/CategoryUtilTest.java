@@ -18,6 +18,7 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.model.Category;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
+import com.app.util.EbayAPIUtil;
 import com.app.util.ReleaseUtil;
 
 import com.app.util.UserUtil;
@@ -63,7 +64,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		_classInstance = _clazz.newInstance();
 
-		setUpApiContext();
+		//setUpApiContext();
 	}
 
 	@Before
@@ -89,6 +90,8 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testCreateGetCategoriesCall() throws Exception {
+		EbayAPIUtil.loadApiContext("ebay.token");
+
 		Method method = _clazz.getDeclaredMethod("_createGetCategoriesCall");
 
 		method.setAccessible(true);
