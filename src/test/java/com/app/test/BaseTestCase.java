@@ -34,6 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ebay.services.client.FindingServiceClientFactory;
+import com.ebay.services.finding.FindItemsAdvancedResponse;
+import com.ebay.services.finding.FindingServicePortType;
+import com.ebay.services.finding.ListingInfo;
+import com.ebay.services.finding.SearchItem;
+import com.ebay.services.finding.SearchResult;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -58,9 +64,9 @@ import javax.mail.Transport;
  * @author Jonathan McCann
  */
 @PrepareForTest({
-	DatabaseUtil.class, MailSenderFactory.class, ReleaseUtil.class,
-	SecurityUtils.class, SendGridMailSender.class, StripeUtil.class,
-	Transport.class, UserUtil.class
+	DatabaseUtil.class, FindingServiceClientFactory.class,
+	MailSenderFactory.class, ReleaseUtil.class, SecurityUtils.class,
+	SendGridMailSender.class, StripeUtil.class, Transport.class, UserUtil.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -119,6 +125,29 @@ public abstract class BaseTestCase {
 			"/sql/defaultdb.sql"
 		).thenReturn(
 			resource
+		);
+	}
+
+	protected static void setUpEbayAPIUtil() throws Exception {
+		PowerMockito.spy(FindingServiceClientFactory.class);
+
+		FindingServicePortType serviceClient =
+			Mockito.mock(FindingServicePortType.class);
+
+		PowerMockito.doReturn(
+			serviceClient
+		).when(
+			FindingServiceClientFactory.class, "getServiceClient",
+			Mockito.anyObject()
+		);
+
+		FindItemsAdvancedResponse result = Mockito.mock(
+			FindItemsAdvancedResponse.class);
+
+		Mockito.when(
+			serviceClient.findItemsAdvanced(Mockito.anyObject())
+		).thenReturn(
+			result
 		);
 	}
 

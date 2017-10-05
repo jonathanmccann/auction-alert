@@ -71,7 +71,8 @@ public class UserDAO {
 			resultSet.next();
 
 			return new User(
-				resultSet.getInt(1), emailAddress, password, salt, true);
+				resultSet.getInt(1), emailAddress, password, salt, true,
+				preferredDomain);
 		}
 	}
 

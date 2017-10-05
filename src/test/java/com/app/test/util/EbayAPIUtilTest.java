@@ -42,7 +42,6 @@ import java.util.Map;
 /**
  * @author Jonathan McCann
  */
-@PrepareForTest(FindingServiceClientFactory.class)
 public class EbayAPIUtilTest extends BaseTestCase {
 
 	@Before
@@ -52,19 +51,8 @@ public class EbayAPIUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetServiceClient() throws Exception {
+		setUpEbayAPIUtil();
 		setUpProperties();
-
-		PowerMockito.spy(FindingServiceClientFactory.class);
-
-		FindingServicePortType serviceClient =
-			Mockito.mock(FindingServicePortType.class);
-
-		PowerMockito.doReturn(
-			serviceClient
-		).when(
-			FindingServiceClientFactory.class, "getServiceClient",
-			Mockito.anyObject()
-		);
 
 		Field serviceClients = _clazz.getDeclaredField("_serviceClients");
 
@@ -110,21 +98,10 @@ public class EbayAPIUtilTest extends BaseTestCase {
 
 	@Test
 	public void testLoadEbayServiceClients() throws Exception {
+		setUpEbayAPIUtil();
 		setUpProperties();
 
 		ConstantsUtil.init();
-
-		PowerMockito.spy(FindingServiceClientFactory.class);
-
-		FindingServicePortType serviceClient =
-			Mockito.mock(FindingServicePortType.class);
-
-		PowerMockito.doReturn(
-			serviceClient
-		).when(
-			FindingServiceClientFactory.class, "getServiceClient",
-			Mockito.anyObject()
-		);
 
 		EbayAPIUtil.loadEbayServiceClients();
 

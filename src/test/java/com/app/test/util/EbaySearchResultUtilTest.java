@@ -16,14 +16,21 @@ package com.app.test.util;
 
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
-import com.app.test.BaseTestCase;
+import com.app.model.User;
 import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
+import com.app.util.SearchQueryUtil;
+import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
 import com.app.util.EbaySearchResultUtil;
 
+import com.app.test.BaseTestCase;
+
+import com.ebay.services.client.FindingServiceClientFactory;
 import com.ebay.services.finding.Amount;
 import com.ebay.services.finding.FindItemsAdvancedRequest;
+import com.ebay.services.finding.FindItemsAdvancedResponse;
+import com.ebay.services.finding.FindingServicePortType;
 import com.ebay.services.finding.ItemFilter;
 import com.ebay.services.finding.ItemFilterType;
 import com.ebay.services.finding.ListingInfo;
@@ -40,8 +47,14 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.mockito.Mockito;
+
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -54,6 +67,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class EbaySearchResultUtilTest extends BaseTestCase {
+
+	@Rule
+	public PowerMockRule rule = new PowerMockRule();
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -126,6 +142,104 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("secondItem", firstSearchResult.getItemId());
 		Assert.assertEquals("firstItem", secondSearchResult.getItemId());
+	}
+
+	@Test
+	public void testGetEbaySearchResults() throws Exception {
+		setUpDatabase();
+		setUpProperties();
+
+		ConstantsUtil.init();
+
+		User user = UserUtil.addUser("test@test.com", "password");
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setSearchQueryId(1);
+		searchQuery.setKeywords("Test Keywords");
+		searchQuery.setGlobalId("EBAY-US");
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
+
+		PowerMockito.spy(FindingServiceClientFactory.class);
+
+		FindingServicePortType serviceClient =
+			Mockito.mock(FindingServicePortType.class);
+
+		PowerMockito.doReturn(
+			serviceClient
+		).when(
+			FindingServiceClientFactory.class, "getServiceClient",
+			Mockito.anyObject()
+		);
+
+		FindItemsAdvancedResponse result = Mockito.mock(
+			FindItemsAdvancedResponse.class);
+
+		Mockito.when(
+			serviceClient.findItemsAdvanced(Mockito.anyObject())
+		).thenReturn(
+			result
+		);
+
+		Mockito.when(
+			result.getSearchResult()
+		).thenReturn(
+			null
+		);
+
+		List<SearchResult> searchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
+
+		Assert.assertTrue(searchResults.isEmpty());
+
+		SearchItem searchItem = new SearchItem();
+
+		ListingInfo listingInfo = _createListingInfo();
+
+		listingInfo.setListingType("AuctionWithBIN");
+
+		searchItem.setListingInfo(listingInfo);
+		searchItem.setItemId("123");
+		searchItem.setTitle("Title");
+		searchItem.setGalleryURL("http://www.ebay.com/123.jpg");
+		searchItem.setSellingStatus(_createSellingStatus());
+
+		List<SearchItem> searchItems = new ArrayList<>();
+
+		searchItems.add(searchItem);
+
+		com.ebay.services.finding.SearchResult ebaySearchResult = Mockito.mock(
+			com.ebay.services.finding.SearchResult.class);
+
+		Mockito.when(
+			result.getSearchResult()
+		).thenReturn(
+			ebaySearchResult
+		);
+
+		Mockito.when(
+			ebaySearchResult.getItem()
+		).thenReturn(
+			searchItems
+		);
+
+		searchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
+
+		Assert.assertEquals(1, searchResults.size());
+
+		SearchResult searchResult = searchResults.get(0);
+
+		Assert.assertEquals("123", searchResult.getItemId());
+		Assert.assertEquals("Title", searchResult.getItemTitle());
+		Assert.assertEquals(
+			user.getPreferredDomain() + "123", searchResult.getItemURL());
+		Assert.assertEquals(
+			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
+		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$10.00", searchResult.getFixedPrice());
 	}
 
 	@Test

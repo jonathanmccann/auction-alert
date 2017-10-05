@@ -34,13 +34,17 @@ public class UserTest {
 
 	@Test
 	public void testConstructor() {
-		User user = new User(1, "test@test.com", "password", "salt", true);
+		User user = new User(
+			1, "test@test.com", "password", "salt", true,
+			"http://www.ebay.com/itm/");
 
 		Assert.assertEquals(1, user.getUserId());
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertEquals("password", user.getPassword());
 		Assert.assertEquals("salt", user.getSalt());
 		Assert.assertTrue(user.isEmailNotification());
+		Assert.assertEquals(
+			"http://www.ebay.com/itm/", user.getPreferredDomain());
 	}
 
 	@Test

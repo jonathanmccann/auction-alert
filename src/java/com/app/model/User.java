@@ -26,13 +26,14 @@ public class User {
 
 	public User(
 		int userId, String emailAddress, String password, String salt,
-		boolean emailNotification) {
+		boolean emailNotification, String preferredDomain) {
 
 		_userId = userId;
 		_emailAddress = emailAddress;
 		_password = password;
 		_salt = salt;
 		_emailNotification = emailNotification;
+		_preferredDomain = preferredDomain;
 	}
 
 	public String getCurrentPassword() {
