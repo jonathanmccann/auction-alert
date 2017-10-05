@@ -18,21 +18,17 @@ import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
 import com.app.mail.SendGridMailSender;
 import com.app.model.Category;
-import com.app.model.SearchQuery;
-import com.app.model.SearchResult;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
-import com.app.util.EbaySearchResultUtil;
 import com.app.util.PropertiesUtil;
-import com.app.util.SearchQueryPreviousResultUtil;
-import com.app.util.SearchQueryUtil;
-import com.app.util.SearchResultUtil;
+import com.app.util.ReleaseUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.EbayAPIUtil;
 
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,8 +58,9 @@ import javax.mail.Transport;
  * @author Jonathan McCann
  */
 @PrepareForTest({
-	MailSenderFactory.class, SecurityUtils.class, SendGridMailSender.class,
-	StripeUtil.class, Transport.class, UserUtil.class
+	DatabaseUtil.class, MailSenderFactory.class, ReleaseUtil.class,
+	SecurityUtils.class, SendGridMailSender.class, StripeUtil.class,
+	Transport.class, UserUtil.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -105,6 +102,28 @@ public abstract class BaseTestCase {
 
 		ScriptUtils.executeSqlScript(
 			DatabaseUtil.getDatabaseConnection(), resource);
+	}
+
+	protected static void setUpDatabaseUtil() throws Exception {
+		PowerMockito.spy(ReleaseUtil.class);
+
+		PowerMockito.doThrow(
+			new SQLException()
+		).when(
+			ReleaseUtil.class, "getReleaseVersion", Mockito.anyString()
+		);
+
+		PowerMockito.spy(ClassPathResource.class);
+
+		ClassPathResource resource = new ClassPathResource("/sql/testdb.sql");
+
+		PowerMockito.whenNew(
+			ClassPathResource.class
+		).withArguments(
+			"/sql/defaultdb.sql"
+		).thenReturn(
+			resource
+		);
 	}
 
 	protected static void setUpGetCurrentUserId() throws Exception {
