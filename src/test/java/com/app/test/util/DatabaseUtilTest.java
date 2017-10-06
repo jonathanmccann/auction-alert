@@ -126,11 +126,6 @@ public class DatabaseUtilTest extends BaseTestCase {
 		databaseUsername.setAccessible(true);
 		isPropertiesSet.setAccessible(true);
 
-		Assert.assertNull(databasePassword.get(DatabaseUtil.class));
-		Assert.assertNull(databaseURL.get(DatabaseUtil.class));
-		Assert.assertNull(databaseUsername.get(DatabaseUtil.class));
-		Assert.assertFalse((boolean)isPropertiesSet.get(DatabaseUtil.class));
-
 		DatabaseUtil.loadDatabaseProperties();
 
 		Assert.assertEquals(
