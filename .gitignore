@@ -4,6 +4,7 @@
 /.gradle
 /.idea
 /target
+config.properties
 gradlew
 gradlew.bat
 tips.txt
