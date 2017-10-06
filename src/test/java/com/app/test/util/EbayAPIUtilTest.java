@@ -53,17 +53,27 @@ public class EbayAPIUtilTest extends BaseTestCase {
 		setUpEbayAPIUtil();
 		setUpProperties();
 
-		Field serviceClients = _clazz.getDeclaredField("_serviceClients");
+		Field serviceClientsField = _clazz.getDeclaredField("_serviceClients");
 
-		serviceClients.setAccessible(true);
+		serviceClientsField.setAccessible(true);
 
 		Field modifiersField = Field.class.getDeclaredField("modifiers");
 
 		modifiersField.setAccessible(true);
 		modifiersField.setInt(
-			serviceClients, serviceClients.getModifiers() & ~Modifier.FINAL);
+			serviceClientsField,
+			serviceClientsField.getModifiers() & ~Modifier.FINAL);
 
-		serviceClients.set(_clazz, new HashMap<>());
+		Map<String, FindingServicePortType> serviceClients =
+			(Map<String, FindingServicePortType>)serviceClientsField.get(
+				EbayAPIUtil.class);
+
+		if (serviceClients.isEmpty()) {
+			serviceClientsField.set(_clazz, new HashMap<>());
+		}
+		else {
+			serviceClients.clear();
+		}
 
 		EbayAPIUtil.getServiceClient("EBAY-US");
 		EbayAPIUtil.getServiceClient("EBAY-US");
@@ -72,12 +82,12 @@ public class EbayAPIUtilTest extends BaseTestCase {
 			FindingServiceClientFactory.class, Mockito.times(1)).invoke(
 				"getServiceClient", Mockito.anyObject());
 
-		Map<String, FindingServicePortType> clients =
-			(Map<String, FindingServicePortType>)serviceClients.get(
+		serviceClients =
+			(Map<String, FindingServicePortType>)serviceClientsField.get(
 				EbayAPIUtil.class);
 
-		Assert.assertEquals(1, clients.size());
-		Assert.assertTrue(clients.containsKey("EBAY-US"));
+		Assert.assertEquals(1, serviceClients.size());
+		Assert.assertTrue(serviceClients.containsKey("EBAY-US"));
 	}
 
 	@Test
