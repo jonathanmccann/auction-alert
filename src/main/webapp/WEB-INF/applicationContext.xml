@@ -38,7 +38,6 @@
 	<bean class="com.app.dao.CategoryDAO" id="categoryDAO" />
 	<bean class="com.app.dao.ReleaseDAO" id="releaseDAO" />
 	<bean class="com.app.dao.SearchQueryDAO" id="searchQueryDAO" />
-	<bean class="com.app.dao.SearchQueryPreviousResultDAO" id="searchQueryPreviousResultDAO" />
 	<bean class="com.app.dao.SearchResultDAO" id="searchResultDAO" />
 	<bean class="com.app.dao.UserDAO" id="userDAO" />
 	<bean class="com.app.mail.SendGridMailSender" id="mailSender" />

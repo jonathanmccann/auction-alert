@@ -91,9 +91,4 @@ public class PropertiesValues {
 	public static final String STRIPE_SUBSCRIPTION_PLAN_ID =
 		PropertiesUtil.getConfigurationProperty("stripe.subscription.plan.id");
 
-	public static final int TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS =
-		Integer.parseInt(
-			PropertiesUtil.getConfigurationProperty(
-				"total.number.of.previous.search.result.ids"));
-
 }

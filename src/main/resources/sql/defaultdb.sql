@@ -28,12 +28,6 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 	fixedPrice VARCHAR(30)
 );
 
-CREATE TABLE IF NOT EXISTS SearchQueryPreviousResult(
-	searchQueryPreviousResultId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	searchQueryId INT NOT NULL,
-	searchResultItemId VARCHAR(25) NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS Category(
 	uuid INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	categoryId VARCHAR(10) NOT NULL,

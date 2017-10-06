@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS SearchQuery, SearchResult, SearchQueryPreviousResult, Category, User_, Release_;
+DROP TABLE IF EXISTS SearchQuery, SearchResult, Category, User_, Release_;
 
 CREATE TABLE IF NOT EXISTS SearchQuery(
 	searchQueryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -28,12 +28,6 @@ CREATE TABLE IF NOT EXISTS SearchResult(
 	galleryURL VARCHAR(100),
 	auctionPrice VARCHAR(30),
 	fixedPrice VARCHAR(30)
-);
-
-CREATE TABLE IF NOT EXISTS SearchQueryPreviousResult(
-	searchQueryPreviousResultId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	searchQueryId INT NOT NULL,
-	searchResultItemId VARCHAR(25) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Category(

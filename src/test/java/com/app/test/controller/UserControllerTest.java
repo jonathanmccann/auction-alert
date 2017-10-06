@@ -26,7 +26,6 @@ import com.app.test.BaseTestCase;
 import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
-import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.UserUtil;
@@ -421,9 +420,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			searchQueryId, "1234");
-
 		SearchResult searchResult = new SearchResult(
 			searchQueryId, "1234", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
@@ -455,12 +451,6 @@ public class UserControllerTest extends BaseTestCase {
 		catch (SQLException sqle) {
 			Assert.assertEquals(SQLException.class, sqle.getClass());
 		}
-
-		int searchQueryPreviousResultCount =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
-				searchQueryId);
-
-		Assert.assertEquals(0, searchQueryPreviousResultCount);
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(searchQueryId);

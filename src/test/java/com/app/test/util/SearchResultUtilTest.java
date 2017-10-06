@@ -18,7 +18,6 @@ import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
 import com.app.util.PropertiesValues;
-import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchResultUtil;
 
 import java.lang.reflect.Method;
@@ -57,8 +56,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 	@After
 	public void tearDown() throws Exception {
 		SearchResultUtil.deleteSearchQueryResults(_SEARCH_QUERY_ID);
-		SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
-			_SEARCH_QUERY_ID);
 	}
 
 	@Test
@@ -88,37 +85,23 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-
-		Assert.assertEquals(
-			1,
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
-				_SEARCH_QUERY_ID));
 	}
 
 	@Test
 	public void testAddNewResultsWithPreviousSearchQueryResults()
 		throws Exception {
 
-		_addSearchResult("1234");
-
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
-
-		SearchResult searchResult = searchResults.get(0);
-
-		for (int i = 0; i < PropertiesValues.TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS; i++) {
-			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-				searchResult.getSearchQueryId(), String.valueOf(i));
-		}
-
-		Assert.assertEquals(
-			10,
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
-				_SEARCH_QUERY_ID));
-
 		Method method = _clazz.getDeclaredMethod("_addNewResults", List.class);
 
 		method.setAccessible(true);
+
+		SearchResult searchResult = new SearchResult(
+			_SEARCH_QUERY_ID, "1234", "First Item", "$10.00", "$14.99",
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(searchResult);
 
 		method.invoke(_classInstance, searchResults);
 
@@ -136,20 +119,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-
-		Assert.assertEquals(
-			10,
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResultsCount(
-				_SEARCH_QUERY_ID));
-
-		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				_SEARCH_QUERY_ID);
-
-		String latestSearchQueryPreviousResult = searchQueryPreviousResults.get(
-			9);
-
-		Assert.assertEquals("1234", latestSearchQueryPreviousResult);
 	}
 
 	@Test
@@ -295,11 +264,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
-		SearchResult searchResult = searchResults.get(0);
-
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			searchResult.getSearchQueryId(), "1234");
-
 		searchResults = SearchResultUtil.filterSearchResults(
 			searchQuery, searchResults);
 
@@ -314,7 +278,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
 
 		List<SearchResult> searchResults = SearchResultUtil.filterSearchResults(
-			searchQuery, new ArrayList<SearchResult>());
+			searchQuery, new ArrayList<>());
 
 		Assert.assertEquals(0, searchResults.size());
 	}
@@ -332,8 +296,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			_SEARCH_QUERY_ID, "1234");
+		SearchResult searchResult = new SearchResult(
+			_SEARCH_QUERY_ID, "3456", "First Item", "$10.00", "$14.99",
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+
+		searchResults.add(searchResult);
 
 		searchResults = SearchResultUtil.filterSearchResults(
 			searchQuery, searchResults);
@@ -343,34 +310,46 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testRemovePreviouslyNotifiedResults() throws Exception {
+		List<SearchResult> existingSearchResults = new ArrayList<>();
+
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		List<SearchResult> newSearchResults = new ArrayList<>();
 
-		searchResults.add(searchResult);
+		newSearchResults.add(searchResult);
 
 		Method method = _clazz.getDeclaredMethod(
-			"_removePreviouslyNotifiedResults", int.class, List.class);
+			"_removePreviouslyNotifiedResults", List.class, List.class);
 
 		method.setAccessible(true);
 
-		method.invoke(_classInstance, 1, searchResults);
+		List<SearchResult> searchResults =
+			(List<SearchResult>)method.invoke(
+				_classInstance, existingSearchResults, newSearchResults);
 
 		Assert.assertEquals(1, searchResults.size());
 
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			searchResult.getSearchQueryId(), "2345");
+		searchResult = new SearchResult(
+			1, "2345", "First Item", "$10.00", "$14.99",
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		method.invoke(_classInstance, 1, searchResults);
+		existingSearchResults.add(searchResult);
+
+		searchResults = (List<SearchResult>)method.invoke(
+			_classInstance, existingSearchResults, newSearchResults);
 
 		Assert.assertEquals(1, searchResults.size());
 
-		SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-			searchResult.getSearchQueryId(), "1234");
+		searchResult = new SearchResult(
+			1, "1234", "First Item", "$10.00", "$14.99",
+			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		method.invoke(_classInstance, 1, searchResults);
+		existingSearchResults.add(searchResult);
+
+		searchResults = (List<SearchResult>)method.invoke(
+			_classInstance, existingSearchResults, newSearchResults);
 
 		Assert.assertEquals(0, searchResults.size());
 	}

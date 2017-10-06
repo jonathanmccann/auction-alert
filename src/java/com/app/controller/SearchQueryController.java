@@ -22,7 +22,6 @@ import com.app.model.SearchQuery;
 import com.app.model.User;
 import com.app.util.CategoryUtil;
 import com.app.util.ConstantsUtil;
-import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.UserUtil;
@@ -165,9 +164,6 @@ public class SearchQueryController {
 			SearchQueryUtil.deleteSearchQuery(userId, searchQueryId);
 
 			SearchResultUtil.deleteSearchQueryResults(searchQueryId);
-
-			SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
-				searchQueryId);
 		}
 
 		return "redirect:view_search_queries";

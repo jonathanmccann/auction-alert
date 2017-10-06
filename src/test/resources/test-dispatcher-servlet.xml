@@ -24,7 +24,6 @@
 	<bean id="mailSender" class="com.app.mail.SendGridMailSender" />
 	<bean id="releaseDao" class="com.app.dao.ReleaseDAO" />
 	<bean id="searchQueryDAO" class="com.app.dao.SearchQueryDAO" />
-	<bean id="searchQueryPreviousResultDAO" class="com.app.dao.SearchQueryPreviousResultDAO" />
 	<bean id="searchResultDAO" class="com.app.dao.SearchResultDAO" />
 	<bean id="userDAO" class="com.app.dao.UserDAO" />
 

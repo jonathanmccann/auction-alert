@@ -27,7 +27,6 @@ import com.app.model.User;
 import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
-import com.app.util.SearchQueryPreviousResultUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.StripeUtil;
@@ -283,9 +282,6 @@ public class UserController {
 
 			for (SearchQuery searchQuery : searchQueries) {
 				int searchQueryId = searchQuery.getSearchQueryId();
-
-				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResults(
-					searchQueryId);
 
 				SearchResultUtil.deleteSearchQueryResults(searchQueryId);
 

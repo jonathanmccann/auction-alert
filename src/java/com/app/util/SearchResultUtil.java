@@ -22,11 +22,11 @@ import com.app.runnable.SearchResultRunnable;
 
 import java.sql.SQLException;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,16 +62,16 @@ public class SearchResultUtil {
 			SearchQuery searchQuery, List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
 
-		_removePreviouslyNotifiedResults(
-			searchQuery.getSearchQueryId(), newSearchResults);
+		List<SearchResult> existingSearchResults = getSearchQueryResults(
+			searchQuery.getSearchQueryId());
+
+		newSearchResults = _removePreviouslyNotifiedResults(
+			existingSearchResults, newSearchResults);
 
 		if (!newSearchResults.isEmpty()) {
 			_log.debug(
 				"Found {} new search results for keywords: {}",
 				newSearchResults.size(), searchQuery.getKeywords());
-
-			List<SearchResult> existingSearchResults = getSearchQueryResults(
-				searchQuery.getSearchQueryId());
 
 			_deleteOldResults(existingSearchResults, newSearchResults.size());
 
@@ -122,9 +122,7 @@ public class SearchResultUtil {
 	}
 
 	@Autowired
-	public void setSearchQueryPreviousResultDAO(
-		SearchResultDAO searchResultDAO) {
-
+	public void setSearchResultDAO(SearchResultDAO searchResultDAO) {
 		_searchResultDAO = searchResultDAO;
 	}
 
@@ -133,22 +131,6 @@ public class SearchResultUtil {
 
 		for (SearchResult searchResult : newSearchResults) {
 			addSearchResult(searchResult);
-
-			int searchQueryPreviousResultsCount =
-				SearchQueryPreviousResultUtil.
-					getSearchQueryPreviousResultsCount(
-						searchResult.getSearchQueryId());
-
-			if (searchQueryPreviousResultsCount ==
-					PropertiesValues.
-						TOTAL_NUMBER_OF_PREVIOUS_SEARCH_RESULT_IDS) {
-
-				SearchQueryPreviousResultUtil.deleteSearchQueryPreviousResult(
-					searchResult.getSearchQueryId());
-			}
-
-			SearchQueryPreviousResultUtil.addSearchQueryPreviousResult(
-				searchResult.getSearchQueryId(), searchResult.getItemId());
 		}
 	}
 
@@ -169,27 +151,17 @@ public class SearchResultUtil {
 		}
 	}
 
-	private static void _removePreviouslyNotifiedResults(
-			int searchQueryId, List<SearchResult> newSearchResults)
+	private static List<SearchResult> _removePreviouslyNotifiedResults(
+			List<SearchResult> existingSearchResults,
+			List<SearchResult> newSearchResults)
 		throws DatabaseConnectionException, SQLException {
 
-		List<String> searchQueryPreviousResults =
-			SearchQueryPreviousResultUtil.getSearchQueryPreviousResults(
-				searchQueryId);
-
-		if (!searchQueryPreviousResults.isEmpty()) {
-			Iterator iterator = newSearchResults.iterator();
-
-			while (iterator.hasNext()) {
-				SearchResult searchResult = (SearchResult)iterator.next();
-
-				if (searchQueryPreviousResults.contains(
-						searchResult.getItemId())) {
-
-					iterator.remove();
-				}
-			}
-		}
+		return newSearchResults.stream()
+			.filter(searchResult -> !existingSearchResults.stream()
+				.map(SearchResult::getItemId)
+				.collect(Collectors.toSet())
+				.contains(searchResult.getItemId()))
+			.collect(Collectors.toList());
 	}
 
 	private static final int _THREAD_POOL_SIZE =
