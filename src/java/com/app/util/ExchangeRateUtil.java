@@ -54,14 +54,20 @@ public class ExchangeRateUtil {
 			BufferedReader bufferedReader = new BufferedReader(
 				new InputStreamReader(urlConnection.getInputStream()));
 
-			Gson gson = new Gson();
-
-			Map<Object, Object> response = gson.fromJson(
-				bufferedReader, Map.class);
-
-			_exchangeRates.put(
-				currencyId, (Map<String, Double>)response.get("rates"));
+			_parseExchangeRates(currencyId, bufferedReader);
 		}
+	}
+
+	private static void _parseExchangeRates(
+		String currencyId, BufferedReader bufferedReader) {
+
+		Gson gson = new Gson();
+
+		Map<Object, Object> response = gson.fromJson(
+			bufferedReader, Map.class);
+
+		_exchangeRates.put(
+			currencyId, (Map<String, Double>)response.get("rates"));
 	}
 
 	private static final String[] _CURRENCY_IDS = {
