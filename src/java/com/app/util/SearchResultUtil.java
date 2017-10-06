@@ -52,10 +52,12 @@ public class SearchResultUtil {
 		_searchResultDAO.deleteSearchQueryResults(searchQueryId);
 	}
 
-	public static void deleteSearchResult(int searchResultId)
+	public static void deleteSearchResults(
+			int searchQueryId, int numberOfSearchResultsToRemove)
 		throws DatabaseConnectionException, SQLException {
 
-		_searchResultDAO.deleteSearchResult(searchResultId);
+		_searchResultDAO.deleteSearchResults(
+			searchQueryId, numberOfSearchResultsToRemove);
 	}
 
 	public static List<SearchResult> filterSearchResults(
@@ -73,7 +75,9 @@ public class SearchResultUtil {
 				"Found {} new search results for keywords: {}",
 				newSearchResults.size(), searchQuery.getKeywords());
 
-			_deleteOldResults(existingSearchResults, newSearchResults.size());
+			_deleteOldResults(
+				searchQuery.getSearchQueryId(), existingSearchResults.size(),
+				newSearchResults.size());
 
 			_addNewResults(newSearchResults);
 		}
@@ -135,19 +139,16 @@ public class SearchResultUtil {
 	}
 
 	private static void _deleteOldResults(
-			List<SearchResult> existingSearchResults, int newSearchResultsSize)
+			int searchQueryId, int existingSearchResultsSize,
+			int newSearchResultsSize)
 		throws DatabaseConnectionException, SQLException {
 
 		int numberOfSearchResultsToRemove =
-			existingSearchResults.size() + newSearchResultsSize -
+			existingSearchResultsSize + newSearchResultsSize -
 				PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_RESULTS;
 
 		if (numberOfSearchResultsToRemove > 0) {
-			for (int i = 0; i < numberOfSearchResultsToRemove; i++) {
-				SearchResult searchResult = existingSearchResults.get(i);
-
-				deleteSearchResult(searchResult.getSearchResultId());
-			}
+			deleteSearchResults(searchQueryId, numberOfSearchResultsToRemove);
 		}
 	}
 

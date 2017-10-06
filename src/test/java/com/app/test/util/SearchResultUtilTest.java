@@ -17,7 +17,6 @@ package com.app.test.util;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
-import com.app.util.PropertiesValues;
 import com.app.util.SearchResultUtil;
 
 import java.lang.reflect.Method;
@@ -144,7 +143,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 	@Test
 	public void testDeleteOldResultsWithAllNewResults() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"_deleteOldResults", List.class, int.class);
+			"_deleteOldResults", int.class, int.class, int.class);
 
 		method.setAccessible(true);
 
@@ -154,13 +153,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 		_addSearchResult("4567");
 		_addSearchResult("5678");
 
+		method.invoke(_classInstance, _SEARCH_QUERY_ID, 5, 5);
+
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
-
-		method.invoke(_classInstance, searchResults, 5);
-
-		searchResults = SearchResultUtil.getSearchQueryResults(
-			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(0, searchResults.size());
 	}
@@ -168,7 +164,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 	@Test
 	public void testDeleteOldResultsWithNoNewResults() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"_deleteOldResults", List.class, int.class);
+			"_deleteOldResults", int.class, int.class, int.class);
 
 		method.setAccessible(true);
 
@@ -178,13 +174,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 		_addSearchResult("4567");
 		_addSearchResult("5678");
 
+		method.invoke(_classInstance, _SEARCH_QUERY_ID, 5, 0);
+
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
-
-		method.invoke(_classInstance, searchResults, 0);
-
-		searchResults = SearchResultUtil.getSearchQueryResults(
-			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(5, searchResults.size());
 	}
@@ -192,7 +185,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 	@Test
 	public void testDeleteOldResultsWithPartialNewResults() throws Exception {
 		Method method = _clazz.getDeclaredMethod(
-			"_deleteOldResults", List.class, int.class);
+			"_deleteOldResults", int.class, int.class, int.class);
 
 		method.setAccessible(true);
 
@@ -202,15 +195,16 @@ public class SearchResultUtilTest extends BaseTestCase {
 		_addSearchResult("4567");
 		_addSearchResult("5678");
 
+		method.invoke(_classInstance, _SEARCH_QUERY_ID, 5, 3);
+
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
-		method.invoke(_classInstance, searchResults, 3);
-
-		searchResults = SearchResultUtil.getSearchQueryResults(
-			_SEARCH_QUERY_ID);
-
 		Assert.assertEquals(2, searchResults.size());
+
+		SearchResult searchResult = searchResults.get(0);
+
+		Assert.assertEquals("4567", searchResult.getItemId());
 	}
 
 	@Test
@@ -241,15 +235,16 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(2, searchResults.size());
 
-		SearchResult firstSearchResult = searchResults.get(0);
-
-		SearchResultUtil.deleteSearchResult(
-			firstSearchResult.getSearchResultId());
+		SearchResultUtil.deleteSearchResults(_SEARCH_QUERY_ID, 1);
 
 		searchResults = SearchResultUtil.getSearchQueryResults(
 			_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(1, searchResults.size());
+
+		SearchResult searchResult = searchResults.get(0);
+
+		Assert.assertEquals("2345", searchResult.getItemId());
 	}
 
 	@Test

@@ -74,16 +74,20 @@ public class SearchResultDAO {
 		}
 	}
 
-	public void deleteSearchResult(int searchResultId)
+	public void deleteSearchResults(
+			int searchQueryId, int numberOfSearchResultsToRemove)
 		throws DatabaseConnectionException, SQLException {
 
-		_log.debug("Deleting search result ID: {}", searchResultId);
+		_log.debug(
+			"Deleting {} search results for search query ID: {}",
+			numberOfSearchResultsToRemove, searchQueryId);
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_DELETE_SEARCH_RESULT_SQL)) {
 
-			preparedStatement.setInt(1, searchResultId);
+			preparedStatement.setInt(1, searchQueryId);
+			preparedStatement.setInt(2, numberOfSearchResultsToRemove);
 
 			preparedStatement.executeUpdate();
 		}
@@ -154,7 +158,7 @@ public class SearchResultDAO {
 		"DELETE FROM SearchResult WHERE searchQueryId = ?";
 
 	private static final String _DELETE_SEARCH_RESULT_SQL =
-		"DELETE FROM SearchResult WHERE searchResultId = ?";
+		"DELETE FROM SearchResult WHERE searchQueryId = ? LIMIT ?";
 
 	private static final String _GET_SEARCH_QUERY_RESULTS_SQL =
 		"SELECT * FROM SearchResult WHERE searchQueryId = ?";
