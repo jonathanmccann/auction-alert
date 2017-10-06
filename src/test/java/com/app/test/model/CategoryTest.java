@@ -15,8 +15,6 @@
 package com.app.test.model;
 
 import com.app.model.Category;
-import com.app.model.SearchQuery;
-import com.app.util.ValidatorUtil;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -14,14 +14,12 @@
 
 package com.app.test.util;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.Category;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
 import com.app.util.EbayAPIUtil;
 import com.app.util.ReleaseUtil;
 
-import com.app.util.UserUtil;
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.call.GetCategoriesCall;
 import com.ebay.soap.eBLBaseComponents.CategoryType;
@@ -30,7 +28,6 @@ import com.ebay.soap.eBLBaseComponents.SiteCodeType;
 
 import java.lang.reflect.Method;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -38,14 +35,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

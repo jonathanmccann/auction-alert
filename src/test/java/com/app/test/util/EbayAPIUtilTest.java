@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

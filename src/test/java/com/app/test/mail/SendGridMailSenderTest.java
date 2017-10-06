@@ -26,7 +26,6 @@ import com.app.util.UserUtil;
 import com.sendgrid.Content;
 import com.sendgrid.Mail;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -45,15 +44,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.ui.velocity.VelocityEngineFactoryBean;
-
-import javax.mail.Transport;
 
 /**
  * @author Jonathan McCann

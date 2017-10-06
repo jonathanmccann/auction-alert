@@ -18,7 +18,6 @@ import com.app.dao.CategoryDAO;
 import com.app.model.Category;
 import com.app.test.BaseTestCase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.ehcache.Cache;

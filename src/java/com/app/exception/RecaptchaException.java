@@ -22,16 +22,4 @@ public class RecaptchaException extends Exception {
 	public RecaptchaException() {
 	}
 
-	public RecaptchaException(String msg) {
-		super(msg);
-	}
-
-	public RecaptchaException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public RecaptchaException(Throwable cause) {
-		super(cause);
-	}
-
 }

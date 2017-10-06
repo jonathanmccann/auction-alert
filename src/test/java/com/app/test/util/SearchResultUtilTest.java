@@ -375,12 +375,12 @@ public class SearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(0, searchResults.size());
 	}
 
-	private static int _addSearchResult(String itemId) throws Exception {
+	private static void _addSearchResult(String itemId) throws Exception {
 		SearchResult searchResult = new SearchResult(
 			_SEARCH_QUERY_ID, itemId, "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		return SearchResultUtil.addSearchResult(searchResult);
+		SearchResultUtil.addSearchResult(searchResult);
 	}
 
 	private static final int _SEARCH_QUERY_ID = 1;

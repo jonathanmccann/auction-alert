@@ -58,11 +58,11 @@ public class SaltedJdbcRealmTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		_clazz = Class.forName(SaltedJdbcRealm.class.getName());
+		Class clazz = Class.forName(SaltedJdbcRealm.class.getName());
 
-		_classInstance = _clazz.newInstance();
+		_classInstance = clazz.newInstance();
 
-		_doGetAuthenticationInfo = _clazz.getDeclaredMethod(
+		_doGetAuthenticationInfo = clazz.getDeclaredMethod(
 			"doGetAuthenticationInfo", AuthenticationToken.class);
 
 		_doGetAuthenticationInfo.setAccessible(true);
@@ -153,7 +153,6 @@ public class SaltedJdbcRealmTest extends BaseTestCase {
 	}
 
 	private static Object _classInstance;
-	private static Class _clazz;
 	private static Method _doGetAuthenticationInfo;
 
 }

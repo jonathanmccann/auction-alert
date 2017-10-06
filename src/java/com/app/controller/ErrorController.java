@@ -15,15 +15,11 @@
 package com.app.controller;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.model.User;
 import com.app.util.UserUtil;
 
 import java.sql.SQLException;
 
 import java.util.Map;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

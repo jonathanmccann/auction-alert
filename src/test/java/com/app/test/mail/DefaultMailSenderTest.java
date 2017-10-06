@@ -15,14 +15,11 @@
 package com.app.test.mail;
 
 import com.app.mail.DefaultMailSender;
-import com.app.mail.MailSender;
-import com.app.mail.MailSenderFactory;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
 import com.app.test.BaseTestCase;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,12 +41,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
 /**
  * @author Jonathan McCann

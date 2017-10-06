@@ -22,16 +22,4 @@ public class InvalidEmailAddressException extends Exception {
 	public InvalidEmailAddressException() {
 	}
 
-	public InvalidEmailAddressException(String msg) {
-		super(msg);
-	}
-
-	public InvalidEmailAddressException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public InvalidEmailAddressException(Throwable cause) {
-		super(cause);
-	}
-
 }
