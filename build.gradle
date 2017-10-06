@@ -70,7 +70,7 @@ test {
 	systemProperties System.getProperties()
 	systemProperties['user.dir'] = workingDir
 
-	jvmArgs '-noverify'
+	jvmArgs += '-noverify'
 
 	testLogging {
 		exceptionFormat = 'full'
