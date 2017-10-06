@@ -51,10 +51,13 @@ public class ExchangeRateUtil {
 
 			URLConnection urlConnection = exchangeRateUrl.openConnection();
 
-			BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(urlConnection.getInputStream()));
+			try (InputStreamReader inputStreamReader = new InputStreamReader(
+					urlConnection.getInputStream());
+				BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader)) {
 
-			_parseExchangeRates(currencyId, bufferedReader);
+				_parseExchangeRates(currencyId, bufferedReader);
+			}
 		}
 	}
 
