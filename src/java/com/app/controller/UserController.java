@@ -284,9 +284,9 @@ public class UserController {
 				int searchQueryId = searchQuery.getSearchQueryId();
 
 				SearchResultUtil.deleteSearchQueryResults(searchQueryId);
-
-				SearchQueryUtil.deleteSearchQuery(userId, searchQueryId);
 			}
+
+			SearchQueryUtil.deleteSearchQueries(userId);
 
 			StripeUtil.deleteCustomer(currentUser.getCustomerId());
 		}
