@@ -22,16 +22,4 @@ public class PasswordResetException extends Exception {
 	public PasswordResetException() {
 	}
 
-	public PasswordResetException(String msg) {
-		super(msg);
-	}
-
-	public PasswordResetException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public PasswordResetException(Throwable cause) {
-		super(cause);
-	}
-
 }

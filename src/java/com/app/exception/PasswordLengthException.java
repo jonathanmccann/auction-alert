@@ -22,16 +22,4 @@ public class PasswordLengthException extends Exception {
 	public PasswordLengthException() {
 	}
 
-	public PasswordLengthException(String msg) {
-		super(msg);
-	}
-
-	public PasswordLengthException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public PasswordLengthException(Throwable cause) {
-		super(cause);
-	}
-
 }

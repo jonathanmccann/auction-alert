@@ -22,16 +22,4 @@ public class SearchQueryException extends Exception {
 	public SearchQueryException() {
 	}
 
-	public SearchQueryException(String msg) {
-		super(msg);
-	}
-
-	public SearchQueryException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public SearchQueryException(Throwable cause) {
-		super(cause);
-	}
-
 }

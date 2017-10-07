@@ -22,16 +22,4 @@ public class DuplicateEmailAddressException extends Exception {
 	public DuplicateEmailAddressException() {
 	}
 
-	public DuplicateEmailAddressException(String msg) {
-		super(msg);
-	}
-
-	public DuplicateEmailAddressException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public DuplicateEmailAddressException(Throwable cause) {
-		super(cause);
-	}
-
 }
