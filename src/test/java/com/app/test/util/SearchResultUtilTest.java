@@ -228,16 +228,19 @@ public class SearchResultUtilTest extends BaseTestCase {
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
 
+		List<SearchResult> nonCacheSearchResults =
+			new ArrayList<>(searchResults);
+
 		SearchResult searchResult = new SearchResult(
 			_SEARCH_QUERY_ID, "3456", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		searchResults.add(searchResult);
+		nonCacheSearchResults.add(searchResult);
 
-		searchResults = SearchResultUtil.filterSearchResults(
-			searchQuery, searchResults);
+		nonCacheSearchResults = SearchResultUtil.filterSearchResults(
+			searchQuery, nonCacheSearchResults);
 
-		Assert.assertEquals(1, searchResults.size());
+		Assert.assertEquals(1, nonCacheSearchResults.size());
 	}
 
 	@Test
