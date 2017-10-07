@@ -428,7 +428,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
-		SearchResultUtil.addSearchResults(searchResults);
+		SearchResultUtil.addSearchResults(searchQueryId, searchResults);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 

@@ -295,7 +295,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
-		SearchResultUtil.addSearchResults(searchResults);
+		SearchResultUtil.addSearchResults(_SEARCH_QUERY_ID, searchResults);
 	}
 
 	private static final int _SEARCH_QUERY_ID = 1;

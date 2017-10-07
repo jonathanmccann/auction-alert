@@ -180,6 +180,12 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			activeSearchQueryId, "1234", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(firstSearchResult);
+
+		SearchResultUtil.addSearchResults(activeSearchQueryId, searchResults);
+
 		SearchQuery inactiveSearchQuery = new SearchQuery();
 
 		inactiveSearchQuery.setUserId(_USER_ID);
@@ -193,12 +199,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			inactiveSearchQueryId, "2345", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg");
 
-		List<SearchResult> searchResults = new ArrayList<>();
+		searchResults.clear();
 
-		searchResults.add(firstSearchResult);
 		searchResults.add(secondSearchResult);
 
-		SearchResultUtil.addSearchResults(searchResults);
+		SearchResultUtil.addSearchResults(inactiveSearchQueryId, searchResults);
 
 		this.mockMvc.perform(post("/delete_search_query")
 			.param("searchQueryId", String.valueOf(activeSearchQueryId)))
@@ -257,7 +262,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		searchResults.add(searchResult);
 
-		SearchResultUtil.addSearchResults(searchResults);
+		SearchResultUtil.addSearchResults(searchQueryId, searchResults);
 
 		this.mockMvc.perform(post("/delete_search_query")
 			.param("searchQueryId", String.valueOf(searchQueryId)))

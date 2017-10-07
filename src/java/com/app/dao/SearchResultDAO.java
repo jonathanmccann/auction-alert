@@ -28,13 +28,17 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @author Jonathan McCann
  */
 public class SearchResultDAO {
 
-	public void addSearchResults(List<SearchResult> searchResults)
+	@CacheEvict(value = "searchResults", key = "#searchQueryId")
+	public void addSearchResults(
+			int searchQueryId, List<SearchResult> searchResults)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Adding {} new search results", searchResults.size());
@@ -58,6 +62,7 @@ public class SearchResultDAO {
 		}
 	}
 
+	@CacheEvict(value = "searchResults", key = "#searchQueryId")
 	public void deleteSearchQueryResults(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 
@@ -75,6 +80,7 @@ public class SearchResultDAO {
 		}
 	}
 
+	@CacheEvict(value = "searchResults", key = "#searchQueryId")
 	public void deleteSearchResults(
 			int searchQueryId, int numberOfSearchResultsToRemove)
 		throws DatabaseConnectionException, SQLException {
@@ -94,6 +100,7 @@ public class SearchResultDAO {
 		}
 	}
 
+	@Cacheable(value = "searchResults", key = "#searchQueryId")
 	public List<SearchResult> getSearchQueryResults(int searchQueryId)
 		throws DatabaseConnectionException, SQLException {
 

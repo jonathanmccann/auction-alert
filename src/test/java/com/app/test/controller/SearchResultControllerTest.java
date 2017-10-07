@@ -89,7 +89,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 		searchResults.add(firstSearchResult);
 		searchResults.add(secondSearchResult);
 
-		SearchResultUtil.addSearchResults(searchResults);
+		SearchResultUtil.addSearchResults(_SEARCH_QUERY_ID, searchResults);
 
 		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
 			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))
@@ -155,7 +155,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 		searchResults.add(firstSearchResult);
 		searchResults.add(secondSearchResult);
 
-		SearchResultUtil.addSearchResults(searchResults);
+		SearchResultUtil.addSearchResults(_SEARCH_QUERY_ID, searchResults);
 
 		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
 			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))
