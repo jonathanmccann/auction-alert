@@ -40,10 +40,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchResultUtil {
 
-	public static int addSearchResult(SearchResult searchResult)
+	public static void addSearchResults(List<SearchResult> searchResults)
 		throws DatabaseConnectionException, SQLException {
 
-		return _searchResultDAO.addSearchResult(searchResult);
+		_searchResultDAO.addSearchResults(searchResults);
 	}
 
 	public static void deleteSearchQueryResults(int searchQueryId)
@@ -79,7 +79,7 @@ public class SearchResultUtil {
 				searchQuery.getSearchQueryId(), existingSearchResults.size(),
 				newSearchResults.size());
 
-			_addNewResults(newSearchResults);
+			addSearchResults(newSearchResults);
 		}
 
 		return newSearchResults;
@@ -128,14 +128,6 @@ public class SearchResultUtil {
 	@Autowired
 	public void setSearchResultDAO(SearchResultDAO searchResultDAO) {
 		_searchResultDAO = searchResultDAO;
-	}
-
-	private static void _addNewResults(List<SearchResult> newSearchResults)
-		throws DatabaseConnectionException, SQLException {
-
-		for (SearchResult searchResult : newSearchResults) {
-			addSearchResult(searchResult);
-		}
 	}
 
 	private static void _deleteOldResults(

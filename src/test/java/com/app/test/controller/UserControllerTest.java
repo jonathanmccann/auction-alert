@@ -424,7 +424,11 @@ public class UserControllerTest extends BaseTestCase {
 			searchQueryId, "1234", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		SearchResultUtil.addSearchResult(searchResult);
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(searchResult);
+
+		SearchResultUtil.addSearchResults(searchResults);
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
@@ -452,8 +456,7 @@ public class UserControllerTest extends BaseTestCase {
 			Assert.assertEquals(SQLException.class, sqle.getClass());
 		}
 
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(searchQueryId);
+		searchResults = SearchResultUtil.getSearchQueryResults(searchQueryId);
 
 		Assert.assertEquals(0, searchResults.size());
 	}

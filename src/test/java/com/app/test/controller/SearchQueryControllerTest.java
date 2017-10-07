@@ -180,8 +180,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			activeSearchQueryId, "1234", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		SearchResultUtil.addSearchResult(firstSearchResult);
-
 		SearchQuery inactiveSearchQuery = new SearchQuery();
 
 		inactiveSearchQuery.setUserId(_USER_ID);
@@ -195,7 +193,12 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			inactiveSearchQueryId, "2345", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/2345", "http://www.ebay.com/234.jpg");
 
-		SearchResultUtil.addSearchResult(secondSearchResult);
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(firstSearchResult);
+		searchResults.add(secondSearchResult);
+
+		SearchResultUtil.addSearchResults(searchResults);
 
 		this.mockMvc.perform(post("/delete_search_query")
 			.param("searchQueryId", String.valueOf(activeSearchQueryId)))
@@ -223,8 +226,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			Assert.assertEquals(SQLException.class, sqle.getClass());
 		}
 
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(activeSearchQueryId);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			activeSearchQueryId);
 
 		Assert.assertEquals(0, searchResults.size());
 
@@ -250,7 +253,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			searchQueryId, "1234", "itemTitle", "$14.99", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		SearchResultUtil.addSearchResult(searchResult);
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(searchResult);
+
+		SearchResultUtil.addSearchResults(searchResults);
 
 		this.mockMvc.perform(post("/delete_search_query")
 			.param("searchQueryId", String.valueOf(searchQueryId)))
@@ -260,8 +267,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		List<SearchQuery> searchQueries = SearchQueryUtil.getSearchQueries(
 			_USER_ID, true);
 
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(searchQueryId);
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			searchQueryId);
 
 		Assert.assertEquals(1, searchQueries.size());
 		Assert.assertEquals(1, searchResults.size());

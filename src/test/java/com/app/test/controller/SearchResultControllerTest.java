@@ -76,17 +76,20 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		SearchQueryUtil.addSearchQuery(searchQuery);
 
-		SearchResult searchResult = new SearchResult(
+		SearchResult firstSearchResult = new SearchResult(
 			_SEARCH_QUERY_ID, "Item ID 1", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		SearchResultUtil.addSearchResult(searchResult);
-
-		searchResult = new SearchResult(
+		SearchResult secondSearchResult = new SearchResult(
 			_SEARCH_QUERY_ID, "Item ID 2", "Second Item", "$20.00", "$24.99",
 			"http://www.ebay.com/itm/5678", "http://www.ebay.com/567.jpg");
 
-		SearchResultUtil.addSearchResult(searchResult);
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(firstSearchResult);
+		searchResults.add(secondSearchResult);
+
+		SearchResultUtil.addSearchResults(searchResults);
 
 		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
 			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))
@@ -96,12 +99,12 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		Type listType = new TypeToken<ArrayList<JsonSearchResult>>(){}.getType();
 
-		List<JsonSearchResult> searchResults = gson.fromJson(
+		List<JsonSearchResult> jsonSearchResults = gson.fromJson(
 			mvcResult.getResponse().getContentAsString(), listType);
 
 		Assert.assertEquals(2, searchResults.size());
 
-		JsonSearchResult jsonSearchResult = searchResults.get(0);
+		JsonSearchResult jsonSearchResult = jsonSearchResults.get(0);
 
 		Assert.assertEquals("$20.00", jsonSearchResult.getAuctionPrice());
 		Assert.assertEquals("$24.99", jsonSearchResult.getFixedPrice());
@@ -112,7 +115,7 @@ public class SearchResultControllerTest extends BaseTestCase {
 		Assert.assertEquals(1, jsonSearchResult.getSearchQueryId());
 		Assert.assertEquals(2, jsonSearchResult.getSearchResultId());
 
-		jsonSearchResult = searchResults.get(1);
+		jsonSearchResult = jsonSearchResults.get(1);
 
 		Assert.assertEquals("$10.00", jsonSearchResult.getAuctionPrice());
 		Assert.assertEquals("$14.99", jsonSearchResult.getFixedPrice());
@@ -139,17 +142,20 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		SearchQueryUtil.addSearchQuery(searchQuery);
 
-		SearchResult searchResult = new SearchResult(
+		SearchResult firstSearchResult = new SearchResult(
 			_SEARCH_QUERY_ID, "Item ID 1", "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		SearchResultUtil.addSearchResult(searchResult);
-
-		searchResult = new SearchResult(
+		SearchResult secondSearchResult = new SearchResult(
 			_SEARCH_QUERY_ID, "Item ID 2", "Second Item", "$20.00", "$24.99",
 			"http://www.ebay.com/itm/5678", "http://www.ebay.com/567.jpg");
 
-		SearchResultUtil.addSearchResult(searchResult);
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(firstSearchResult);
+		searchResults.add(secondSearchResult);
+
+		SearchResultUtil.addSearchResults(searchResults);
 
 		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
 			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))

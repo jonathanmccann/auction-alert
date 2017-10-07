@@ -58,69 +58,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testAddNewResults() throws Exception {
-		_addSearchResult("1234");
-
-		List<SearchResult> searchResults =
-			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
-
-		Method method = _clazz.getDeclaredMethod("_addNewResults", List.class);
-
-		method.setAccessible(true);
-
-		method.invoke(_classInstance, searchResults);
-
-		searchResults = SearchResultUtil.getSearchQueryResults(
-			_SEARCH_QUERY_ID);
-
-		SearchResult searchResult = searchResults.get(0);
-
-		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
-		Assert.assertEquals("1234", searchResult.getItemId());
-		Assert.assertEquals("First Item", searchResult.getItemTitle());
-		Assert.assertEquals("$10.00", searchResult.getAuctionPrice());
-		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
-		Assert.assertEquals(
-			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
-		Assert.assertEquals(
-			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-	}
-
-	@Test
-	public void testAddNewResultsWithPreviousSearchQueryResults()
-		throws Exception {
-
-		Method method = _clazz.getDeclaredMethod("_addNewResults", List.class);
-
-		method.setAccessible(true);
-
-		SearchResult searchResult = new SearchResult(
-			_SEARCH_QUERY_ID, "1234", "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
-
-		List<SearchResult> searchResults = new ArrayList<>();
-
-		searchResults.add(searchResult);
-
-		method.invoke(_classInstance, searchResults);
-
-		searchResults = SearchResultUtil.getSearchQueryResults(
-			_SEARCH_QUERY_ID);
-
-		searchResult = searchResults.get(0);
-
-		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
-		Assert.assertEquals("1234", searchResult.getItemId());
-		Assert.assertEquals("First Item", searchResult.getItemTitle());
-		Assert.assertEquals("$10.00", searchResult.getAuctionPrice());
-		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
-		Assert.assertEquals(
-			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
-		Assert.assertEquals(
-			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-	}
-
-	@Test
 	public void testAddSearchResult() throws Exception {
 		_addSearchResult("1234");
 
@@ -354,7 +291,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 			_SEARCH_QUERY_ID, itemId, "First Item", "$10.00", "$14.99",
 			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
 
-		SearchResultUtil.addSearchResult(searchResult);
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(searchResult);
+
+		SearchResultUtil.addSearchResults(searchResults);
 	}
 
 	private static final int _SEARCH_QUERY_ID = 1;
