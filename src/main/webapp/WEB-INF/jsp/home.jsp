@@ -220,7 +220,7 @@
 			<div>
 				<section class="minor">
 					<div class="inner">
-						<h2>Welcome</h2>
+						<h1>Welcome</h1>
 					</div>
 				</section>
 
