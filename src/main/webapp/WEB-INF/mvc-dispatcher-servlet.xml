@@ -61,6 +61,8 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 
+	<mvc:resources location="/robots.txt" mapping="/robots.txt" />
+
 	<mvc:resources location="/sitemap.xml" mapping="/sitemap.xml" />
 
 	<mvc:resources location="/resources/images/favicon.ico" mapping="/favicon.ico" />

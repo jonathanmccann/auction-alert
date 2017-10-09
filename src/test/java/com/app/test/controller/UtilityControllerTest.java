@@ -58,6 +58,13 @@ public class UtilityControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetRobots() throws Exception {
+		this.mockMvc.perform(get("/robots.txt"))
+			.andExpect(forwardedUrl("resources/robots.txt"))
+			.andExpect(view().name("forward:resources/robots.txt"));
+	}
+
+	@Test
 	public void testGetSitemap() throws Exception {
 		this.mockMvc.perform(get("/sitemap.xml"))
 			.andExpect(forwardedUrl("resources/sitemap.xml"))

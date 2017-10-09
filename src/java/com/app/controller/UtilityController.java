@@ -24,14 +24,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class UtilityController {
 
-	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET)
-	public String getSitemap() {
-		return "forward:resources/sitemap.xml";
-	}
-
 	@RequestMapping(value = "/favicon.ico", method = RequestMethod.GET)
 	public String getFavicon() {
 		return "forward:resources/images/favicon.ico";
+	}
+
+	@RequestMapping(value = "/robots.txt", method = RequestMethod.GET)
+	public String getRobots() {
+		return "forward:resources/robots.txt";
+	}
+
+	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET)
+	public String getSitemap() {
+		return "forward:resources/sitemap.xml";
 	}
 
 }
