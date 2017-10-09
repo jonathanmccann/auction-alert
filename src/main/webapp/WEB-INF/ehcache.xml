@@ -10,14 +10,14 @@
 
 	<!-- SearchQueryDAO -->
 
-	<cache eternal="false" maxEntriesLocalHeap="100" memoryStoreEvictionPolicy="LFU" name="searchQueries" timeToIdleSeconds="300" timeToLiveSeconds="600" />
+	<cache eternal="false" maxEntriesLocalHeap="100" memoryStoreEvictionPolicy="LFU" name="searchQueries" timeToIdleSeconds="300" timeToLiveSeconds="43200" />
 
 	<!-- SearchResultDAO -->
 
-	<cache eternal="false" maxEntriesLocalHeap="1000" memoryStoreEvictionPolicy="LFU" name="searchResults" timeToIdleSeconds="300" timeToLiveSeconds="600" />
+	<cache eternal="false" maxEntriesLocalHeap="1000" memoryStoreEvictionPolicy="LFU" name="searchResults" timeToIdleSeconds="300" timeToLiveSeconds="43200" />
 
 	<!-- UserDAO -->
 
-	<cache eternal="false" maxEntriesLocalHeap="100" memoryStoreEvictionPolicy="LFU" name="userByUserId" timeToIdleSeconds="300" timeToLiveSeconds="600" />
-	<cache eternal="false" maxEntriesLocalHeap="2" memoryStoreEvictionPolicy="LFU" name="userIds" timeToIdleSeconds="300" timeToLiveSeconds="600" />
+	<cache eternal="false" maxEntriesLocalHeap="100" memoryStoreEvictionPolicy="LFU" name="userByUserId" timeToIdleSeconds="300" timeToLiveSeconds="43200" />
+	<cache eternal="false" maxEntriesLocalHeap="2" memoryStoreEvictionPolicy="LFU" name="userIds" timeToIdleSeconds="300" timeToLiveSeconds="43200" />
 </ehcache>
