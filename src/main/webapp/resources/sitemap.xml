@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>http://www.auctionalert.io/</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/home</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/log_in</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/create_account</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/forgot_password</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/contact</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/faq</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/new_faq</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/general_faq</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/account_faq</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/query_faq</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/result_faq</loc>
+</url>
+<url>
+  <loc>http://www.auctionalert.io/monitor_faq</loc>
+</url>
+</urlset>

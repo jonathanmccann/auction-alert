@@ -22,7 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author Jonathan McCann
  */
 @Controller
-public class FaviconController {
+public class UtilityController {
+
+	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET)
+	public String getSitemap() {
+		return "forward:resources/sitemap.xml";
+	}
 
 	@RequestMapping(value = "/favicon.ico", method = RequestMethod.GET)
 	public String getFavicon() {

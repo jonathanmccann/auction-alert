@@ -40,7 +40,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-public class FaviconControllerTest extends BaseTestCase {
+public class UtilityControllerTest extends BaseTestCase {
 
 	@Rule
 	public PowerMockRule rule = new PowerMockRule();
@@ -51,10 +51,17 @@ public class FaviconControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetExceptionHandler() throws Exception {
+	public void testGetFavicon() throws Exception {
 		this.mockMvc.perform(get("/favicon.ico"))
 			.andExpect(forwardedUrl("resources/images/favicon.ico"))
 			.andExpect(view().name("forward:resources/images/favicon.ico"));
+	}
+
+	@Test
+	public void testGetSitemap() throws Exception {
+		this.mockMvc.perform(get("/sitemap.xml"))
+			.andExpect(forwardedUrl("resources/sitemap.xml"))
+			.andExpect(view().name("forward:resources/sitemap.xml"));
 	}
 
 	private MockMvc mockMvc;
