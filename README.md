@@ -1,7 +1,7 @@
 Auction Alert
 ========
 
-This Java webapp will hook into eBay's API in order to serve custom search results via email or text message to recipients on a set interval.
+This Java webapp will hook into eBay's API in order to serve custom search results via email to recipients on a set interval.
 
 In Action
 ========
