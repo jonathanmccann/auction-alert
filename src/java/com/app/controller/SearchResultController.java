@@ -53,8 +53,6 @@ public class SearchResultController {
 			List<SearchResult> searchResults =
 				SearchResultUtil.getSearchQueryResults(searchQueryId);
 
-			Collections.reverse(searchResults);
-
 			return searchResults;
 		}
 

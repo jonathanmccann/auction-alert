@@ -141,7 +141,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		SearchResult searchResult = searchResults.get(0);
 
-		Assert.assertEquals("4567", searchResult.getItemId());
+		Assert.assertEquals("5678", searchResult.getItemId());
 	}
 
 	@Test

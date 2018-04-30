@@ -169,7 +169,8 @@ public class SearchResultDAO {
 		"DELETE FROM SearchResult WHERE searchQueryId = ? LIMIT ?";
 
 	private static final String _GET_SEARCH_QUERY_RESULTS_SQL =
-		"SELECT * FROM SearchResult WHERE searchQueryId = ?";
+		"SELECT * FROM SearchResult WHERE searchQueryId = ? ORDER BY " +
+			"searchResultId DESC";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultDAO.class);
