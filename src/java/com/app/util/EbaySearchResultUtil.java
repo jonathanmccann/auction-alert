@@ -67,8 +67,16 @@ public class EbaySearchResultUtil {
 		FindingServicePortType serviceClient = EbayAPIUtil.getServiceClient(
 			searchQuery.getGlobalId());
 
-		FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(
-			request);
+		FindItemsAdvancedResponse result = null;
+
+		try {
+			result = serviceClient.findItemsAdvanced(request);
+		}
+		catch (Exception e) {
+			_log.error(e.getMessage(), e);
+
+			return new ArrayList<>();
+		}
 
 		com.ebay.services.finding.SearchResult searchResults =
 			result.getSearchResult();
