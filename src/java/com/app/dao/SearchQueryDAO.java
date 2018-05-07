@@ -249,13 +249,13 @@ public class SearchQueryDAO {
 
 			int searchQueryCount = 0;
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				while (resultSet.next()) {
+					searchQueryCount = resultSet.getInt(1);
+				}
 
-			while (resultSet.next()) {
-				searchQueryCount = resultSet.getInt(1);
+				return searchQueryCount;
 			}
-
-			return searchQueryCount;
 		}
 	}
 

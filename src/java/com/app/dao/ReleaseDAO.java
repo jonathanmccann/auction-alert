@@ -59,13 +59,13 @@ public class ReleaseDAO {
 
 			preparedStatement.setString(1, releaseName);
 
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return resultSet.getString("version");
-			}
-			else {
-				return "";
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return resultSet.getString("version");
+				}
+				else {
+					return "";
+				}
 			}
 		}
 	}

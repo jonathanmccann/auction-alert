@@ -131,13 +131,13 @@ public class UserDAO {
 
 			preparedStatement.setString(1, emailAddress);
 
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return _createUserFromResultSet(resultSet);
-			}
-			else {
-				return null;
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return _createUserFromResultSet(resultSet);
+				}
+				else {
+					return null;
+				}
 			}
 		}
 	}
@@ -154,13 +154,13 @@ public class UserDAO {
 
 			preparedStatement.setInt(1, userId);
 
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (resultSet.next()) {
-				return _createUserFromResultSet(resultSet);
-			}
-			else {
-				return null;
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.next()) {
+					return _createUserFromResultSet(resultSet);
+				}
+				else {
+					return null;
+				}
 			}
 		}
 	}
@@ -174,13 +174,13 @@ public class UserDAO {
 
 			int searchQueryCount = 0;
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				while (resultSet.next()) {
+					searchQueryCount = resultSet.getInt(1);
+				}
 
-			while (resultSet.next()) {
-				searchQueryCount = resultSet.getInt(1);
+				return searchQueryCount;
 			}
-
-			return searchQueryCount;
 		}
 	}
 
@@ -196,15 +196,15 @@ public class UserDAO {
 
 			preparedStatement.setBoolean(1, active);
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				List<Integer> userIds = new ArrayList<>();
 
-			List<Integer> userIds = new ArrayList<>();
+				while (resultSet.next()) {
+					userIds.add(resultSet.getInt("userId"));
+				}
 
-			while (resultSet.next()) {
-				userIds.add(resultSet.getInt("userId"));
+				return userIds;
 			}
-
-			return userIds;
 		}
 	}
 
