@@ -22,8 +22,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import java.text.MessageFormat;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,44 +31,41 @@ import java.util.Map;
 public class ExchangeRateUtil {
 
 	public static double convertCurrency(
-		String fromCurrency, String toCurrency, double price) {
+		String fromCurrencyId, String toCurrencyId, double price) {
 
-		if (fromCurrency.equals(toCurrency)) {
+		if (fromCurrencyId.equals(toCurrencyId)) {
 			return price;
 		}
 
-		double exchangeRate = _exchangeRates.get(fromCurrency).get(toCurrency);
+		String currencyKey = fromCurrencyId + "_" + toCurrencyId;
 
-		return price * exchangeRate;
+		return price * _exchangeRates.get(currencyKey);
 	}
 
 	public static void updateExchangeRates() throws Exception {
-		for (String currencyId : _CURRENCY_IDS) {
-			URL exchangeRateUrl = new URL(
-				MessageFormat.format(_EXCHANGE_RATE_URL, currencyId));
-
-			URLConnection urlConnection = exchangeRateUrl.openConnection();
-
-			try (InputStreamReader inputStreamReader = new InputStreamReader(
-					urlConnection.getInputStream());
-				BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader)) {
-
-				_parseExchangeRates(currencyId, bufferedReader);
-			}
-		}
-	}
-
-	private static void _parseExchangeRates(
-		String currencyId, BufferedReader bufferedReader) {
-
 		Gson gson = new Gson();
 
-		Map<Object, Object> response = gson.fromJson(
-			bufferedReader, Map.class);
+		for (String fromCurrencyId : _CURRENCY_IDS) {
+			for (String toCurrencyId : _CURRENCY_IDS) {
+				if (fromCurrencyId.equals(toCurrencyId)) {
+					continue;
+				}
 
-		_exchangeRates.put(
-			currencyId, (Map<String, Double>)response.get("rates"));
+				URL exchangeRateUrl = new URL(
+					_EXCHANGE_RATE_URL + fromCurrencyId + "_" + toCurrencyId);
+
+				URLConnection urlConnection = exchangeRateUrl.openConnection();
+
+				try (InputStreamReader inputStreamReader = new InputStreamReader(
+						urlConnection.getInputStream());
+					BufferedReader bufferedReader = new BufferedReader(
+						inputStreamReader)) {
+
+					_exchangeRates.putAll(
+						gson.fromJson(bufferedReader, Map.class));
+				}
+			}
+		}
 	}
 
 	private static final String[] _CURRENCY_IDS = {
@@ -78,9 +73,9 @@ public class ExchangeRateUtil {
 	};
 
 	private static final String _EXCHANGE_RATE_URL =
-		"http://api.fixer.io/latest?base={0}&symbols=AUD,CAD,CHF,EUR,GBP,USD";
+		"https://free.currencyconverterapi.com/api/v5/convert?compact=ultra&q=";
 
-	private static final Map<String, Map<String, Double>> _exchangeRates =
+	private static final Map<String, Double> _exchangeRates =
 		new HashMap<>();
 
 }

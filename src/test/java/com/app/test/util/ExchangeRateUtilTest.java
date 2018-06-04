@@ -54,45 +54,6 @@ public class ExchangeRateUtilTest {
 		Assert.assertEquals(_PRICE, price, 0);
 	}
 
-	@Test
-	public void testParseExchangeRates() throws Exception {
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(
-			_EXCHANGE_RATES.getBytes(StandardCharsets.UTF_8.name()));
-
-		InputStreamReader inputStreamReader = new InputStreamReader(
-			inputStream);
-
-		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-		Class clazz = Class.forName(ExchangeRateUtil.class.getName());
-
-		Object classInstance = clazz.newInstance();
-
-		Method parseExchangeRates = clazz.getDeclaredMethod(
-			"_parseExchangeRates", String.class, BufferedReader.class);
-
-		parseExchangeRates.setAccessible(true);
-
-		parseExchangeRates.invoke(classInstance, "USD", bufferedReader);
-
-		Field exchangeRates = clazz.getDeclaredField("_exchangeRates");
-
-		exchangeRates.setAccessible(true);
-
-		Map<String, Map<String, Double>> exchangeRatesMap =
-			(Map<String, Map<String, Double>>)exchangeRates.get(
-				ExchangeRateUtil.class);
-
-		Map<String, Double> exchangeRate = exchangeRatesMap.get("USD");
-
-		Assert.assertEquals((Double)1.0, exchangeRate.get("AUD"));
-		Assert.assertEquals((Double)2.0, exchangeRate.get("CAD"));
-		Assert.assertEquals((Double)3.0, exchangeRate.get("CHF"));
-		Assert.assertEquals((Double)4.0, exchangeRate.get("GBP"));
-		Assert.assertEquals((Double)5.0, exchangeRate.get("EUR"));
-		Assert.assertFalse(exchangeRate.containsKey("USD"));
-	}
-
 	private static void setUpExchangeRateUtil() throws Exception {
 		Class clazz = Class.forName(ExchangeRateUtil.class.getName());
 
@@ -108,21 +69,14 @@ public class ExchangeRateUtilTest {
 
 		Map<String, Double> usdRates = new HashMap<>();
 
-		usdRates.put("CAD", _USD_TO_CAD);
-		usdRates.put("GBP", _USD_TO_GBP);
+		usdRates.put("USD_CAD", _USD_TO_CAD);
+		usdRates.put("USD_GBP", _USD_TO_GBP);
 
-		Map<String, Map<String, Double>> rates = new HashMap<>();
-
-		rates.put("USD", usdRates);
-
-		exchangeRates.set("USD", rates);
+		exchangeRates.set(clazz, usdRates);
 	}
 
 	private static final double _PRICE = 10.0;
 	private static final double _USD_TO_CAD = 2.0;
 	private static final double _USD_TO_GBP = 5.0;
-
-	private static final String _EXCHANGE_RATES =
-		"{\"base\":\"USD\",\"date\":\"2017-10-05\",\"rates\":{\"AUD\":1.0,\"CAD\":2.0,\"CHF\":3.0,\"GBP\":4.0,\"EUR\":5.0}}";
 
 }
