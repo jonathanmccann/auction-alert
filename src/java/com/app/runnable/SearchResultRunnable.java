@@ -84,7 +84,7 @@ public class SearchResultRunnable implements Runnable {
 
 			long endTime = System.nanoTime();
 
-			_log.info(
+			_log.debug(
 				"Performing searches for userId: {} with {} queries took {} " +
 					"milliseconds",
 				_userId, searchQueries.size(), (endTime - startTime) / 1000000);
