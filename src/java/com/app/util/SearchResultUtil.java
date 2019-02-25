@@ -160,8 +160,7 @@ public class SearchResultUtil {
 			.collect(Collectors.toList());
 	}
 
-	private static final int _THREAD_POOL_SIZE =
-		Runtime.getRuntime().availableProcessors() + 1;
+	private static final int _THREAD_POOL_SIZE = 2;
 
 	private static final long _THREAD_TIMEOUT_SECONDS = 15;
 
