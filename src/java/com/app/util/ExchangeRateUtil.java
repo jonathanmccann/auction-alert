@@ -73,7 +73,8 @@ public class ExchangeRateUtil {
 	};
 
 	private static final String _EXCHANGE_RATE_URL =
-		"https://free.currencyconverterapi.com/api/v5/convert?compact=ultra&q=";
+		"https://free.currencyconverterapi.com/api/v6/convert?compact=ultra&apiKey=" +
+			PropertiesValues.CURRENCY_CONVERTER_API_KEY + "&q=";
 
 	private static final Map<String, Double> _exchangeRates =
 		new HashMap<>();

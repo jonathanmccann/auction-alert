@@ -22,6 +22,9 @@ public class PropertiesValues {
 	public static final String APPLICATION_ID =
 		PropertiesUtil.getConfigurationProperty("application.id");
 
+	public static final String CURRENCY_CONVERTER_API_KEY =
+		PropertiesUtil.getConfigurationProperty("currency.converter.api.key");
+
 	public static final String EBAY_CAMPAIGN_ID =
 		PropertiesUtil.getConfigurationProperty("ebay.campaign.id");
 
