@@ -57,8 +57,7 @@ public class StripeUtil {
 		String customerId = customer.getId();
 
 		UserUtil.updateUserSubscription(
-			userId, UserUtil.generateUnsubscribeToken(customerId), customerId,
-			subscription.getId(), true, false);
+			userId, customerId, subscription.getId(), true, false);
 	}
 
 	public static void deleteCustomer(String customerId) throws Exception {
@@ -81,8 +80,8 @@ public class StripeUtil {
 		User user = UserUtil.getCurrentUser();
 
 		UserUtil.updateUserSubscription(
-			user.getUserId(), user.getUnsubscribeToken(), user.getCustomerId(),
-			user.getSubscriptionId(), true, true);
+			user.getUserId(), user.getCustomerId(), user.getSubscriptionId(),
+			true, true);
 	}
 
 	public static String getNextChargeDate() throws Exception {
@@ -175,8 +174,7 @@ public class StripeUtil {
 		User user = UserUtil.getCurrentUser();
 
 		UserUtil.updateUserSubscription(
-			user.getUserId(), user.getUnsubscribeToken(), customerId,
-			subscriptionId, true, false);
+			user.getUserId(), customerId, subscriptionId, true, false);
 	}
 
 	public static void updateCustomerEmailAddress() throws Exception {

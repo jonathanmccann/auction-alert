@@ -72,8 +72,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testGetAddSearchQueryWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(get("/add_search_query"))
 			.andExpect(status().isOk())
@@ -94,8 +93,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testGetMonitorWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(get("/monitor"))
 			.andExpect(status().isOk())
@@ -116,8 +114,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testGetSearchQueryResultsWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(get("/search_query_results"))
 			.andExpect(status().is3xxRedirection())
@@ -138,8 +135,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testGetUpdateSearchQueryWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(get("/update_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -160,8 +156,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testGetViewSearchQueriesWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(get("/view_search_queries"))
 			.andExpect(status().isOk())
@@ -182,8 +177,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testPostActivateSearchQueryWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/activate_search_query")
 			.param("searchQueryId", "1"))
@@ -204,8 +198,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testPostAddSearchQueryWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/add_search_query"))
 			.andExpect(status().isFound())
@@ -225,8 +218,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testPostDeactivateSearchQueryWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/deactivate_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -247,8 +239,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testPostDeleteSearchQueryWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/delete_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -269,8 +260,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testPostDeleteSubscriptionWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/delete_subscription"))
 			.andExpect(status().is3xxRedirection())
@@ -292,8 +282,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testPostUpdateSearchQueryWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/update_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -314,8 +303,7 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	@Test
 	public void testPostUpdateSubscriptionWithActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/update_subscription"))
 			.andExpect(status().is3xxRedirection())

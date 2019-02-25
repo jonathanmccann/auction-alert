@@ -97,8 +97,7 @@ public class UserUtilTest extends BaseTestCase {
 		UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			true);
+			_USER_ID, "customerId", "subscriptionId", true, true);
 
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
@@ -170,13 +169,6 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGenerateUnsubscribeToken() throws Exception {
-		Matcher matcher = _BASE_64_PATTERN.matcher(
-			UserUtil.generateUnsubscribeToken("customerId"));
-
-		Assert.assertTrue(matcher.find());
-	}
-	@Test
 	public void testGetCurrentUserId() throws Exception {
 		setUpSecurityUtils(true);
 
@@ -212,8 +204,8 @@ public class UserUtilTest extends BaseTestCase {
 		User secondUser = UserUtil.addUser("test2@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			firstUser.getUserId(), firstUser.getUnsubscribeToken(),
-			firstUser.getCustomerId(), firstUser.getSubscriptionId(), true,
+			firstUser.getUserId(), firstUser.getCustomerId(),
+			firstUser.getSubscriptionId(), true,
 			firstUser.isPendingCancellation());
 
 		List<Integer> activeUserIds = UserUtil.getUserIds(true);
@@ -237,8 +229,7 @@ public class UserUtilTest extends BaseTestCase {
 		UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		Assert.assertTrue(UserUtil.isCurrentUserActive());
 	}
@@ -253,8 +244,7 @@ public class UserUtilTest extends BaseTestCase {
 		UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
-			true);
+			_USER_ID, "customerId", "subscriptionId", false, true);
 
 		Assert.assertTrue(UserUtil.isCurrentUserActive());
 	}
@@ -269,8 +259,7 @@ public class UserUtilTest extends BaseTestCase {
 		UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
-			false);
+			_USER_ID, "customerId", "subscriptionId", false, false);
 
 		Assert.assertFalse(UserUtil.isCurrentUserActive());
 	}
@@ -593,13 +582,11 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertFalse(user.isPendingCancellation());
 
 		UserUtil.updateUserSubscription(
-			user.getUserId(), "unsubscribeToken", "customerId",
-			"subscriptionId", true, true);
+			user.getUserId(), "customerId", "subscriptionId", true, true);
 
 		user = UserUtil.getUserByUserId(user.getUserId());
 
 		Assert.assertNotNull(user);
-		Assert.assertEquals("unsubscribeToken", user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());

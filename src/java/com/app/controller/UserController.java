@@ -598,30 +598,6 @@ public class UserController {
 		response.setStatus(HttpStatus.SC_OK);
 	}
 
-	@RequestMapping(value = "/email_unsubscribe", method = RequestMethod.GET)
-	public void unsubscribeFromEmailNotifications(
-			String emailAddress, String unsubscribeToken,
-			Map<String, Object> model)
-		throws Exception {
-
-		User user = UserUtil.getUserByEmailAddress(emailAddress);
-
-		String userUnsubscribeToken = user.getUnsubscribeToken();
-
-		if (userUnsubscribeToken.equals(unsubscribeToken)) {
-			UserUtil.unsubscribeUserFromEmailNotifications(emailAddress);
-
-			model.put(
-				"unsubscribeMessage",
-				LanguageUtil.getMessage("unsubscribe-successful"));
-		}
-		else {
-			model.put(
-				"unsubscribeMessage",
-				LanguageUtil.getMessage("unsubscribe-failure"));
-		}
-	}
-
 	@RequestMapping(value = "/my_account", method = RequestMethod.POST)
 	public String updateMyAccount(
 		@ModelAttribute("user")User user,

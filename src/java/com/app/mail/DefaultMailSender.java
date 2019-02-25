@@ -189,8 +189,7 @@ public class DefaultMailSender implements MailSender {
 
 		try {
 			Message emailMessage = _populateEmailMessage(
-				searchQueryResultMap, user.getEmailAddress(),
-				user.getUnsubscribeToken(), session);
+				searchQueryResultMap, user.getEmailAddress(), session);
 
 			Transport.send(emailMessage);
 
@@ -253,8 +252,7 @@ public class DefaultMailSender implements MailSender {
 
 	private Message _populateEmailMessage(
 			Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
-			String recipientEmailAddress, String unsubscribeToken,
-			Session session)
+			String recipientEmailAddress, Session session)
 		throws Exception {
 
 		Message message = new MimeMessage(session);
@@ -273,9 +271,6 @@ public class DefaultMailSender implements MailSender {
 
 		rootMap.put("emailAddress", recipientEmailAddress);
 		rootMap.put("searchQueryResultMap", searchQueryResultMap);
-		rootMap.put(
-			"unsubscribeToken",
-			MailUtil.escapeUnsubscribeToken(unsubscribeToken));
 		rootMap.put("numberTool", new NumberTool());
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 

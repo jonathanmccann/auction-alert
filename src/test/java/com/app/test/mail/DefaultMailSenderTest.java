@@ -182,8 +182,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
 		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
-			"_populateEmailMessage", Map.class, String.class, String.class,
-			Session.class);
+			"_populateEmailMessage", Map.class, String.class, Session.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -203,8 +202,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		searchQueryResultMap.put(searchQuery, searchResults);
 
 		Message message = (Message)populateEmailMessageMethod.invoke(
-			_classInstance, searchQueryResultMap, "user@test.com",
-			"unsubscribeToken", _session);
+			_classInstance, searchQueryResultMap, "user@test.com", _session);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -518,7 +516,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			1, "unsubscribeToken", "customerId", "subscriptionId", true, false);
+			1, "customerId", "subscriptionId", true, false);
 
 		Method sendSearchResultsToRecipient = _clazz.getDeclaredMethod(
 			"sendSearchResultsToRecipient", int.class, Map.class);
@@ -584,7 +582,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			1, "unsubscribeToken", "customerId", "subscriptionId", true, false);
+			1, "customerId", "subscriptionId", true, false);
 
 		Method sendSearchResultsToRecipient = _clazz.getDeclaredMethod(
 			"sendSearchResultsToRecipient", int.class, Map.class);

@@ -145,8 +145,7 @@ public class SendGridMailSender implements MailSender {
 			searchQueryResultMap.size(), userId);
 
 		Mail mail = _populateEmailMessage(
-			searchQueryResultMap, user.getEmailAddress(),
-			user.getUnsubscribeToken());
+			searchQueryResultMap, user.getEmailAddress());
 
 		_sendEmail(mail);
 
@@ -174,7 +173,7 @@ public class SendGridMailSender implements MailSender {
 
 	private Mail _populateEmailMessage(
 		Map<SearchQuery, List<SearchResult>> searchQueryResultMap,
-		String recipientEmailAddress, String unsubscribeToken) {
+		String recipientEmailAddress) {
 
 		Email emailTo = new Email(recipientEmailAddress);
 		Email emailFrom = new Email(PropertiesValues.OUTBOUND_EMAIL_ADDRESS);
@@ -187,9 +186,6 @@ public class SendGridMailSender implements MailSender {
 
 		rootMap.put("emailAddress", recipientEmailAddress);
 		rootMap.put("searchQueryResultMap", searchQueryResultMap);
-		rootMap.put(
-			"unsubscribeToken",
-			MailUtil.escapeUnsubscribeToken(unsubscribeToken));
 		rootMap.put("numberTool", new NumberTool());
 		rootMap.put("rootDomainName", PropertiesValues.ROOT_DOMAIN_NAME);
 

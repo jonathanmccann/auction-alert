@@ -276,7 +276,7 @@ public class UserDAOCacheTest extends BaseTestCase {
 		_assertBeforeCacheEvictUserByUserId();
 
 		_userDAO.updateUserSubscription(
-			1, "unsubscribeToken", "customerId", "subscriptionId", true, false);
+			1, "customerId", "subscriptionId", true, false);
 
 		_assertAfterCacheEvictUserByUserId();
 	}

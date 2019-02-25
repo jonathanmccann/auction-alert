@@ -293,7 +293,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			1, "unsubscribeToken", "customerId", "subscriptionId", true, false);
+			1, "customerId", "subscriptionId", true, false);
 
 		Method sendSearchResultsToRecipient = _clazz.getDeclaredMethod(
 			"sendSearchResultsToRecipient", int.class, Map.class);
@@ -495,7 +495,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
 		Method populateEmailMessageMethod = _clazz.getDeclaredMethod(
-			"_populateEmailMessage", Map.class,	String.class, String.class);
+			"_populateEmailMessage", Map.class,	String.class);
 
 		populateEmailMessageMethod.setAccessible(true);
 
@@ -516,8 +516,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		Mail mail =
 			(Mail)populateEmailMessageMethod.invoke(
-				_classInstance, searchQueryResultMap, "user@test.com",
-				"unsubscribeToken");
+				_classInstance, searchQueryResultMap, "user@test.com");
 
 		Assert.assertTrue(
 			mail.getSubject().contains("New Search Results - "));

@@ -390,8 +390,8 @@ public class UserDAO {
 
 	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUserSubscription(
-			int userId, String unsubscribeToken, String customerId,
-			String subscriptionId, boolean active, boolean pendingCancellation)
+			int userId, String customerId, String subscriptionId,
+			boolean active, boolean pendingCancellation)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Updating user ID: {}", userId);
@@ -400,12 +400,11 @@ public class UserDAO {
 			PreparedStatement preparedStatement = connection.prepareStatement(
 				_UPDATE_USER_SUBSCRIPTION_SQL)) {
 
-			preparedStatement.setString(1, unsubscribeToken);
-			preparedStatement.setString(2, customerId);
-			preparedStatement.setString(3, subscriptionId);
-			preparedStatement.setBoolean(4, active);
-			preparedStatement.setBoolean(5, pendingCancellation);
-			preparedStatement.setInt(6, userId);
+			preparedStatement.setString(1, customerId);
+			preparedStatement.setString(2, subscriptionId);
+			preparedStatement.setBoolean(3, active);
+			preparedStatement.setBoolean(4, pendingCancellation);
+			preparedStatement.setInt(5, userId);
 
 			preparedStatement.executeUpdate();
 		}
@@ -422,7 +421,6 @@ public class UserDAO {
 		user.setSalt(resultSet.getString("salt"));
 		user.setPreferredDomain(resultSet.getString("preferredDomain"));
 		user.setEmailNotification(resultSet.getBoolean("emailNotification"));
-		user.setUnsubscribeToken(resultSet.getString("unsubscribeToken"));
 		user.setEmailsSent(resultSet.getInt("emailsSent"));
 		user.setCustomerId(resultSet.getString("customerId"));
 		user.setSubscriptionId(resultSet.getString("subscriptionId"));
@@ -496,9 +494,8 @@ public class UserDAO {
 				"pendingCancellation = ? WHERE userId = ?";
 
 	private static final String _UPDATE_USER_SUBSCRIPTION_SQL =
-		"UPDATE User_ SET unsubscribeToken = ?, customerId = ?, " +
-			"subscriptionId = ?, active = ?, pendingCancellation = ? " +
-				"WHERE userId = ?";
+		"UPDATE User_ SET customerId = ?, subscriptionId = ?, active = ?, " +
+			"pendingCancellation = ? WHERE userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(UserDAO.class);
 

@@ -24,10 +24,6 @@ import java.util.Date;
  */
 public class MailUtil {
 
-	protected static String escapeUnsubscribeToken(String unsubscribeToken) {
-		return unsubscribeToken.replaceAll("(\\+)", "%2B");
-	}
-
 	protected static String getCurrentDate() {
 		DateFormat dateFormat = _DATE_FORMAT.get();
 

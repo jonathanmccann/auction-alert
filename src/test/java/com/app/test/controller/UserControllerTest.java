@@ -220,8 +220,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpSubscription();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -239,7 +238,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getCurrentUser();
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -253,8 +251,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId",
-			_USER.getSubscriptionId(), true, false);
+			_USER_ID, "customerId", _USER.getSubscriptionId(), true, false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -272,7 +269,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getCurrentUser();
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertNull(user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -284,8 +280,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID,  "unsubscribeToken", "customerId", "subscriptionId",
-			false, false);
+			_USER_ID, "customerId", "subscriptionId", false, false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -303,7 +298,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getCurrentUser();
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertFalse(user.isActive());
@@ -317,8 +311,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID,  "unsubscribeToken", "customerId", "subscriptionId", true,
-			true);
+			_USER_ID, "customerId", "subscriptionId", true, true);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -336,7 +329,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getCurrentUser();
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -350,8 +342,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID,  "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -369,7 +360,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getCurrentUser();
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -662,7 +652,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "", "testSubscriptionId", true, true);
+			_USER_ID, "", "testSubscriptionId", true, true);
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -684,7 +674,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "", "testSubscriptionId", true, false);
+			_USER_ID, "", "testSubscriptionId", true, false);
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -706,7 +696,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "", "testSubscriptionId", false, false);
+			_USER_ID, "", "testSubscriptionId", false, false);
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -729,7 +719,7 @@ public class UserControllerTest extends BaseTestCase {
 		UserUtil.updateEmailsSent(_USER_ID, 1);
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "", "testSubscriptionId", false, false);
+			_USER_ID, "", "testSubscriptionId", false, false);
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -1233,8 +1223,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1247,7 +1236,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -1262,8 +1250,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
-			true);
+			_USER_ID, "customerId", "subscriptionId", false, true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1276,7 +1263,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -1288,7 +1274,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "", true, false);
+			_USER_ID, "customerId", "", true, false);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1301,7 +1287,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -1316,8 +1301,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", true,
-			true);
+			_USER_ID, "customerId", "subscriptionId", true, true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1330,7 +1314,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
@@ -1342,8 +1325,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", "customerId", "subscriptionId", false,
-			true);
+			_USER_ID, "customerId", "subscriptionId", false, true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1356,7 +1338,6 @@ public class UserControllerTest extends BaseTestCase {
 
 		User user = UserUtil.getUserByUserId(_USER_ID);
 
-		Assert.assertNotNull(user.getUnsubscribeToken());
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertFalse(user.isActive());
@@ -1379,47 +1360,6 @@ public class UserControllerTest extends BaseTestCase {
 		ResultActions resultActions = this.mockMvc.perform(request);
 
 		resultActions.andExpect(status().isOk());
-	}
-
-	@Test
-	public void testUnsubscribeFromEmailNotifications() throws Exception {
-		setUpUserUtil();
-
-		UserUtil.updateUserSubscription(
-			_USER_ID, "unsubscribeToken", _USER.getCustomerId(),
-			_USER.getSubscriptionId(), _USER.isActive(), true);
-
-		MockHttpServletRequestBuilder request = get("/email_unsubscribe");
-
-		request.param("emailAddress", _USER.getEmailAddress());
-		request.param("unsubscribeToken", "invalidUnsubscribeToken");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("email_unsubscribe"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/email_unsubscribe.jsp"));
-		resultActions.andExpect(model().attributeExists("unsubscribeMessage"));
-
-		User user = UserUtil.getUserByUserId(_USER_ID);
-
-		Assert.assertTrue(user.isEmailNotification());
-
-		request = get("/email_unsubscribe");
-
-		request.param("emailAddress", _USER.getEmailAddress());
-		request.param("unsubscribeToken", "unsubscribeToken");
-
-		resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().isOk());
-		resultActions.andExpect(view().name("email_unsubscribe"));
-		resultActions.andExpect(forwardedUrl("/WEB-INF/jsp/email_unsubscribe.jsp"));
-		resultActions.andExpect(model().attributeExists("unsubscribeMessage"));
-
-		user = UserUtil.getUserByUserId(_USER_ID);
-
-		Assert.assertFalse(user.isEmailNotification());
 	}
 
 	@Test
@@ -1563,8 +1503,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, _USER.getUnsubscribeToken(), "customerId",
-			"subscriptionId", true, false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		MockHttpServletRequestBuilder request = post("/update_subscription");
 
@@ -1587,8 +1526,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, _USER.getUnsubscribeToken(), "customerId",
-			"subscriptionId", true, false);
+			_USER_ID, "customerId", "subscriptionId", true, false);
 
 		MockHttpServletRequestBuilder request = post("/update_subscription");
 

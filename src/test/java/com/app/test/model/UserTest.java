@@ -164,13 +164,6 @@ public class UserTest {
 	}
 
 	@Test
-	public void testGetAndSetUnsubscribeToken() {
-		_user.setUnsubscribeToken("unsubscribeToken");
-
-		Assert.assertEquals("unsubscribeToken", _user.getUnsubscribeToken());
-	}
-
-	@Test
 	public void testGetAndSetUserId() {
 		_user.setUserId(1);
 

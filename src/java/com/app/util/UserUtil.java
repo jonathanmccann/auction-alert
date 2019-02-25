@@ -100,14 +100,6 @@ public class UserUtil {
 		return false;
 	}
 
-	public static String generateUnsubscribeToken(String customerId) {
-		RandomNumberGenerator rng = new SecureRandomNumberGenerator();
-
-		Object salt = rng.nextBytes();
-
-		return new Sha512Hash(customerId, salt, 1024).toBase64();
-	}
-
 	public static User getCurrentUser()
 		throws DatabaseConnectionException, SQLException {
 
@@ -270,13 +262,12 @@ public class UserUtil {
 	}
 
 	public static void updateUserSubscription(
-			int userId, String unsubscribeToken, String customerId,
-			String subscriptionId, boolean active, boolean pendingCancellation)
+			int userId, String customerId, String subscriptionId,
+			boolean active, boolean pendingCancellation)
 		throws DatabaseConnectionException, SQLException {
 
 		_userDAO.updateUserSubscription(
-			userId, unsubscribeToken, customerId, subscriptionId, active,
-			pendingCancellation);
+			userId, customerId, subscriptionId, active, pendingCancellation);
 	}
 
 	@Autowired

@@ -38,22 +38,6 @@ public class MailUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testEscapeUnsubscribeToken() throws Exception {
-		Method escapeUnsubscribeToken = _clazz.getDeclaredMethod(
-			"escapeUnsubscribeToken", String.class);
-
-		escapeUnsubscribeToken.setAccessible(true);
-
-		Assert.assertEquals(
-			"unsubscribeToken", escapeUnsubscribeToken.invoke(
-				_classInstance, "unsubscribeToken"));
-
-		Assert.assertEquals(
-			"unsubscribeToken%2B", escapeUnsubscribeToken.invoke(
-				_classInstance, "unsubscribeToken+"));
-	}
-
-	@Test
 	public void testGetCurrentDate() throws Exception {
 		Method getCurrentDate = _clazz.getDeclaredMethod("getCurrentDate");
 

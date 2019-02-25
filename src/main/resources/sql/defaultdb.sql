@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS User_(
 	salt VARCHAR(128),
 	preferredDomain VARCHAR(250) NOT NULL,
 	emailNotification BOOLEAN DEFAULT TRUE,
-	unsubscribeToken VARCHAR(128),
 	emailsSent INT DEFAULT 0,
 	customerId VARCHAR(100),
 	subscriptionId VARCHAR(100),
