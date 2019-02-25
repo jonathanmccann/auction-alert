@@ -14,25 +14,28 @@
 
 package com.app.test.util;
 
+import com.app.test.BaseTestCase;
 import com.app.util.ExchangeRateUtil;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.nio.charset.StandardCharsets;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * @author Jonathan McCann
  */
-public class ExchangeRateUtilTest {
+public class ExchangeRateUtilTest extends BaseTestCase {
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpProperties();
+	}
 
 	@Test
 	public void testConvertCurrency() throws Exception {
