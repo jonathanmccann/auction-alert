@@ -11,7 +11,7 @@ See this web application in action at http://auctionalert.io/
 Configuration
 ========
 
-A "config.properties" file is required in the Catalina base directory. Please see [config.properties](https://github.com/jonathanmccann/ebay-webapp/blob/master/src/main/resources/config.properties) for a full listing of properties.
+A "config.properties" file is required in the Catalina base directory. Please see [config.properties](https://github.com/jonathanmccann/auction-alert/blob/master/src/main/resources/config.properties) for a full listing of properties.
 
 Running Tests
 ========
