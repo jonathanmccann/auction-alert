@@ -15,22 +15,23 @@
 package com.app.util;
 
 import com.app.exception.DatabaseConnectionException;
+import com.app.json.BuyItNowPrice;
+import com.app.json.CurrentPrice;
+import com.app.json.EbaySearchResultJsonResponse;
+import com.app.json.FindItemsAdvancedResponse;
+import com.app.json.Item;
+import com.app.json.JsonSearchResult;
+import com.app.json.ListingInfo;
+import com.app.json.SellingStatus;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
 
-import com.ebay.services.finding.Amount;
-import com.ebay.services.finding.FindItemsAdvancedRequest;
-import com.ebay.services.finding.FindItemsAdvancedResponse;
-import com.ebay.services.finding.FindingServicePortType;
-import com.ebay.services.finding.ItemFilter;
-import com.ebay.services.finding.ItemFilterType;
-import com.ebay.services.finding.ListingInfo;
-import com.ebay.services.finding.PaginationInput;
-import com.ebay.services.finding.SearchItem;
-import com.ebay.services.finding.SellingStatus;
-import com.ebay.services.finding.SortOrderType;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 
 import java.text.DecimalFormat;
@@ -39,6 +40,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +57,7 @@ public class EbaySearchResultUtil {
 
 	public static List<SearchResult> getEbaySearchResults(
 			SearchQuery searchQuery)
-		throws DatabaseConnectionException, SQLException {
+		throws DatabaseConnectionException, IOException, SQLException {
 
 		_log.debug("Searching for: {}", searchQuery.getKeywords());
 
@@ -61,39 +68,28 @@ public class EbaySearchResultUtil {
 		String preferredCurrency = ConstantsUtil.getPreferredCurrency(
 			preferredDomain);
 
-		FindItemsAdvancedRequest request = _setUpAdvancedRequest(
-			searchQuery, preferredCurrency);
+		String url = _setUpAdvancedRequest(searchQuery, preferredCurrency);
 
-		FindingServicePortType serviceClient = EbayAPIUtil.getServiceClient(
-			searchQuery.getGlobalId());
+		HttpClient httpClient = HttpClients.createDefault();
 
-		FindItemsAdvancedResponse result = null;
+		HttpGet httpGet = new HttpGet(url);
 
-		try {
-			result = serviceClient.findItemsAdvanced(request);
-		}
-		catch (Exception e) {
-			_log.error(e.getMessage(), e);
+		HttpResponse response = httpClient.execute(httpGet);
 
-			return new ArrayList<>();
-		}
+		Gson gson = new Gson();
 
-		com.ebay.services.finding.SearchResult searchResults =
-			result.getSearchResult();
-
-		if (searchResults == null) {
-			return new ArrayList<>();
-		}
-
-		List<SearchItem> searchItems = searchResults.getItem();
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
+			gson.fromJson(
+				EntityUtils.toString(response.getEntity()),
+				EbaySearchResultJsonResponse.class);
 
 		return _createSearchResults(
-			searchItems, searchQuery.getSearchQueryId(), preferredDomain,
-			preferredCurrency);
+			ebaySearchResultJsonResponse, searchQuery.getSearchQueryId(),
+			preferredDomain, preferredCurrency);
 	}
 
 	private static SearchResult _createSearchResult(
-		SearchItem item, String preferredDomain, String preferredCurrency) {
+		Item item, String preferredDomain, String preferredCurrency) {
 
 		SearchResult searchResult = new SearchResult();
 
@@ -112,22 +108,36 @@ public class EbaySearchResultUtil {
 		return searchResult;
 	}
 
+	private static List<Item> getSearchResultJsonObject(
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse) {
+
+		FindItemsAdvancedResponse findItemsAdvancedResponse =
+			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
+
+		JsonSearchResult jsonSearchResult =
+			findItemsAdvancedResponse.getJsonSearchResult();
+
+		return jsonSearchResult.getItems();
+	}
+
 	private static List<SearchResult> _createSearchResults(
-		List<SearchItem> searchItems, int searchQueryId, String preferredDomain,
-		String preferredCurrency) {
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse,
+		int searchQueryId, String preferredDomain, String preferredCurrency) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		Collections.reverse(searchItems);
+		for (Item item :
+				getSearchResultJsonObject(ebaySearchResultJsonResponse)) {
 
-		for (SearchItem searchItem : searchItems) {
 			SearchResult searchResult = _createSearchResult(
-				searchItem, preferredDomain, preferredCurrency);
+				item, preferredDomain, preferredCurrency);
 
 			searchResult.setSearchQueryId(searchQueryId);
 
 			searchResults.add(searchResult);
 		}
+
+		Collections.reverse(searchResults);
 
 		return searchResults;
 	}
@@ -137,8 +147,8 @@ public class EbaySearchResultUtil {
 		ListingInfo listingInfo, SellingStatus sellingStatus,
 		String typeOfAuction) {
 
-		Amount currentPrice = sellingStatus.getCurrentPrice();
-		Amount buyItNowPrice = listingInfo.getBuyItNowPrice();
+		CurrentPrice currentPrice = sellingStatus.getCurrentPrice();
+		BuyItNowPrice buyItNowPrice = listingInfo.getBuyItNowPrice();
 
 		double auctionPrice = ExchangeRateUtil.convertCurrency(
 			currentPrice.getCurrencyId(), preferredCurrency,
@@ -175,115 +185,169 @@ public class EbaySearchResultUtil {
 		}
 	}
 
-	private static FindItemsAdvancedRequest _setUpAdvancedRequest(
-		SearchQuery searchQuery, String preferredCurrency) {
+	private static String _setUpAdvancedRequest(
+			SearchQuery searchQuery, String preferredCurrency)
+		throws UnsupportedEncodingException {
 
 		_log.debug("Setting up advanced request");
 
-		FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
+		int itemFilterCount = 0;
 
-		request.setKeywords(searchQuery.getKeywords());
+		StringBuilder url = new StringBuilder();
+
+		url.append(_FIND_ITEMS_ADVANCED_URL_PREFIX);
+
+		url.append("&GLOBAL-ID=");
+		url.append(searchQuery.getGlobalId());
+
+		url.append("&REST-PAYLOAD");
+
+		url.append("&affiliate.trackingId=");
+		url.append(PropertiesValues.EBAY_CAMPAIGN_ID);
+		url.append("&affiliate.networkId=");
+		url.append(_NETWORK_ID);
+
+		url.append("&paginationInput.entriesPerPage=");
+		url.append(PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
+
+		url.append("&sortOrder=StartTimeNewest");
+
+		url.append("&keywords=");
+		url.append(URLEncoder.encode(searchQuery.getKeywords(), "UTF-8"));
 
 		if (ValidatorUtil.isNotNull(searchQuery.getSubcategoryId())) {
-			request.getCategoryId().add(searchQuery.getSubcategoryId());
+			url.append("&categoryId=");
+			url.append(searchQuery.getSubcategoryId());
 		}
 		else if (ValidatorUtil.isNotNull(searchQuery.getCategoryId())) {
-			request.getCategoryId().add(searchQuery.getCategoryId());
+			url.append("&categoryId=");
+			url.append(searchQuery.getCategoryId());
 		}
 
 		if (searchQuery.isSearchDescription()) {
-			request.setDescriptionSearch(true);
+			url.append("&descriptionSearch=true");
 		}
 
 		if (searchQuery.isFreeShippingOnly()) {
-			ItemFilter freeShipping = new ItemFilter();
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").name=FreeShippingOnly");
 
-			freeShipping.setName(ItemFilterType.FREE_SHIPPING_ONLY);
-			freeShipping.getValue().add("true");
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").value=true");
 
-			request.getItemFilter().add(freeShipping);
+			itemFilterCount++;
 		}
 
 		if (!searchQuery.isNewCondition() || !searchQuery.isUsedCondition() ||
 			!searchQuery.isUnspecifiedCondition()) {
 
-			if (searchQuery.isNewCondition()) {
-				ItemFilter newCondition = new ItemFilter();
+			int valueCount = 0;
 
-				newCondition.setName(ItemFilterType.CONDITION);
-				newCondition.getValue().add("New");
-				request.getItemFilter().add(newCondition);
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").name=Condition");
+
+			if (searchQuery.isNewCondition()) {
+				url.append("&itemFilter(");
+				url.append(itemFilterCount);
+				url.append(").value(");
+				url.append(valueCount);
+				url.append(")=New");
+
+				valueCount++;
 			}
 
 			if (searchQuery.isUsedCondition()) {
-				ItemFilter usedCondition = new ItemFilter();
+				url.append("&itemFilter(");
+				url.append(itemFilterCount);
+				url.append(").value(");
+				url.append(valueCount);
+				url.append(")=Used");
 
-				usedCondition.setName(ItemFilterType.CONDITION);
-				usedCondition.getValue().add("Used");
-				request.getItemFilter().add(usedCondition);
+				valueCount++;
 			}
 
 			if (searchQuery.isUnspecifiedCondition()) {
-				ItemFilter unspecifiedCondition = new ItemFilter();
-
-				unspecifiedCondition.setName(ItemFilterType.CONDITION);
-				unspecifiedCondition.getValue().add("Unspecified");
-				request.getItemFilter().add(unspecifiedCondition);
+				url.append("&itemFilter(");
+				url.append(itemFilterCount);
+				url.append(").value(");
+				url.append(valueCount);
+				url.append(")=Unspecified");
 			}
+
+			itemFilterCount++;
 		}
 
 		if (!searchQuery.isAuctionListing() ||
 			!searchQuery.isFixedPriceListing()) {
 
-			ItemFilter listingType = new ItemFilter();
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").name=ListingType");
 
-			listingType.setName(ItemFilterType.LISTING_TYPE);
-			listingType.getValue().add("AuctionWithBIN");
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").value(0)=AuctionWithBIN");
 
 			if (searchQuery.isAuctionListing()) {
-				listingType.getValue().add("Auction");
+				url.append("&itemFilter(");
+				url.append(itemFilterCount);
+				url.append(").value(1)=Auction");
 			}
 			else {
-				listingType.getValue().add("FixedPrice");
+				url.append("&itemFilter(");
+				url.append(itemFilterCount);
+				url.append(").value(1)=FixedPrice");
 			}
 
-			request.getItemFilter().add(listingType);
+			itemFilterCount++;
 		}
 
 		if (searchQuery.getMinPrice() > 0) {
-			ItemFilter minPrice = new ItemFilter();
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").name=MinPrice");
 
-			minPrice.setName(ItemFilterType.MIN_PRICE);
-			minPrice.getValue().add(
-				_DECIMAL_FORMAT.format(searchQuery.getMinPrice()));
-			minPrice.setParamName(ItemFilterType.CURRENCY.value());
-			minPrice.setParamValue(preferredCurrency);
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").value=");
+			url.append(_DECIMAL_FORMAT.format(searchQuery.getMinPrice()));
 
-			request.getItemFilter().add(minPrice);
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").paramName=Currency");
+
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").paramValue=");
+			url.append(preferredCurrency);
+
+			itemFilterCount++;
 		}
 
 		if (searchQuery.getMaxPrice() > 0) {
-			ItemFilter maxPrice = new ItemFilter();
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").name=MaxPrice");
 
-			maxPrice.setName(ItemFilterType.MAX_PRICE);
-			maxPrice.getValue().add(
-				_DECIMAL_FORMAT.format(searchQuery.getMaxPrice()));
-			maxPrice.setParamName(ItemFilterType.CURRENCY.value());
-			maxPrice.setParamValue(preferredCurrency);
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").value=");
+			url.append(_DECIMAL_FORMAT.format(searchQuery.getMaxPrice()));
 
-			request.getItemFilter().add(maxPrice);
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").paramName=Currency");
+
+			url.append("&itemFilter(");
+			url.append(itemFilterCount);
+			url.append(").paramValue=");
+			url.append(preferredCurrency);
 		}
 
-		PaginationInput paginationInput = new PaginationInput();
-
-		paginationInput.setEntriesPerPage(
-			PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
-
-		request.setPaginationInput(paginationInput);
-
-		request.setSortOrder(SortOrderType.START_TIME_NEWEST);
-
-		return request;
+		return url.toString();
 	}
 
 	private static final DecimalFormat _DECIMAL_FORMAT = new DecimalFormat(
@@ -292,8 +356,17 @@ public class EbaySearchResultUtil {
 	private static final DecimalFormat _DISPLAY_DECIMAL_FORMAT =
 		new DecimalFormat("#,##0.00");
 
+	private static final String _FIND_ITEMS_ADVANCED_URL_PREFIX =
+		"https://svcs.ebay.com/services/search/FindingService/v1?" +
+			"OPERATION-NAME=findItemsAdvanced" +
+			"&SERVICE-VERSION=1.0.0" +
+			"&RESPONSE-DATA-FORMAT=JSON" +
+			"&SECURITY-APPNAME=" + PropertiesValues.APPLICATION_ID;
+
 	private static final Pattern _ITEM_TITLE_PATTERN = Pattern.compile(
 		"\\P{Print}");
+
+	private static final int _NETWORK_ID = 9;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		EbaySearchResultUtil.class);
