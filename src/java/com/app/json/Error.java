@@ -17,27 +17,20 @@ package com.app.json;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class FindItemsAdvancedResponse {
+public class Error {
 
-	@SerializedName("ack")
-	private List<String> ack = null;
+	@SerializedName("errorId")
+	private List<String> errorId = null;
 
-	@SerializedName("errorMessage")
-	private List<ErrorMessage> errorMessage = null;
+	@SerializedName("message")
+	private List<String> message = null;
 
-	@SerializedName("searchResult")
-	private List<JsonSearchResult> jsonSearchResult = null;
-
-	public String getAck() {
-		return ack.get(0);
+	public List<String> getErrorId() {
+		return errorId;
 	}
 
-	public ErrorMessage getErrorMessage() {
-		return errorMessage.get(0);
-	}
-
-	public JsonSearchResult getJsonSearchResult() {
-		return jsonSearchResult.get(0);
+	public List<String> getMessage() {
+		return message;
 	}
 
 }

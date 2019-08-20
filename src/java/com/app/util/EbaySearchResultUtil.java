@@ -18,6 +18,7 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.json.BuyItNowPrice;
 import com.app.json.CurrentPrice;
 import com.app.json.EbaySearchResultJsonResponse;
+import com.app.json.ErrorMessage;
 import com.app.json.FindItemsAdvancedResponse;
 import com.app.json.Item;
 import com.app.json.JsonSearchResult;
@@ -83,9 +84,20 @@ public class EbaySearchResultUtil {
 				EntityUtils.toString(response.getEntity()),
 				EbaySearchResultJsonResponse.class);
 
-		return _createSearchResults(
-			ebaySearchResultJsonResponse, searchQuery.getSearchQueryId(),
-			preferredDomain, preferredCurrency);
+		FindItemsAdvancedResponse findItemsAdvancedResponse =
+			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
+
+		boolean isValidResponse = validateResponse(
+			findItemsAdvancedResponse, searchQuery.getSearchQueryId());
+
+		if (isValidResponse) {
+			return _createSearchResults(
+				findItemsAdvancedResponse, searchQuery.getSearchQueryId(),
+				preferredDomain, preferredCurrency);
+		}
+		else {
+			return new ArrayList<>();
+		}
 	}
 
 	private static SearchResult _createSearchResult(
@@ -108,27 +120,16 @@ public class EbaySearchResultUtil {
 		return searchResult;
 	}
 
-	private static List<Item> getSearchResultJsonObject(
-		EbaySearchResultJsonResponse ebaySearchResultJsonResponse) {
-
-		FindItemsAdvancedResponse findItemsAdvancedResponse =
-			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
-
-		JsonSearchResult jsonSearchResult =
-			findItemsAdvancedResponse.getJsonSearchResult();
-
-		return jsonSearchResult.getItems();
-	}
-
 	private static List<SearchResult> _createSearchResults(
-		EbaySearchResultJsonResponse ebaySearchResultJsonResponse,
+		FindItemsAdvancedResponse findItemsAdvancedResponse,
 		int searchQueryId, String preferredDomain, String preferredCurrency) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		for (Item item :
-				getSearchResultJsonObject(ebaySearchResultJsonResponse)) {
+		JsonSearchResult jsonSearchResult =
+			findItemsAdvancedResponse.getJsonSearchResult();
 
+		for (Item item : jsonSearchResult.getItems()) {
 			SearchResult searchResult = _createSearchResult(
 				item, preferredDomain, preferredCurrency);
 
@@ -348,6 +349,26 @@ public class EbaySearchResultUtil {
 		}
 
 		return url.toString();
+	}
+
+	private static boolean validateResponse(
+		FindItemsAdvancedResponse findItemsAdvancedResponse,
+		long searchQueryId) {
+
+		ErrorMessage errorMessage = findItemsAdvancedResponse.getErrorMessage();
+
+		if (errorMessage == null) {
+			return true;
+		}
+
+		com.app.json.Error error = errorMessage.getError();
+
+		_log.error(
+			"Unable to perform search request for search query ID: {}. " +
+				"Received error ID: {} and error message: {}",
+			searchQueryId, error.getErrorId(), error.getMessage());
+
+		return false;
 	}
 
 	private static final DecimalFormat _DECIMAL_FORMAT = new DecimalFormat(
