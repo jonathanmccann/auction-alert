@@ -70,10 +70,6 @@ public class AppServletContextListener implements ServletContextListener {
 
 			ConstantsUtil.init();
 
-			_log.info("Loading eBay service client");
-
-			EbayAPIUtil.loadEbayServiceClients();
-
 			_log.info("Initializing eBay API context");
 
 			EbayAPIUtil.loadApiContext();

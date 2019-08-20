@@ -16,14 +16,7 @@ package com.app.util;
 
 import com.ebay.sdk.ApiContext;
 import com.ebay.sdk.ApiCredential;
-import com.ebay.services.client.ClientConfig;
-import com.ebay.services.client.FindingServiceClientFactory;
-import com.ebay.services.finding.FindingServicePortType;
 import com.ebay.soap.eBLBaseComponents.SiteCodeType;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Jonathan McCann
@@ -32,25 +25,6 @@ public class EbayAPIUtil {
 
 	public static ApiContext getApiContext() {
 		return _apiContext;
-	}
-
-	public static FindingServicePortType getServiceClient(String globalId) {
-		FindingServicePortType serviceClient = _serviceClients.get(globalId);
-
-		if (null != serviceClient) {
-			return serviceClient;
-		}
-
-		ClientConfig config = new ClientConfig();
-
-		config.setApplicationId(PropertiesValues.APPLICATION_ID);
-		config.setGlobalId(globalId);
-
-		serviceClient = FindingServiceClientFactory.getServiceClient(config);
-
-		_serviceClients.put(globalId, serviceClient);
-
-		return serviceClient;
 	}
 
 	public static void loadApiContext() {
@@ -69,29 +43,6 @@ public class EbayAPIUtil {
 		_apiContext.setSite(SiteCodeType.US);
 	}
 
-	public static void loadEbayServiceClients() {
-		loadEbayServiceClients(PropertiesValues.APPLICATION_ID);
-	}
-
-	public static void loadEbayServiceClients(String applicationId) {
-		ClientConfig config = new ClientConfig();
-
-		config.setApplicationId(applicationId);
-
-		Map<String, String> globalIds = ConstantsUtil.getGlobalIds();
-
-		Set<String> keys = globalIds.keySet();
-
-		for (String key : keys) {
-			config.setGlobalId(key);
-
-			_serviceClients.put(
-				key, FindingServiceClientFactory.getServiceClient(config));
-		}
-	}
-
 	private static ApiContext _apiContext;
-	private static final Map<String, FindingServicePortType> _serviceClients =
-		new HashMap<>();
 
 }
