@@ -14,13 +14,15 @@
 
 package com.app.json;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonSearchResult {
 
 	@SerializedName("item")
-	private List<Item> items = null;
+	private List<Item> items = new ArrayList<>();
 
 	public List<Item> getItems() {
 		return items;

@@ -1,0 +1,44 @@
+{
+  "findItemsAdvancedResponse": [
+    {
+      "ack": [
+        "Failure"
+      ],
+      "errorMessage": [
+        {
+          "error": [
+            {
+              "errorId": [
+                "15"
+              ],
+              "domain": [
+                "Marketplace"
+              ],
+              "severity": [
+                "Error"
+              ],
+              "category": [
+                "Request"
+              ],
+              "message": [
+                "Invalid listing type."
+              ],
+              "subdomain": [
+                "Search"
+              ],
+              "parameter": [
+                "AuctionWithBI"
+              ]
+            }
+          ]
+        }
+      ],
+      "version": [
+        "1.13.0"
+      ],
+      "timestamp": [
+        "2019-08-20T17:58:30.846Z"
+      ]
+    }
+  ]
+}

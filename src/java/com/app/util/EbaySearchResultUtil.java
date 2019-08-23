@@ -71,21 +71,8 @@ public class EbaySearchResultUtil {
 
 		String url = _setUpAdvancedRequest(searchQuery, preferredCurrency);
 
-		HttpClient httpClient = HttpClients.createDefault();
-
-		HttpGet httpGet = new HttpGet(url);
-
-		HttpResponse response = httpClient.execute(httpGet);
-
-		Gson gson = new Gson();
-
-		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
-			gson.fromJson(
-				EntityUtils.toString(response.getEntity()),
-				EbaySearchResultJsonResponse.class);
-
 		FindItemsAdvancedResponse findItemsAdvancedResponse =
-			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
+			_executeFindItemsAdvanced(url);
 
 		boolean isValidResponse = validateResponse(
 			findItemsAdvancedResponse, searchQuery.getSearchQueryId());
@@ -141,6 +128,26 @@ public class EbaySearchResultUtil {
 		Collections.reverse(searchResults);
 
 		return searchResults;
+	}
+
+	private static FindItemsAdvancedResponse _executeFindItemsAdvanced(
+			String url)
+		throws IOException {
+
+		HttpClient httpClient = HttpClients.createDefault();
+
+		HttpGet httpGet = new HttpGet(url);
+
+		HttpResponse response = httpClient.execute(httpGet);
+
+		Gson gson = new Gson();
+
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
+			gson.fromJson(
+				EntityUtils.toString(response.getEntity()),
+				EbaySearchResultJsonResponse.class);
+
+		return ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
 	}
 
 	private static void _setPrice(

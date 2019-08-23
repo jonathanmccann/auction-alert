@@ -14,18 +14,23 @@
 
 package com.app.json;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class ListingInfo {
 
 	@SerializedName("buyItNowPrice")
-	private List<BuyItNowPrice> buyItNowPrice = null;
+	private List<BuyItNowPrice> buyItNowPrice = new ArrayList<>();
 
 	@SerializedName("listingType")
-	private List<String> listingType = null;
+	private List<String> listingType = new ArrayList<>();
 
 	public BuyItNowPrice getBuyItNowPrice() {
+		if (buyItNowPrice.isEmpty()) {
+			return null;
+		}
+
 		return buyItNowPrice.get(0);
 	}
 

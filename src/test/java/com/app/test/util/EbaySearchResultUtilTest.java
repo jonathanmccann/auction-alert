@@ -14,33 +14,29 @@
 
 package com.app.test.util;
 
+import com.app.json.BuyItNowPrice;
+import com.app.json.CurrentPrice;
+import com.app.json.EbaySearchResultJsonResponse;
+import com.app.json.FindItemsAdvancedResponse;
+import com.app.json.Item;
+import com.app.json.JsonSearchResult;
+import com.app.json.ListingInfo;
+import com.app.json.SellingStatus;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
+import com.app.test.BaseTestCase;
 import com.app.util.ConstantsUtil;
-import com.app.util.PropertiesValues;
-import com.app.util.SearchQueryUtil;
+import com.app.util.EbaySearchResultUtil;
 import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
-import com.app.util.EbaySearchResultUtil;
 
-import com.app.test.BaseTestCase;
+import com.google.gson.Gson;
 
-import com.ebay.services.client.FindingServiceClientFactory;
-import com.ebay.services.finding.Amount;
-import com.ebay.services.finding.FindItemsAdvancedRequest;
-import com.ebay.services.finding.FindItemsAdvancedResponse;
-import com.ebay.services.finding.FindingServicePortType;
-import com.ebay.services.finding.ItemFilter;
-import com.ebay.services.finding.ItemFilterType;
-import com.ebay.services.finding.ListingInfo;
-import com.ebay.services.finding.PaginationInput;
-import com.ebay.services.finding.SearchItem;
-import com.ebay.services.finding.SellingStatus;
-import com.ebay.services.finding.SortOrderType;
-
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -56,6 +52,7 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -73,18 +70,20 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpProperties();
+
 		Class<?> clazz = Class.forName(EbaySearchResultUtil.class.getName());
 
 		_classInstance = clazz.newInstance();
 
 		_createSearchResultMethod = clazz.getDeclaredMethod(
-			"_createSearchResult", SearchItem.class, String.class, String.class);
+			"_createSearchResult", Item.class, String.class, String.class);
 
 		_createSearchResultMethod.setAccessible(true);
 
 		_createSearchResultsMethod = clazz.getDeclaredMethod(
-			"_createSearchResults", List.class, int.class, String.class,
-			String.class);
+			"_createSearchResults", FindItemsAdvancedResponse.class, int.class,
+			String.class, String.class);
 
 		_createSearchResultsMethod.setAccessible(true);
 
@@ -99,18 +98,22 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		_setUpAdvanceRequestMethod.setAccessible(true);
 
-		setUpProperties();
+		setUpDatabase();
+
+		setUpExchangeRateUtil();
+
+		_setUpItems();
 
 		ConstantsUtil.init();
 	}
 
 	@Test
 	public void testCreateSearchResult() throws Exception {
-		SearchItem searchItem = _createSearchItem();
+		List<Item> items = _getItems(_AUCTION_JSON_RESPONSE);
 
 		SearchResult searchResult =
 			(SearchResult)_createSearchResultMethod.invoke(
-				_classInstance, searchItem, "http://www.ebay.com/itm/",
+				_classInstance, items.get(0), "http://www.ebay.com/itm/",
 				"USD");
 
 		Assert.assertEquals(_ITEM_ID, searchResult.getItemId());
@@ -119,39 +122,32 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			_EBAY_URL_PREFIX + searchResult.getItemId(),
 			searchResult.getItemURL());
 		Assert.assertEquals(_GALLERY_URL, searchResult.getGalleryURL());
-		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
+		Assert.assertEquals(_AUCTION_PRICE, searchResult.getAuctionPrice());
 		Assert.assertNull(searchResult.getFixedPrice());
 	}
 
 	@Test
 	public void testCreateSearchResults() throws Exception {
-		List<SearchItem> searchItems = new ArrayList<>();
-
-		searchItems.add(_createSearchItem("firstItem"));
-		searchItems.add(_createSearchItem("secondItem"));
+		FindItemsAdvancedResponse findItemsAdvancedResponse =
+			_AUCTION_JSON_RESPONSE.getFindItemsAdvancedResponse();
 
 		List<SearchResult> searchResults =
 			(List<SearchResult>)_createSearchResultsMethod.invoke(
-				_classInstance, searchItems, 1, "http://www.ebay.com/itm/",
-				"USD");
+				_classInstance, findItemsAdvancedResponse, 1,
+				"http://www.ebay.com/itm/", "USD");
 
 		Assert.assertEquals(2, searchResults.size());
 
 		SearchResult firstSearchResult = searchResults.get(0);
 		SearchResult secondSearchResult = searchResults.get(1);
 
-		Assert.assertEquals("secondItem", firstSearchResult.getItemId());
-		Assert.assertEquals("firstItem", secondSearchResult.getItemId());
+		Assert.assertEquals("itemId2", firstSearchResult.getItemId());
+		Assert.assertEquals("itemId1", secondSearchResult.getItemId());
 	}
 
 	@Test
-	public void testGetEbaySearchResults() throws Exception {
-		setUpDatabase();
-		setUpProperties();
-
-		ConstantsUtil.init();
-
-		User user = UserUtil.addUser("test@test.com", "password");
+	public void testGetEbaySearchResultsWithAuctionResults() throws Exception {
+		_setUpGetEbaySearchResults(_AUCTION_JSON_RESPONSE);
 
 		SearchQuery searchQuery = new SearchQuery();
 
@@ -160,86 +156,113 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setKeywords("Test Keywords");
 		searchQuery.setGlobalId("EBAY-US");
 
-		SearchQueryUtil.addSearchQuery(searchQuery);
+		List<SearchResult> searchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
 
-		PowerMockito.spy(FindingServiceClientFactory.class);
+		Assert.assertEquals(2, searchResults.size());
 
-		FindingServicePortType serviceClient =
-			Mockito.mock(FindingServicePortType.class);
+		_assertSearchResult(searchResults.get(0), "2", "$4.00", null);
+		_assertSearchResult(searchResults.get(1), "1", "$10.00", null);
+	}
 
-		PowerMockito.doReturn(
-			serviceClient
-		).when(
-			FindingServiceClientFactory.class, "getServiceClient",
-			Mockito.anyObject()
-		);
+	@Test
+	public void testGetEbaySearchResultsWithAuctionWithBINResults()
+		throws Exception {
 
-		FindItemsAdvancedResponse result = Mockito.mock(
-			FindItemsAdvancedResponse.class);
+		_setUpGetEbaySearchResults(_AUCTION_WITH_BIN_RESPONSE);
 
-		Mockito.when(
-			serviceClient.findItemsAdvanced(Mockito.anyObject())
-		).thenReturn(
-			result
-		);
+		SearchQuery searchQuery = new SearchQuery();
 
-		Mockito.when(
-			result.getSearchResult()
-		).thenReturn(
-			null
-		);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setSearchQueryId(1);
+		searchQuery.setKeywords("Test Keywords");
+		searchQuery.setGlobalId("EBAY-US");
+
+		List<SearchResult> searchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
+
+		Assert.assertEquals(2, searchResults.size());
+
+		_assertSearchResult(searchResults.get(0), "2", "$4.00", "$40.00");
+		_assertSearchResult(searchResults.get(1), "1", "$10.00", "$100.00");
+	}
+
+	@Test
+	public void testGetEbaySearchResultsWithEmptyResults() throws Exception {
+		_setUpGetEbaySearchResults(_EMPTY_RESPONSE);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setSearchQueryId(1);
+		searchQuery.setKeywords("Test Keywords");
+		searchQuery.setGlobalId("EBAY-US");
 
 		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
 
 		Assert.assertTrue(searchResults.isEmpty());
+	}
 
-		SearchItem searchItem = new SearchItem();
+	@Test
+	public void testGetEbaySearchResultsWithFailure() throws Exception {
+		_setUpGetEbaySearchResults(_FAILURE_RESPONSE);
 
-		ListingInfo listingInfo = _createListingInfo();
+		SearchQuery searchQuery = new SearchQuery();
 
-		listingInfo.setListingType("AuctionWithBIN");
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setSearchQueryId(1);
+		searchQuery.setKeywords("Test Keywords");
+		searchQuery.setGlobalId("EBAY-US");
 
-		searchItem.setListingInfo(listingInfo);
-		searchItem.setItemId("123");
-		searchItem.setTitle("Title");
-		searchItem.setGalleryURL("http://www.ebay.com/123.jpg");
-		searchItem.setSellingStatus(_createSellingStatus());
-
-		List<SearchItem> searchItems = new ArrayList<>();
-
-		searchItems.add(searchItem);
-
-		com.ebay.services.finding.SearchResult ebaySearchResult = Mockito.mock(
-			com.ebay.services.finding.SearchResult.class);
-
-		Mockito.when(
-			result.getSearchResult()
-		).thenReturn(
-			ebaySearchResult
-		);
-
-		Mockito.when(
-			ebaySearchResult.getItem()
-		).thenReturn(
-			searchItems
-		);
-
-		searchResults =
+		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
 
-		Assert.assertEquals(1, searchResults.size());
+		Assert.assertTrue(searchResults.isEmpty());
+	}
 
-		SearchResult searchResult = searchResults.get(0);
+	@Test
+	public void testGetEbaySearchResultsWithFixedPriceResults()
+		throws Exception {
 
-		Assert.assertEquals("123", searchResult.getItemId());
-		Assert.assertEquals("Title", searchResult.getItemTitle());
-		Assert.assertEquals(
-			user.getPreferredDomain() + "123", searchResult.getItemURL());
-		Assert.assertEquals(
-			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
-		Assert.assertEquals("$10.00", searchResult.getFixedPrice());
+		_setUpGetEbaySearchResults(_FIXED_PRICE_RESPONSE);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setSearchQueryId(1);
+		searchQuery.setKeywords("Test Keywords");
+		searchQuery.setGlobalId("EBAY-US");
+
+		List<SearchResult> searchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
+
+		Assert.assertEquals(2, searchResults.size());
+
+		_assertSearchResult(searchResults.get(0), "2", null, "$40.00");
+		_assertSearchResult(searchResults.get(1), "1", null, "$100.00");
+	}
+
+	@Test
+	public void testGetEbaySearchResultsWithStoreInventoryResults()
+		throws Exception {
+
+		_setUpGetEbaySearchResults(_STORE_INVENTORY_RESPONSE);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setSearchQueryId(1);
+		searchQuery.setKeywords("Test Keywords");
+		searchQuery.setGlobalId("EBAY-US");
+
+		List<SearchResult> searchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
+
+		Assert.assertEquals(2, searchResults.size());
+
+		_assertSearchResult(searchResults.get(0), "2", null, "$40.00");
+		_assertSearchResult(searchResults.get(1), "1", null, "$100.00");
 	}
 
 	@Test
@@ -264,6 +287,10 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
 		Assert.assertEquals("$10.00", searchResult.getFixedPrice());
+	}
+
+	@Test
+	public void testSetConvertedCurrencyPrice() throws Exception {
 	}
 
 	@Test
@@ -305,31 +332,13 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	@Test
 	public void testSetUpAdvancedRequest() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "", false, false, true,
-			true, true, true, true, 0.00, 0.00, "EBAY-US", false);
+			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
+			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(
-			"Test keywords", findItemsAdvancedRequest.getKeywords());
-
-		List<String> categoryIds = findItemsAdvancedRequest.getCategoryId();
-
-		Assert.assertEquals("100", categoryIds.get(0));
-		Assert.assertEquals(1, categoryIds.size());
-
-		PaginationInput paginationInput =
-			findItemsAdvancedRequest.getPaginationInput();
-
-		Assert.assertEquals(
-			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
-			(int)paginationInput.getEntriesPerPage());
-
-		Assert.assertEquals(
-			SortOrderType.START_TIME_NEWEST,
-			findItemsAdvancedRequest.getSortOrder());
+		Assert.assertEquals(_FIND_ITEMS_ADVANCED_URL_BASE, url);
 	}
 
 	@Test
@@ -338,17 +347,17 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
 			true, true, false, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=ListingType");
+		expectedURL.append("&itemFilter(0).value(0)=AuctionWithBIN");
+		expectedURL.append("&itemFilter(0).value(1)=Auction");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.LISTING_TYPE, itemFilter.getName());
-		Assert.assertEquals("AuctionWithBIN", itemFilter.getValue().get(0));
-		Assert.assertEquals("Auction", itemFilter.getValue().get(1));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -357,14 +366,15 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "100", "", false, false, true, true,
 			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<String> categoryIds = findItemsAdvancedRequest.getCategoryId();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&categoryId=100");
 
-		Assert.assertEquals("100", categoryIds.get(0));
-		Assert.assertEquals(1, categoryIds.size());
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
+
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -375,11 +385,15 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", true, false, true, true, true,
 			true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&descriptionSearch=true");
+
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
+
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -390,17 +404,17 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
 			true, false, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=ListingType");
+		expectedURL.append("&itemFilter(0).value(0)=AuctionWithBIN");
+		expectedURL.append("&itemFilter(0).value(1)=FixedPrice");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.LISTING_TYPE, itemFilter.getName());
-		Assert.assertEquals("AuctionWithBIN", itemFilter.getValue().get(0));
-		Assert.assertEquals("FixedPrice", itemFilter.getValue().get(1));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -411,17 +425,20 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, true, true, true, true,
 			true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=FreeShippingOnly");
+		expectedURL.append("&itemFilter(0).value=true");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(
-			ItemFilterType.FREE_SHIPPING_ONLY, itemFilter.getName());
-		Assert.assertEquals("true", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
+	}
+
+	@Test
+	public void testSetUpAdvancedRequestWithGlobalId() throws Exception {
 	}
 
 	@Test
@@ -430,16 +447,18 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
 			true, true, true, 0.00, 10.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=MaxPrice");
+		expectedURL.append("&itemFilter(0).value=10.00");
+		expectedURL.append("&itemFilter(0).paramName=Currency");
+		expectedURL.append("&itemFilter(0).paramValue=USD");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.MAX_PRICE, itemFilter.getName());
-		Assert.assertEquals("10.00", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -448,16 +467,18 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
 			true, true, true, 5.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=MinPrice");
+		expectedURL.append("&itemFilter(0).value=5.00");
+		expectedURL.append("&itemFilter(0).paramName=Currency");
+		expectedURL.append("&itemFilter(0).paramValue=USD");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.MIN_PRICE, itemFilter.getName());
-		Assert.assertEquals("5.00", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -468,61 +489,32 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
 			false, true, false, 5.00, 10.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		Assert.assertTrue(findItemsAdvancedRequest.isDescriptionSearch());
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&categoryId=200");
+		expectedURL.append("&descriptionSearch=true");
+		expectedURL.append("&itemFilter(0).name=FreeShippingOnly");
+		expectedURL.append("&itemFilter(0).value=true");
+		expectedURL.append("&itemFilter(1).name=Condition");
+		expectedURL.append("&itemFilter(1).value(0)=New");
+		expectedURL.append("&itemFilter(1).value(1)=Used");
+		expectedURL.append("&itemFilter(2).name=ListingType");
+		expectedURL.append("&itemFilter(2).value(0)=AuctionWithBIN");
+		expectedURL.append("&itemFilter(2).value(1)=Auction");
+		expectedURL.append("&itemFilter(3).name=MinPrice");
+		expectedURL.append("&itemFilter(3).value=5.00");
+		expectedURL.append("&itemFilter(3).paramName=Currency");
+		expectedURL.append("&itemFilter(3).paramValue=USD");
+		expectedURL.append("&itemFilter(4).name=MaxPrice");
+		expectedURL.append("&itemFilter(4).value=10.00");
+		expectedURL.append("&itemFilter(4).paramName=Currency");
+		expectedURL.append("&itemFilter(4).paramValue=USD");
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		ItemFilter itemFilter = itemFilters.get(0);
-
-		Assert.assertEquals(
-			ItemFilterType.FREE_SHIPPING_ONLY, itemFilter.getName());
-		Assert.assertEquals("true", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(1);
-
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("New", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(2);
-
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Used", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(3);
-
-		Assert.assertEquals(ItemFilterType.LISTING_TYPE, itemFilter.getName());
-		Assert.assertEquals("AuctionWithBIN", itemFilter.getValue().get(0));
-		Assert.assertEquals("Auction", itemFilter.getValue().get(1));
-
-		itemFilter = itemFilters.get(4);
-
-		Assert.assertEquals(ItemFilterType.MIN_PRICE, itemFilter.getName());
-		Assert.assertEquals("5.00", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(5);
-
-		Assert.assertEquals(ItemFilterType.MAX_PRICE, itemFilter.getName());
-		Assert.assertEquals("10.00", itemFilter.getValue().get(0));
-
-		List<String> categoryIds = findItemsAdvancedRequest.getCategoryId();
-
-		Assert.assertEquals("200", categoryIds.get(0));
-		Assert.assertEquals(1, categoryIds.size());
-
-		PaginationInput paginationInput =
-			findItemsAdvancedRequest.getPaginationInput();
-
-		Assert.assertEquals(
-			PropertiesValues.NUMBER_OF_SEARCH_RESULTS,
-			(int)paginationInput.getEntriesPerPage());
-
-		Assert.assertEquals(
-			SortOrderType.START_TIME_NEWEST,
-			findItemsAdvancedRequest.getSortOrder());
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -533,21 +525,17 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, true, false,
 			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=Condition");
+		expectedURL.append("&itemFilter(0).value(0)=New");
+		expectedURL.append("&itemFilter(0).value(1)=Unspecified");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("New", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(1);
-
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -558,21 +546,17 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
 			false, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=Condition");
+		expectedURL.append("&itemFilter(0).value(0)=New");
+		expectedURL.append("&itemFilter(0).value(1)=Used");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("New", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(1);
-
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Used", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -581,32 +565,33 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, true, false,
 			false, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=Condition");
+		expectedURL.append("&itemFilter(0).value(0)=New");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("New", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
 	public void testSetUpAdvancedRequestWithSubcategoryId() throws Exception {
 		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "200", false, false, true, true,
-			true, true, true, 0.00, 0.00, "EBAY-US", false);
+			1, _USER_ID, "Test keywords", "100", "200", false, false, true,
+			true, true, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<String> categoryIds = findItemsAdvancedRequest.getCategoryId();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&categoryId=200");
 
-		Assert.assertEquals("200", categoryIds.get(0));
-		Assert.assertEquals(1, categoryIds.size());
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
+
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -617,16 +602,16 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, false, false,
 			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=Condition");
+		expectedURL.append("&itemFilter(0).value(0)=Unspecified");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -637,21 +622,17 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, false, true,
 			true, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=Condition");
+		expectedURL.append("&itemFilter(0).value(0)=Used");
+		expectedURL.append("&itemFilter(0).value(1)=Unspecified");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Used", itemFilter.getValue().get(0));
-
-		itemFilter = itemFilters.get(1);
-
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Unspecified", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
 	@Test
@@ -660,85 +641,212 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			1, _USER_ID, "Test keywords", "", "", false, false, false, true,
 			false, true, true, 0.00, 0.00, "EBAY-US", false);
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		StringBuilder expectedURL = new StringBuilder();
 
-		List<ItemFilter> itemFilters = findItemsAdvancedRequest.getItemFilter();
+		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
+		expectedURL.append("&itemFilter(0).name=Condition");
+		expectedURL.append("&itemFilter(0).value(0)=Used");
 
-		ItemFilter itemFilter = itemFilters.get(0);
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
 
-		Assert.assertEquals(ItemFilterType.CONDITION, itemFilter.getName());
-		Assert.assertEquals("Used", itemFilter.getValue().get(0));
+		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
-	@Test
-	public void testSetUpAdvancedRequestWithoutCategoryId() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "", "", false, false, true, true,
-			true, true, true, 0.00, 0.00, "EBAY-US", false);
+	private static ListingInfo _createListingInfo() throws Exception {
+		BuyItNowPrice buyItNowPrice = new BuyItNowPrice();
 
-		FindItemsAdvancedRequest findItemsAdvancedRequest =
-			(FindItemsAdvancedRequest)_setUpAdvanceRequestMethod.invoke(
-				_classInstance, searchQuery, "USD");
+		Class<?> buyItNowPriceClass = buyItNowPrice.getClass();
 
-		List<String> categoryIds = findItemsAdvancedRequest.getCategoryId();
+		Field currencyId = buyItNowPriceClass.getDeclaredField("currencyId");
+		Field value = buyItNowPriceClass.getDeclaredField("value");
 
-		Assert.assertEquals(0, categoryIds.size());
-	}
+		currencyId.setAccessible(true);
+		value.setAccessible(true);
 
-	private static ListingInfo _createListingInfo() {
-		Amount buyItNowPrice = new Amount();
-
-		buyItNowPrice.setValue(10.00);
-		buyItNowPrice.setCurrencyId("USD");
+		currencyId.set(buyItNowPrice, "USD");
+		value.setDouble(buyItNowPrice, 10.00);
 
 		ListingInfo listingInfo = new ListingInfo();
 
-		listingInfo.setBuyItNowPrice(buyItNowPrice);
+		Class<?> clazz = listingInfo.getClass();
+
+		Field buyItNowPriceField = clazz.getDeclaredField("buyItNowPrice");
+
+		buyItNowPriceField.setAccessible(true);
+
+		List<BuyItNowPrice> buyItNowPrices = new ArrayList<>();
+
+		buyItNowPrices.add(buyItNowPrice);
+
+		buyItNowPriceField.set(listingInfo, buyItNowPrices);
 
 		return listingInfo;
 	}
 
-	private static SellingStatus _createSellingStatus() {
-		Amount currentPrice = new Amount();
+	private static SellingStatus _createSellingStatus() throws Exception {
+		CurrentPrice currentPrice = new CurrentPrice();
 
-		currentPrice.setValue(5.00);
-		currentPrice.setCurrencyId("USD");
+		Class<?> currentPriceClass = currentPrice.getClass();
+
+		Field currencyId = currentPriceClass.getDeclaredField("currencyId");
+		Field value = currentPriceClass.getDeclaredField("value");
+
+		currencyId.setAccessible(true);
+		value.setAccessible(true);
+
+		currencyId.set(currentPrice, "USD");
+		value.setDouble(currentPrice, 5.00);
 
 		SellingStatus sellingStatus = new SellingStatus();
 
-		sellingStatus.setCurrentPrice(currentPrice);
+		Class<?> clazz = sellingStatus.getClass();
+
+		Field currentPriceField = clazz.getDeclaredField("currentPrice");
+
+		currentPriceField.setAccessible(true);
+
+		List<CurrentPrice> currentPrices = new ArrayList<>();
+
+		currentPrices.add(currentPrice);
+
+		currentPriceField.set(sellingStatus, currentPrices);
 
 		return sellingStatus;
 	}
 
-	private static SearchItem _createSearchItem() {
-		return _createSearchItem(null);
+	private static List<Item> _getItems(
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse) {
+
+		FindItemsAdvancedResponse findItemsAdvancedResponse =
+			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
+
+		JsonSearchResult jsonSearchResult =
+			findItemsAdvancedResponse.getJsonSearchResult();
+
+		return jsonSearchResult.getItems();
 	}
 
-	private static SearchItem _createSearchItem(String itemId) {
-		SearchItem searchItem = new SearchItem();
+	private static void _setUpItems() throws Exception {
+		Gson gson = new Gson();
 
-		if (ValidatorUtil.isNull(itemId)) {
-			itemId = _ITEM_ID;
+		_AUCTION_JSON_RESPONSE = gson.fromJson(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource("/json/auction.json")
+				.getFile().toPath())),
+			EbaySearchResultJsonResponse.class);
+
+		_AUCTION_WITH_BIN_RESPONSE = gson.fromJson(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource("/json/auctionWithBIN.json")
+				.getFile().toPath())),
+			EbaySearchResultJsonResponse.class);
+
+		_EMPTY_RESPONSE = gson.fromJson(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource("/json/empty.json")
+				.getFile().toPath())),
+			EbaySearchResultJsonResponse.class);
+
+		_FAILURE_RESPONSE = gson.fromJson(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource("/json/failure.json")
+				.getFile().toPath())),
+			EbaySearchResultJsonResponse.class);
+
+		_FIXED_PRICE_RESPONSE = gson.fromJson(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource("/json/fixedPrice.json")
+				.getFile().toPath())),
+			EbaySearchResultJsonResponse.class);
+
+		_STORE_INVENTORY_RESPONSE = gson.fromJson(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource("/json/storeInventory.json")
+				.getFile().toPath())),
+			EbaySearchResultJsonResponse.class);
+	}
+
+	private void _assertSearchResult(
+			SearchResult searchResult, String itemNumber, String auctionPrice,
+			String fixedPrice)
+		throws Exception {
+
+		Assert.assertEquals("itemId" + itemNumber, searchResult.getItemId());
+		Assert.assertEquals(
+			"Item Title " + itemNumber, searchResult.getItemTitle());
+		Assert.assertEquals(
+			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN + "itemId" + itemNumber,
+			searchResult.getItemURL());
+		Assert.assertEquals(
+			"http://www.ebay.com/" + itemNumber + ".jpg",
+			searchResult.getGalleryURL());
+
+		if (ValidatorUtil.isNull(auctionPrice)) {
+			Assert.assertNull(searchResult.getAuctionPrice());
+		}
+		else {
+			Assert.assertEquals(auctionPrice, searchResult.getAuctionPrice());
 		}
 
-		ListingInfo listingInfo = _createListingInfo();
-
-		listingInfo.setEndTime(_CALENDAR);
-		listingInfo.setListingType(_AUCTION);
-
-		searchItem.setGalleryURL(_GALLERY_URL);
-		searchItem.setItemId(itemId);
-		searchItem.setListingInfo(listingInfo);
-		searchItem.setTitle(_ITEM_TITLE);
-		searchItem.setSellingStatus(_createSellingStatus());
-
-		return searchItem;
+		if (ValidatorUtil.isNull(fixedPrice)) {
+			Assert.assertNull(searchResult.getFixedPrice());
+		}
+		else {
+			Assert.assertEquals(fixedPrice, searchResult.getFixedPrice());
+		}
 	}
 
+	private void _setUpGetEbaySearchResults(
+			EbaySearchResultJsonResponse ebaySearchResultJsonResponse)
+		throws Exception {
+
+		User mockUser = Mockito.mock(User.class);
+
+		Mockito.when(
+			mockUser.getPreferredDomain()
+		).thenReturn(
+			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN
+		);
+
+		PowerMockito.spy(UserUtil.class);
+
+		PowerMockito.doReturn(
+			mockUser
+		).when(
+			UserUtil.class, "getUserByUserId", Mockito.anyInt()
+		);
+
+		PowerMockito.spy(EbaySearchResultUtil.class);
+
+		PowerMockito.doReturn(
+			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse()
+		).when(
+			EbaySearchResultUtil.class, "_executeFindItemsAdvanced", Mockito.anyString()
+		);
+	}
+
+	private static EbaySearchResultJsonResponse _AUCTION_JSON_RESPONSE;
+
+	private static EbaySearchResultJsonResponse _AUCTION_WITH_BIN_RESPONSE;
+
+	private static EbaySearchResultJsonResponse _EMPTY_RESPONSE;
+
+	private static EbaySearchResultJsonResponse _FAILURE_RESPONSE;
+
+	private static EbaySearchResultJsonResponse _FIXED_PRICE_RESPONSE;
+
+	private static EbaySearchResultJsonResponse _STORE_INVENTORY_RESPONSE;
+
 	private static final String _AUCTION = "Auction";
+
+	private static final String _AUCTION_PRICE = "$10.00";
 
 	private static final String _AUCTION_WITH_BIN = "AuctionWithBIN";
 
@@ -746,13 +854,23 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
+	private static final String _FIND_ITEMS_ADVANCED_URL_BASE =
+		"https://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME" +
+			"=findItemsAdvanced&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON" +
+			"&SECURITY-APPNAME=applicationId&GLOBAL-ID=EBAY-US&REST-PAYLOAD" +
+			"&affiliate.trackingId=ebayCampaignId&affiliate.networkId=9" +
+			"&paginationInput.entriesPerPage=5&sortOrder=StartTimeNewest" +
+			"&keywords=Test+keywords";
+
 	private static final String _FIXED_PRICE = "FixedPrice";
 
-	private static final String _GALLERY_URL = "http://www.test.com";
+	private static final String _FIXED_PRICE_PRICE = "$100.00";
 
-	private static final String _ITEM_ID = "itemId";
+	private static final String _GALLERY_URL = "http://www.ebay.com/1.jpg";
 
-	private static final String _ITEM_TITLE = "Item Title";
+	private static final String _ITEM_ID = "itemId1";
+
+	private static final String _ITEM_TITLE = "Item Title 1";
 
 	private static final String _STORE_INVENTORY = "StoreInventory";
 

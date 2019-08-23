@@ -18,14 +18,18 @@ import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
 import com.app.mail.SendGridMailSender;
 import com.app.model.Category;
+import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
+import com.app.util.EbaySearchResultUtil;
+import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.ReleaseUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,9 +61,9 @@ import javax.mail.Transport;
  * @author Jonathan McCann
  */
 @PrepareForTest({
-	DatabaseUtil.class, MailSenderFactory.class, ReleaseUtil.class,
-	SecurityUtils.class, SendGridMailSender.class, StripeUtil.class,
-	Transport.class, UserUtil.class
+	DatabaseUtil.class, EbaySearchResultUtil.class, MailSenderFactory.class,
+	ReleaseUtil.class, SearchQuery.class, SecurityUtils.class,
+	SendGridMailSender.class, StripeUtil.class, Transport.class, UserUtil.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -119,6 +123,28 @@ public abstract class BaseTestCase {
 		).thenReturn(
 			resource
 		);
+	}
+
+	protected static void setUpExchangeRateUtil() throws Exception {
+		Class clazz = Class.forName(ExchangeRateUtil.class.getName());
+
+		Field exchangeRates = clazz.getDeclaredField("_exchangeRates");
+
+		exchangeRates.setAccessible(true);
+
+		Field modifiersField = Field.class.getDeclaredField("modifiers");
+
+		modifiersField.setAccessible(true);
+		modifiersField.setInt(
+			exchangeRates, exchangeRates.getModifiers() & ~Modifier.FINAL);
+
+		Map<String, Double> usdRates = new HashMap<>();
+
+		usdRates.put("GBP_USD", _GBP_TO_USD);
+		usdRates.put("USD_CAD", _USD_TO_CAD);
+		usdRates.put("USD_GBP", _USD_TO_GBP);
+
+		exchangeRates.set(clazz, usdRates);
 	}
 
 	protected static void setUpGetCurrentUserId() throws Exception {
@@ -291,6 +317,12 @@ public abstract class BaseTestCase {
 	}
 
 	protected static MailSender _mockMailSender;
+
+	protected static final double _GBP_TO_USD = 0.2;
+
+	protected static final double _USD_TO_CAD = 2.0;
+
+	protected static final double _USD_TO_GBP = 5.0;
 
 	protected static final int _CATEGORY_LEVEL = 1;
 

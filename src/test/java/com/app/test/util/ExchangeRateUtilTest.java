@@ -57,29 +57,6 @@ public class ExchangeRateUtilTest extends BaseTestCase {
 		Assert.assertEquals(_PRICE, price, 0);
 	}
 
-	private static void setUpExchangeRateUtil() throws Exception {
-		Class clazz = Class.forName(ExchangeRateUtil.class.getName());
-
-		Field exchangeRates = clazz.getDeclaredField("_exchangeRates");
-
-		exchangeRates.setAccessible(true);
-
-		Field modifiersField = Field.class.getDeclaredField("modifiers");
-
-		modifiersField.setAccessible(true);
-		modifiersField.setInt(
-			exchangeRates, exchangeRates.getModifiers() & ~Modifier.FINAL);
-
-		Map<String, Double> usdRates = new HashMap<>();
-
-		usdRates.put("USD_CAD", _USD_TO_CAD);
-		usdRates.put("USD_GBP", _USD_TO_GBP);
-
-		exchangeRates.set(clazz, usdRates);
-	}
-
 	private static final double _PRICE = 10.0;
-	private static final double _USD_TO_CAD = 2.0;
-	private static final double _USD_TO_GBP = 5.0;
 
 }

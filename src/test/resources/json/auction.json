@@ -1,0 +1,72 @@
+{
+  "findItemsAdvancedResponse": [
+    {
+      "ack": [
+        "Success"
+      ],
+      "searchResult": [
+        {
+          "@count": "2",
+          "item": [
+            {
+              "itemId": [
+                "itemId1"
+              ],
+              "title": [
+                "Item Title 1"
+              ],
+              "galleryURL": [
+                "http://www.ebay.com/1.jpg"
+              ],
+              "sellingStatus": [
+                {
+                  "currentPrice": [
+                    {
+                      "@currencyId": "USD",
+                      "__value__": "10.0"
+                    }
+                  ]
+                }
+              ],
+              "listingInfo": [
+                {
+                  "listingType": [
+                    "Auction"
+                  ]
+                }
+              ]
+            },
+            {
+              "itemId": [
+                "itemId2"
+              ],
+              "title": [
+                "Item Title 2"
+              ],
+              "galleryURL": [
+                "http://www.ebay.com/2.jpg"
+              ],
+              "sellingStatus": [
+                {
+                  "currentPrice": [
+                    {
+                      "@currencyId": "GBP",
+                      "__value__": "20.0"
+                    }
+                  ]
+                }
+              ],
+              "listingInfo": [
+                {
+                  "listingType": [
+                    "Auction"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

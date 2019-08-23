@@ -14,6 +14,7 @@
 
 package com.app.json;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,20 +24,28 @@ public class FindItemsAdvancedResponse {
 	private List<String> ack = null;
 
 	@SerializedName("errorMessage")
-	private List<ErrorMessage> errorMessage = null;
+	private List<ErrorMessage> errorMessage = new ArrayList<>();
 
 	@SerializedName("searchResult")
-	private List<JsonSearchResult> jsonSearchResult = null;
+	private List<JsonSearchResult> jsonSearchResult = new ArrayList<>();
 
 	public String getAck() {
 		return ack.get(0);
 	}
 
 	public ErrorMessage getErrorMessage() {
+		if (errorMessage.isEmpty()) {
+			return null;
+		}
+
 		return errorMessage.get(0);
 	}
 
 	public JsonSearchResult getJsonSearchResult() {
+		if (jsonSearchResult.isEmpty()) {
+			return null;
+		}
+
 		return jsonSearchResult.get(0);
 	}
 
