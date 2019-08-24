@@ -37,12 +37,14 @@ import java.util.List;
  * @author Jonathan McCann
  */
 @PrepareForTest({
-	EbaySearchResultUtil.class, SearchResultUtil.class, SearchQueryUtil.class
+	SearchResultUtil.class, SearchQueryUtil.class
 })
 public class SearchResultRunnableTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
+		setUpProperties();
+
 		PowerMockito.spy(EbaySearchResultUtil.class);
 		PowerMockito.spy(SearchQueryUtil.class);
 		PowerMockito.spy(SearchResultUtil.class);

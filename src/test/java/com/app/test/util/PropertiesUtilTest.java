@@ -46,10 +46,10 @@ public class PropertiesUtilTest extends BaseTestCase {
 
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 
-		Assert.assertEquals("Application ID", PropertiesValues.APPLICATION_ID);
+		Assert.assertEquals("applicationId", PropertiesValues.APPLICATION_ID);
 		Assert.assertEquals("eBay Token", PropertiesValues.EBAY_TOKEN);
 		Assert.assertEquals(
-			"eBay Campaign Id", PropertiesValues.EBAY_CAMPAIGN_ID);
+			"ebayCampaignId", PropertiesValues.EBAY_CAMPAIGN_ID);
 		Assert.assertEquals(
 			"eBay Publisher Id", PropertiesValues.EBAY_PUBLISHER_ID);
 		Assert.assertEquals(
