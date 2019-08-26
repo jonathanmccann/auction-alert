@@ -52,7 +52,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetAccountFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/account_faq"))
@@ -65,7 +65,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetAccountFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/account_faq"))
@@ -78,7 +78,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/faq"))
@@ -91,7 +91,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/faq"))
@@ -104,7 +104,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetGeneralFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/general_faq"))
@@ -117,7 +117,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetGeneralFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/general_faq"))
@@ -130,7 +130,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetMonitorFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/monitor_faq"))
@@ -143,7 +143,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetMonitorFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/monitor_faq"))
@@ -156,7 +156,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetNewFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/new_faq"))
@@ -169,7 +169,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetNewFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/new_faq"))
@@ -182,7 +182,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetQueryFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/query_faq"))
@@ -195,7 +195,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetQueryFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/query_faq"))
@@ -208,7 +208,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetResultFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/result_faq"))
@@ -221,7 +221,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetResultFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/result_faq"))

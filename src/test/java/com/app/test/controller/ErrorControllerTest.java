@@ -53,7 +53,7 @@ public class ErrorControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetAccountFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/error"))
@@ -66,7 +66,7 @@ public class ErrorControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetAccountFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/error"))
@@ -79,7 +79,7 @@ public class ErrorControllerTest extends BaseTestCase {
 
 	@Test
 	public void testHeadAccountFaqAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(head("/error"))
@@ -92,7 +92,7 @@ public class ErrorControllerTest extends BaseTestCase {
 
 	@Test
 	public void testHeadAccountFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(head("/error"))

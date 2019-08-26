@@ -30,21 +30,15 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.shiro.authc.CredentialsException;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -52,16 +46,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserUtilTest extends BaseTestCase {
-
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		setUpProperties();
+
+		setUpDatabase();
 
 		ConstantsUtil.init();
 
@@ -72,13 +64,22 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpDatabase();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+		_SECOND_USER = UserUtil.addUser("test2@test.com", "password");
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		UserUtil.deleteUserByUserId(_FIRST_USER.getUserId());
+		UserUtil.deleteUserByUserId(_SECOND_USER.getUserId());
+
+		if (_THIRD_USER != null) {
+			UserUtil.deleteUserByUserId(_THIRD_USER.getUserId());
+		}
 	}
 
 	@Test
 	public void testAddAndGetUserByEmailAddress() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
-
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
 		Assert.assertNotNull(user);
@@ -88,16 +89,14 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test(expected = DuplicateEmailAddressException.class)
 	public void testAddUserWithDuplicateEmailAddress() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
 		UserUtil.addUser("test@test.com", "updatedPassword");
 	}
 
 	@Test
 	public void testDeactivateUser() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
-
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			true);
 
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
@@ -114,8 +113,6 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteUser() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
-
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
 		Assert.assertNotNull(user);
@@ -130,8 +127,6 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteUserByUserId() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
-
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
 		Assert.assertNotNull(user);
@@ -146,8 +141,6 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test(expected = CredentialsException.class)
 	public void testDeleteUserWithInvalidCredentials() throws Exception {
-		UserUtil.addUser("test@test.com", "password");
-
 		User user = UserUtil.getUserByEmailAddress("test@test.com");
 
 		Assert.assertNotNull(user);
@@ -157,34 +150,27 @@ public class UserUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testExceedsMaximumNumberOfSearchQueries() throws Exception {
+	public void testExceedsMaximumNumberOfUsers() throws Exception {
 		setUpProperties();
 
 		Assert.assertFalse(UserUtil.exceedsMaximumNumberOfUsers());
 
-		UserUtil.addUser("test@test.com", "password");
-		UserUtil.addUser("test2@test.com", "password");
+		_THIRD_USER = UserUtil.addUser("test3@test.com", "password");
 
 		Assert.assertTrue(UserUtil.exceedsMaximumNumberOfUsers());
 	}
 
 	@Test
 	public void testGetCurrentUserId() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
-		Assert.assertEquals(_USER_ID, UserUtil.getCurrentUserId());
-	}
-
-	@Test(expected = NullPointerException.class)
-	public void testGetCurrentUserIdWithNullUser() throws Exception {
-		setUpNullSecurityUtils();
-
-		UserUtil.getCurrentUserId();
+		Assert.assertEquals(
+			_FIRST_USER.getUserId(), UserUtil.getCurrentUserId());
 	}
 
 	@Test
 	public void testGetUserByInvalidEmailAddress() throws Exception {
-		User user = UserUtil.getUserByEmailAddress("test@test.com");
+		User user = UserUtil.getUserByEmailAddress("invalid@test.com");
 
 		Assert.assertNull(user);
 	}
@@ -198,38 +184,33 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserIds() throws Exception {
-		setUpUserUtil();
-
-		User firstUser = UserUtil.addUser("test@test.com", "password");
-		User secondUser = UserUtil.addUser("test2@test.com", "password");
-
 		UserUtil.updateUserSubscription(
-			firstUser.getUserId(), firstUser.getCustomerId(),
-			firstUser.getSubscriptionId(), true,
-			firstUser.isPendingCancellation());
+			_FIRST_USER.getUserId(), _FIRST_USER.getCustomerId(),
+			_FIRST_USER.getSubscriptionId(), true,
+			_FIRST_USER.isPendingCancellation());
 
 		List<Integer> activeUserIds = UserUtil.getUserIds(true);
 
 		Assert.assertEquals(1, activeUserIds.size());
-		Assert.assertEquals(firstUser.getUserId(), (int) activeUserIds.get(0));
+		Assert.assertEquals(
+			_FIRST_USER.getUserId(), (int) activeUserIds.get(0));
 
 		List<Integer> inactiveUserIds = UserUtil.getUserIds(false);
 
 		Assert.assertEquals(1, inactiveUserIds.size());
-		Assert.assertEquals(secondUser.getUserId(), (int) inactiveUserIds.get(0));
+		Assert.assertEquals(
+			_SECOND_USER.getUserId(), (int) inactiveUserIds.get(0));
 	}
 
 	@Test
 	public void testIsCurrentUserActiveWithAuthenticatedAndActiveUser()
 		throws Exception {
 
-		setUpSecurityUtils(true);
-		setUpGetCurrentUserId();
-
-		UserUtil.addUser("test@test.com", "password");
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
 
 		Assert.assertTrue(UserUtil.isCurrentUserActive());
 	}
@@ -238,13 +219,11 @@ public class UserUtilTest extends BaseTestCase {
 	public void testIsCurrentUserActiveWithAuthenticatedAndPendingCancellationUser()
 		throws Exception {
 
-		setUpSecurityUtils(true);
-		setUpGetCurrentUserId();
-
-		UserUtil.addUser("test@test.com", "password");
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", false, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", false,
+			true);
 
 		Assert.assertTrue(UserUtil.isCurrentUserActive());
 	}
@@ -253,13 +232,11 @@ public class UserUtilTest extends BaseTestCase {
 	public void testIsCurrentUserActiveWithAuthenticatedAndInactiveUser()
 		throws Exception {
 
-		setUpSecurityUtils(true);
-		setUpGetCurrentUserId();
-
-		UserUtil.addUser("test@test.com", "password");
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", false, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", false,
+			false);
 
 		Assert.assertFalse(UserUtil.isCurrentUserActive());
 	}
@@ -268,21 +245,18 @@ public class UserUtilTest extends BaseTestCase {
 	public void testIsCurrentUserActiveWithUnauthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 
 		Assert.assertFalse(UserUtil.isCurrentUserActive());
 	}
 
 	@Test
 	public void testResetEmailsSent() throws Exception {
-		User firstUser = UserUtil.addUser("test@test.com", "password");
-		User secondUser = UserUtil.addUser("test2@test.com", "password");
+		UserUtil.updateEmailsSent(_FIRST_USER.getUserId(), 5);
+		UserUtil.updateEmailsSent(_SECOND_USER.getUserId(), 10);
 
-		UserUtil.updateEmailsSent(firstUser.getUserId(), 5);
-		UserUtil.updateEmailsSent(secondUser.getUserId(), 10);
-
-		firstUser = UserUtil.getUserByUserId(firstUser.getUserId());
-		secondUser = UserUtil.getUserByUserId(secondUser.getUserId());
+		User firstUser = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
+		User secondUser = UserUtil.getUserByUserId(_SECOND_USER.getUserId());
 
 		Assert.assertEquals(5, firstUser.getEmailsSent());
 		Assert.assertEquals(10, secondUser.getEmailsSent());
@@ -298,11 +272,9 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testResetPassword() throws Exception {
-		User user = UserUtil.addUser("test@test.com", "password");
+		UserUtil.updatePasswordResetToken(_FIRST_USER.getUserId());
 
-		UserUtil.updatePasswordResetToken(user.getUserId());
-
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		String encryptedPassword = user.getPassword();
 
@@ -317,11 +289,9 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testResetPasswordAfterExpiration() throws Exception {
-		User user = UserUtil.addUser("test@test.com", "password");
+		UserUtil.updatePasswordResetToken(_FIRST_USER.getUserId());
 
-		UserUtil.updatePasswordResetToken(user.getUserId());
-
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		String encryptedPassword = user.getPassword();
 
@@ -333,14 +303,6 @@ public class UserUtilTest extends BaseTestCase {
 
 		user.setPasswordResetExpiration(
 			new Timestamp(calendar.getTimeInMillis()));
-
-		PowerMockito.spy(UserUtil.class);
-
-		PowerMockito.doReturn(
-			user
-		).when(
-			UserUtil.class, "getUserByEmailAddress", "test@test.com"
-		);
 
 		try {
 			UserUtil.resetPassword(
@@ -358,11 +320,9 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testResetPasswordWithInvalidToken() throws Exception {
-		User user = UserUtil.addUser("test@test.com", "password");
+		UserUtil.updatePasswordResetToken(_FIRST_USER.getUserId());
 
-		UserUtil.updatePasswordResetToken(user.getUserId());
-
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		String encryptedPassword = user.getPassword();
 
@@ -382,18 +342,14 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testUpdatePassword() throws Exception {
-		setUpUserUtil();
+		String password = _FIRST_USER.getPassword();
+		String salt = _FIRST_USER.getSalt();
 
-		User user = UserUtil.addUser("test@test.com", "password");
+		UserUtil.updatePasswordResetToken(_FIRST_USER.getUserId());
 
-		String password = user.getPassword();
-		String salt = user.getSalt();
+		UserUtil.updatePassword(_FIRST_USER.getUserId(), "updatedPassword");
 
-		UserUtil.updatePasswordResetToken(_USER_ID);
-
-		UserUtil.updatePassword(_USER_ID, "updatedPassword");
-
-		user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotEquals(password, user.getPassword());
 		Assert.assertNotEquals(salt, user.getSalt());
@@ -402,25 +358,17 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test(expected = PasswordLengthException.class)
 	public void testUpdatePasswordWithInvalidPassword() throws Exception {
-		setUpUserUtil();
-
-		UserUtil.addUser("test@test.com", "password");
-
-		UserUtil.updatePassword(_USER_ID, "test");
+		UserUtil.updatePassword(_FIRST_USER.getUserId(), "test");
 	}
 
 	@Test
 	public void testUpdatePasswordResetToken() throws Exception {
-		setUpUserUtil();
+		Assert.assertNull(_FIRST_USER.getPasswordResetToken());
+		Assert.assertNull(_FIRST_USER.getPasswordResetExpiration());
 
-		User user = UserUtil.addUser("test@test.com", "password");
+		UserUtil.updatePasswordResetToken(_FIRST_USER.getUserId());
 
-		Assert.assertNull(user.getPasswordResetToken());
-		Assert.assertNull(user.getPasswordResetExpiration());
-
-		UserUtil.updatePasswordResetToken(_USER_ID);
-
-		user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user.getPasswordResetToken());
 		Assert.assertNotNull(user.getPasswordResetExpiration());
@@ -428,43 +376,38 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateEmailsSent() throws Exception {
-		User user = UserUtil.addUser("test@test.com", "password");
+		Assert.assertEquals(0, _FIRST_USER.getEmailsSent());
 
-		Assert.assertEquals(0, user.getEmailsSent());
+		UserUtil.updateEmailsSent(_FIRST_USER.getUserId(), 5);
 
-		UserUtil.updateEmailsSent(user.getUserId(), 5);
-
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals(5, user.getEmailsSent());
 	}
 	@Test
 	public void testUnsubscribeUserFromEmailNotifications() throws Exception {
-		User user = UserUtil.addUser("test@test.com", "password");
+		Assert.assertTrue(_FIRST_USER.isEmailNotification());
 
-		Assert.assertTrue(user.isEmailNotification());
+		UserUtil.unsubscribeUserFromEmailNotifications(
+			_FIRST_USER.getEmailAddress());
 
-		UserUtil.unsubscribeUserFromEmailNotifications(user.getEmailAddress());
-
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertFalse(user.isEmailNotification());
 	}
 
 	@Test
 	public void testUpdateUserDetails() throws Exception {
-		setUpUserUtil();
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
-		User user = UserUtil.addUser("test@test.com", "password");
-
-		String password = user.getPassword();
-		String salt = user.getSalt();
+		String password = _FIRST_USER.getPassword();
+		String salt = _FIRST_USER.getSalt();
 
 		UserUtil.updateUserDetails(
 			"update@test.com", "password", "newPassword",
 			"http://www.ebay.ca/itm/", false);
 
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
@@ -477,18 +420,16 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test(expected = PasswordLengthException.class)
 	public void testUpdateUserDetailsWithInvalidPassword() throws Exception {
-		setUpUserUtil();
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
-		User user = UserUtil.addUser("test@test.com", "password");
-
-		String password = user.getPassword();
-		String salt = user.getSalt();
+		String password = _FIRST_USER.getPassword();
+		String salt = _FIRST_USER.getSalt();
 
 		UserUtil.updateUserDetails(
 			"update@test.com", "password", "short", "http://www.ebay.ca/itm/",
 			false);
 
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
@@ -503,17 +444,15 @@ public class UserUtilTest extends BaseTestCase {
 	public void testUpdateUserDetailsWithNullPasswords()
 		throws Exception {
 
-		setUpUserUtil();
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
-		User user = UserUtil.addUser("test@test.com", "password");
-
-		String password = user.getPassword();
-		String salt = user.getSalt();
+		String password = _FIRST_USER.getPassword();
+		String salt = _FIRST_USER.getSalt();
 
 		UserUtil.updateUserDetails(
 			"update@test.com", "", "", "http://www.ebay.ca/itm/", false);
 
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
@@ -528,9 +467,7 @@ public class UserUtilTest extends BaseTestCase {
 	public void testUpdateUserDetailsWithNullCurrentPassword()
 		throws Exception {
 
-		setUpUserUtil();
-
-		UserUtil.addUser("test@test.com", "password");
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserDetails(
 			"update@test.com", "currentPassword", "", "http://www.ebay.ca/itm/",
@@ -541,29 +478,25 @@ public class UserUtilTest extends BaseTestCase {
 	public void testUpdateUserDetailsWithNullNewPassword()
 		throws Exception {
 
-		setUpUserUtil();
-
-		UserUtil.addUser("test@test.com", "password");
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserDetails(
-			"update@test.com", "", "newPassword", "http://www.ebay.ca/itm/",
+			"test@test.com", "", "newPassword", "http://www.ebay.ca/itm/",
 			false);
 	}
 
 	@Test
 	public void testUpdateUserLoginDetails() throws Exception {
-		setUpUserUtil();
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
-		User user = UserUtil.addUser("test@test.com", "password");
-
-		Assert.assertNull(user.getLastLoginDate());
-		Assert.assertNull(user.getLastLoginIpAddress());
+		Assert.assertNull(_FIRST_USER.getLastLoginDate());
+		Assert.assertNull(_FIRST_USER.getLastLoginIpAddress());
 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 
 		UserUtil.updateUserLoginDetails(date, "127.0.0.1");
 
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user.getLastLoginDate());
 		Assert.assertEquals("127.0.0.1", user.getLastLoginIpAddress());
@@ -571,20 +504,15 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateUserSubscription() throws Exception {
-		setUpUserUtil();
-
-		User user = UserUtil.addUser("update@test.com", "password");
-
-		Assert.assertNotNull(user);
-		Assert.assertNull(user.getCustomerId());
-		Assert.assertNull(user.getSubscriptionId());
-		Assert.assertFalse(user.isActive());
-		Assert.assertFalse(user.isPendingCancellation());
+		Assert.assertNull(_FIRST_USER.getCustomerId());
+		Assert.assertNull(_FIRST_USER.getSubscriptionId());
+		Assert.assertFalse(_FIRST_USER.isActive());
+		Assert.assertFalse(_FIRST_USER.isPendingCancellation());
 
 		UserUtil.updateUserSubscription(
-			user.getUserId(), "customerId", "subscriptionId", true, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true, true);
 
-		user = UserUtil.getUserByUserId(user.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("customerId", user.getCustomerId());
@@ -595,8 +523,6 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testValidateCredentials() throws Exception {
-		User user = UserUtil.addUser("test@test.com", "password");
-
 		Method validateCredentials = _clazz.getDeclaredMethod(
 			"_validateCredentials", String.class, String.class, String.class,
 			String.class);
@@ -604,15 +530,13 @@ public class UserUtilTest extends BaseTestCase {
 		validateCredentials.setAccessible(true);
 
 		validateCredentials.invoke(
-			_classInstance, "test@test.com", user.getPassword(), "password",
-			user.getSalt());
+			_classInstance, "test@test.com", _FIRST_USER.getPassword(),
+			"password", _FIRST_USER.getSalt());
 	}
 
 	@Test
 	public void testValidateCredentialsWithIncorrectPassword()
 		throws Exception {
-
-		User user = UserUtil.addUser("test@test.com", "password");
 
 		Method validateCredentials = _clazz.getDeclaredMethod(
 			"_validateCredentials", String.class, String.class, String.class,
@@ -622,8 +546,8 @@ public class UserUtilTest extends BaseTestCase {
 
 		try {
 			validateCredentials.invoke(
-				_classInstance, "test@test.com", user.getPassword(),
-				"incorrectPassword", user.getSalt());
+				_classInstance, "test@test.com", _FIRST_USER.getPassword(),
+				"incorrectPassword", _FIRST_USER.getSalt());
 
 			Assert.fail();
 		}
@@ -637,8 +561,6 @@ public class UserUtilTest extends BaseTestCase {
 	public void testValidateCredentialsWithNullEncryptedPassword()
 		throws Exception {
 
-		User user = UserUtil.addUser("test@test.com", "password");
-
 		Method validateCredentials = _clazz.getDeclaredMethod(
 			"_validateCredentials", String.class, String.class, String.class,
 			String.class);
@@ -647,8 +569,8 @@ public class UserUtilTest extends BaseTestCase {
 
 		try {
 			validateCredentials.invoke(
-				_classInstance, "test@test.com", "",
-				"password", user.getSalt());
+				_classInstance, "test@test.com", "", "password",
+				_FIRST_USER.getSalt());
 
 			Assert.fail();
 		}
@@ -662,8 +584,6 @@ public class UserUtilTest extends BaseTestCase {
 	public void testValidateCredentialsWithNullPassword()
 		throws Exception {
 
-		User user = UserUtil.addUser("test@test.com", "password");
-
 		Method validateCredentials = _clazz.getDeclaredMethod(
 			"_validateCredentials", String.class, String.class, String.class,
 			String.class);
@@ -672,8 +592,8 @@ public class UserUtilTest extends BaseTestCase {
 
 		try {
 			validateCredentials.invoke(
-				_classInstance, "test@test.com", user.getPassword(),
-				"", user.getSalt());
+				_classInstance, "test@test.com", _FIRST_USER.getPassword(),
+				"", _FIRST_USER.getSalt());
 
 			Assert.fail();
 		}
@@ -690,14 +610,13 @@ public class UserUtilTest extends BaseTestCase {
 
 		validateEmailAddress.setAccessible(true);
 
-		validateEmailAddress.invoke(_classInstance, _USER_ID, "test@test.com");
+		validateEmailAddress.invoke(
+			_classInstance, _FIRST_USER.getUserId(), "test3@test.com");
 	}
 
 	@Test
 	public void testValidateEmailAddressWithDuplicateEmailAddress()
 		throws Exception {
-
-		User user = UserUtil.addUser("test@test.com", "password");
 
 		Method validateEmailAddress = _clazz.getDeclaredMethod(
 			"_validateEmailAddress", int.class, String.class);
@@ -706,7 +625,7 @@ public class UserUtilTest extends BaseTestCase {
 
 		try {
 			validateEmailAddress.invoke(
-				_classInstance, user.getUserId() + 1, "test@test.com");
+				_classInstance, _FIRST_USER.getUserId() + 1, "test@test.com");
 
 			Assert.fail();
 		}
@@ -720,14 +639,13 @@ public class UserUtilTest extends BaseTestCase {
 	public void testValidateEmailAddressWithSameEmailAddress()
 		throws Exception {
 
-		UserUtil.addUser("test@test.com", "password");
-
 		Method validateEmailAddress = _clazz.getDeclaredMethod(
 			"_validateEmailAddress", int.class, String.class);
 
 		validateEmailAddress.setAccessible(true);
 
-		validateEmailAddress.invoke(_classInstance, _USER_ID, "test@test.com");
+		validateEmailAddress.invoke(
+			_classInstance, _FIRST_USER.getUserId(), "test@test.com");
 	}
 
 	@Test
@@ -740,7 +658,8 @@ public class UserUtilTest extends BaseTestCase {
 		validateEmailAddress.setAccessible(true);
 
 		try {
-			validateEmailAddress.invoke(_classInstance, _USER_ID, "test");
+			validateEmailAddress.invoke(
+				_classInstance, _FIRST_USER.getUserId(), "test");
 
 			Assert.fail();
 		}
@@ -796,11 +715,11 @@ public class UserUtilTest extends BaseTestCase {
 		}
 	}
 
-	private static Object _classInstance;
+	private static boolean _isInitialized = false;
 	private static Class _clazz;
-
-	private static final Pattern _BASE_64_PATTERN = Pattern.compile(
-		"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|" +
-			"[A-Za-z0-9+/]{2}==)$");
+	private static Object _classInstance;
+	private static User _FIRST_USER;
+	private static User _SECOND_USER;
+	private static User _THIRD_USER;
 
 }

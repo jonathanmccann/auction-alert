@@ -40,8 +40,12 @@ import java.util.Map;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DelegatingSubject;
+import org.apache.shiro.subject.support.SubjectThreadState;
+import org.apache.shiro.util.ThreadContext;
+import org.apache.shiro.util.ThreadState;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
@@ -203,18 +207,6 @@ public abstract class BaseTestCase {
 		);
 	}
 
-	protected static void setUpNullSecurityUtils()
-		throws Exception {
-
-		PowerMockito.spy(SecurityUtils.class);
-
-		PowerMockito.doReturn(
-			null
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-	}
-
 	protected static void setUpProperties() throws Exception {
 		Class<?> clazz = BaseTestCase.class;
 
@@ -223,25 +215,55 @@ public abstract class BaseTestCase {
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 	}
 
-	protected static void setUpSecurityUtils(boolean authenticated)
+	protected static void setUpSecurityUtilsSubject(boolean authenticated)
 		throws Exception {
-
-		PowerMockito.spy(SecurityUtils.class);
 
 		DefaultSecurityManager defaultSecurityManager =
 			new DefaultSecurityManager();
 
-		Subject subject = new DelegatingSubject(
-			null, authenticated, null, null, defaultSecurityManager);
+		ThreadContext.bind(defaultSecurityManager);
 
-		Session session = subject.getSession(true);
+		Subject subject = Mockito.mock(DelegatingSubject.class);
 
-		session.setAttribute("userId", _USER_ID);
+		ThreadState threadState = new SubjectThreadState(subject);
 
-		PowerMockito.doReturn(
-			subject
-		).when(
-			SecurityUtils.class, "getSubject"
+		threadState.bind();
+
+		Mockito.when(
+			subject.isAuthenticated()
+		).thenReturn(
+			authenticated
+		);
+	}
+
+	protected static void setUpSecurityUtilsSession(int userId)
+		throws Exception {
+
+		DefaultSecurityManager defaultSecurityManager =
+			new DefaultSecurityManager();
+
+		ThreadContext.bind(defaultSecurityManager);
+
+		Subject subject = Mockito.mock(DelegatingSubject.class);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute("userId", userId);
+
+		ThreadState threadState = new SubjectThreadState(subject);
+
+		threadState.bind();
+
+		Mockito.when(
+			subject.getSession()
+		).thenReturn(
+			session
+		);
+
+		Mockito.when(
+			subject.isAuthenticated()
+		).thenReturn(
+			true
 		);
 	}
 

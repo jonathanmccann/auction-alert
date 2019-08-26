@@ -106,7 +106,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testCreateAccount() throws Exception {
 		setUpCustomer();
 		setUpMailSender();
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		MockHttpServletRequestBuilder request = post("/create_account");
@@ -539,7 +539,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testGetContactWithAuthenticatedAndActiveUser()
 		throws Exception {
 
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/contact"))
@@ -556,7 +556,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testGetContactWithAuthenticatedAndInactiveUser()
 		throws Exception {
 
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/contact"))
@@ -573,7 +573,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testGetContactWithUnauthenticatedAndActiveUser()
 		throws Exception {
 
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/contact"))
@@ -589,7 +589,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testGetContactWithUnauthenticatedAndInactiveUser()
 		throws Exception {
 
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/contact"))
@@ -603,7 +603,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetCreateAccount() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(get("/create_account"))
 			.andExpect(status().isOk())
@@ -621,7 +621,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetCreateAccountWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/create_account"))
@@ -647,7 +647,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithPendingCancellation() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpSubscription();
 		setUpUserUtil();
 
@@ -669,7 +669,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpSubscription();
 		setUpUserUtil();
 
@@ -691,7 +691,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithInactiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpSubscription();
 		setUpUserUtil();
 
@@ -712,7 +712,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithOneEmailSent() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpSubscription();
 		setUpUserUtil();
 
@@ -735,7 +735,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithUnauthenticatedUser() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(get("/"))
 			.andExpect(status().isOk())
@@ -750,7 +750,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetLogInWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpSubscription();
 		setUpUserUtil();
 
@@ -821,7 +821,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetLogOut() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 
 		Subject currentUser = SecurityUtils.getSubject();
 
@@ -848,7 +848,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testPostContact() throws Exception {
 		setUpMailSender();
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(post("/contact"))
 			.andExpect(status().isOk())
@@ -862,7 +862,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostContactWithException() throws Exception {
-		setUpSecurityUtils(false);
+		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(post("/contact"))
 			.andExpect(status().isOk())
@@ -917,7 +917,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostLogInWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 
 		this.mockMvc.perform(post("/log_in"))
 			.andExpect(status().is3xxRedirection())
@@ -929,7 +929,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInWithAuthenticatedUserAndRedirect()
 		throws Exception {
 
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1127,7 +1127,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostResetPassword() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		Subject currentUser = SecurityUtils.getSubject();
@@ -1568,7 +1568,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewMyAccountAsActiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil();
 
 		this.mockMvc.perform(get("/my_account")
@@ -1593,7 +1593,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewMyAccountAsInactiveUser() throws Exception {
-		setUpSecurityUtils(true);
+		setUpSecurityUtilsSubject(true);
 		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/my_account")
