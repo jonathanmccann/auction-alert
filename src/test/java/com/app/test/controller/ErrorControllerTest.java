@@ -18,19 +18,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.app.model.User;
 import com.app.test.BaseTestCase;
 
+import com.app.util.ConstantsUtil;
+import com.app.util.UserUtil;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -40,21 +41,35 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
 public class ErrorControllerTest extends BaseTestCase {
 
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpProperties();
+
+		setUpDatabase();
+
+		ConstantsUtil.init();
+	}
 
 	@Before
 	public void setUp() throws Exception {
+		_USER = UserUtil.addUser("test@liferay.com", "password");
+
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		UserUtil.deleteUserByUserId(_USER.getUserId());
 	}
 
 	@Test
 	public void testGetAccountFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/error"))
 			.andExpect(status().isOk())
@@ -66,8 +81,7 @@ public class ErrorControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetAccountFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil(false);
+		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(get("/error"))
 			.andExpect(status().isOk())
@@ -79,8 +93,10 @@ public class ErrorControllerTest extends BaseTestCase {
 
 	@Test
 	public void testHeadAccountFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(head("/error"))
 			.andExpect(status().isOk())
@@ -92,8 +108,7 @@ public class ErrorControllerTest extends BaseTestCase {
 
 	@Test
 	public void testHeadAccountFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil(false);
+		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(head("/error"))
 			.andExpect(status().isOk())
@@ -104,6 +119,8 @@ public class ErrorControllerTest extends BaseTestCase {
 	}
 
 	private MockMvc mockMvc;
+
+	private static User _USER;
 
 	@Autowired
 	private WebApplicationContext wac;

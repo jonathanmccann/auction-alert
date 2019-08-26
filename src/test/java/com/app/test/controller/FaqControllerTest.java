@@ -17,19 +17,20 @@ package com.app.test.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.app.model.User;
 import com.app.test.BaseTestCase;
 
+import com.app.util.ConstantsUtil;
+import com.app.util.UserUtil;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
-
-import org.powermock.modules.junit4.rule.PowerMockRule;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -39,21 +40,35 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
 public class FaqControllerTest extends BaseTestCase {
 
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpProperties();
+
+		setUpDatabase();
+
+		ConstantsUtil.init();
+	}
 
 	@Before
 	public void setUp() throws Exception {
+		_USER = UserUtil.addUser("test@liferay.com", "password");
+
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		UserUtil.deleteUserByUserId(_USER.getUserId());
 	}
 
 	@Test
 	public void testGetAccountFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/account_faq"))
 			.andExpect(status().isOk())
@@ -66,7 +81,6 @@ public class FaqControllerTest extends BaseTestCase {
 	@Test
 	public void testGetAccountFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/account_faq"))
 			.andExpect(status().isOk())
@@ -78,8 +92,10 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/faq"))
 			.andExpect(status().isOk())
@@ -92,7 +108,6 @@ public class FaqControllerTest extends BaseTestCase {
 	@Test
 	public void testGetFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/faq"))
 			.andExpect(status().isOk())
@@ -104,8 +119,10 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetGeneralFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/general_faq"))
 			.andExpect(status().isOk())
@@ -118,7 +135,6 @@ public class FaqControllerTest extends BaseTestCase {
 	@Test
 	public void testGetGeneralFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/general_faq"))
 			.andExpect(status().isOk())
@@ -130,8 +146,10 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetMonitorFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/monitor_faq"))
 			.andExpect(status().isOk())
@@ -144,7 +162,6 @@ public class FaqControllerTest extends BaseTestCase {
 	@Test
 	public void testGetMonitorFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/monitor_faq"))
 			.andExpect(status().isOk())
@@ -156,8 +173,10 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetNewFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/new_faq"))
 			.andExpect(status().isOk())
@@ -170,7 +189,6 @@ public class FaqControllerTest extends BaseTestCase {
 	@Test
 	public void testGetNewFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/new_faq"))
 			.andExpect(status().isOk())
@@ -182,8 +200,10 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetQueryFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/query_faq"))
 			.andExpect(status().isOk())
@@ -196,7 +216,6 @@ public class FaqControllerTest extends BaseTestCase {
 	@Test
 	public void testGetQueryFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/query_faq"))
 			.andExpect(status().isOk())
@@ -208,8 +227,10 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetResultFaqAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		UserUtil.updateUserSubscription(
+			_USER.getUserId(), "", "", true, false);
+
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/result_faq"))
 			.andExpect(status().isOk())
@@ -222,7 +243,6 @@ public class FaqControllerTest extends BaseTestCase {
 	@Test
 	public void testGetResultFaqAsInactiveUser() throws Exception {
 		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
 
 		this.mockMvc.perform(get("/result_faq"))
 			.andExpect(status().isOk())
@@ -233,6 +253,8 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	private MockMvc mockMvc;
+
+	private static User _USER;
 
 	@Autowired
 	private WebApplicationContext wac;

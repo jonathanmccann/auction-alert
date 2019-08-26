@@ -266,6 +266,38 @@ public abstract class BaseTestCase {
 		);
 	}
 
+	protected static void setUpSecurityUtilsSession(
+			boolean authenticated, int userId)
+		throws Exception {
+
+		DefaultSecurityManager defaultSecurityManager =
+			new DefaultSecurityManager();
+
+		ThreadContext.bind(defaultSecurityManager);
+
+		Subject subject = Mockito.mock(DelegatingSubject.class);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute("userId", userId);
+
+		ThreadState threadState = new SubjectThreadState(subject);
+
+		threadState.bind();
+
+		Mockito.when(
+			subject.getSession()
+		).thenReturn(
+			session
+		);
+
+		Mockito.when(
+			subject.isAuthenticated()
+		).thenReturn(
+			authenticated
+		);
+	}
+
 	protected static void setUpSendGridMailSender() throws Exception {
 		PowerMockito.spy(SendGridMailSender.class);
 
