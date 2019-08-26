@@ -38,22 +38,27 @@ import java.lang.reflect.Method;
 
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -61,12 +66,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+@PrepareForTest({
+	HttpClients.class, EntityUtils.class
+})
 public class EbaySearchResultUtilTest extends BaseTestCase {
-
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -102,14 +107,22 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		setUpExchangeRateUtil();
 
-		_setUpItems();
-
 		ConstantsUtil.init();
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		_USER = UserUtil.addUser("test@liferay.com", "password");
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		UserUtil.deleteUserByUserId(_USER.getUserId());
 	}
 
 	@Test
 	public void testCreateSearchResult() throws Exception {
-		List<Item> items = _getItems(_AUCTION_JSON_RESPONSE);
+		List<Item> items = _getItems(_getEbaySearchResultJsonResponse());
 
 		SearchResult searchResult =
 			(SearchResult)_createSearchResultMethod.invoke(
@@ -128,8 +141,11 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testCreateSearchResults() throws Exception {
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
+			_getEbaySearchResultJsonResponse();
+
 		FindItemsAdvancedResponse findItemsAdvancedResponse =
-			_AUCTION_JSON_RESPONSE.getFindItemsAdvancedResponse();
+			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
 
 		List<SearchResult> searchResults =
 			(List<SearchResult>)_createSearchResultsMethod.invoke(
@@ -147,14 +163,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetEbaySearchResultsWithAuctionResults() throws Exception {
-		_setUpGetEbaySearchResults(_AUCTION_JSON_RESPONSE);
+		_setUpGetEbaySearchResults(_AUCTION_JSON_PATH);
 
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setSearchQueryId(1);
-		searchQuery.setKeywords("Test Keywords");
-		searchQuery.setGlobalId("EBAY-US");
+		SearchQuery searchQuery = _createSearchQuery();
 
 		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
@@ -169,14 +180,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testGetEbaySearchResultsWithAuctionWithBINResults()
 		throws Exception {
 
-		_setUpGetEbaySearchResults(_AUCTION_WITH_BIN_RESPONSE);
+		_setUpGetEbaySearchResults(_AUCTION_WITH_BIN_JSON_PATH);
 
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setSearchQueryId(1);
-		searchQuery.setKeywords("Test Keywords");
-		searchQuery.setGlobalId("EBAY-US");
+		SearchQuery searchQuery = _createSearchQuery();
 
 		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
@@ -189,14 +195,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetEbaySearchResultsWithEmptyResults() throws Exception {
-		_setUpGetEbaySearchResults(_EMPTY_RESPONSE);
+		_setUpGetEbaySearchResults(_EMPTY_JSON_PATH);
 
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setSearchQueryId(1);
-		searchQuery.setKeywords("Test Keywords");
-		searchQuery.setGlobalId("EBAY-US");
+		SearchQuery searchQuery = _createSearchQuery();
 
 		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
@@ -206,14 +207,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetEbaySearchResultsWithFailure() throws Exception {
-		_setUpGetEbaySearchResults(_FAILURE_RESPONSE);
+		_setUpGetEbaySearchResults(_FAILURE_JSON_PATH);
 
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setSearchQueryId(1);
-		searchQuery.setKeywords("Test Keywords");
-		searchQuery.setGlobalId("EBAY-US");
+		SearchQuery searchQuery = _createSearchQuery();
 
 		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
@@ -225,14 +221,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testGetEbaySearchResultsWithFixedPriceResults()
 		throws Exception {
 
-		_setUpGetEbaySearchResults(_FIXED_PRICE_RESPONSE);
+		_setUpGetEbaySearchResults(_FIXED_PRICE_JSON_PATH);
 
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setSearchQueryId(1);
-		searchQuery.setKeywords("Test Keywords");
-		searchQuery.setGlobalId("EBAY-US");
+		SearchQuery searchQuery = _createSearchQuery();
 
 		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
@@ -247,14 +238,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testGetEbaySearchResultsWithStoreInventoryResults()
 		throws Exception {
 
-		_setUpGetEbaySearchResults(_STORE_INVENTORY_RESPONSE);
+		_setUpGetEbaySearchResults(_STORE_INVENTORY_JSON_PATH);
 
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setSearchQueryId(1);
-		searchQuery.setKeywords("Test Keywords");
-		searchQuery.setGlobalId("EBAY-US");
+		SearchQuery searchQuery = _createSearchQuery();
 
 		List<SearchResult> searchResults =
 			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
@@ -684,6 +670,17 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		return listingInfo;
 	}
 
+	private static SearchQuery _createSearchQuery() throws Exception {
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER.getUserId());
+		searchQuery.setSearchQueryId(1);
+		searchQuery.setKeywords("Test Keywords");
+		searchQuery.setGlobalId("EBAY-US");
+
+		return searchQuery;
+	}
+
 	private static SellingStatus _createSellingStatus() throws Exception {
 		CurrentPrice currentPrice = new CurrentPrice();
 
@@ -727,50 +724,19 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		return jsonSearchResult.getItems();
 	}
 
-	private static void _setUpItems() throws Exception {
+	private static EbaySearchResultJsonResponse
+			_getEbaySearchResultJsonResponse()
+		throws Exception {
+
 		Gson gson = new Gson();
 
-		_AUCTION_JSON_RESPONSE = gson.fromJson(
-			new String(
-				Files.readAllBytes(
-					new ClassPathResource("/json/auction.json")
-				.getFile().toPath())),
-			EbaySearchResultJsonResponse.class);
-
-		_AUCTION_WITH_BIN_RESPONSE = gson.fromJson(
-			new String(
-				Files.readAllBytes(
-					new ClassPathResource("/json/auctionWithBIN.json")
-				.getFile().toPath())),
-			EbaySearchResultJsonResponse.class);
-
-		_EMPTY_RESPONSE = gson.fromJson(
-			new String(
-				Files.readAllBytes(
-					new ClassPathResource("/json/empty.json")
-				.getFile().toPath())),
-			EbaySearchResultJsonResponse.class);
-
-		_FAILURE_RESPONSE = gson.fromJson(
-			new String(
-				Files.readAllBytes(
-					new ClassPathResource("/json/failure.json")
-				.getFile().toPath())),
-			EbaySearchResultJsonResponse.class);
-
-		_FIXED_PRICE_RESPONSE = gson.fromJson(
-			new String(
-				Files.readAllBytes(
-					new ClassPathResource("/json/fixedPrice.json")
-				.getFile().toPath())),
-			EbaySearchResultJsonResponse.class);
-
-		_STORE_INVENTORY_RESPONSE = gson.fromJson(
-			new String(
-				Files.readAllBytes(
-					new ClassPathResource("/json/storeInventory.json")
-				.getFile().toPath())),
-			EbaySearchResultJsonResponse.class);
+		return
+			gson.fromJson(
+				new String(
+					Files.readAllBytes(
+						new ClassPathResource(_AUCTION_JSON_PATH)
+					.getFile().toPath())),
+				EbaySearchResultJsonResponse.class);
 	}
 
 	private void _assertSearchResult(
@@ -803,56 +769,55 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		}
 	}
 
-	private void _setUpGetEbaySearchResults(
-			EbaySearchResultJsonResponse ebaySearchResultJsonResponse)
-		throws Exception {
+	private void _setUpGetEbaySearchResults(String jsonPath) throws Exception {
+		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
+			CloseableHttpResponse.class);
 
-		User mockUser = Mockito.mock(User.class);
+		CloseableHttpClient closeableHttpClient = Mockito.mock(
+			CloseableHttpClient.class);
+
+		PowerMockito.spy(HttpClients.class);
+
+		PowerMockito.doReturn(
+			closeableHttpClient
+		).when(
+			HttpClients.class, "createDefault"
+		);
 
 		Mockito.when(
-			mockUser.getPreferredDomain()
+			closeableHttpClient.execute(Mockito.anyObject())
 		).thenReturn(
-			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN
+			closeableHttpResponse
 		);
 
-		PowerMockito.spy(UserUtil.class);
+		PowerMockito.spy(EntityUtils.class);
 
 		PowerMockito.doReturn(
-			mockUser
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource(jsonPath)
+				.getFile().toPath()))
 		).when(
-			UserUtil.class, "getUserByUserId", Mockito.anyInt()
-		);
-
-		PowerMockito.spy(EbaySearchResultUtil.class);
-
-		PowerMockito.doReturn(
-			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse()
-		).when(
-			EbaySearchResultUtil.class, "_executeFindItemsAdvanced", Mockito.anyString()
+			EntityUtils.class, "toString", Mockito.anyObject()
 		);
 	}
 
-	private static EbaySearchResultJsonResponse _AUCTION_JSON_RESPONSE;
-
-	private static EbaySearchResultJsonResponse _AUCTION_WITH_BIN_RESPONSE;
-
-	private static EbaySearchResultJsonResponse _EMPTY_RESPONSE;
-
-	private static EbaySearchResultJsonResponse _FAILURE_RESPONSE;
-
-	private static EbaySearchResultJsonResponse _FIXED_PRICE_RESPONSE;
-
-	private static EbaySearchResultJsonResponse _STORE_INVENTORY_RESPONSE;
-
 	private static final String _AUCTION = "Auction";
+
+	private static final String _AUCTION_JSON_PATH = "/json/auction.json";
 
 	private static final String _AUCTION_PRICE = "$10.00";
 
 	private static final String _AUCTION_WITH_BIN = "AuctionWithBIN";
 
-	private static final Calendar _CALENDAR = Calendar.getInstance();
+	private static final String _AUCTION_WITH_BIN_JSON_PATH =
+		"/json/auctionWithBIN.json";
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
+
+	private static final String _EMPTY_JSON_PATH = "/json/empty.json";
+
+	private static final String _FAILURE_JSON_PATH = "/json/failure.json";
 
 	private static final String _FIND_ITEMS_ADVANCED_URL_BASE =
 		"https://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME" +
@@ -864,7 +829,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private static final String _FIXED_PRICE = "FixedPrice";
 
-	private static final String _FIXED_PRICE_PRICE = "$100.00";
+	private static final String _FIXED_PRICE_JSON_PATH = "/json/fixedPrice.json";
 
 	private static final String _GALLERY_URL = "http://www.ebay.com/1.jpg";
 
@@ -873,6 +838,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	private static final String _ITEM_TITLE = "Item Title 1";
 
 	private static final String _STORE_INVENTORY = "StoreInventory";
+
+	private static final String _STORE_INVENTORY_JSON_PATH =
+		"/json/storeInventory.json";
 
 	private static final String _UNKNOWN = "Unknown";
 
@@ -883,5 +851,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	private static Method _createSearchResultsMethod;
 	private static Method _setPriceMethod;
 	private static Method _setUpAdvanceRequestMethod;
+	private static User _USER;
 
 }

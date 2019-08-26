@@ -21,7 +21,6 @@ import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
-import com.app.util.EbaySearchResultUtil;
 import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.ReleaseUtil;
@@ -65,9 +64,9 @@ import javax.mail.Transport;
  * @author Jonathan McCann
  */
 @PrepareForTest({
-	DatabaseUtil.class, EbaySearchResultUtil.class, MailSenderFactory.class,
-	ReleaseUtil.class, SearchQuery.class, SecurityUtils.class,
-	SendGridMailSender.class, StripeUtil.class, Transport.class, UserUtil.class
+	DatabaseUtil.class, MailSenderFactory.class, ReleaseUtil.class,
+	SearchQuery.class, SecurityUtils.class, SendGridMailSender.class,
+	StripeUtil.class, Transport.class, UserUtil.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
