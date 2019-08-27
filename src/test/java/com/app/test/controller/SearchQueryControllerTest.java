@@ -76,18 +76,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
 		_USER = UserUtil.addUser("test@liferay.com", "password");
-
-		List<Category> categories = new ArrayList<>();
-
-		Category category = new Category("100", "Category Name", "100", 1);
-
-		categories.add(category);
-
-		category = new Category("200", "Category Name 2", "100", 2);
-
-		categories.add(category);
-
-		CategoryUtil.addCategories(categories);
 	}
 
 	@After
@@ -370,6 +358,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetSubcategories() throws Exception {
+		addCategories();
+
 		MvcResult mvcResult = this.mockMvc.perform(get("/subcategories")
 			.param("categoryParentId", "100")
 			.accept("application/json"))
@@ -383,6 +373,8 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	@Test
 	public void testGetSubcategoriesWithInvalidCategoryParentId()
 		throws Exception {
+
+		addCategories();
 
 		MvcResult mvcResult = this.mockMvc.perform(get("/subcategories")
 			.param("categoryParentId", "1")
@@ -1059,6 +1051,20 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeDoesNotExist("isAdd"))
 			.andExpect(model().attribute("currentSearchQueryId", "100"))
 			.andExpect(model().attribute("isCurrentSearchQueryActive", "true"));
+	}
+
+	private static void addCategories() throws Exception {
+		List<Category> categories = new ArrayList<>();
+
+		Category category = new Category("100", "Category Name", "100", 1);
+
+		categories.add(category);
+
+		category = new Category("200", "Category Name 2", "100", 2);
+
+		categories.add(category);
+
+		CategoryUtil.addCategories(categories);
 	}
 
 	private static void addSearchQuery(boolean isActive) throws Exception {
