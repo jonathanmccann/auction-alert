@@ -30,24 +30,25 @@ import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 import com.app.util.UserUtil;
 
+import com.stripe.exception.APIConnectionException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.DeletedCustomer;
+import com.stripe.model.Event;
+import com.stripe.model.EventData;
 import com.stripe.model.Subscription;
+
+import com.stripe.net.Webhook;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.subject.Subject;
-
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -55,63 +56,77 @@ import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@PrepareForTest({Customer.class, RecaptchaUtil.class, Subscription.class})
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+@PrepareForTest({
+	Customer.class, RecaptchaUtil.class, Subscription.class, URL.class,
+	Webhook.class
+})
 public class UserControllerTest extends BaseTestCase {
-
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		setUpProperties();
+
+		setUpDatabase();
+
+		ConstantsUtil.init();
 	}
 
 	@Before
 	public void setUp() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-		setUpDatabase();
+		//_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+	}
 
-		ConstantsUtil.init();
+	@After
+	public void tearDown() throws Exception {
+		if (_FIRST_USER != null) {
+			UserUtil.deleteUserByUserId(_FIRST_USER.getUserId());
+		}
 
-		_USER = UserUtil.addUser("test@test.com", "password");
+		if (_SECOND_USER != null) {
+			UserUtil.deleteUserByUserId(_SECOND_USER.getUserId());
+		}
 	}
 
 	@Test
 	public void testCreateAccount() throws Exception {
 		setUpCustomer();
+
 		setUpMailSender();
+
 		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
 
 		MockHttpServletRequestBuilder request = post("/create_account");
 
-		request.param("emailAddress", "test2@test.com");
+		request.param("emailAddress", "test@test.com");
 		request.param("password", "password");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -120,21 +135,22 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:home"));
 		resultActions.andExpect(redirectedUrl("home"));
 
-		User user = UserUtil.getUserByEmailAddress("test2@test.com");
+		_SECOND_USER = UserUtil.getUserByEmailAddress("test@test.com");
 
-		Assert.assertEquals("testCustomerId", user.getCustomerId());
-		Assert.assertEquals("testSubscriptionId", user.getSubscriptionId());
+		Assert.assertEquals("testCustomerId", _SECOND_USER.getCustomerId());
+		Assert.assertEquals("testSubscriptionId", _SECOND_USER.getSubscriptionId());
 	}
 
 	@Test
 	public void testCreateAccountExceedingMaximumNumberOfUsers()
 		throws Exception {
 
-		UserUtil.addUser("test2@test.com", "password");
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+		_SECOND_USER = UserUtil.addUser("test2@test.com", "password");
 
 		MockHttpServletRequestBuilder request = post("/create_account");
 
-		request.param("emailAddress", "test@test.com");
+		request.param("emailAddress", "test3@test.com");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -145,6 +161,8 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testCreateAccountWithDuplicateEmailAddress() throws Exception {
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
 		MockHttpServletRequestBuilder request = post("/create_account");
 
 		request.param("emailAddress", "test@test.com");
@@ -179,7 +197,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testCreateAccountWithInvalidPassword() throws Exception {
 		MockHttpServletRequestBuilder request = post("/create_account");
 
-		request.param("emailAddress", "test2@test.com");
+		request.param("emailAddress", "test@test.com");
 		request.param("password", "");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -196,11 +214,11 @@ public class UserControllerTest extends BaseTestCase {
 	public void testCreateAccountWithInvalidStripeToken()
 		throws Exception {
 
-		setUpUserUtil();
+		setUpInvalidCustomer();
 
 		MockHttpServletRequestBuilder request = post("/create_account");
 
-		request.param("emailAddress", "test2@test.com");
+		request.param("emailAddress", "test@test.com");
 		request.param("password", "password");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
@@ -216,11 +234,15 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testDeleteSubscription() throws Exception {
 		setUpMailSender();
-		setUpUserUtil();
 		setUpSubscription();
 
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -236,7 +258,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(flash().attribute(
 			"success", LanguageUtil.getMessage("subscription-updated")));
 
-		User user = UserUtil.getCurrentUser();
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
@@ -248,10 +270,13 @@ public class UserControllerTest extends BaseTestCase {
 	public void testDeleteSubscriptionWithNullSubscriptionId()
 		throws Exception {
 
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", _USER.getSubscriptionId(), true, false);
+			_FIRST_USER.getUserId(), "customerId", null, true,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -277,10 +302,13 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSubscriptionWithInactiveUser() throws Exception {
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", false, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", false,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -308,10 +336,13 @@ public class UserControllerTest extends BaseTestCase {
 	public void testDeleteSubscriptionWithPendingCancellation()
 		throws Exception {
 
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			true);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -339,10 +370,15 @@ public class UserControllerTest extends BaseTestCase {
 	public void testDeleteSubscriptionWithCancellationException()
 		throws Exception {
 
-		setUpUserUtil();
+		setUpInvalidSubscription();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post("/delete_subscription");
 
@@ -368,7 +404,13 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetDeleteAccountWithActiveUser() throws Exception {
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		UserUtil.updateUserSubscription(
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/delete_account"))
 			.andExpect(status().isOk())
@@ -383,7 +425,9 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetDeleteAccountWithInactiveUser() throws Exception {
-		setUpUserUtil(false);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/delete_account"))
 			.andExpect(status().isOk())
@@ -400,11 +444,14 @@ public class UserControllerTest extends BaseTestCase {
 	public void testDeleteAccount() throws Exception {
 		setUpCustomer();
 		setUpRecaptchaUtil(true);
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		SearchQuery searchQuery = new SearchQuery();
 
-		searchQuery.setUserId(_USER_ID);
+		searchQuery.setUserId(_FIRST_USER.getUserId());
 		searchQuery.setKeywords("Test keywords");
 		searchQuery.setActive(true);
 
@@ -420,7 +467,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		SearchResultUtil.addSearchResults(searchQueryId, searchResults);
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 
@@ -428,6 +475,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		request.param("emailAddress", "test@test.com");
 		request.param("password", "password");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -435,7 +483,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(view().name("redirect:log_out"));
 		resultActions.andExpect(redirectedUrl("log_out"));
 
-		user = UserUtil.getUserByUserId(_USER_ID);
+		user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNull(user);
 
@@ -453,17 +501,17 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteAccountWithIncorrectEmailAddress() throws Exception {
-		setUpUserUtil();
 		setUpRecaptchaUtil(true);
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		Assert.assertNotNull(user);
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post("/delete_account");
 
 		request.param("emailAddress", "incorrect@test.com");
 		request.param("password", "password");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -474,24 +522,24 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(flash().attribute(
 			"error", LanguageUtil.getMessage("user-deletion-failure")));
 
-		user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 	}
 
 	@Test
 	public void testDeleteAccountWithIncorrectPassword() throws Exception {
-		setUpUserUtil();
 		setUpRecaptchaUtil(true);
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		Assert.assertNotNull(user);
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post("/delete_account");
 
 		request.param("emailAddress", "test@test.com");
 		request.param("password", "incorrectPassword");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -502,24 +550,22 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(flash().attribute(
 			"error", LanguageUtil.getMessage("user-deletion-failure")));
 
-		user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 	}
 
 	@Test
 	public void testDeleteAccountWithInvalidRecaptcha() throws Exception {
-		setUpUserUtil();
 		setUpRecaptchaUtil(false);
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
-
-		Assert.assertNotNull(user);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		MockHttpServletRequestBuilder request = post("/delete_account");
 
 		request.param("emailAddress", "test@test.com");
 		request.param("password", "password");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -530,7 +576,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(flash().attribute(
 			"error", LanguageUtil.getMessage("recaptcha-failure")));
 
-		user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 	}
@@ -539,8 +585,13 @@ public class UserControllerTest extends BaseTestCase {
 	public void testGetContactWithAuthenticatedAndActiveUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		UserUtil.updateUserSubscription(
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
@@ -556,8 +607,9 @@ public class UserControllerTest extends BaseTestCase {
 	public void testGetContactWithAuthenticatedAndInactiveUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil(false);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
@@ -573,8 +625,13 @@ public class UserControllerTest extends BaseTestCase {
 	public void testGetContactWithUnauthenticatedAndActiveUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(false);
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		UserUtil.updateUserSubscription(
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
+
+		setUpSecurityUtilsSession(false, _FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
@@ -582,15 +639,16 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
 			.andExpect(model().attributeDoesNotExist("emailAddress"))
 			.andExpect(model().attributeExists("isActive"))
-			.andExpect(model().attribute("isActive", true));
+			.andExpect(model().attribute("isActive", false));
 	}
 
 	@Test
 	public void testGetContactWithUnauthenticatedAndInactiveUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(false);
-		setUpUserUtil(false);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(false, _FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
@@ -622,7 +680,6 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testGetCreateAccountWithAuthenticatedUser() throws Exception {
 		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
 
 		this.mockMvc.perform(get("/create_account"))
 			.andExpect(status().is3xxRedirection())
@@ -647,12 +704,14 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithPendingCancellation() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
+
 		setUpSubscription();
-		setUpUserUtil();
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "testSubscriptionId", true, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true, true);
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -669,12 +728,15 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpSubscription();
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "testSubscriptionId", true, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
+
+		setUpSubscription();
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -691,12 +753,15 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpSubscription();
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "testSubscriptionId", false, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", false,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
+
+		setUpSubscription();
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -712,14 +777,17 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithOneEmailSent() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpSubscription();
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		UserUtil.updateEmailsSent(_USER_ID, 1);
+		UserUtil.updateEmailsSent(_FIRST_USER.getUserId(), 1);
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "", "testSubscriptionId", false, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", false,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
+
+		setUpSubscription();
 
 		this.mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())
@@ -750,9 +818,11 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetLogInWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
+
 		setUpSubscription();
-		setUpUserUtil();
 
 		this.mockMvc.perform(get("/log_in"))
 			.andExpect(status().isOk())
@@ -762,25 +832,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetLogInWithUnauthenticatedUser() throws Exception {
-		PowerMockito.spy(SecurityUtils.class);
-
-		Session session = new SimpleSession();
-
-		session.setAttribute("loginAttempts", 0);
-
-		Subject mockSubject = Mockito.mock(Subject.class);
-
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
+		setUpSecurityUtilsSession(false, _INVALID_USER_ID, 0);
 
 		this.mockMvc.perform(get("/log_in"))
 			.andExpect(status().isOk())
@@ -790,26 +842,8 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetLogInExceedingLoginAttemptLimit() throws Exception {
-		PowerMockito.spy(SecurityUtils.class);
-
-		Session session = new SimpleSession();
-
-		session.setAttribute(
-			"loginAttempts", PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
-
-		Subject mockSubject = Mockito.mock(Subject.class);
-
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
+		setUpSecurityUtilsSession(
+			false, _INVALID_USER_ID, PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
 
 		this.mockMvc.perform(get("/log_in"))
 			.andExpect(status().isOk())
@@ -848,6 +882,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testPostContact() throws Exception {
 		setUpMailSender();
+
 		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(post("/contact"))
@@ -862,6 +897,8 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostContactWithException() throws Exception {
+		setUpInvalidMailSender();
+
 		setUpSecurityUtilsSubject(false);
 
 		this.mockMvc.perform(post("/contact"))
@@ -879,9 +916,12 @@ public class UserControllerTest extends BaseTestCase {
 		setUpMailSender();
 		setUpRecaptchaUtil(true);
 
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
 		MockHttpServletRequestBuilder request = post("/forgot_password");
 
 		request.param("emailAddress", "test@test.com");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		this.mockMvc.perform(request)
 			.andExpect(status().is3xxRedirection())
@@ -890,7 +930,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(flash().attribute(
 				"success", LanguageUtil.getMessage("forgot-password-success")));
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user.getPasswordResetToken());
 	}
@@ -899,9 +939,12 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostForgotPasswordWithInvalidRecaptcha() throws Exception {
 		setUpRecaptchaUtil(false);
 
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
 		MockHttpServletRequestBuilder request = post("/forgot_password");
 
 		request.param("emailAddress", "test@test.com");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		this.mockMvc.perform(request)
 			.andExpect(status().is3xxRedirection())
@@ -910,7 +953,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(flash().attribute(
 				"success", LanguageUtil.getMessage("forgot-password-success")));
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNull(user.getPasswordResetToken());
 	}
@@ -943,29 +986,9 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostLogInWithUnauthenticatedUser() throws Exception {
-		PowerMockito.spy(SecurityUtils.class);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		Session session = new SimpleSession();
-
-		Subject mockSubject = Mockito.mock(Subject.class);
-
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
-
-		Mockito.doNothing().when(
-			mockSubject
-		).login(
-			Mockito.any(AuthenticationToken.class)
-		);
+		setUpSecurityUtilsSession(false, _FIRST_USER.getUserId(), 0);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -980,7 +1003,8 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostLogInWithUnknownAccountException() throws Exception {
-		_setUpLogInException(new UnknownAccountException());
+		setUpSecurityUtilsSessionWithException(
+			false, _INVALID_USER_ID, 0, new UnknownAccountException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1000,7 +1024,8 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInWithIncorrectCredentialsException()
 		throws Exception {
 
-		_setUpLogInException(new IncorrectCredentialsException());
+		setUpSecurityUtilsSessionWithException(
+			false, _INVALID_USER_ID, 0, new IncorrectCredentialsException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1020,7 +1045,8 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInWithUnknownError()
 		throws Exception {
 
-		_setUpLogInException(new AccountException());
+		setUpSecurityUtilsSessionWithException(
+			false, _INVALID_USER_ID, 0, new AccountException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1040,32 +1066,10 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInExceedingLoginLimitAndFailingRecaptcha()
 		throws Exception {
 
-		PowerMockito.spy(SecurityUtils.class);
+		setUpRecaptchaUtil(false);
 
-		Session session = new SimpleSession();
-
-		session.setAttribute(
-			"loginAttempts", PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
-
-		Subject mockSubject = Mockito.mock(Subject.class);
-
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
-
-		Mockito.doNothing().when(
-			mockSubject
-		).login(
-			Mockito.any(AuthenticationToken.class)
-		);
+		setUpSecurityUtilsSession(
+			false, _INVALID_USER_ID, PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1085,39 +1089,19 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInExceedingLoginLimitAndPassingRecaptcha()
 		throws Exception {
 
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
 		setUpRecaptchaUtil(true);
 
-		PowerMockito.spy(SecurityUtils.class);
-
-		Session session = new SimpleSession();
-
-		session.setAttribute(
-			"loginAttempts", PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
-
-		Subject mockSubject = Mockito.mock(Subject.class);
-
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
-
-		Mockito.doNothing().when(
-			mockSubject
-		).login(
-			Mockito.any(AuthenticationToken.class)
-		);
+		setUpSecurityUtilsSession(
+			false, _FIRST_USER.getUserId(),
+			PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
 		request.param("emailAddress", "test@test.com");
 		request.param("password", "password");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		this.mockMvc.perform(request)
 			.andExpect(status().is3xxRedirection())
@@ -1127,16 +1111,17 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostResetPassword() throws Exception {
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
 		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
 
 		Subject currentUser = SecurityUtils.getSubject();
 
 		Assert.assertTrue(currentUser.isAuthenticated());
 
-		UserUtil.updatePasswordResetToken(_USER_ID);
+		UserUtil.updatePasswordResetToken(_FIRST_USER.getUserId());
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		String password = user.getPassword();
 		String salt = user.getSalt();
@@ -1156,7 +1141,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(flash().attribute(
 			"success", LanguageUtil.getMessage("password-reset-success")));
 
-		user = UserUtil.getUserByUserId(_USER_ID);
+		user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotEquals(password, user.getPassword());
 		Assert.assertNotEquals(salt, user.getSalt());
@@ -1168,11 +1153,11 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostResetPasswordWithInvalidResetToken() throws Exception {
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		UserUtil.updatePasswordResetToken(_USER_ID);
+		UserUtil.updatePasswordResetToken(_FIRST_USER.getUserId());
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		String password = user.getPassword();
 		String salt = user.getSalt();
@@ -1192,7 +1177,7 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(flash().attribute(
 			"error", LanguageUtil.getMessage("password-reset-fail")));
 
-		user = UserUtil.getUserByUserId(_USER_ID);
+		user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals(password, user.getPassword());
 		Assert.assertEquals(salt, user.getSalt());
@@ -1200,8 +1185,6 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostResetPasswordWithNullUser() throws Exception {
-		setUpUserUtil();
-
 		MockHttpServletRequestBuilder request = post("/reset_password");
 
 		request.param("emailAddress", "invalid@test.com");
@@ -1220,10 +1203,13 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testResubscribeWithActiveUser() throws Exception {
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1234,7 +1220,7 @@ public class UserControllerTest extends BaseTestCase {
 				"error",
 				LanguageUtil.getMessage("subscription-resubscribe-failure")));
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
@@ -1247,10 +1233,14 @@ public class UserControllerTest extends BaseTestCase {
 		setUpCustomer();
 		setUpMailSender();
 		setUpSubscription();
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", false, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", false,
+			true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1261,7 +1251,7 @@ public class UserControllerTest extends BaseTestCase {
 				"success",
 				LanguageUtil.getMessage("subscription-updated")));
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
@@ -1271,10 +1261,12 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testResubscribeWithNullSubscriptionId() throws Exception {
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "", true, false);
+			_FIRST_USER.getUserId(), "customerId", "", true, false);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1285,7 +1277,7 @@ public class UserControllerTest extends BaseTestCase {
 				"error",
 				LanguageUtil.getMessage("subscription-resubscribe-failure")));
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("", user.getSubscriptionId());
@@ -1298,10 +1290,13 @@ public class UserControllerTest extends BaseTestCase {
 		setUpCustomer();
 		setUpMailSender();
 		setUpSubscription();
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true, true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1312,7 +1307,7 @@ public class UserControllerTest extends BaseTestCase {
 				"success",
 				LanguageUtil.getMessage("subscription-updated")));
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
@@ -1322,10 +1317,15 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testResubscribeWithResubscribeException() throws Exception {
-		setUpUserUtil();
+		setUpInvalidSubscription();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", false, true);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", false,
+			true);
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -1336,7 +1336,7 @@ public class UserControllerTest extends BaseTestCase {
 				"error",
 				LanguageUtil.getMessage("subscription-resubscribe-failure")));
 
-		User user = UserUtil.getUserByUserId(_USER_ID);
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("customerId", user.getCustomerId());
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
@@ -1346,7 +1346,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testStripeWebhookEndpoint() throws Exception {
-		setUpStripeUtil();
+		_setUpStripeUtil();
 
 		MockHttpServletRequestBuilder request = post(
 			"/stripe");
@@ -1365,7 +1365,10 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testUpdateMyAccount() throws Exception {
 		setUpCustomer();
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
@@ -1386,9 +1389,12 @@ public class UserControllerTest extends BaseTestCase {
 		throws Exception {
 
 		setUpCustomer();
-		setUpUserUtil();
 
-		UserUtil.addUser("test2@test.com", "password");
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
+
+		_SECOND_USER = UserUtil.addUser("test2@test.com", "password");
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
@@ -1407,7 +1413,10 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testUpdateMyAccountWithInvalidEmailAddress() throws Exception {
 		setUpCustomer();
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
@@ -1428,12 +1437,15 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testUpdateMyAccountWithIncorrectPassword() throws Exception {
 		setUpCustomer();
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post(
 			"/my_account");
 
-		request.param("userId", String.valueOf(_USER.getUserId()));
+		request.param("userId", String.valueOf(_FIRST_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
 		request.param("emailNotification", "false");
 		request.param("currentPassword", "incorrectPassword");
@@ -1454,12 +1466,15 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testUpdateMyAccountWithInvalidPassword() throws Exception {
 		setUpCustomer();
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		MockHttpServletRequestBuilder request = post(
 			"/my_account");
 
-		request.param("userId", String.valueOf(_USER.getUserId()));
+		request.param("userId", String.valueOf(_FIRST_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
 		request.param("preferredDomain", "http://www.ebay.ca/itm/");
 		request.param("emailNotification", "false");
@@ -1481,7 +1496,10 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testUpdateMyAccountWithInvalidUserId() throws Exception {
 		setUpCustomer();
-		setUpInvalidUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_INVALID_USER_ID);
 
 		MockHttpServletRequestBuilder request = _buildUpdateMyAccountRequest();
 
@@ -1500,10 +1518,14 @@ public class UserControllerTest extends BaseTestCase {
 	public void testUpdateSubscription() throws Exception {
 		setUpCustomer();
 		setUpMailSender();
-		setUpUserUtil();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, false);
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
 
 		MockHttpServletRequestBuilder request = post("/update_subscription");
 
@@ -1523,32 +1545,15 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateSubscriptionWithStripeException() throws Exception {
-		setUpUserUtil();
+		setUpInvalidCustomer();
+
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserSubscription(
-			_USER_ID, "customerId", "subscriptionId", true, false);
-
-		MockHttpServletRequestBuilder request = post("/update_subscription");
-
-		request.param("stripeToken", "test");
-		request.param("stripeEmail", "test@test.com");
-
-		ResultActions resultActions = this.mockMvc.perform(request);
-
-		resultActions.andExpect(status().is3xxRedirection());
-		resultActions.andExpect(view().name("redirect:my_account"));
-		resultActions.andExpect(redirectedUrl("my_account"));
-		resultActions.andExpect(flash().attributeExists("error"));
-		resultActions.andExpect(flash().attribute(
-			"error",
-			LanguageUtil.getMessage("incorrect-payment-information")));
-	}
-
-	@Test
-	public void testUpdateSubscriptionWithoutCurrentSubscription()
-		throws Exception {
-
-		setUpUserUtil();
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
 
 		MockHttpServletRequestBuilder request = post("/update_subscription");
 
@@ -1568,8 +1573,13 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewMyAccountAsActiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil();
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		UserUtil.updateUserSubscription(
+			_FIRST_USER.getUserId(), "customerId", "subscriptionId", true,
+			false);
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/my_account")
 			.sessionAttr("info", "Info Message")
@@ -1593,8 +1603,9 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testViewMyAccountAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
-		setUpUserUtil(false);
+		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
+
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		this.mockMvc.perform(get("/my_account")
 			.sessionAttr("info", "Info Message")
@@ -1673,13 +1684,77 @@ public class UserControllerTest extends BaseTestCase {
 		);
 	}
 
-	protected static void setUpRecaptchaUtil(boolean valid) throws Exception {
-		PowerMockito.spy(RecaptchaUtil.class);
+	protected static void setUpInvalidCustomer() throws Exception {
+		PowerMockito.spy(Customer.class);
+
+		PowerMockito.doThrow(
+			new APIConnectionException("")
+		).when(
+			Customer.class, "create", Mockito.anyMap()
+		);
+	}
+
+	protected static void setUpRecaptchaUtil(boolean isValid) throws Exception {
+		URL url = PowerMockito.mock(URL.class);
+
+		PowerMockito.whenNew(
+			URL.class
+		).withAnyArguments().thenReturn(
+			url
+		);
+
+		HttpsURLConnection httpsURLConnection = Mockito.mock(
+			HttpsURLConnection.class);
+
+		InputStream inputStream = null;
+
+		if (isValid) {
+			inputStream = new ByteArrayInputStream(
+				"{\"success\": true}".getBytes());
+		}
+		else {
+			inputStream = new ByteArrayInputStream(
+				"{\"success\": \"false\"}".getBytes());
+		}
+
+		Mockito.when(
+			url.openConnection()
+		).thenReturn(
+			httpsURLConnection
+		);
+
+		Mockito.when(
+			httpsURLConnection.getInputStream()
+		).thenReturn(
+			inputStream
+		);
+	}
+
+	private static void _setUpStripeUtil() throws Exception {
+		PowerMockito.spy(Webhook.class);
+
+		Event event = new Event();
+
+		EventData eventData = new EventData();
+
+		event.setData(eventData);
+		event.setType("Invalid Type");
 
 		PowerMockito.doReturn(
-			valid
+			event
 		).when(
-			RecaptchaUtil.class, "verifyRecaptchaResponse", Mockito.anyString()
+			Webhook.class, "constructEvent", Mockito.anyString(),
+			Mockito.anyString(), Mockito.anyString()
+		);
+	}
+
+	protected static void setUpInvalidSubscription() throws Exception {
+		PowerMockito.spy(Subscription.class);
+
+		PowerMockito.doThrow(
+			new APIConnectionException("")
+		).when(
+			Subscription.class, "retrieve", Mockito.anyString()
 		);
 	}
 
@@ -1710,7 +1785,7 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	private void _assertNotUpdatedUser() throws Exception {
-		User user = UserUtil.getUserByUserId(_USER.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertEquals(
@@ -1719,7 +1794,7 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	private void _assertUpdatedUser() throws Exception {
-		User user = UserUtil.getUserByUserId(_USER.getUserId());
+		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("test2@test.com", user.getEmailAddress());
 		Assert.assertEquals(
@@ -1731,7 +1806,7 @@ public class UserControllerTest extends BaseTestCase {
 		MockHttpServletRequestBuilder request = post(
 			"/my_account");
 
-		request.param("userId", String.valueOf(_USER.getUserId()));
+		request.param("userId", String.valueOf(_FIRST_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
 		request.param("preferredDomain", "http://www.ebay.ca/itm/");
 		request.param("emailNotification", "false");
@@ -1741,37 +1816,13 @@ public class UserControllerTest extends BaseTestCase {
 		return request;
 	}
 
-	private void _setUpLogInException(Exception e) throws Exception {
-		PowerMockito.spy(SecurityUtils.class);
-
-		Session session = new SimpleSession();
-
-		Subject mockSubject = Mockito.mock(Subject.class);
-
-		PowerMockito.doReturn(
-			mockSubject
-		).when(
-			SecurityUtils.class, "getSubject"
-		);
-
-		PowerMockito.doReturn(
-			session
-		).when(
-			mockSubject
-		).getSession();
-
-		Mockito.doThrow(e).when(
-			mockSubject
-		).login(
-			Mockito.any(AuthenticationToken.class)
-		);
-	}
-
 	private MockMvc mockMvc;
 
 	@Autowired
 	private WebApplicationContext wac;
 
-	private static User _USER;
+	private static User _FIRST_USER;
+	private static User _SECOND_USER;
+	private static User _THIRD_USER;
 
 }

@@ -24,7 +24,6 @@ import com.app.util.DatabaseUtil;
 import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.ReleaseUtil;
-import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 
 import java.lang.reflect.Field;
@@ -36,8 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.subject.Subject;
@@ -65,8 +64,7 @@ import javax.mail.Transport;
  */
 @PrepareForTest({
 	DatabaseUtil.class, MailSenderFactory.class, ReleaseUtil.class,
-	SearchQuery.class, SecurityUtils.class, SendGridMailSender.class,
-	StripeUtil.class, Transport.class, UserUtil.class
+	SearchQuery.class, SendGridMailSender.class, Transport.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -150,27 +148,27 @@ public abstract class BaseTestCase {
 		exchangeRates.set(clazz, usdRates);
 	}
 
-	protected static void setUpGetCurrentUserId() throws Exception {
-		PowerMockito.spy(UserUtil.class);
+	protected static void setUpInvalidMailSender() throws Exception {
+		_mockMailSender = Mockito.mock(MailSender.class);
 
-		PowerMockito.doReturn(
-			_USER_ID
+		Mockito.doThrow(
+			new Exception()
 		).when(
-			UserUtil.class, "getCurrentUserId"
+			_mockMailSender
+		).sendContactMessage(
+			Mockito.anyString(), Mockito.anyString()
+		);
+
+		PowerMockito.spy(MailSenderFactory.class);
+
+		Mockito.when(
+			MailSenderFactory.getInstance()
+		).thenReturn(
+			_mockMailSender
 		);
 	}
 
-	protected static void setUpInvalidUserUtil() throws Exception {
-		PowerMockito.spy(UserUtil.class);
-
-		PowerMockito.doReturn(
-			_INVALID_USER_ID
-		).when(
-			UserUtil.class, "getCurrentUserId"
-		);
-	}
-
-	protected void setUpMailSender() throws Exception {
+	protected static void setUpMailSender() throws Exception {
 		_mockMailSender = Mockito.mock(MailSender.class);
 
 		Mockito.doNothing().when(
@@ -257,20 +255,93 @@ public abstract class BaseTestCase {
 		threadState.bind();
 	}
 
+	protected static void setUpSecurityUtilsSession(
+			boolean authenticated, int userId, int loginAttempts)
+		throws Exception {
+
+		DelegatingSubject delegatingSubject = Mockito.mock(
+			DelegatingSubject.class);
+
+		DefaultSecurityManager defaultSecurityManager =
+			new DefaultSecurityManager();
+
+		ThreadContext.bind(defaultSecurityManager);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute("userId", userId);
+		session.setAttribute("loginAttempts", loginAttempts);
+
+		ThreadState threadState = new SubjectThreadState(delegatingSubject);
+
+		threadState.bind();
+
+		Mockito.doNothing().when(
+			delegatingSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
+
+		Mockito.when(
+			delegatingSubject.isAuthenticated()
+		).thenReturn(
+			authenticated
+		);
+
+		Mockito.when(
+			delegatingSubject.getSession()
+		).thenReturn(
+			session
+		);
+	}
+
+	protected static void setUpSecurityUtilsSessionWithException(
+			boolean authenticated, int userId, int loginAttempts, Exception e)
+		throws Exception {
+
+		DelegatingSubject delegatingSubject = Mockito.mock(
+			DelegatingSubject.class);
+
+		DefaultSecurityManager defaultSecurityManager =
+			new DefaultSecurityManager();
+
+		ThreadContext.bind(defaultSecurityManager);
+
+		Session session = new SimpleSession();
+
+		session.setAttribute("userId", userId);
+		session.setAttribute("loginAttempts", loginAttempts);
+
+		ThreadState threadState = new SubjectThreadState(delegatingSubject);
+
+		threadState.bind();
+
+		Mockito.doThrow(
+			e
+		).when(
+			delegatingSubject
+		).login(
+			Mockito.any(AuthenticationToken.class)
+		);
+
+		Mockito.when(
+			delegatingSubject.isAuthenticated()
+		).thenReturn(
+			authenticated
+		);
+
+		Mockito.when(
+			delegatingSubject.getSession()
+		).thenReturn(
+			session
+		);
+	}
+
 	protected static void setUpSendGridMailSender() throws Exception {
 		PowerMockito.spy(SendGridMailSender.class);
 
 		PowerMockito.doNothing().when(
 			SendGridMailSender.class, "_sendEmail", Mockito.anyObject()
-		);
-	}
-
-	protected static void setUpStripeUtil() throws Exception {
-		PowerMockito.spy(StripeUtil.class);
-
-		PowerMockito.doNothing().when(
-			StripeUtil.class, "handleStripeEvent", Mockito.anyString(),
-			Mockito.anyString()
 		);
 	}
 
