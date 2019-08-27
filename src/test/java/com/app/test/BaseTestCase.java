@@ -222,48 +222,18 @@ public abstract class BaseTestCase {
 
 		ThreadContext.bind(defaultSecurityManager);
 
-		Subject subject = Mockito.mock(DelegatingSubject.class);
+		Subject subject = new DelegatingSubject(
+			null, authenticated, null, null, defaultSecurityManager);
 
 		ThreadState threadState = new SubjectThreadState(subject);
 
 		threadState.bind();
-
-		Mockito.when(
-			subject.isAuthenticated()
-		).thenReturn(
-			authenticated
-		);
 	}
 
 	protected static void setUpSecurityUtilsSession(int userId)
 		throws Exception {
 
-		DefaultSecurityManager defaultSecurityManager =
-			new DefaultSecurityManager();
-
-		ThreadContext.bind(defaultSecurityManager);
-
-		Subject subject = Mockito.mock(DelegatingSubject.class);
-
-		Session session = new SimpleSession();
-
-		session.setAttribute("userId", userId);
-
-		ThreadState threadState = new SubjectThreadState(subject);
-
-		threadState.bind();
-
-		Mockito.when(
-			subject.getSession()
-		).thenReturn(
-			session
-		);
-
-		Mockito.when(
-			subject.isAuthenticated()
-		).thenReturn(
-			true
-		);
+		setUpSecurityUtilsSession(true, userId);
 	}
 
 	protected static void setUpSecurityUtilsSession(
@@ -275,27 +245,16 @@ public abstract class BaseTestCase {
 
 		ThreadContext.bind(defaultSecurityManager);
 
-		Subject subject = Mockito.mock(DelegatingSubject.class);
-
 		Session session = new SimpleSession();
 
 		session.setAttribute("userId", userId);
 
+		Subject subject = new DelegatingSubject(
+			null, authenticated, null, session, defaultSecurityManager);
+
 		ThreadState threadState = new SubjectThreadState(subject);
 
 		threadState.bind();
-
-		Mockito.when(
-			subject.getSession()
-		).thenReturn(
-			session
-		);
-
-		Mockito.when(
-			subject.isAuthenticated()
-		).thenReturn(
-			authenticated
-		);
 	}
 
 	protected static void setUpSendGridMailSender() throws Exception {
