@@ -379,7 +379,7 @@ public abstract class BaseTestCase {
 
 	protected static final int _CATEGORY_LEVEL = 1;
 
-	protected static final int _INVALID_USER_ID = 2;
+	protected static final int _INVALID_USER_ID = -1;
 
 	protected static final int _USER_ID = 1;
 
