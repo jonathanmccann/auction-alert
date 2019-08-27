@@ -65,16 +65,14 @@ public class UserUtilTest extends BaseTestCase {
 	@Before
 	public void setUp() throws Exception {
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
-		_SECOND_USER = UserUtil.addUser("test2@test.com", "password");
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		UserUtil.deleteUserByUserId(_FIRST_USER.getUserId());
-		UserUtil.deleteUserByUserId(_SECOND_USER.getUserId());
 
-		if (_THIRD_USER != null) {
-			UserUtil.deleteUserByUserId(_THIRD_USER.getUserId());
+		if (_SECOND_USER != null) {
+			UserUtil.deleteUserByUserId(_SECOND_USER.getUserId());
 		}
 	}
 
@@ -155,7 +153,7 @@ public class UserUtilTest extends BaseTestCase {
 
 		Assert.assertFalse(UserUtil.exceedsMaximumNumberOfUsers());
 
-		_THIRD_USER = UserUtil.addUser("test3@test.com", "password");
+		_SECOND_USER = UserUtil.addUser("test2@test.com", "password");
 
 		Assert.assertTrue(UserUtil.exceedsMaximumNumberOfUsers());
 	}
@@ -184,6 +182,8 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetUserIds() throws Exception {
+		_SECOND_USER = UserUtil.addUser("test2@test.com", "password");
+
 		UserUtil.updateUserSubscription(
 			_FIRST_USER.getUserId(), _FIRST_USER.getCustomerId(),
 			_FIRST_USER.getSubscriptionId(), true,
@@ -252,6 +252,8 @@ public class UserUtilTest extends BaseTestCase {
 
 	@Test
 	public void testResetEmailsSent() throws Exception {
+		_SECOND_USER = UserUtil.addUser("test2@test.com", "password");
+
 		UserUtil.updateEmailsSent(_FIRST_USER.getUserId(), 5);
 		UserUtil.updateEmailsSent(_SECOND_USER.getUserId(), 10);
 
@@ -715,11 +717,9 @@ public class UserUtilTest extends BaseTestCase {
 		}
 	}
 
-	private static boolean _isInitialized = false;
 	private static Class _clazz;
 	private static Object _classInstance;
 	private static User _FIRST_USER;
 	private static User _SECOND_USER;
-	private static User _THIRD_USER;
 
 }
