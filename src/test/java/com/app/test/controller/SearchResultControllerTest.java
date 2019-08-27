@@ -18,24 +18,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
+import com.app.model.User;
 import com.app.test.BaseTestCase;
 
+import com.app.util.ConstantsUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
+import com.app.util.UserUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -50,49 +51,41 @@ import java.util.List;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
 public class SearchResultControllerTest extends BaseTestCase {
 
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpProperties();
+
+		setUpDatabase();
+
+		ConstantsUtil.init();
+	}
 
 	@Before
 	public void setUp() throws Exception {
-		setUpDatabase();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();////
+		_USER = UserUtil.addUser("test@liferay.com", "password");
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		UserUtil.deleteUserByUserId(_USER.getUserId());
+
+		SearchQueryUtil.deleteSearchQueries(_USER.getUserId());
+
+		SearchResultUtil.deleteSearchQueryResults(_searchQueryId);
 	}
 
 	@Test
 	public void testGetSearchQueryResults() throws Exception {
-		setUpProperties();
-		setUpUserUtil();
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setSearchQueryId(_SEARCH_QUERY_ID);
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setKeywords("Test Keywords");
-
-		SearchQueryUtil.addSearchQuery(searchQuery);
-
-		SearchResult firstSearchResult = new SearchResult(
-			_SEARCH_QUERY_ID, "Item ID 1", "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
-
-		SearchResult secondSearchResult = new SearchResult(
-			_SEARCH_QUERY_ID, "Item ID 2", "Second Item", "$20.00", "$24.99",
-			"http://www.ebay.com/itm/5678", "http://www.ebay.com/567.jpg");
-
-		List<SearchResult> searchResults = new ArrayList<>();
-
-		searchResults.add(firstSearchResult);
-		searchResults.add(secondSearchResult);
-
-		SearchResultUtil.addSearchResults(_SEARCH_QUERY_ID, searchResults);
+		addSearchQueryAndResults();
 
 		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
-			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))
+			.param("searchQueryId", String.valueOf(_searchQueryId)))
 			.andReturn();
 
 		Gson gson = new Gson();
@@ -101,8 +94,6 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		List<JsonSearchResult> jsonSearchResults = gson.fromJson(
 			mvcResult.getResponse().getContentAsString(), listType);
-
-		Assert.assertEquals(2, searchResults.size());
 
 		JsonSearchResult jsonSearchResult = jsonSearchResults.get(0);
 
@@ -128,19 +119,27 @@ public class SearchResultControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetSearchQueryResultsWithInvalidSearchQueryId()
+	public void testGetSearchQueryResultsWithInvalidUserId()
 		throws Exception {
 
-		setUpProperties();
-		setUpUserUtil();
+		setUpSecurityUtilsSession(true, _INVALID_USER_ID);
 
+		addSearchQueryAndResults();
+
+		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
+			.param("searchQueryId", String.valueOf(_searchQueryId)))
+			.andReturn();
+
+		Assert.assertEquals("[]", mvcResult.getResponse().getContentAsString());
+	}
+
+	private static void addSearchQueryAndResults() throws Exception {
 		SearchQuery searchQuery = new SearchQuery();
 
-		searchQuery.setSearchQueryId(_SEARCH_QUERY_ID);
-		searchQuery.setUserId(_USER_ID + 1);
+		searchQuery.setUserId(_USER.getUserId());
 		searchQuery.setKeywords("Test Keywords");
 
-		SearchQueryUtil.addSearchQuery(searchQuery);
+		_searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		SearchResult firstSearchResult = new SearchResult(
 			_SEARCH_QUERY_ID, "Item ID 1", "First Item", "$10.00", "$14.99",
@@ -155,19 +154,13 @@ public class SearchResultControllerTest extends BaseTestCase {
 		searchResults.add(firstSearchResult);
 		searchResults.add(secondSearchResult);
 
-		SearchResultUtil.addSearchResults(_SEARCH_QUERY_ID, searchResults);
-
-		MvcResult mvcResult = this.mockMvc.perform(get("/search_query_results")
-			.param("searchQueryId", String.valueOf(_SEARCH_QUERY_ID)))
-			.andReturn();
-
-		Assert.assertEquals("[]", mvcResult.getResponse().getContentAsString());
+		SearchResultUtil.addSearchResults(_searchQueryId, searchResults);
 	}
 
 	private static class JsonSearchResult {
 		public String getAuctionPrice() {
-		return auctionPrice;
-	}
+			return auctionPrice;
+		}
 
 		public String getFixedPrice() {
 			return fixedPrice;
@@ -208,6 +201,10 @@ public class SearchResultControllerTest extends BaseTestCase {
 	}
 
 	private MockMvc mockMvc;
+
+	private static int _searchQueryId;
+
+	private static User _USER;
 
 	@Autowired
 	private WebApplicationContext wac;
