@@ -57,14 +57,12 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
-import javax.mail.Transport;
-
 /**
  * @author Jonathan McCann
  */
 @PrepareForTest({
 	DatabaseUtil.class, MailSenderFactory.class, ReleaseUtil.class,
-	SearchQuery.class, SendGridMailSender.class, Transport.class
+	SearchQuery.class, SendGridMailSender.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -342,14 +340,6 @@ public abstract class BaseTestCase {
 
 		PowerMockito.doNothing().when(
 			SendGridMailSender.class, "_sendEmail", Mockito.anyObject()
-		);
-	}
-
-	protected void setUpTransport() throws Exception {
-		PowerMockito.spy(Transport.class);
-
-		PowerMockito.doNothing().when(
-			Transport.class, "send", Mockito.anyObject()
 		);
 	}
 
