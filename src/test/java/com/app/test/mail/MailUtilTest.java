@@ -15,7 +15,6 @@
 package com.app.test.mail;
 
 import com.app.mail.MailUtil;
-import com.app.test.BaseTestCase;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -28,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * @author Jonathan McCann
  */
-public class MailUtilTest extends BaseTestCase {
+public class MailUtilTest {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
