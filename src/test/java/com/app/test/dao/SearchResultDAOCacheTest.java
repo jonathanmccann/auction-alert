@@ -21,17 +21,18 @@ import com.app.test.BaseTestCase;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.util.SearchResultUtil;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.statistics.StatisticsGateway;
 
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -39,13 +40,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SearchResultDAOCacheTest extends BaseTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		setUpDatabase();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		SearchResultUtil.deleteSearchQueryResults(_SEARCH_QUERY_ID);
 	}
 
 	@Test
@@ -54,19 +59,22 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 
 		StatisticsGateway statistics = cache.getStatistics();
 
+		long hitCount = statistics.cacheHitCount();
+		long missCount = statistics.cacheMissCount();
+
 		List<SearchResult> searchResults =
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(0, searchResults.size());
-		Assert.assertEquals(0, statistics.cacheHitCount());
-		Assert.assertEquals(1, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 1, statistics.cacheMissCount());
 
 		List<SearchResult> searchResultsToAdd = new ArrayList<>();
 
 		SearchResult searchResult = new SearchResult();
 
 		searchResult.setSearchQueryId(_SEARCH_QUERY_ID);
-		searchResult.setItemId("1234");
+		searchResult.setItemId("itemId");
 
 		searchResultsToAdd.add(searchResult);
 
@@ -76,15 +84,15 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(1, searchResults.size());
-		Assert.assertEquals(0, statistics.cacheHitCount());
-		Assert.assertEquals(2, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
 
 		searchResults =
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(1, searchResults.size());
-		Assert.assertEquals(1, statistics.cacheHitCount());
-		Assert.assertEquals(2, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount + 1, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
 	}
 
 	@Test
@@ -94,7 +102,7 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		searchResult.setSearchQueryId(_SEARCH_QUERY_ID);
-		searchResult.setItemId("1234");
+		searchResult.setItemId("itemId");
 
 		searchResultsToAdd.add(searchResult);
 
@@ -104,12 +112,15 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 
 		StatisticsGateway statistics = cache.getStatistics();
 
+		long hitCount = statistics.cacheHitCount();
+		long missCount = statistics.cacheMissCount();
+
 		List<SearchResult> searchResults =
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(1, searchResults.size());
-		Assert.assertEquals(0, statistics.cacheHitCount());
-		Assert.assertEquals(1, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 1, statistics.cacheMissCount());
 
 		_searchResultDAO.deleteSearchQueryResults(_SEARCH_QUERY_ID);
 
@@ -117,38 +128,33 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(0, searchResults.size());
-		Assert.assertEquals(0, statistics.cacheHitCount());
-		Assert.assertEquals(2, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
 
 		searchResults =
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(0, searchResults.size());
-		Assert.assertEquals(1, statistics.cacheHitCount());
-		Assert.assertEquals(2, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount + 1, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
 	}
 
 	@Test
 	public void testDeleteSearchResultsCacheEvict() throws Exception {
 		List<SearchResult> searchResultsToAdd = new ArrayList<>();
 
-		SearchResult searchResult = new SearchResult();
+		SearchResult firstSearchResult = new SearchResult();
 
-		searchResult.setSearchQueryId(_SEARCH_QUERY_ID);
-		searchResult.setItemId("1234");
+		firstSearchResult.setSearchQueryId(_SEARCH_QUERY_ID);
+		firstSearchResult.setItemId("itemId");
 
-		searchResultsToAdd.add(searchResult);
+		SearchResult secondSearchResult = new SearchResult();
 
-		_searchResultDAO.addSearchResults(_SEARCH_QUERY_ID, searchResultsToAdd);
+		secondSearchResult.setSearchQueryId(_SEARCH_QUERY_ID);
+		secondSearchResult.setItemId("itemId");
 
-		searchResultsToAdd.clear();
-
-		searchResult = new SearchResult();
-
-		searchResult.setSearchQueryId(_SEARCH_QUERY_ID);
-		searchResult.setItemId("2345");
-
-		searchResultsToAdd.add(searchResult);
+		searchResultsToAdd.add(firstSearchResult);
+		searchResultsToAdd.add(secondSearchResult);
 
 		_searchResultDAO.addSearchResults(_SEARCH_QUERY_ID, searchResultsToAdd);
 
@@ -156,12 +162,15 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 
 		StatisticsGateway statistics = cache.getStatistics();
 
+		long hitCount = statistics.cacheHitCount();
+		long missCount = statistics.cacheMissCount();
+
 		List<SearchResult> searchResults =
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(2, searchResults.size());
-		Assert.assertEquals(0, statistics.cacheHitCount());
-		Assert.assertEquals(1, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 1, statistics.cacheMissCount());
 
 		_searchResultDAO.deleteSearchResults(_SEARCH_QUERY_ID, 1);
 
@@ -169,15 +178,15 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(1, searchResults.size());
-		Assert.assertEquals(0, statistics.cacheHitCount());
-		Assert.assertEquals(2, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
 
 		searchResults =
 			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
 
 		Assert.assertEquals(1, searchResults.size());
-		Assert.assertEquals(1, statistics.cacheHitCount());
-		Assert.assertEquals(2, statistics.cacheMissCount());
+		Assert.assertEquals(hitCount + 1, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
 	}
 
 	@Autowired
