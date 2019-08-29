@@ -16,7 +16,6 @@ package com.app.test;
 
 import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
-import com.app.mail.SendGridMailSender;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
@@ -62,7 +61,7 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
  */
 @PrepareForTest({
 	DatabaseUtil.class, MailSenderFactory.class, ReleaseUtil.class,
-	SearchQuery.class, SendGridMailSender.class
+	SearchQuery.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -332,14 +331,6 @@ public abstract class BaseTestCase {
 			delegatingSubject.getSession()
 		).thenReturn(
 			session
-		);
-	}
-
-	protected static void setUpSendGridMailSender() throws Exception {
-		PowerMockito.spy(SendGridMailSender.class);
-
-		PowerMockito.doNothing().when(
-			SendGridMailSender.class, "_sendEmail", Mockito.anyObject()
 		);
 	}
 

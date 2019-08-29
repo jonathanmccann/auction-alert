@@ -34,18 +34,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sendgrid.SendGrid;
-import org.apache.http.client.HttpResponseException;
+import org.apache.http.Header;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicStatusLine;
+import org.apache.http.ssl.SSLInitializationException;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.springframework.test.annotation.DirtiesContext;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -53,25 +59,34 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@RunWith(SpringJUnit4ClassRunner.class)
+@PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+@PrepareForTest(HttpClients.class)
 public class SendGridMailSenderTest extends BaseTestCase {
 
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpDatabase();
+
+		setUpProperties();
+
+		ConstantsUtil.init();
+	}
 
 	@Before
 	public void setUp() throws Exception {
-		setUpProperties();
-
 		_clazz = Class.forName(SendGridMailSender.class.getName());
 
 		_classInstance = _clazz.newInstance();
 	}
 
+	@After
+	public void tearDown() throws Exception {
+		UserUtil.deleteUserByUserId(_userId);
+	}
+
 	@Test
 	public void testSendAccountDeletionMessage() throws Exception {
-		setUpSendGridMailSender();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
@@ -80,12 +95,12 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		sendAccountDeletionMessage.invoke(_classInstance, "test@test.com");
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
 	public void testSendCancellationMessage() throws Exception {
-		setUpSendGridMailSender();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
@@ -94,12 +109,12 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		sendCancellationMessage.invoke(_classInstance, "test@test.com");
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
 	public void testSendCardDetailsMessage() throws Exception {
-		setUpSendGridMailSender();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
@@ -108,30 +123,12 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		sendCardDetailsMessage.invoke(_classInstance, "test@test.com");
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
 	public void testSendContactMessage() throws Exception {
-		SendGrid sendGrid = Mockito.mock(SendGrid.class);
-
-		Mockito.doReturn(
-			null
-		).when(
-			sendGrid
-		).api(
-			Mockito.anyObject()
-		);
-
-		PowerMockito.spy(SendGrid.class);
-
-		PowerMockito.whenNew(
-			SendGrid.class
-		).withArguments(
-			Mockito.anyString()
-		).thenReturn(
-			sendGrid
-		);
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		Method sendContactMessage = _clazz.getDeclaredMethod(
 			"sendContactMessage", String.class, String.class);
@@ -139,11 +136,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		sendContactMessage.invoke(
 			_classInstance, "test@test.com", "Contact Message");
 
-		Mockito.verify(
-			sendGrid, Mockito.times(1)
-		).api(
-			Mockito.anyObject()
-		);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
@@ -157,89 +150,43 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		}
 		catch (InvocationTargetException ite) {
 			Assert.assertTrue(
-				ite.getCause() instanceof HttpResponseException);
+				ite.getCause() instanceof SSLInitializationException);
 		}
 	}
 
 	@Test
 	public void testSendEmail() throws Exception {
-		SendGrid sendGrid = Mockito.mock(SendGrid.class);
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
-		Mockito.doReturn(
-			null
-		).when(
-			sendGrid
-		).api(
-			Mockito.anyObject()
-		);
+		Method sendEmail = _clazz.getDeclaredMethod("_sendEmail", Mail.class);
 
-		PowerMockito.spy(SendGrid.class);
-
-		PowerMockito.whenNew(
-			SendGrid.class
-		).withArguments(
-			Mockito.anyString()
-		).thenReturn(
-			sendGrid
-		);
-
-		Method sendAccountDeletionMessage = _clazz.getDeclaredMethod(
-			"_sendEmail", Mail.class);
-
-		sendAccountDeletionMessage.setAccessible(true);
+		sendEmail.setAccessible(true);
 
 		Mail mail = new Mail();
 
-		sendAccountDeletionMessage.invoke(_classInstance, mail);
+		sendEmail.invoke(_classInstance, mail);
 
-		Mockito.verify(
-			sendGrid, Mockito.times(1)
-		).api(
-			Mockito.anyObject()
-		);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
 	public void testSendEmailWithException() throws Exception {
-		SendGrid sendGrid = Mockito.mock(SendGrid.class);
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
-		Mockito.doReturn(
-			null
-		).when(
-			sendGrid
-		).api(
-			Mockito.anyObject()
-		);
+		Method sendEmail = _clazz.getDeclaredMethod("_sendEmail", Mail.class);
 
-		PowerMockito.spy(SendGrid.class);
-
-		PowerMockito.whenNew(
-			SendGrid.class
-		).withArguments(
-			Mockito.anyString()
-		).thenReturn(
-			sendGrid
-		);
-
-		Method sendAccountDeletionMessage = _clazz.getDeclaredMethod(
-			"_sendEmail", Mail.class);
-
-		sendAccountDeletionMessage.setAccessible(true);
+		sendEmail.setAccessible(true);
 
 		Mail mail = null;
 
-		sendAccountDeletionMessage.invoke(_classInstance, mail);
+		sendEmail.invoke(_classInstance, mail);
 
-		Mockito.verify(
-			sendGrid, Mockito.never()
-		).api(
-			Mockito.anyObject()
-		);
+		_assertSendGridCalled(closeableHttpClient, 0);
 	}
 
 	@Test
 	public void testSendPasswordResetToken() throws Exception {
-		setUpSendGridMailSender();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
@@ -249,12 +196,12 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		sendPasswordResetToken.invoke(
 			_classInstance, "test@test.com", "passwordResetToken");
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
 	public void testSendPaymentFailedMessage() throws Exception {
-		setUpSendGridMailSender();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
@@ -263,12 +210,12 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		sendPaymentFailedMessage.invoke(_classInstance, "test@test.com");
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
 	public void testSendResubscribeMessage() throws Exception {
-		setUpSendGridMailSender();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
@@ -277,23 +224,21 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		sendResubscribeMessage.invoke(_classInstance, "test@test.com");
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
 	public void testSendSearchResultsToRecipient() throws Exception {
-		setUpDatabase();
-		setUpUserUtil();
-		setUpSendGridMailSender();
-
-		ConstantsUtil.init();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		UserUtil.addUser("test@test.com", "password");
+		User user = UserUtil.addUser("user@test.com", "password");
+
+		_userId = user.getUserId();
 
 		UserUtil.updateUserSubscription(
-			1, "customerId", "subscriptionId", true, false);
+			_userId, "customerId", "subscriptionId", true, false);
 
 		Method sendSearchResultsToRecipient = _clazz.getDeclaredMethod(
 			"sendSearchResultsToRecipient", int.class, Map.class);
@@ -302,11 +247,11 @@ public class SendGridMailSenderTest extends BaseTestCase {
 			new HashMap<>();
 
 		sendSearchResultsToRecipient.invoke(
-			_classInstance, 1, searchQueryResultMap);
+			_classInstance, _userId, searchQueryResultMap);
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 
-		User user = UserUtil.getUserByUserId(1);
+		user = UserUtil.getUserByUserId(_userId);
 
 		Assert.assertEquals(1, user.getEmailsSent());
 	}
@@ -315,51 +260,16 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	public void testSendSearchResultsToRecipientExceedingEmailLimit()
 		throws Exception {
 
-		setUpDatabase();
-		setUpUserUtil();
-		setUpSendGridMailSender();
-
-		ConstantsUtil.init();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
-		UserUtil.addUser("test@test.com", "password");//
+		User user = UserUtil.addUser("user@test.com", "password");
 
-		UserUtil.updateUserDetails(
-			"test@test.com", "", "", "http://www.ebay.com/itm/", false);
-
-		Method sendSearchResultsToRecipient = _clazz.getDeclaredMethod(
-			"sendSearchResultsToRecipient", int.class, Map.class);
-
-		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
-			new HashMap<>();
-
-		sendSearchResultsToRecipient.invoke(
-			_classInstance, 1, searchQueryResultMap);
-
-		_assertSendGridCalled(0);
-
-		User user = UserUtil.getUserByUserId(1);
-
-		Assert.assertEquals(0, user.getEmailsSent());
-	}
-
-	@Test
-	public void testSendSearchResultsToRecipientWithoutEmailNotifications()
-		throws Exception {
-
-		setUpDatabase();
-		setUpUserUtil();
-		setUpSendGridMailSender();
-
-		ConstantsUtil.init();
-
-		_initializeVelocityTemplate(_clazz, _classInstance);
-
-		UserUtil.addUser("test@test.com", "password");
+		_userId = user.getUserId();
 
 		UserUtil.updateEmailsSent(
-			1, PropertiesValues.NUMBER_OF_EMAILS_PER_DAY + 1);
+			_userId, PropertiesValues.NUMBER_OF_EMAILS_PER_DAY + 1);
 
 		Method sendSearchResultsToRecipient = _clazz.getDeclaredMethod(
 			"sendSearchResultsToRecipient", int.class, Map.class);
@@ -368,11 +278,11 @@ public class SendGridMailSenderTest extends BaseTestCase {
 			new HashMap<>();
 
 		sendSearchResultsToRecipient.invoke(
-			_classInstance, 1, searchQueryResultMap);
+			_classInstance, _userId, searchQueryResultMap);
 
-		_assertSendGridCalled(0);
+		_assertSendGridCalled(closeableHttpClient, 0);
 
-		User user = UserUtil.getUserByUserId(1);
+		user = UserUtil.getUserByUserId(_userId);
 
 		Assert.assertEquals(
 			PropertiesValues.NUMBER_OF_EMAILS_PER_DAY + 1,
@@ -380,8 +290,38 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testSendSearchResultsToRecipientWithoutEmailNotifications()
+		throws Exception {
+
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
+
+		_initializeVelocityTemplate(_clazz, _classInstance);
+
+		User user = UserUtil.addUser("user@test.com", "password");
+
+		_userId = user.getUserId();
+
+		UserUtil.unsubscribeUserFromEmailNotifications("user@test.com");
+
+		Method sendSearchResultsToRecipient = _clazz.getDeclaredMethod(
+			"sendSearchResultsToRecipient", int.class, Map.class);
+
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+			new HashMap<>();
+
+		sendSearchResultsToRecipient.invoke(
+			_classInstance, _userId, searchQueryResultMap);
+
+		_assertSendGridCalled(closeableHttpClient, 0);
+
+		user = UserUtil.getUserByUserId(_userId);
+
+		Assert.assertEquals(0, user.getEmailsSent());
+	}
+
+	@Test
 	public void testSendWelcomeMessage() throws Exception {
-		setUpSendGridMailSender();
+		CloseableHttpClient closeableHttpClient = _setUpSendGrid();
 
 		_initializeVelocityTemplate(_clazz, _classInstance);
 
@@ -390,7 +330,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		sendWelcomeMessage.invoke(_classInstance, "test@test.com");
 
-		_assertSendGridCalled(1);
+		_assertSendGridCalled(closeableHttpClient, 1);
 	}
 
 	@Test
@@ -627,22 +567,77 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		Assert.assertEquals(_WELCOME_EMAIL, content.getValue());
 	}
 
-	private static void _assertSendGridCalled(int times)
+	private static void _assertSendGridCalled(
+			CloseableHttpClient closeableHttpClient, int times)
 		throws Exception {
 
 		if (times == 0) {
-			PowerMockito.verifyPrivate(
-				SendGridMailSender.class, Mockito.never()).invoke(
-					"_sendEmail", Mockito.anyObject());
+			Mockito.verify(
+				closeableHttpClient, Mockito.never()
+			).execute(
+				Mockito.anyObject()
+			);
 		}
-		else if (times == 1) {
-			PowerMockito.verifyPrivate(
-				SendGridMailSender.class, Mockito.times(1)).invoke(
-					"_sendEmail", Mockito.anyObject());
+		else {
+			ArgumentCaptor<HttpUriRequest> argumentCaptor =
+				ArgumentCaptor.forClass(HttpUriRequest.class);
+
+			Mockito.verify(
+				closeableHttpClient, Mockito.times(1)
+			).execute(
+				argumentCaptor.capture()
+			);
+
+			Assert.assertNotNull(argumentCaptor.getValue());
 		}
+	}
+
+	private static CloseableHttpClient _setUpSendGrid() throws Exception {
+		CloseableHttpClient closeableHttpClient = Mockito.mock(
+			CloseableHttpClient.class);
+
+		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
+			CloseableHttpResponse.class);
+
+		BasicStatusLine basicStatusLine = Mockito.mock(BasicStatusLine.class);
+
+		Mockito.when(
+			basicStatusLine.getStatusCode()
+		).thenReturn(
+			200
+		);
+
+		Mockito.when(
+			closeableHttpResponse.getStatusLine()
+		).thenReturn(
+			basicStatusLine
+		);
+
+		Mockito.when(
+			closeableHttpResponse.getAllHeaders()
+		).thenReturn(
+			new Header[0]
+		);
+
+		Mockito.when(
+			closeableHttpClient.execute(Mockito.anyObject())
+		).thenReturn(
+			closeableHttpResponse
+		);
+
+		PowerMockito.spy(HttpClients.class);
+
+		PowerMockito.doReturn(
+			closeableHttpClient
+		).when(
+			HttpClients.class, "createDefault"
+		);
+
+		return closeableHttpClient;
 	}
 
 	private static Object _classInstance;
 	private static Class _clazz;
+	private static int _userId;
 
 }
