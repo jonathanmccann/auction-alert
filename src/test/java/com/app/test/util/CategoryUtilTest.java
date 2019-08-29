@@ -32,6 +32,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -47,22 +48,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CategoryUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpDatabase();
+
 		_clazz = Class.forName(CategoryUtil.class.getName());
 
 		_classInstance = _clazz.newInstance();
-
-		//setUpApiContext();
 	}
 
-	@Before
-	public void setUp() throws Exception {
-		setUpDatabase();
+	@After
+	public void tearDown() throws Exception {
+		CategoryUtil.deleteCategories();
 	}
 
 	@Test
@@ -119,9 +119,13 @@ public class CategoryUtilTest extends BaseTestCase {
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5), 1);
 
+		List<Category> categories = CategoryUtil.getParentCategories();
+
+		Assert.assertEquals(2, categories.size());
+
 		CategoryUtil.deleteCategories();
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		categories = CategoryUtil.getParentCategories();
 
 		Assert.assertEquals(0, categories.size());
 	}
@@ -161,6 +165,8 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testIsNewerCategoryVersion() throws Exception {
+		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "");
+
 		Method method = _clazz.getDeclaredMethod(
 			"_isNewerCategoryVersion", String.class);
 
@@ -181,30 +187,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testPopulateCategoriesWithNewerVersion() throws Exception {
-		GetCategoriesCall getCategoriesCall = Mockito.mock(
-			GetCategoriesCall.class);
-
-		Mockito.doReturn(
-			"101"
-		).when(
-			getCategoriesCall
-		).getReturnedCategoryVersion();
-
-		CategoryType[] ebayCategories = new CategoryType[1];
-
-		ebayCategories[0] = new CategoryType();
-
-		ebayCategories[0].setCategoryID("2");
-		ebayCategories[0].setCategoryName("newParentCategory");
-		ebayCategories[0].setCategoryParentID(new String[1]);
-		ebayCategories[0].setCategoryParentID(0, "2");
-		ebayCategories[0].setCategoryLevel(1);
-
-		Mockito.doReturn(
-			ebayCategories
-		).when(
-			getCategoriesCall
-		).getCategories();
+		GetCategoriesCall getCategoriesCall = _setUpGetCategoriesCall();
 
 		Method populateCategories = _clazz.getDeclaredMethod(
 			"_populateCategories", GetCategoriesCall.class);
@@ -229,7 +212,7 @@ public class CategoryUtilTest extends BaseTestCase {
 		Assert.assertEquals(1, category.getCategoryLevel());
 
 		Assert.assertEquals(
-			"101", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
+			"200", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
 	}
 
 	@Test
@@ -257,6 +240,37 @@ public class CategoryUtilTest extends BaseTestCase {
 		Assert.assertEquals("parentCategory", category.getCategoryName());
 		Assert.assertEquals("1", category.getCategoryParentId());
 		Assert.assertEquals(1, category.getCategoryLevel());
+	}
+
+	private static GetCategoriesCall _setUpGetCategoriesCall()
+		throws Exception {
+
+		GetCategoriesCall getCategoriesCall = Mockito.mock(
+			GetCategoriesCall.class);
+
+		Mockito.doReturn(
+			"200"
+		).when(
+			getCategoriesCall
+		).getReturnedCategoryVersion();
+
+		CategoryType[] ebayCategories = new CategoryType[1];
+
+		ebayCategories[0] = new CategoryType();
+
+		ebayCategories[0].setCategoryID("2");
+		ebayCategories[0].setCategoryName("newParentCategory");
+		ebayCategories[0].setCategoryParentID(new String[1]);
+		ebayCategories[0].setCategoryParentID(0, "2");
+		ebayCategories[0].setCategoryLevel(1);
+
+		Mockito.doReturn(
+			ebayCategories
+		).when(
+			getCategoriesCall
+		).getCategories();
+
+		return getCategoriesCall;
 	}
 
 	private static final int _SUB_CATEGORY_LEVEL_LIMIT = 2;
