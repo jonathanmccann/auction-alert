@@ -101,6 +101,19 @@ public abstract class BaseTestCase {
 			DatabaseUtil.getDatabaseConnection(), resource);
 	}
 
+	protected static void setUpDatabaseProperties() throws Exception {
+		String databasePassword = System.getProperty("jdbc.default.password");
+		String databaseURL = System.getProperty("jdbc.default.url");
+		String databaseUsername = System.getProperty("jdbc.default.username");
+
+		DatabaseUtil.setDatabaseProperties(
+			databaseURL, databaseUsername, databasePassword);
+	}
+
+	protected static void setUpInvalidDatabaseProperties() throws Exception {
+		DatabaseUtil.setDatabaseProperties(null, null, null);
+	}
+
 	protected static void setUpDatabaseUtil() throws Exception {
 		PowerMockito.spy(ReleaseUtil.class);
 

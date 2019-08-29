@@ -14,7 +14,6 @@
 
 package com.app.test.shiro;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.User;
 import com.app.shiro.SaltedJdbcRealm;
 import com.app.util.ConstantsUtil;
@@ -27,17 +26,12 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -48,16 +42,17 @@ import java.lang.reflect.Method;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@PrepareForTest(UserUtil.class)
 public class SaltedJdbcRealmTest extends BaseTestCase {
-
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpDatabase();
+
+		setUpProperties();
+
+		ConstantsUtil.init();
+
 		Class clazz = Class.forName(SaltedJdbcRealm.class.getName());
 
 		_classInstance = clazz.newInstance();
@@ -68,14 +63,20 @@ public class SaltedJdbcRealmTest extends BaseTestCase {
 		_doGetAuthenticationInfo.setAccessible(true);
 	}
 
+	@After
+	public void tearDown() throws Exception {
+		if (_user != null) {
+			UserUtil.deleteUserByUserId(_user.getUserId());
+
+			_user = null;
+		}
+
+		setUpDatabaseProperties();
+	}
+
 	@Test
 	public void testDoGetAuthenticationInfo() throws Exception {
-		setUpDatabase();
-		setUpProperties();
-
-		ConstantsUtil.init();
-
-		User user = UserUtil.addUser("test@test.com", "password");
+		_user = UserUtil.addUser("test@test.com", "password");
 
 		UsernamePasswordToken usernamePasswordToken =
 			new UsernamePasswordToken();
@@ -90,20 +91,12 @@ public class SaltedJdbcRealmTest extends BaseTestCase {
 			"test@test.com", authenticationInfo.getPrincipals().toString());
 
 		Assert.assertEquals(
-			user.getPassword(), authenticationInfo.getCredentials());
-
-		UserUtil.deleteUser("password", user);
+			_user.getPassword(), authenticationInfo.getCredentials());
 	}
 
 	@Test
 	public void testDoGetAuthenticationInfoWithException() throws Exception {
-		PowerMockito.spy(UserUtil.class);
-
-		PowerMockito.doThrow(
-			new DatabaseConnectionException()
-		).when(
-			UserUtil.class, "getUserByEmailAddress", Mockito.anyString()
-		);
+		setUpInvalidDatabaseProperties();
 
 		UsernamePasswordToken usernamePasswordToken =
 			new UsernamePasswordToken();
@@ -122,8 +115,6 @@ public class SaltedJdbcRealmTest extends BaseTestCase {
 
 	@Test
 	public void testDoGetAuthenticationInfoWithNoUser() throws Exception {
-		setUpDatabase();
-
 		UsernamePasswordToken usernamePasswordToken =
 			new UsernamePasswordToken();
 
@@ -154,5 +145,6 @@ public class SaltedJdbcRealmTest extends BaseTestCase {
 
 	private static Object _classInstance;
 	private static Method _doGetAuthenticationInfo;
+	private static User _user;
 
 }
