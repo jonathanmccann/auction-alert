@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -31,6 +32,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-active-dispatcher-servlet.xml")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 public class MailSenderFactoryTest {
@@ -41,13 +43,13 @@ public class MailSenderFactoryTest {
 
 		MailSender mailSender = mailSenderFactory.getInstance();
 
-		Assert.assertTrue(mailSender instanceof SendGridMailSender);
+		Assert.assertTrue(mailSender instanceof DefaultMailSender);
 
-		mailSenderFactory.setMailSender(new DefaultMailSender());
+		mailSenderFactory.setMailSender(new SendGridMailSender());
 
 		mailSender = mailSenderFactory.getInstance();
 
-		Assert.assertTrue(mailSender instanceof DefaultMailSender);
+		Assert.assertTrue(mailSender instanceof SendGridMailSender);
 	}
 
 }

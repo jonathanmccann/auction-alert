@@ -14,198 +14,278 @@
 
 package com.app.test.runnable;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
+import com.app.model.User;
 import com.app.runnable.SearchResultRunnable;
-import com.app.util.EbaySearchResultUtil;
+import com.app.util.ConstantsUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
 import com.app.test.BaseTestCase;
 
+import com.app.util.UserUtil;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+import javax.mail.Transport;
 
 /**
  * @author Jonathan McCann
  */
+@ContextConfiguration("/test-dispatcher-servlet.xml")
+@PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
 @PrepareForTest({
-	SearchResultUtil.class, SearchQueryUtil.class
+	EntityUtils.class, HttpClients.class, Transport.class
 })
 public class SearchResultRunnableTest extends BaseTestCase {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		setUpDatabase();
+
 		setUpProperties();
 
-		PowerMockito.spy(EbaySearchResultUtil.class);
-		PowerMockito.spy(SearchQueryUtil.class);
-		PowerMockito.spy(SearchResultUtil.class);
+		setUpExchangeRateUtil();
 
-		setUpMailSender();
+		ConstantsUtil.init();
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		PowerMockito.spy(Transport.class);
+
+		PowerMockito.doNothing().when(
+			Transport.class, "send", Mockito.anyObject()
+		);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		SearchResultUtil.deleteSearchQueryResults(_searchQueryId);
+
+		SearchQueryUtil.deleteSearchQueries(_userId);
+
+		UserUtil.deleteUserByUserId(_userId);
 	}
 
 	@Test
 	public void testRunWithException() throws Exception {
-		PowerMockito.doThrow(new DatabaseConnectionException()).when(
-			SearchQueryUtil.class, "getSearchQueries",
-			Mockito.anyInt(), Mockito.anyBoolean()
-		);
+		CloseableHttpClient closeableHttpClient =
+			_setUpGetEbaySearchResultsWithException();
+
+		User user = UserUtil.addUser("user@test.com", "password");
+
+		_userId = user.getUserId();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_userId);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setActive(true);
+
+		SearchQueryUtil.addSearchQuery(searchQuery);
 
 		SearchResultRunnable searchResultRunnable = new SearchResultRunnable(
-			_USER_ID);
+			_userId);
 
 		searchResultRunnable.run();
 
-		PowerMockito.verifyStatic(Mockito.times(0));
-		EbaySearchResultUtil.getEbaySearchResults(Mockito.anyObject());
-
 		Mockito.verify(
-			_mockMailSender, Mockito.times(0)
-		).sendSearchResultsToRecipient(
-			Mockito.anyInt(), Mockito.anyMap()
+			closeableHttpClient, Mockito.times(1)
+		).execute(
+			Mockito.anyObject()
 		);
 
 		PowerMockito.verifyStatic(Mockito.times(0));
-		SearchResultUtil.filterSearchResults(
-			Mockito.anyObject(), Mockito.anyObject());
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		SearchQueryUtil.getSearchQueries(
-			Mockito.anyInt(), Mockito.anyBoolean());
+		Transport.send(Mockito.anyObject());
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_searchQueryId);
+
+		Assert.assertEquals(0, searchResults.size());
 	}
 
 	@Test
 	public void testRunWithSearchResults() throws Exception {
-		List<SearchResult> searchResults = new ArrayList<>();
+		CloseableHttpClient closeableHttpClient =
+			_setUpGetEbaySearchResults("/json/auction.json");
 
-		PowerMockito.doReturn(searchResults).when(
-			EbaySearchResultUtil.class, "getEbaySearchResults",
-			Mockito.anyObject()
-		);
+		User user = UserUtil.addUser("user@test.com", "password");
 
-		List<SearchQuery> searchQueries = new ArrayList<>();
+		_userId = user.getUserId();
 
-		searchQueries.add(new SearchQuery());
+		SearchQuery searchQuery = new SearchQuery();
 
-		PowerMockito.doReturn(searchQueries).when(
-			SearchQueryUtil.class, "getSearchQueries",
-			Mockito.anyInt(), Mockito.anyBoolean()
-		);
+		searchQuery.setUserId(_userId);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setActive(true);
 
-		searchResults.add(new SearchResult());
-
-		PowerMockito.doReturn(searchResults).when(
-			SearchResultUtil.class, "filterSearchResults",
-			Mockito.anyObject(), Mockito.anyObject()
-		);
+		_searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		SearchResultRunnable searchResultRunnable = new SearchResultRunnable(
-			_USER_ID);
+			_userId);
 
 		searchResultRunnable.run();
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		EbaySearchResultUtil.getEbaySearchResults(Mockito.anyObject());
-
 		Mockito.verify(
-			_mockMailSender, Mockito.times(1)
-		).sendSearchResultsToRecipient(
-			Mockito.anyInt(), Mockito.anyMap()
+			closeableHttpClient, Mockito.times(1)
+		).execute(
+			Mockito.anyObject()
 		);
 
 		PowerMockito.verifyStatic(Mockito.times(1));
-		SearchResultUtil.filterSearchResults(
-			Mockito.anyObject(), Mockito.anyObject());
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		SearchQueryUtil.getSearchQueries(
-			Mockito.anyInt(), Mockito.anyBoolean());
+		Transport.send(Mockito.anyObject());
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_searchQueryId);
+
+		Assert.assertEquals(2, searchResults.size());
 	}
 
 	@Test
 	public void testRunWithoutSearchResults() throws Exception {
-		List<SearchResult> searchResults = new ArrayList<>();
+		CloseableHttpClient closeableHttpClient =
+			_setUpGetEbaySearchResults("/json/empty.json");
 
-		PowerMockito.doReturn(searchResults).when(
-			EbaySearchResultUtil.class, "getEbaySearchResults",
-			Mockito.anyObject()
-		);
+		User user = UserUtil.addUser("user@test.com", "password");
 
-		List<SearchQuery> searchQueries = new ArrayList<>();
+		_userId = user.getUserId();
 
-		searchQueries.add(new SearchQuery());
+		SearchQuery searchQuery = new SearchQuery();
 
-		PowerMockito.doReturn(searchQueries).when(
-			SearchQueryUtil.class, "getSearchQueries",
-			Mockito.anyInt(), Mockito.anyBoolean()
-		);
+		searchQuery.setUserId(_userId);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setActive(true);
 
-		PowerMockito.doReturn(searchResults).when(
-			SearchResultUtil.class, "filterSearchResults",
-			Mockito.anyObject(), Mockito.anyObject()
-		);
+		_searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
 		SearchResultRunnable searchResultRunnable = new SearchResultRunnable(
-			_USER_ID);
+			_userId);
 
 		searchResultRunnable.run();
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		EbaySearchResultUtil.getEbaySearchResults(Mockito.anyObject());
-
 		Mockito.verify(
-			_mockMailSender, Mockito.times(0)
-		).sendSearchResultsToRecipient(
-			Mockito.anyInt(), Mockito.anyMap()
+			closeableHttpClient, Mockito.times(1)
+		).execute(
+			Mockito.anyObject()
 		);
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		SearchResultUtil.filterSearchResults(
-			Mockito.anyObject(), Mockito.anyObject());
+		PowerMockito.verifyStatic(Mockito.times(0));
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		SearchQueryUtil.getSearchQueries(
-			Mockito.anyInt(), Mockito.anyBoolean());
+		Transport.send(Mockito.anyObject());
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_searchQueryId);
+
+		Assert.assertEquals(0, searchResults.size());
 	}
 
 	@Test
 	public void testRunWithoutSearchQueries() throws Exception {
-		List<SearchQuery> searchQueries = new ArrayList<>();
+		CloseableHttpClient closeableHttpClient =
+			_setUpGetEbaySearchResults("/json/empty.json");
 
-		PowerMockito.doReturn(searchQueries).when(
-			SearchQueryUtil.class, "getSearchQueries",
-			Mockito.anyInt(), Mockito.anyBoolean()
-		);
+		User user = UserUtil.addUser("user@test.com", "password");
+
+		_userId = user.getUserId();
 
 		SearchResultRunnable searchResultRunnable = new SearchResultRunnable(
-			_USER_ID);
+			_userId);
 
 		searchResultRunnable.run();
 
-		PowerMockito.verifyStatic(Mockito.times(0));
-		EbaySearchResultUtil.getEbaySearchResults(Mockito.anyObject());
-
 		Mockito.verify(
-			_mockMailSender, Mockito.times(0)
-		).sendSearchResultsToRecipient(
-			Mockito.anyInt(), Mockito.anyMap()
+			closeableHttpClient, Mockito.times(0)
+		).execute(
+			Mockito.anyObject()
 		);
 
 		PowerMockito.verifyStatic(Mockito.times(0));
-		SearchResultUtil.filterSearchResults(
-			Mockito.anyObject(), Mockito.anyObject());
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		SearchQueryUtil.getSearchQueries(
-			Mockito.anyInt(), Mockito.anyBoolean());
+		Transport.send(Mockito.anyObject());
 	}
+
+	private static CloseableHttpClient _setUpGetEbaySearchResultsWithException()
+		throws Exception {
+
+		CloseableHttpClient closeableHttpClient = Mockito.mock(
+			CloseableHttpClient.class);
+
+		PowerMockito.spy(HttpClients.class);
+
+		PowerMockito.doReturn(
+			closeableHttpClient
+		).when(
+			HttpClients.class, "createDefault"
+		);
+
+		Mockito.when(
+			closeableHttpClient.execute(Mockito.anyObject())
+		).thenThrow(
+			new IOException()
+		);
+
+		return closeableHttpClient;
+	}
+
+	private CloseableHttpClient _setUpGetEbaySearchResults(String jsonPath)
+		throws Exception {
+
+		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
+			CloseableHttpResponse.class);
+
+		CloseableHttpClient closeableHttpClient = Mockito.mock(
+			CloseableHttpClient.class);
+
+		PowerMockito.spy(HttpClients.class);
+
+		PowerMockito.doReturn(
+			closeableHttpClient
+		).when(
+			HttpClients.class, "createDefault"
+		);
+
+		Mockito.when(
+			closeableHttpClient.execute(Mockito.anyObject())
+		).thenReturn(
+			closeableHttpResponse
+		);
+
+		PowerMockito.spy(EntityUtils.class);
+
+		PowerMockito.doReturn(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource(jsonPath)
+				.getFile().toPath()))
+		).when(
+			EntityUtils.class, "toString", Mockito.anyObject()
+		);
+
+		return closeableHttpClient;
+	}
+
+	private static int _searchQueryId;
+	private static int _userId;
 
 }
