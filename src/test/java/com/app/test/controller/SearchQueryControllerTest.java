@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.app.controller.SearchQueryController;
 import com.app.model.Category;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
@@ -31,10 +32,14 @@ import com.app.util.ConstantsUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.app.util.UserUtil;
 import org.junit.After;
@@ -424,6 +429,53 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(status().isOk())
 			.andExpect(view().name("add_search_query"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/add_search_query.jsp"));
+	}
+
+	@Test
+	public void testPopulateCategories() throws Exception {
+		Class clazz = Class.forName(SearchQueryController.class.getName());
+
+		Object classInstance = clazz.newInstance();
+
+		Method populateCategoriesMethod = clazz.getDeclaredMethod(
+			"_populateCategories",  Map.class);
+
+		populateCategoriesMethod.setAccessible(true);
+
+		Field field = clazz.getDeclaredField("_categories");
+
+		field.setAccessible(true);
+
+		Map<String, String> categories = (Map<String, String>)field.get(clazz);
+
+		Assert.assertEquals(0, categories.size());
+
+		List<Category> categoriesToAdd = new ArrayList<>();
+
+		Category category = new Category(
+			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
+
+		categoriesToAdd.add(category);
+
+		CategoryUtil.addCategories(categoriesToAdd);
+
+		Map<String, Object> model = new HashMap<>();
+
+		populateCategoriesMethod.invoke(classInstance, model);
+
+		Map<String, String> searchQueryCategories =
+			(HashMap)model.get("searchQueryCategories");
+
+		Assert.assertEquals(
+			_CATEGORY_NAME, searchQueryCategories.get(_CATEGORY_ID));
+
+		categories = (Map<String, String>)field.get(clazz);
+
+		Assert.assertEquals(1, categories.size());
+
+		String categoryName = categories.get(_CATEGORY_ID);
+
+		Assert.assertEquals(_CATEGORY_NAME, categoryName);
 	}
 
 	@Test
