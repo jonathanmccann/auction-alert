@@ -17,7 +17,6 @@ package com.app.test;
 import com.app.mail.MailSender;
 import com.app.mail.MailSenderFactory;
 import com.app.model.Category;
-import com.app.model.SearchQuery;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.ExchangeRateUtil;
@@ -58,7 +57,7 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
  * @author Jonathan McCann
  */
 @PrepareForTest({
-	DatabaseUtil.class, MailSenderFactory.class, SearchQuery.class
+	DatabaseUtil.class, MailSenderFactory.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
