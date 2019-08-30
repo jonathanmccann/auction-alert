@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 
 import com.app.util.ConstantsUtil;
@@ -40,10 +39,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -53,7 +48,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
-@PrepareForTest(Transport.class)
 public class DefaultMailSenderTest extends BaseTestCase {
 
 	@BeforeClass
@@ -67,7 +61,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		_setUpTransport();
+		setUpTransport();
 
 		_clazz = Class.forName(DefaultMailSender.class.getName());
 
@@ -111,7 +105,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendAccountDeletionMessage.invoke(_classInstance, "user@test.com");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -134,7 +128,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendAccountDeletionMessage.invoke(_classInstance, "user@test.com");
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 	}
 
 	@Test
@@ -146,7 +140,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendCancellationMessage.invoke(_classInstance, "user@test.com");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -169,7 +163,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendCancellationMessage.invoke(_classInstance, "user@test.com");
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 	}
 
 	@Test
@@ -181,7 +175,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendCardDetailsMessage.invoke(_classInstance, "user@test.com");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -204,7 +198,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendCardDetailsMessage.invoke(_classInstance, "user@test.com");
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 	}
 
 	@Test
@@ -215,7 +209,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		sendContactMessage.invoke(
 			_classInstance, "user@test.com", "Sample contact message");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals("user@test.com", message.getFrom()[0].toString());
 		Assert.assertEquals(
@@ -233,7 +227,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		sendPasswordResetToken.invoke(
 			_classInstance, "user@test.com", "Sample password reset token");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -257,7 +251,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		sendPasswordResetToken.invoke(
 			_classInstance, "user@test.com", "passwordResetToken");
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 	}
 
 	@Test
@@ -269,7 +263,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendPaymentFailedMessage.invoke(_classInstance, "user@test.com");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -292,7 +286,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendPaymentFailedMessage.invoke(_classInstance, "user@test.com");
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 	}
 
 	@Test
@@ -304,7 +298,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendResubscribeMessage.invoke(_classInstance, "user@test.com");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -327,7 +321,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendResubscribeMessage.invoke(_classInstance, "user@test.com");
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 	}
 
 	@Test
@@ -364,7 +358,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		sendSearchResultsToRecipient.invoke(
 			_classInstance, _userId, searchQueryResultMap);
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -406,7 +400,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		sendSearchResultsToRecipient.invoke(
 			_classInstance, _userId, searchQueryResultMap);
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 
 		user = UserUtil.getUserByUserId(_userId);
 
@@ -435,7 +429,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		sendSearchResultsToRecipient.invoke(
 			_classInstance, _userId, searchQueryResultMap);
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 
 		user = UserUtil.getUserByUserId(_userId);
 
@@ -463,7 +457,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 		sendSearchResultsToRecipient.invoke(
 			_classInstance, _userId, searchQueryResultMap);
 
-		_assertTransportCalled(0);
+		assertTransportCalled(0);
 
 		user = UserUtil.getUserByUserId(_userId);
 
@@ -479,7 +473,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendWelcomeMessage.invoke(_classInstance, "user@test.com");
 
-		Message message = _assertTransportCalled(1);
+		Message message = assertTransportCalled(1);
 
 		Assert.assertEquals(
 			"Auction Alert <test@test.com>", message.getFrom()[0].toString());
@@ -502,37 +496,7 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		sendWelcomeMessage.invoke(_classInstance, "test@test.com");
 
-		_assertTransportCalled(0);
-	}
-
-	private static Message _assertTransportCalled(int times)
-		throws Exception {
-
-		if (times == 0) {
-			PowerMockito.verifyStatic(Mockito.never());
-
-			Transport.send(Mockito.anyObject());
-
-			return null;
-		}
-		else {
-			PowerMockito.verifyStatic(Mockito.times(1));
-
-			ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(
-				Message.class);
-
-			Transport.send(argumentCaptor.capture());
-
-			return argumentCaptor.getValue();
-		}
-	}
-
-	private static void _setUpTransport() throws Exception {
-		PowerMockito.spy(Transport.class);
-
-		PowerMockito.doNothing().when(
-			Transport.class, "send", Mockito.anyObject()
-		);
+		assertTransportCalled(0);
 	}
 
 	private static Object _classInstance;

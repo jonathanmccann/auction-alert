@@ -52,6 +52,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
@@ -75,6 +76,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.mail.Message;
+import javax.mail.Transport;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
@@ -119,10 +122,8 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testCreateAccount() throws Exception {
 		setUpCustomer();
-
-		setUpMailSender();
-
 		setUpSecurityUtilsSubject(true);
+		setUpTransport();
 
 		MockHttpServletRequestBuilder request = post("/create_account");
 
@@ -139,6 +140,8 @@ public class UserControllerTest extends BaseTestCase {
 
 		Assert.assertEquals("testCustomerId", _SECOND_USER.getCustomerId());
 		Assert.assertEquals("testSubscriptionId", _SECOND_USER.getSubscriptionId());
+
+		assertTransportCalled(1);
 	}
 
 	@Test
@@ -233,8 +236,8 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteSubscription() throws Exception {
-		setUpMailSender();
 		setUpSubscription();
+		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -264,6 +267,8 @@ public class UserControllerTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
 		Assert.assertTrue(user.isPendingCancellation());
+
+		assertTransportCalled(1);
 	}
 
 	@Test
@@ -881,11 +886,16 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostContact() throws Exception {
-		setUpMailSender();
+		setUpTransport();
 
 		setUpSecurityUtilsSubject(false);
 
-		this.mockMvc.perform(post("/contact"))
+		MockHttpServletRequestBuilder request = post("/contact");
+
+		request.param("emailAddress", "user@test.com");
+		request.param("message", "Sample contact message");
+
+		this.mockMvc.perform(request)
 			.andExpect(status().isOk())
 			.andExpect(view().name("contact"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
@@ -893,11 +903,13 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(
 				model().attribute(
 					"success", LanguageUtil.getMessage("message-send-success")));
+
+		assertTransportCalled(1);
 	}
 
 	@Test
 	public void testPostContactWithException() throws Exception {
-		setUpInvalidMailSender();
+		setUpTransport();
 
 		setUpSecurityUtilsSubject(false);
 
@@ -909,12 +921,14 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(
 				model().attribute(
 					"error", LanguageUtil.getMessage("message-send-fail")));
+
+		assertTransportCalled(0);
 	}
 
 	@Test
 	public void testPostForgotPassword() throws Exception {
-		setUpMailSender();
 		setUpRecaptchaUtil(true);
+		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -933,6 +947,8 @@ public class UserControllerTest extends BaseTestCase {
 		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user.getPasswordResetToken());
+
+		assertTransportCalled(1);
 	}
 
 	@Test
@@ -1231,8 +1247,8 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testResubscribeWithInactiveUser() throws Exception {
 		setUpCustomer();
-		setUpMailSender();
 		setUpSubscription();
+		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -1257,6 +1273,8 @@ public class UserControllerTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
 		Assert.assertFalse(user.isPendingCancellation());
+
+		assertTransportCalled(1);
 	}
 
 	@Test
@@ -1288,8 +1306,8 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testResubscribeWithPendingCancellationUser() throws Exception {
 		setUpCustomer();
-		setUpMailSender();
 		setUpSubscription();
+		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -1313,6 +1331,8 @@ public class UserControllerTest extends BaseTestCase {
 		Assert.assertEquals("subscriptionId", user.getSubscriptionId());
 		Assert.assertTrue(user.isActive());
 		Assert.assertFalse(user.isPendingCancellation());
+
+		assertTransportCalled(1);
 	}
 
 	@Test
@@ -1517,7 +1537,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testUpdateSubscription() throws Exception {
 		setUpCustomer();
-		setUpMailSender();
+		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -1541,6 +1561,8 @@ public class UserControllerTest extends BaseTestCase {
 		resultActions.andExpect(flash().attribute(
 			"success",
 			LanguageUtil.getMessage("subscription-updated")));
+
+		assertTransportCalled(1);
 	}
 
 	@Test

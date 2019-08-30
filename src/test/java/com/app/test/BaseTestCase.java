@@ -41,6 +41,7 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.junit.runner.RunWith;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -52,12 +53,13 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
+import javax.mail.Message;
+import javax.mail.Transport;
+
 /**
  * @author Jonathan McCann
  */
-@PrepareForTest({
-	DatabaseUtil.class, MailSenderFactory.class
-})
+@PrepareForTest(Transport.class)
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
 public abstract class BaseTestCase {
@@ -80,6 +82,28 @@ public abstract class BaseTestCase {
 		categories.add(category);
 
 		CategoryUtil.addCategories(categories);
+	}
+
+	protected static Message assertTransportCalled(int times)
+		throws Exception {
+
+		if (times == 0) {
+			PowerMockito.verifyStatic(Mockito.never());
+
+			Transport.send(Mockito.anyObject());
+
+			return null;
+		}
+		else {
+			PowerMockito.verifyStatic(Mockito.times(1));
+
+			ArgumentCaptor<Message> argumentCaptor = ArgumentCaptor.forClass(
+				Message.class);
+
+			Transport.send(argumentCaptor.capture());
+
+			return argumentCaptor.getValue();
+		}
 	}
 
 	protected static void setUpDatabase() throws Exception {
@@ -126,62 +150,6 @@ public abstract class BaseTestCase {
 		usdRates.put("USD_GBP", _USD_TO_GBP);
 
 		exchangeRates.set(clazz, usdRates);
-	}
-
-	protected static void setUpInvalidMailSender() throws Exception {
-		_mockMailSender = Mockito.mock(MailSender.class);
-
-		Mockito.doThrow(
-			new Exception()
-		).when(
-			_mockMailSender
-		).sendContactMessage(
-			Mockito.anyString(), Mockito.anyString()
-		);
-
-		PowerMockito.spy(MailSenderFactory.class);
-
-		Mockito.when(
-			MailSenderFactory.getInstance()
-		).thenReturn(
-			_mockMailSender
-		);
-	}
-
-	protected static void setUpMailSender() throws Exception {
-		_mockMailSender = Mockito.mock(MailSender.class);
-
-		Mockito.doNothing().when(
-			_mockMailSender
-		).sendCancellationMessage(
-			Mockito.anyString()
-		);
-
-		Mockito.doNothing().when(
-			_mockMailSender
-		).sendContactMessage(
-			Mockito.anyString(), Mockito.anyString()
-		);
-
-		Mockito.doNothing().when(
-			_mockMailSender
-		).sendPasswordResetToken(
-			Mockito.anyString(), Mockito.anyString()
-		);
-
-		Mockito.doNothing().when(
-			_mockMailSender
-		).sendWelcomeMessage(
-			Mockito.anyString()
-		);
-
-		PowerMockito.spy(MailSenderFactory.class);
-
-		Mockito.when(
-			MailSenderFactory.getInstance()
-		).thenReturn(
-			_mockMailSender
-		);
 	}
 
 	protected static void setUpProperties() throws Exception {
@@ -317,6 +285,14 @@ public abstract class BaseTestCase {
 		);
 	}
 
+	protected static void setUpTransport() throws Exception {
+		PowerMockito.spy(Transport.class);
+
+		PowerMockito.doNothing().when(
+			Transport.class, "send", Mockito.anyObject()
+		);
+	}
+
 	protected static void _initializeVelocityTemplate(
 			Class clazz, Object classInstance)
 		throws Exception {
@@ -342,8 +318,6 @@ public abstract class BaseTestCase {
 		velocityEngine.set(
 			classInstance, velocityEngineFactoryBean.createVelocityEngine());
 	}
-
-	protected static MailSender _mockMailSender;
 
 	protected static final double _GBP_TO_USD = 0.2;
 
