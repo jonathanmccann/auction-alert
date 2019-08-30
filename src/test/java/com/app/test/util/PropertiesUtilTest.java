@@ -24,6 +24,7 @@ import java.net.URL;
 
 import java.util.Properties;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,6 +36,11 @@ public class PropertiesUtilTest extends BaseTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpProperties();
+	}
+
+	@AfterClass
+	public static void tearDownClass() throws Exception {
 		setUpProperties();
 	}
 
@@ -97,13 +103,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Properties properties = new Properties();
 
 		properties.setProperty("application.id", "Updated Application ID");
-		properties.setProperty(
-			"jdbc.default.password", "Updated JDBC Default Password");
-		properties.setProperty(
-			"jdbc.default.url", "Updated JDBC Default URL");
-		properties.setProperty(
-			"jdbc.default.username",
-			"Updated JDBC Default Username");
 
 		PropertiesUtil.setConfigurationProperties(properties);
 
@@ -111,15 +110,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			"Updated Application ID", properties.getProperty("application.id"));
-		Assert.assertEquals(
-			"Updated JDBC Default Password",
-			properties.getProperty("jdbc.default.password"));
-		Assert.assertEquals(
-			"Updated JDBC Default URL",
-			properties.getProperty("jdbc.default.url"));
-		Assert.assertEquals(
-			"Updated JDBC Default Username",
-			properties.getProperty("jdbc.default.username"));
 	}
 
 }
