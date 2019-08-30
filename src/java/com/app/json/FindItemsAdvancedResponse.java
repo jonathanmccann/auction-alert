@@ -20,18 +20,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class FindItemsAdvancedResponse {
 
-	@SerializedName("ack")
-	private List<String> ack = null;
-
 	@SerializedName("errorMessage")
 	private List<ErrorMessage> errorMessage = new ArrayList<>();
 
 	@SerializedName("searchResult")
 	private List<JsonSearchResult> jsonSearchResult = new ArrayList<>();
-
-	public String getAck() {
-		return ack.get(0);
-	}
 
 	public ErrorMessage getErrorMessage() {
 		if (errorMessage.isEmpty()) {
