@@ -21,15 +21,11 @@ import com.app.util.DatabaseUtil;
 import java.lang.reflect.Field;
 
 import com.app.util.ReleaseUtil;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -37,22 +33,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DatabaseUtilTest extends BaseTestCase {
 
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
-
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpDatabase();
+
 		_clazz = Class.forName(DatabaseUtil.class.getName());
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		setUpDatabaseProperties();
 	}
 
 	@Test
 	public void testGetDatabaseConnection() throws Exception {
-		setUpDatabase();
-
 		DatabaseUtil.getDatabaseConnection();
 	}
 
@@ -67,6 +64,8 @@ public class DatabaseUtilTest extends BaseTestCase {
 		field.set(_clazz, false);
 
 		DatabaseUtil.getDatabaseConnection();
+
+		field.set(_clazz, true);
 	}
 
 	@Test(expected = DatabaseConnectionException.class)
@@ -79,37 +78,16 @@ public class DatabaseUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testInitializeDatabase() throws Exception {
-		setUpDatabase();
-
-		String version = ReleaseUtil.getReleaseVersion(_APPLICATION_RELEASE_NAME);
-
-		Assert.assertEquals("", version);
-
-		setUpDatabaseUtil();
+	public void testInitializeDatabaseWithRelease() throws Exception {
+		ReleaseUtil.addRelease(
+			_APPLICATION_RELEASE_NAME, _APPLICATION_VERSION + 1);
 
 		DatabaseUtil.initializeDatabase();
 
-		PowerMockito.doCallRealMethod().when(
-			ReleaseUtil.class, "getReleaseVersion", Mockito.anyString()
-		);
+		String version = ReleaseUtil.getReleaseVersion(
+			_APPLICATION_RELEASE_NAME);
 
-		version = ReleaseUtil.getReleaseVersion(_APPLICATION_RELEASE_NAME);
-
-		Assert.assertEquals(_APPLICATION_VERSION, version);
-	}
-
-	@Test
-	public void testInitializeDatabaseWithData() throws Exception {
-		setUpDatabase();
-
-		ReleaseUtil.addRelease(_APPLICATION_RELEASE_NAME, "2");
-
-		DatabaseUtil.initializeDatabase();
-
-		String version = ReleaseUtil.getReleaseVersion(_APPLICATION_RELEASE_NAME);
-
-		Assert.assertEquals("2", version);
+		Assert.assertEquals(_APPLICATION_VERSION + 1, version);
 	}
 
 	@Test
