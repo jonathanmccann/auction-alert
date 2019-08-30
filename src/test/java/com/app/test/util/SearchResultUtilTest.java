@@ -38,7 +38,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SearchResultUtilTest extends BaseTestCase {
 
@@ -302,8 +301,6 @@ public class SearchResultUtilTest extends BaseTestCase {
 	}
 
 	private static final int _SEARCH_QUERY_ID = 1;
-
-	private static final int _USER_ID = 1;
 
 	private static Object _classInstance;
 	private static Class _clazz;
