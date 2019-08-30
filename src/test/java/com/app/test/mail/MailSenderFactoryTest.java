@@ -31,7 +31,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 /**
  * @author Jonathan McCann
  */
-@ContextConfiguration("/test-active-dispatcher-servlet.xml")
+@ContextConfiguration("/test-dispatcher-servlet.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
