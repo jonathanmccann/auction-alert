@@ -56,6 +56,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 /**
  * @author Jonathan McCann
@@ -64,6 +65,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
 @PrepareForTest(HttpClients.class)
 @RunWith(PowerMockRunner.class)
+@WebAppConfiguration
 public class SendGridMailSenderTest extends BaseTestCase {
 
 	@BeforeClass

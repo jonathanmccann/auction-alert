@@ -61,6 +61,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 /**
  * @author Jonathan McCann
@@ -71,6 +72,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @PrepareForTest({
 	HttpClients.class, EntityUtils.class
 })
+@WebAppConfiguration
 public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@BeforeClass

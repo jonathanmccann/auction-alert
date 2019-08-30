@@ -34,6 +34,7 @@ import org.junit.runner.RunWith;
 
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,6 +44,7 @@ import java.lang.reflect.Method;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
 public class SaltedJdbcRealmTest extends BaseTestCase {
 
 	@BeforeClass

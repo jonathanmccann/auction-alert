@@ -45,7 +45,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
 import javax.mail.Message;
@@ -54,7 +53,6 @@ import javax.mail.Transport;
 /**
  * @author Jonathan McCann
  */
-@WebAppConfiguration
 public abstract class BaseTestCase {
 
 	protected static void _addCategory() throws Exception {
