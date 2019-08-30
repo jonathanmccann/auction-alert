@@ -14,24 +14,23 @@
 
 package com.app.test.controller.interceptor;
 
+import com.app.model.User;
 import com.app.test.BaseTestCase;
 
 import com.app.util.ConstantsUtil;
 import com.app.util.UserUtil;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -46,31 +45,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ContextConfiguration("/test-authentication-dispatcher-servlet.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
 public class AuthenticationInterceptorTest extends BaseTestCase {
-
-	@Rule
-	public PowerMockRule rule = new PowerMockRule();
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		setUpDatabase();
+
 		setUpProperties();
 
 		ConstantsUtil.init();
 	}
+
 	@Before
 	public void setUp() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-		setUpDatabase();
-		setUpUserUtil();
+		_USER = UserUtil.addUser("test@test.com", "password");
+	}
 
-		UserUtil.addUser("test@test.com", "password");
+	@After
+	public void tearDown() throws Exception {
+		UserUtil.deleteUserByUserId(_USER.getUserId());
 	}
 
 	@Test
 	public void testGetAddSearchQueryWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/add_search_query"))
 			.andExpect(status().isOk())
@@ -94,7 +94,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 
 	@Test
 	public void testGetDeleteAccountWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/delete_account"))
 			.andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 
 	@Test
 	public void testGetMonitorWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/monitor"))
 			.andExpect(status().isOk())
@@ -140,7 +140,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 
 	@Test
 	public void testGetMyAccountWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/my_account"))
 			.andExpect(status().isOk())
@@ -164,7 +164,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testGetSearchQueryResultsWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/search_query_results"))
 			.andExpect(status().is3xxRedirection())
@@ -190,7 +190,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testGetUpdateSearchQueryWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/update_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -216,7 +216,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testGetViewSearchQueriesWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(get("/view_search_queries"))
 			.andExpect(status().isOk())
@@ -242,7 +242,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostActivateSearchQueryWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/activate_search_query")
 			.param("searchQueryId", "1"))
@@ -268,7 +268,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostAddSearchQueryWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/add_search_query"))
 			.andExpect(status().isFound())
@@ -294,7 +294,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostDeactivateSearchQueryWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/deactivate_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -320,7 +320,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostDeleteAccountWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/delete_account"))
 			.andExpect(status().is3xxRedirection())
@@ -347,7 +347,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostDeleteSearchQueryWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/delete_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -373,7 +373,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostDeleteSubscriptionWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/delete_subscription"))
 			.andExpect(status().is3xxRedirection())
@@ -400,7 +400,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostMyAccountWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/my_account"))
 			.andExpect(status().is3xxRedirection())
@@ -427,7 +427,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostResubscribeWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/resubscribe"))
 			.andExpect(status().is3xxRedirection())
@@ -454,7 +454,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostUpdateSearchQueryWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/update_search_query"))
 			.andExpect(status().is3xxRedirection())
@@ -480,7 +480,7 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	public void testPostUpdateSubscriptionWithAuthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER.getUserId());
 
 		this.mockMvc.perform(post("/update_subscription"))
 			.andExpect(status().is3xxRedirection())
@@ -504,6 +504,8 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	}
 
 	private MockMvc mockMvc;
+
+	private static User _USER;
 
 	@Autowired
 	private WebApplicationContext wac;
