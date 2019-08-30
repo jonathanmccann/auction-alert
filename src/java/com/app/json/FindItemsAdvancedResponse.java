@@ -35,10 +35,6 @@ public class FindItemsAdvancedResponse {
 	}
 
 	public JsonSearchResult getJsonSearchResult() {
-		if (jsonSearchResult.isEmpty()) {
-			return null;
-		}
-
 		return jsonSearchResult.get(0);
 	}
 
