@@ -21,7 +21,6 @@ import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
-import com.app.util.UserUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -84,12 +83,9 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpDatabase() throws Exception {
-		String databasePassword = System.getProperty("jdbc.default.password");
-		String databaseURL = System.getProperty("jdbc.default.url");
-		String databaseUsername = System.getProperty("jdbc.default.username");
+		Class.forName("com.mysql.jdbc.Driver");
 
-		DatabaseUtil.setDatabaseProperties(
-			databaseURL, databaseUsername, databasePassword);
+		setUpDatabaseProperties();
 
 		Resource resource = new ClassPathResource(_TEST_DATABASE_PATH);
 
@@ -318,26 +314,6 @@ public abstract class BaseTestCase {
 			delegatingSubject.getSession()
 		).thenReturn(
 			session
-		);
-	}
-
-	protected static void setUpUserUtil() throws Exception {
-		setUpUserUtil(true);
-	}
-
-	protected static void setUpUserUtil(boolean isActive) throws Exception {
-		PowerMockito.spy(UserUtil.class);
-
-		PowerMockito.doReturn(
-			_USER_ID
-		).when(
-			UserUtil.class, "getCurrentUserId"
-		);
-
-		PowerMockito.doReturn(
-			isActive
-		).when(
-			UserUtil.class, "isCurrentUserActive"
 		);
 	}
 
