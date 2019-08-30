@@ -124,7 +124,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testCreateAccount() throws Exception {
 		setUpCustomer();
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER_ID);
 		setUpTransport();
 
 		MockHttpServletRequestBuilder request = post("/create_account");
@@ -668,7 +668,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetCreateAccount() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/create_account"))
 			.andExpect(status().isOk())
@@ -686,7 +686,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetCreateAccountWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER_ID);
 
 		this.mockMvc.perform(get("/create_account"))
 			.andExpect(status().is3xxRedirection())
@@ -810,7 +810,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetHomeWithUnauthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/"))
 			.andExpect(status().isOk())
@@ -839,7 +839,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetLogInWithUnauthenticatedUser() throws Exception {
-		setUpSecurityUtilsSession(false, _INVALID_USER_ID, 0);
+		setUpSecurityUtilsSession(_INVALID_USER_ID, 0);
 
 		this.mockMvc.perform(get("/log_in"))
 			.andExpect(status().isOk())
@@ -850,7 +850,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testGetLogInExceedingLoginAttemptLimit() throws Exception {
 		setUpSecurityUtilsSession(
-			false, _INVALID_USER_ID, PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
+			_INVALID_USER_ID, PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
 
 		this.mockMvc.perform(get("/log_in"))
 			.andExpect(status().isOk())
@@ -862,7 +862,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetLogOut() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER_ID);
 
 		Subject currentUser = SecurityUtils.getSubject();
 
@@ -890,7 +890,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostContact() throws Exception {
 		setUpTransport();
 
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		MockHttpServletRequestBuilder request = post("/contact");
 
@@ -913,7 +913,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostContactWithException() throws Exception {
 		setUpTransport();
 
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(post("/contact"))
 			.andExpect(status().isOk())
@@ -978,7 +978,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostLogInWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER_ID);
 
 		this.mockMvc.perform(post("/log_in"))
 			.andExpect(status().is3xxRedirection())
@@ -990,7 +990,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInWithAuthenticatedUserAndRedirect()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER_ID);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1006,7 +1006,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInWithUnauthenticatedUser() throws Exception {
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		setUpSecurityUtilsSession(false, _FIRST_USER.getUserId(), 0);
+		setUpSecurityUtilsSession(_FIRST_USER.getUserId(), 0);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1022,7 +1022,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testPostLogInWithUnknownAccountException() throws Exception {
 		setUpSecurityUtilsSessionWithException(
-			false, _INVALID_USER_ID, 0, new UnknownAccountException());
+			_INVALID_USER_ID, new UnknownAccountException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1043,7 +1043,7 @@ public class UserControllerTest extends BaseTestCase {
 		throws Exception {
 
 		setUpSecurityUtilsSessionWithException(
-			false, _INVALID_USER_ID, 0, new IncorrectCredentialsException());
+			_INVALID_USER_ID, new IncorrectCredentialsException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1064,7 +1064,7 @@ public class UserControllerTest extends BaseTestCase {
 		throws Exception {
 
 		setUpSecurityUtilsSessionWithException(
-			false, _INVALID_USER_ID, 0, new AccountException());
+			_INVALID_USER_ID, new AccountException());
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1087,7 +1087,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpRecaptchaUtil(false);
 
 		setUpSecurityUtilsSession(
-			false, _INVALID_USER_ID, PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
+			_INVALID_USER_ID, PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1112,8 +1112,7 @@ public class UserControllerTest extends BaseTestCase {
 		setUpRecaptchaUtil(true);
 
 		setUpSecurityUtilsSession(
-			false, _FIRST_USER.getUserId(),
-			PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
+			_FIRST_USER.getUserId(), PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
 
 		MockHttpServletRequestBuilder request = post("/log_in");
 
@@ -1131,7 +1130,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostResetPassword() throws Exception {
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		setUpSecurityUtilsSubject(true);
+		setUpSecurityUtilsSession(true, _USER_ID);
 
 		Subject currentUser = SecurityUtils.getSubject();
 

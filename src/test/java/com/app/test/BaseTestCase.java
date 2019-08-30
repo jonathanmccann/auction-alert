@@ -55,11 +55,6 @@ import javax.mail.Transport;
  */
 public abstract class BaseTestCase {
 
-	protected static void _addCategory() throws Exception {
-		_addCategory(
-			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
-	}
-
 	protected static void _addCategory(
 			String categoryId, String categoryName, String categoryParentId,
 			int categoryLevel)
@@ -151,22 +146,6 @@ public abstract class BaseTestCase {
 		PropertiesUtil.loadConfigurationProperties(resource.getPath());
 	}
 
-	protected static void setUpSecurityUtilsSubject(boolean authenticated)
-		throws Exception {
-
-		DefaultSecurityManager defaultSecurityManager =
-			new DefaultSecurityManager();
-
-		ThreadContext.bind(defaultSecurityManager);
-
-		Subject subject = new DelegatingSubject(
-			null, authenticated, null, null, defaultSecurityManager);
-
-		ThreadState threadState = new SubjectThreadState(subject);
-
-		threadState.bind();
-	}
-
 	protected static void setUpSecurityUtilsSession(int userId)
 		throws Exception {
 
@@ -195,7 +174,7 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpSecurityUtilsSession(
-			boolean authenticated, int userId, int loginAttempts)
+			int userId, int loginAttempts)
 		throws Exception {
 
 		DelegatingSubject delegatingSubject = Mockito.mock(
@@ -224,7 +203,7 @@ public abstract class BaseTestCase {
 		Mockito.when(
 			delegatingSubject.isAuthenticated()
 		).thenReturn(
-			authenticated
+			false
 		);
 
 		Mockito.when(
@@ -235,7 +214,7 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpSecurityUtilsSessionWithException(
-			boolean authenticated, int userId, int loginAttempts, Exception e)
+			int userId, Exception e)
 		throws Exception {
 
 		DelegatingSubject delegatingSubject = Mockito.mock(
@@ -249,7 +228,6 @@ public abstract class BaseTestCase {
 		Session session = new SimpleSession();
 
 		session.setAttribute("userId", userId);
-		session.setAttribute("loginAttempts", loginAttempts);
 
 		ThreadState threadState = new SubjectThreadState(delegatingSubject);
 
@@ -266,7 +244,7 @@ public abstract class BaseTestCase {
 		Mockito.when(
 			delegatingSubject.isAuthenticated()
 		).thenReturn(
-			authenticated
+			false
 		);
 
 		Mockito.when(

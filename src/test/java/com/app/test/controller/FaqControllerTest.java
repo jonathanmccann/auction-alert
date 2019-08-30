@@ -82,7 +82,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetAccountFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/account_faq"))
 			.andExpect(status().isOk())
@@ -109,7 +109,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/faq"))
 			.andExpect(status().isOk())
@@ -136,7 +136,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetGeneralFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/general_faq"))
 			.andExpect(status().isOk())
@@ -163,7 +163,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetMonitorFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/monitor_faq"))
 			.andExpect(status().isOk())
@@ -190,7 +190,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetNewFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/new_faq"))
 			.andExpect(status().isOk())
@@ -217,7 +217,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetQueryFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/query_faq"))
 			.andExpect(status().isOk())
@@ -244,7 +244,7 @@ public class FaqControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetResultFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		this.mockMvc.perform(get("/result_faq"))
 			.andExpect(status().isOk())

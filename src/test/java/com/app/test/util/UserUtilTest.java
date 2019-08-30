@@ -247,7 +247,7 @@ public class UserUtilTest extends BaseTestCase {
 	public void testIsCurrentUserActiveWithUnauthenticatedUser()
 		throws Exception {
 
-		setUpSecurityUtilsSubject(false);
+		setUpSecurityUtilsSession(false, _USER_ID);
 
 		Assert.assertFalse(UserUtil.isCurrentUserActive());
 	}

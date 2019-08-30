@@ -67,7 +67,8 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddCategory() throws Exception {
-		_addCategory();
+		_addCategory(
+			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
 
 		List<Category> categories = CategoryUtil.getParentCategories();
 
