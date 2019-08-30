@@ -14,8 +14,6 @@
 
 package com.app.test;
 
-import com.app.mail.MailSender;
-import com.app.mail.MailSenderFactory;
 import com.app.model.Category;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
@@ -39,13 +37,10 @@ import org.apache.shiro.subject.support.DelegatingSubject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
-import org.junit.runner.RunWith;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -59,8 +54,6 @@ import javax.mail.Transport;
 /**
  * @author Jonathan McCann
  */
-@PrepareForTest(Transport.class)
-@RunWith(PowerMockRunner.class)
 @WebAppConfiguration
 public abstract class BaseTestCase {
 

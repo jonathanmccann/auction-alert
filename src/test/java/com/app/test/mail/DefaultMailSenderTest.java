@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 
 import com.app.util.ConstantsUtil;
@@ -39,6 +40,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,6 +52,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+@PrepareForTest(Transport.class)
+@RunWith(PowerMockRunner.class)
 public class DefaultMailSenderTest extends BaseTestCase {
 
 	@BeforeClass

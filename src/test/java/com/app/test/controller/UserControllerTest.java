@@ -87,8 +87,8 @@ import javax.net.ssl.HttpsURLConnection;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
 @PrepareForTest({
-	Customer.class, RecaptchaUtil.class, Subscription.class, URL.class,
-	Webhook.class
+	Customer.class, RecaptchaUtil.class, Subscription.class, Transport.class,
+	URL.class, Webhook.class
 })
 public class UserControllerTest extends BaseTestCase {
 

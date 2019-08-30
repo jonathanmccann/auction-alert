@@ -34,9 +34,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,6 +57,7 @@ import javax.mail.Transport;
 @PrepareForTest({
 	EntityUtils.class, HttpClients.class, Transport.class
 })
+@RunWith(PowerMockRunner.class)
 public class SearchResultRunnableTest extends BaseTestCase {
 
 	@BeforeClass
