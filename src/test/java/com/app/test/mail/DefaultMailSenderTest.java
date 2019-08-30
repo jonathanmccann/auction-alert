@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -85,6 +86,20 @@ public class DefaultMailSenderTest extends BaseTestCase {
 	@After
 	public void tearDown() throws Exception {
 		UserUtil.deleteUserByUserId(_userId);
+	}
+
+	@Test
+	public void testSessionPasswordAuthentication() throws Exception {
+		PasswordAuthentication passwordAuthentication =
+			_session.requestPasswordAuthentication(null, 0, null, null, null);
+
+		Assert.assertEquals(
+			PropertiesValues.OUTBOUND_EMAIL_ADDRESS,
+			passwordAuthentication.getUserName());
+
+		Assert.assertEquals(
+			PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD,
+			passwordAuthentication.getPassword());
 	}
 
 	@Test
