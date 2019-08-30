@@ -30,7 +30,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ReleaseUtilTest extends BaseTestCase {
 
