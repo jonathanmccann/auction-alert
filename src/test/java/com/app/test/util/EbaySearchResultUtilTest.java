@@ -470,6 +470,29 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testSetUpAdvancedRequestWithGlobalId() throws Exception {
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setNewCondition(true);
+		searchQuery.setUsedCondition(true);
+		searchQuery.setUnspecifiedCondition(true);
+		searchQuery.setAuctionListing(true);
+		searchQuery.setFixedPriceListing(true);
+		searchQuery.setGlobalId("EBAY-CA");
+
+		String url = (String)_setUpAdvanceRequestMethod.invoke(
+			_classInstance, searchQuery, "USD");
+
+		String expectedUrl =
+			"https://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME" +
+			"=findItemsAdvanced&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON" +
+			"&SECURITY-APPNAME=applicationId&GLOBAL-ID=EBAY-CA&REST-PAYLOAD" +
+			"&affiliate.trackingId=ebayCampaignId&affiliate.networkId=9" +
+			"&paginationInput.entriesPerPage=5&sortOrder=StartTimeNewest" +
+			"&keywords=Test+keywords";
+
+		Assert.assertEquals(expectedUrl, url);
 	}
 
 	@Test
