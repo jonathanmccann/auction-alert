@@ -1135,13 +1135,14 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	private static void addSearchResults() throws Exception {
-		SearchResult firstSearchResult = new SearchResult(
-			_searchQueryId, "1234", "itemTitle", "$14.99", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(_searchQueryId);
+		searchResult.setItemId("1234");
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		searchResults.add(firstSearchResult);
+		searchResults.add(searchResult);
 
 		SearchResultUtil.addSearchResults(_searchQueryId, searchResults);
 	}

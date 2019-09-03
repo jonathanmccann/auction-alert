@@ -22,19 +22,6 @@ public class SearchResult {
 	public SearchResult() {
 	}
 
-	public SearchResult(
-		int searchQueryId, String itemId, String itemTitle, String auctionPrice,
-		String fixedPrice, String itemURL, String galleryURL) {
-
-		_searchQueryId = searchQueryId;
-		_itemId = itemId;
-		_itemTitle = itemTitle;
-		_auctionPrice = auctionPrice;
-		_fixedPrice = fixedPrice;
-		_itemURL = itemURL;
-		_galleryURL = galleryURL;
-	}
-
 	public boolean equals(Object obj) {
 		if ((obj == null) || !(obj instanceof SearchResult)) {
 			return false;

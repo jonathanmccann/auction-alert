@@ -143,13 +143,25 @@ public class SearchResultControllerTest extends BaseTestCase {
 
 		_searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
-		SearchResult firstSearchResult = new SearchResult(
-			_SEARCH_QUERY_ID, "Item ID 1", "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		SearchResult firstSearchResult = new SearchResult();
 
-		SearchResult secondSearchResult = new SearchResult(
-			_SEARCH_QUERY_ID, "Item ID 2", "Second Item", "$20.00", "$24.99",
-			"http://www.ebay.com/itm/5678", "http://www.ebay.com/567.jpg");
+		firstSearchResult.setSearchQueryId(_searchQueryId);
+		firstSearchResult.setItemId("Item ID 1");
+		firstSearchResult.setItemTitle("First Item");
+		firstSearchResult.setAuctionPrice("$10.00");
+		firstSearchResult.setFixedPrice("$14.99");
+		firstSearchResult.setItemURL("http://www.ebay.com/itm/1234");
+		firstSearchResult.setGalleryURL("http://www.ebay.com/123.jpg");
+
+		SearchResult secondSearchResult = new SearchResult();
+
+		secondSearchResult.setSearchQueryId(_searchQueryId);
+		secondSearchResult.setItemId("Item ID 2");
+		secondSearchResult.setItemTitle("Second Item");
+		secondSearchResult.setAuctionPrice("$20.00");
+		secondSearchResult.setFixedPrice("$24.99");
+		secondSearchResult.setItemURL("http://www.ebay.com/itm/5678");
+		secondSearchResult.setGalleryURL("http://www.ebay.com/567.jpg");
 
 		List<SearchResult> searchResults = new ArrayList<>();
 

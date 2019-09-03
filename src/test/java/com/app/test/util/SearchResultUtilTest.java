@@ -241,9 +241,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 		List<SearchResult> nonCacheSearchResults =
 			new ArrayList<>(searchResults);
 
-		SearchResult searchResult = new SearchResult(
-			_SEARCH_QUERY_ID, "3456", "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchResult.setItemId("3456");
 
 		nonCacheSearchResults.add(searchResult);
 
@@ -257,9 +258,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testRemovePreviouslyNotifiedResults() throws Exception {
 		List<SearchResult> existingSearchResults = new ArrayList<>();
 
-		SearchResult searchResult = new SearchResult(
-			1, "1234", "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(1);
+		searchResult.setItemId("1234");
 
 		List<SearchResult> newSearchResults = new ArrayList<>();
 
@@ -276,9 +278,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(1, searchResults.size());
 
-		searchResult = new SearchResult(
-			1, "2345", "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(1);
+		searchResult.setItemId("2345");
 
 		existingSearchResults.add(searchResult);
 
@@ -287,9 +290,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(1, searchResults.size());
 
-		searchResult = new SearchResult(
-			1, "1234", "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(1);
+		searchResult.setItemId("1234");
 
 		existingSearchResults.add(searchResult);
 
@@ -300,9 +304,15 @@ public class SearchResultUtilTest extends BaseTestCase {
 	}
 
 	private static void _addSearchResult(String itemId) throws Exception {
-		SearchResult searchResult = new SearchResult(
-			_SEARCH_QUERY_ID, itemId, "First Item", "$10.00", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchResult.setItemId(itemId);
+		searchResult.setItemTitle("First Item");
+		searchResult.setAuctionPrice("$10.00");
+		searchResult.setFixedPrice("$14.99");
+		searchResult.setItemURL("http://www.ebay.com/itm/1234");
+		searchResult.setGalleryURL("http://www.ebay.com/123.jpg");
 
 		List<SearchResult> searchResults = new ArrayList<>();
 

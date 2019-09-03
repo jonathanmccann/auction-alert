@@ -31,23 +31,6 @@ public class SearchResultTest {
 	}
 
 	@Test
-	public void testConstructor() {
-		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", "$14.99", "$14.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
-
-		Assert.assertEquals(1, searchResult.getSearchQueryId());
-		Assert.assertEquals("1234", searchResult.getItemId());
-		Assert.assertEquals("itemTitle", searchResult.getItemTitle());
-		Assert.assertEquals("$14.99", searchResult.getAuctionPrice());
-		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
-		Assert.assertEquals(
-			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
-		Assert.assertEquals(
-			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
-	}
-
-	@Test
 	public void testEqualsWithEqualObject() {
 		_searchResult.setItemId("1234");
 

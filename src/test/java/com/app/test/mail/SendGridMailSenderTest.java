@@ -451,9 +451,15 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("Test keywords");
 
-		SearchResult searchResult = new SearchResult(
-			1, "1234", "itemTitle", "$14.99", "$29.99",
-			"http://www.ebay.com/itm/1234", "http://www.ebay.com/123.jpg");
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(1);
+		searchResult.setItemId("1234");
+		searchResult.setItemTitle("itemTitle");
+		searchResult.setAuctionPrice("$14.99");
+		searchResult.setFixedPrice("$29.99");
+		searchResult.setItemURL("http://www.ebay.com/itm/1234");
+		searchResult.setGalleryURL("http://www.ebay.com/123.jpg");
 
 		searchResults.add(searchResult);
 
