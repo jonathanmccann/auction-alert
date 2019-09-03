@@ -17,6 +17,7 @@ package com.app.test.util;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.test.BaseTestCase;
+import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
 
 import java.lang.reflect.Method;
@@ -188,8 +189,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testFilterSearchResultsWithCompletePreviousResults()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(
-			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
 
 		_addSearchResult("1234");
 
@@ -206,8 +210,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testFilterSearchResultsWithNullNewSearchResults()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(
-			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
 
 		List<SearchResult> searchResults = SearchResultUtil.filterSearchResults(
 			searchQuery, new ArrayList<>());
@@ -219,8 +226,11 @@ public class SearchResultUtilTest extends BaseTestCase {
 	public void testFilterSearchResultsWithPartialPreviousResults()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(
-			_SEARCH_QUERY_ID, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
 
 		_addSearchResult("1234");
 		_addSearchResult("2345");

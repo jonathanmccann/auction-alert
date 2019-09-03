@@ -350,7 +350,10 @@ public class DefaultMailSenderTest extends BaseTestCase {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		SearchQuery searchQuery = new SearchQuery(1, _userId, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_userId);
+		searchQuery.setKeywords("Test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", "$14.99", "$29.99",

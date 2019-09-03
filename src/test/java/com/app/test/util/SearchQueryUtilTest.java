@@ -60,9 +60,13 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testActivateSearchQuery() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+		searchQuery.setGlobalId("EBAY-US");
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -75,9 +79,23 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddSearchQuery() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
-			true, true, true, 5.00, 10.00, "EBAY-US", true);
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+		searchQuery.setSearchDescription(true);
+		searchQuery.setFreeShippingOnly(true);
+		searchQuery.setNewCondition(true);
+		searchQuery.setUsedCondition(true);
+		searchQuery.setUnspecifiedCondition(true);
+		searchQuery.setAuctionListing(true);
+		searchQuery.setFixedPriceListing(true);
+		searchQuery.setMinPrice(5.00);
+		searchQuery.setMaxPrice(10.00);
+		searchQuery.setGlobalId("EBAY-US");
+		searchQuery.setActive(true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -104,17 +122,26 @@ public class SearchQueryUtilTest extends BaseTestCase {
 	public void testAddSearchQueryExceedingMaximumNumberOfSearchQueries()
 		throws Exception {
 
-		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+		SearchQuery firstSearchQuery = new SearchQuery();
 
-		SearchQueryUtil.addSearchQuery(searchQuery);
+		firstSearchQuery.setUserId(_USER_ID);
+		firstSearchQuery.setKeywords("Test keywords");
 
-		searchQuery = new SearchQuery(2, _USER_ID, "Second test keywords");
+		SearchQueryUtil.addSearchQuery(firstSearchQuery);
 
-		SearchQueryUtil.addSearchQuery(searchQuery);
+		SearchQuery secondSearchQuery = new SearchQuery();
 
-		searchQuery = new SearchQuery(2, _USER_ID, "Third test keywords");
+		secondSearchQuery.setUserId(_USER_ID);
+		secondSearchQuery.setKeywords("Second test keywords");
 
-		SearchQueryUtil.addSearchQuery(searchQuery);
+		SearchQueryUtil.addSearchQuery(secondSearchQuery);
+
+		SearchQuery thirdSearchQuery = new SearchQuery();
+
+		thirdSearchQuery.setUserId(_USER_ID);
+		thirdSearchQuery.setKeywords("Third test keywords");
+
+		SearchQueryUtil.addSearchQuery(thirdSearchQuery);
 	}
 
 	@Test
@@ -150,9 +177,18 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddSearchQueryWithNormalizedValues() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "200", true, true, false,
-			false, false, false, false, 5.00, 10.00, "EBAY-US", true);
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+		searchQuery.setSearchDescription(true);
+		searchQuery.setFreeShippingOnly(true);
+		searchQuery.setMinPrice(5.00);
+		searchQuery.setMaxPrice(10.00);
+		searchQuery.setGlobalId("EBAY-US");
+		searchQuery.setActive(true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -177,9 +213,14 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testDeactivateSearchQuery() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, "EBAY-US", true);
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+		searchQuery.setGlobalId("EBAY-US");
+		searchQuery.setActive(true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -544,9 +585,13 @@ public class SearchQueryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testUpdateSearchQuery() throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "200", false, false, false,
-			false, false, false, false, 0.00, 0.00, "EBAY-US", false);
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+		searchQuery.setGlobalId("EBAY-US");
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -568,10 +613,21 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
 		Assert.assertFalse(searchQuery.isActive());
 
-		searchQuery = new SearchQuery(
-			searchQueryId, _USER_ID, "New test keywords", "101", "201", true,
-			true, true, false, false, true, false, 5.00, 10.00, "EBAY-CA",
-			true);
+		searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(searchQueryId);
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("New test keywords");
+		searchQuery.setCategoryId("101");
+		searchQuery.setSubcategoryId("201");
+		searchQuery.setSearchDescription(true);
+		searchQuery.setFreeShippingOnly(true);
+		searchQuery.setNewCondition(true);
+		searchQuery.setAuctionListing(true);
+		searchQuery.setMinPrice(5.00);
+		searchQuery.setMaxPrice(10.00);
+		searchQuery.setGlobalId("EBAY-CA");
+		searchQuery.setActive(true);
 
 		SearchQueryUtil.updateSearchQuery(_USER_ID, searchQuery);
 

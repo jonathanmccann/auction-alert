@@ -267,9 +267,10 @@ public class SearchQueryDAOCacheTest extends BaseTestCase {
 	}
 
 	private static int _addSearchQuery(boolean isActive) throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "searchQuery");
+		SearchQuery searchQuery = new SearchQuery();
 
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
 		searchQuery.setActive(isActive);
 
 		return SearchQueryUtil.addSearchQuery(searchQuery);

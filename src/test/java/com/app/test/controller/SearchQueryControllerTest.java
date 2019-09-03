@@ -1122,9 +1122,14 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	private static void addSearchQuery(boolean isActive) throws Exception {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER.getUserId(), "Test keywords", "100", "200", false, false,
-			false, false, false, false, false, 0.00, 0.00, "EBAY-US", isActive);
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER.getUserId());
+		searchQuery.setKeywords("Test keywords");
+		searchQuery.setCategoryId("100");
+		searchQuery.setSubcategoryId("200");
+		searchQuery.setGlobalId("EBAY-US");
+		searchQuery.setActive(isActive);
 
 		_searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 	}

@@ -22,47 +22,6 @@ public class SearchQuery {
 	public SearchQuery() {
 	}
 
-	public SearchQuery(int searchQueryId, int userId, String keywords) {
-		_searchQueryId = searchQueryId;
-		_userId = userId;
-		_keywords = keywords;
-	}
-
-	public SearchQuery(
-		int searchQueryId, int userId, String keywords, String categoryId) {
-
-		_searchQueryId = searchQueryId;
-		_userId = userId;
-		_keywords = keywords;
-		_categoryId = categoryId;
-	}
-
-	public SearchQuery(
-		int searchQueryId, int userId, String keywords, String categoryId,
-		String subcategoryId, boolean searchDescription,
-		boolean freeShippingOnly, boolean newCondition, boolean usedCondition,
-		boolean unspecifiedCondition, boolean auctionListing,
-		boolean fixedPriceListing, double minPrice, double maxPrice,
-		String globalId, boolean active) {
-
-		_searchQueryId = searchQueryId;
-		_userId = userId;
-		_keywords = keywords;
-		_categoryId = categoryId;
-		_subcategoryId = subcategoryId;
-		_searchDescription = searchDescription;
-		_freeShippingOnly = freeShippingOnly;
-		_newCondition = newCondition;
-		_usedCondition = usedCondition;
-		_unspecifiedCondition = unspecifiedCondition;
-		_auctionListing = auctionListing;
-		_fixedPriceListing = fixedPriceListing;
-		_minPrice = minPrice;
-		_maxPrice = maxPrice;
-		_globalId = globalId;
-		_active = active;
-	}
-
 	public String getCategoryId() {
 		return _categoryId;
 	}

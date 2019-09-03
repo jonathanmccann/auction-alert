@@ -32,54 +32,10 @@ public class SearchQueryTest {
 	}
 
 	@Test
-	public void testAdvancedConstructor() {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100", "200", true, true, true, true,
-			true, true, true, 5.00, 10.00, "EBAY-US", false);
-
-		Assert.assertEquals(1, searchQuery.getSearchQueryId());
-		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
-		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
-		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("200", searchQuery.getSubcategoryId());
-		Assert.assertTrue(searchQuery.isSearchDescription());
-		Assert.assertTrue(searchQuery.isFreeShippingOnly());
-		Assert.assertTrue(searchQuery.isNewCondition());
-		Assert.assertTrue(searchQuery.isUsedCondition());
-		Assert.assertTrue(searchQuery.isUnspecifiedCondition());
-		Assert.assertTrue(searchQuery.isAuctionListing());
-		Assert.assertTrue(searchQuery.isFixedPriceListing());
-		Assert.assertEquals(5.00, searchQuery.getMinPrice(), 0);
-		Assert.assertEquals(10.00, searchQuery.getMaxPrice(), 0);
-		Assert.assertEquals("EBAY-US", searchQuery.getGlobalId());
-		Assert.assertFalse(searchQuery.isActive());
-	}
-
-	@Test
 	public void testConstructor() {
 		Assert.assertEquals(0, _searchQuery.getSearchQueryId());
 		Assert.assertTrue(ValidatorUtil.isNull(_searchQuery.getKeywords()));
 		Assert.assertTrue(ValidatorUtil.isNull(_searchQuery.getCategoryId()));
-	}
-
-	@Test
-	public void testConstructorWithKeywords() {
-		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
-
-		Assert.assertEquals(1, searchQuery.getSearchQueryId());
-		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
-		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
-	}
-
-	@Test
-	public void testConstructorWithKeywordsAndCategoryId() {
-		SearchQuery searchQuery = new SearchQuery(
-			1, _USER_ID, "Test keywords", "100");
-
-		Assert.assertEquals(1, searchQuery.getSearchQueryId());
-		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
-		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
-		Assert.assertEquals("100", searchQuery.getCategoryId());
 	}
 
 	@Test

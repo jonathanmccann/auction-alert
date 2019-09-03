@@ -446,7 +446,10 @@ public class SendGridMailSenderTest extends BaseTestCase {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		SearchQuery searchQuery = new SearchQuery(1, _USER_ID, "Test keywords");
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test keywords");
 
 		SearchResult searchResult = new SearchResult(
 			1, "1234", "itemTitle", "$14.99", "$29.99",
