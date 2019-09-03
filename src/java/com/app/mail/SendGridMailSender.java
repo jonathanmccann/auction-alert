@@ -81,15 +81,7 @@ public class SendGridMailSender implements MailSender {
 
 		Mail mail = _populateContactMessage(emailAddress, message);
 
-		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
-
-		Request request = new Request();
-
-		request.method = Method.POST;
-		request.endpoint = "mail/send";
-		request.body = mail.build();
-
-		sendgrid.api(request);
+		_sendSendGridEmail(mail);
 	}
 
 	@Override
@@ -242,19 +234,23 @@ public class SendGridMailSender implements MailSender {
 
 	private static void _sendEmail(Mail mail) {
 		try {
-			SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
-
-			Request request = new Request();
-
-			request.method = Method.POST;
-			request.endpoint = "mail/send";
-			request.body = mail.build();
-
-			sendgrid.api(request);
+			_sendSendGridEmail(mail);
 		}
 		catch (Exception e) {
 			_log.error("Unable to send email", e);
 		}
+	}
+
+	private static void _sendSendGridEmail(Mail mail) throws IOException {
+		SendGrid sendgrid = new SendGrid(PropertiesValues.SENDGRID_API_KEY);
+
+		Request request = new Request();
+
+		request.method = Method.POST;
+		request.endpoint = "mail/send";
+		request.body = mail.build();
+
+		sendgrid.api(request);
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
