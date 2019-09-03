@@ -102,7 +102,7 @@ public class EbaySearchResultUtil {
 
 		_setPrice(
 			searchResult, preferredCurrency, listingInfo,
-			item.getSellingStatus(), listingInfo.getListingType());
+			item.getSellingStatus());
 
 		return searchResult;
 	}
@@ -152,11 +152,12 @@ public class EbaySearchResultUtil {
 
 	private static void _setPrice(
 		SearchResult searchResult, String preferredCurrency,
-		ListingInfo listingInfo, SellingStatus sellingStatus,
-		String typeOfAuction) {
+		ListingInfo listingInfo, SellingStatus sellingStatus) {
 
 		CurrentPrice currentPrice = sellingStatus.getCurrentPrice();
 		BuyItNowPrice buyItNowPrice = listingInfo.getBuyItNowPrice();
+
+		String typeOfAuction = listingInfo.getListingType();
 
 		double auctionPrice = ExchangeRateUtil.convertCurrency(
 			currentPrice.getCurrencyId(), preferredCurrency,

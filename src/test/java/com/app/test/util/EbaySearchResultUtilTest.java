@@ -96,7 +96,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		_setPriceMethod = clazz.getDeclaredMethod(
 			"_setPrice", SearchResult.class, String.class, ListingInfo.class,
-			SellingStatus.class, String.class);
+			SellingStatus.class);
 
 		_setPriceMethod.setAccessible(true);
 
@@ -258,8 +258,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, "USD", _createListingInfo(),
-			_createSellingStatus(), _AUCTION);
+			_classInstance, searchResult, "USD", _createListingInfo(_AUCTION),
+			_createSellingStatus());
 
 		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
 		Assert.assertNull(searchResult.getFixedPrice());
@@ -270,8 +270,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, "USD", _createListingInfo(),
-			_createSellingStatus(), _AUCTION_WITH_BIN);
+			_classInstance, searchResult, "USD",
+			_createListingInfo(_AUCTION_WITH_BIN), _createSellingStatus());
 
 		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
 		Assert.assertEquals("$10.00", searchResult.getFixedPrice());
@@ -286,8 +286,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, "USD", _createListingInfo(),
-			_createSellingStatus(), _FIXED_PRICE);
+			_classInstance, searchResult, "USD",
+			_createListingInfo(_FIXED_PRICE), _createSellingStatus());
 
 		Assert.assertNull(searchResult.getAuctionPrice());
 		Assert.assertEquals("$5.00", searchResult.getFixedPrice());
@@ -298,8 +298,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, "USD", _createListingInfo(),
-			_createSellingStatus(), _STORE_INVENTORY);
+			_classInstance, searchResult, "USD",
+			_createListingInfo(_STORE_INVENTORY), _createSellingStatus());
 
 		Assert.assertNull(searchResult.getAuctionPrice());
 		Assert.assertEquals("$5.00", searchResult.getFixedPrice());
@@ -310,8 +310,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, "USD", _createListingInfo(),
-			_createSellingStatus(), _UNKNOWN);
+			_classInstance, searchResult, "USD", _createListingInfo(_UNKNOWN),
+			_createSellingStatus());
 
 		Assert.assertNull(searchResult.getAuctionPrice());
 		Assert.assertNull(searchResult.getFixedPrice());
@@ -641,7 +641,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
-	private static ListingInfo _createListingInfo() throws Exception {
+	private static ListingInfo _createListingInfo(String listingType)
+		throws Exception {
+
 		BuyItNowPrice buyItNowPrice = new BuyItNowPrice();
 
 		Class<?> buyItNowPriceClass = buyItNowPrice.getClass();
@@ -658,6 +660,16 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		ListingInfo listingInfo = new ListingInfo();
 
 		Class<?> clazz = listingInfo.getClass();
+
+		Field listingTypeField = clazz.getDeclaredField("listingType");
+
+		listingTypeField.setAccessible(true);
+
+		List<String> listingTypes = new ArrayList<>();
+
+		listingTypes.add(listingType);
+
+		listingTypeField.set(listingInfo, listingTypes);
 
 		Field buyItNowPriceField = clazz.getDeclaredField("buyItNowPrice");
 
