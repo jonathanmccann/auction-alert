@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -219,8 +220,25 @@ public class DefaultMailSender implements MailSender {
 	}
 
 	private static Session _authenticateOutboundEmailAddress() {
+		if (_outboundEmailSessionProperties == null) {
+			_outboundEmailSessionProperties = new Properties();
+
+			_outboundEmailSessionProperties.put(
+				"mail.smtp.auth", PropertiesValues.MAIL_SMTP_AUTH);
+
+			_outboundEmailSessionProperties.put(
+				"mail.smtp.host", PropertiesValues.MAIL_SMTP_HOST);
+
+			_outboundEmailSessionProperties.put(
+				"mail.smtp.port", PropertiesValues.MAIL_SMTP_PORT);
+
+			_outboundEmailSessionProperties.put(
+				"mail.smtp.starttls.enable",
+				PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
+		}
+
 		return Session.getInstance(
-			PropertiesUtil.getConfigurationProperties(),
+			_outboundEmailSessionProperties,
 			new Authenticator() {
 
 				protected PasswordAuthentication getPasswordAuthentication() {
@@ -337,6 +355,8 @@ public class DefaultMailSender implements MailSender {
 
 		return message;
 	}
+
+	private static Properties _outboundEmailSessionProperties;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		DefaultMailSender.class);

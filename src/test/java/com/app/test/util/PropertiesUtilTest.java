@@ -72,6 +72,14 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"test", PropertiesValues.OUTBOUND_EMAIL_ADDRESS_PASSWORD);
 		Assert.assertEquals(
+			"true", PropertiesValues.MAIL_SMTP_AUTH);
+		Assert.assertEquals(
+			"testHost", PropertiesValues.MAIL_SMTP_HOST);
+		Assert.assertEquals(
+			"testPort", PropertiesValues.MAIL_SMTP_PORT);
+		Assert.assertEquals(
+			"true", PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
+		Assert.assertEquals(
 			5, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_RESULTS);
 		Assert.assertEquals(
 			2, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES);

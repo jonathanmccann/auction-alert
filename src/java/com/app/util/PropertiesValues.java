@@ -46,6 +46,18 @@ public class PropertiesValues {
 	public static final int LOGIN_ATTEMPT_LIMIT = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty("login.attempt.limit"));
 
+	public static final String MAIL_SMTP_AUTH =
+		PropertiesUtil.getConfigurationProperty("mail.smtp.auth");
+
+	public static final String MAIL_SMTP_HOST =
+		PropertiesUtil.getConfigurationProperty("mail.smtp.host");
+
+	public static final String MAIL_SMTP_PORT =
+		PropertiesUtil.getConfigurationProperty("mail.smtp.port");
+
+	public static final String MAIL_SMTP_STARTTLS_ENABLE =
+		PropertiesUtil.getConfigurationProperty("mail.smtp.starttls.enable");
+
 	public static final int MAXIMUM_NUMBER_OF_SEARCH_RESULTS = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty(
 			"maximum.number.of.search.results"));
