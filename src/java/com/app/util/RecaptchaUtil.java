@@ -15,6 +15,11 @@
 package com.app.util;
 
 import com.google.gson.Gson;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,31 +43,23 @@ public class RecaptchaUtil {
 			return false;
 		}
 
-		BufferedReader bufferedReader = null;
-
 		try {
-			URL url = new URL(_VERIFY_RECAPTCHA_URL + recaptchaResponse);
+			HttpClient httpClient = HttpClients.createDefault();
 
-			HttpsURLConnection connection =
-				(HttpsURLConnection)url.openConnection();
+			HttpGet httpGet = new HttpGet(
+				_VERIFY_RECAPTCHA_URL + recaptchaResponse);
 
-			bufferedReader = new BufferedReader(
-				new InputStreamReader(connection.getInputStream()));
+			HttpResponse response = httpClient.execute(httpGet);
 
 			Gson gson = new Gson();
 
-			Map<Object, Object> response = gson.fromJson(
-				bufferedReader, Map.class);
+			Map<Object, Object> responseMap = gson.fromJson(
+				EntityUtils.toString(response.getEntity()), Map.class);
 
-			return (boolean)response.get("success");
+			return (boolean)responseMap.get("success");
 		}
 		catch (Exception e) {
 			return false;
-		}
-		finally {
-			if (bufferedReader != null) {
-				bufferedReader.close();
-			}
 		}
 	}
 
