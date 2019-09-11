@@ -85,9 +85,9 @@ public class PropertiesUtilTest extends BaseTestCase {
 			2, PropertiesValues.MAXIMUM_NUMBER_OF_SEARCH_QUERIES);
 		Assert.assertEquals(2, PropertiesValues.MAXIMUM_NUMBER_OF_USERS);
 		Assert.assertEquals(
-			"Recaptcha Site Key", PropertiesValues.RECAPTCHA_SITE_KEY);
+			"recaptchaSecretKey", PropertiesValues.RECAPTCHA_SECRET_KEY);
 		Assert.assertEquals(
-			"Recaptcha Secret Key", PropertiesValues.RECAPTCHA_SECRET_KEY);
+			"recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
 		Assert.assertEquals(
 			"http://www.test.com", PropertiesValues.ROOT_DOMAIN_NAME);
 		Assert.assertEquals(

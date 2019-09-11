@@ -40,6 +40,10 @@ import com.stripe.model.Subscription;
 
 import com.stripe.net.Webhook;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -61,6 +65,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -74,6 +79,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,8 +94,8 @@ import javax.net.ssl.HttpsURLConnection;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
 @PrepareForTest({
-	Customer.class, RecaptchaUtil.class, Subscription.class, Transport.class,
-	URL.class, Webhook.class
+	Customer.class, EntityUtils.class, HttpClients.class, Subscription.class,
+	Transport.class, URL.class, Webhook.class
 })
 @WebAppConfiguration
 public class UserControllerTest extends BaseTestCase {
@@ -1718,42 +1724,6 @@ public class UserControllerTest extends BaseTestCase {
 		);
 	}
 
-	protected static void setUpRecaptchaUtil(boolean isValid) throws Exception {
-		URL url = PowerMockito.mock(URL.class);
-
-		PowerMockito.whenNew(
-			URL.class
-		).withAnyArguments().thenReturn(
-			url
-		);
-
-		HttpsURLConnection httpsURLConnection = Mockito.mock(
-			HttpsURLConnection.class);
-
-		InputStream inputStream = null;
-
-		if (isValid) {
-			inputStream = new ByteArrayInputStream(
-				"{\"success\": true}".getBytes());
-		}
-		else {
-			inputStream = new ByteArrayInputStream(
-				"{\"success\": \"false\"}".getBytes());
-		}
-
-		Mockito.when(
-			url.openConnection()
-		).thenReturn(
-			httpsURLConnection
-		);
-
-		Mockito.when(
-			httpsURLConnection.getInputStream()
-		).thenReturn(
-			inputStream
-		);
-	}
-
 	private static void _setUpStripeUtil() throws Exception {
 		PowerMockito.spy(Webhook.class);
 
@@ -1780,6 +1750,45 @@ public class UserControllerTest extends BaseTestCase {
 		).when(
 			Subscription.class, "retrieve", Mockito.anyString()
 		);
+	}
+
+	protected void setUpRecaptchaUtil(boolean isValid) throws Exception {
+		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
+			CloseableHttpResponse.class);
+
+		CloseableHttpClient closeableHttpClient = Mockito.mock(
+			CloseableHttpClient.class);
+
+		PowerMockito.spy(HttpClients.class);
+
+		PowerMockito.doReturn(
+			closeableHttpClient
+		).when(
+			HttpClients.class, "createDefault"
+		);
+
+		Mockito.when(
+			closeableHttpClient.execute(Mockito.anyObject())
+		).thenReturn(
+			closeableHttpResponse
+		);
+
+		PowerMockito.spy(EntityUtils.class);
+
+		if (isValid) {
+			PowerMockito.doReturn(
+				"{\"success\": true}"
+			).when(
+				EntityUtils.class, "toString", Mockito.anyObject()
+			);
+		}
+		else {
+			PowerMockito.doReturn(
+				"{\"success\": false}"
+			).when(
+				EntityUtils.class, "toString", Mockito.anyObject()
+			);
+		}
 	}
 
 	protected static void setUpSubscription() throws Exception {
@@ -1847,6 +1856,5 @@ public class UserControllerTest extends BaseTestCase {
 
 	private static User _FIRST_USER;
 	private static User _SECOND_USER;
-	private static User _THIRD_USER;
 
 }
