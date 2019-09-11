@@ -15,6 +15,11 @@
 package com.app.util;
 
 import com.google.gson.Gson;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,19 +59,17 @@ public class ExchangeRateUtil {
 						continue;
 					}
 
-					URL exchangeRateUrl = new URL(
+					HttpClient httpClient = HttpClients.createDefault();
+
+					HttpGet httpGet = new HttpGet(
 						_EXCHANGE_RATE_URL + fromCurrencyId + "_" + toCurrencyId);
 
-					URLConnection urlConnection = exchangeRateUrl.openConnection();
+					HttpResponse response = httpClient.execute(httpGet);
 
-					try (InputStreamReader inputStreamReader = new InputStreamReader(
-						urlConnection.getInputStream());
-						 BufferedReader bufferedReader = new BufferedReader(
-							 inputStreamReader)) {
-
-						_exchangeRates.putAll(
-							gson.fromJson(bufferedReader, Map.class));
-					}
+					_exchangeRates.putAll(
+						gson.fromJson(
+							EntityUtils.toString(response.getEntity()),
+							Map.class));
 				}
 			}
 		}
