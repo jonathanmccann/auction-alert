@@ -79,12 +79,7 @@ public class CategoryUtil {
 
 		GetCategoriesCall getCategoriesCall = new GetCategoriesCall(apiContext);
 
-		DetailLevelCodeType[] detailLevelCodeTypes = {
-			DetailLevelCodeType.RETURN_ALL
-		};
-
 		getCategoriesCall.setCategorySiteID(SiteCodeType.US);
-		getCategoriesCall.setDetailLevel(detailLevelCodeTypes);
 		getCategoriesCall.setLevelLimit(_SUB_CATEGORY_LEVEL_LIMIT);
 		getCategoriesCall.setViewAllNodes(true);
 
@@ -118,6 +113,8 @@ public class CategoryUtil {
 	private static void _populateCategories(GetCategoriesCall getCategoriesCall)
 		throws Exception {
 
+		getCategoriesCall.getCategories();
+
 		String version = getCategoriesCall.getReturnedCategoryVersion();
 
 		if (_isNewerCategoryVersion(version)) {
@@ -127,6 +124,12 @@ public class CategoryUtil {
 				version);
 
 			deleteCategories();
+
+			DetailLevelCodeType[] detailLevelCodeTypes = {
+				DetailLevelCodeType.RETURN_ALL
+			};
+
+			getCategoriesCall.setDetailLevel(detailLevelCodeTypes);
 
 			CategoryType[] ebayCategories = getCategoriesCall.getCategories();
 

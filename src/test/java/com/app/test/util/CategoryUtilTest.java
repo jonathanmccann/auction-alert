@@ -95,15 +95,9 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ApiContext apiContext = getCategoriesCall.getApiContext();
 
-		DetailLevelCodeType[] detailLevelCodeTypes = {
-			DetailLevelCodeType.RETURN_ALL
-		};
-
 		Assert.assertNotNull(apiContext);
 		Assert.assertEquals(
 			SiteCodeType.US, getCategoriesCall.getCategorySiteID());
-		Assert.assertArrayEquals(
-			detailLevelCodeTypes, getCategoriesCall.getDetailLevel());
 		Assert.assertEquals(
 			_SUB_CATEGORY_LEVEL_LIMIT, getCategoriesCall.getLevelLimit());
 		Assert.assertTrue(getCategoriesCall.getViewAllNodes());
@@ -155,13 +149,6 @@ public class CategoryUtilTest extends BaseTestCase {
 		List<Category> categories = CategoryUtil.getSubcategories("1");
 
 		Assert.assertEquals(1, categories.size());
-	}
-
-	@Test
-	public void testInitializeCategories() throws Exception {
-		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
-
-		CategoryUtil.initializeCategories();
 	}
 
 	@Test
@@ -218,16 +205,16 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testPopulateCategoriesWithOlderVersion() throws Exception {
+		GetCategoriesCall getCategoriesCall = _setUpGetCategoriesCall();
+
 		Method populateCategories = _clazz.getDeclaredMethod(
 			"_populateCategories", GetCategoriesCall.class);
 
 		populateCategories.setAccessible(true);
 
-		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
+		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "300");
 
 		_addCategory("1", "parentCategory", "1", 1);
-
-		GetCategoriesCall getCategoriesCall = new GetCategoriesCall();
 
 		populateCategories.invoke(_classInstance, getCategoriesCall);
 
