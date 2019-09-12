@@ -457,6 +457,7 @@ public class UserControllerTest extends BaseTestCase {
 	public void testDeleteAccount() throws Exception {
 		setUpCustomer();
 		setUpRecaptchaUtil(true);
+		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -1752,7 +1753,7 @@ public class UserControllerTest extends BaseTestCase {
 		);
 	}
 
-	protected void setUpRecaptchaUtil(boolean isValid) throws Exception {
+	protected static void setUpRecaptchaUtil(boolean isValid) throws Exception {
 		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
 			CloseableHttpResponse.class);
 
