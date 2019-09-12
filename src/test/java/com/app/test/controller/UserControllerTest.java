@@ -456,7 +456,7 @@ public class UserControllerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAccount() throws Exception {
 		setUpCustomer();
-		setUpRecaptchaUtil(true);
+		setUpRecaptchaUtil();
 		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
@@ -516,7 +516,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteAccountWithIncorrectEmailAddress() throws Exception {
-		setUpRecaptchaUtil(true);
+		setUpRecaptchaUtil();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -544,7 +544,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteAccountWithIncorrectPassword() throws Exception {
-		setUpRecaptchaUtil(true);
+		setUpRecaptchaUtil();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
@@ -572,15 +572,12 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testDeleteAccountWithInvalidRecaptcha() throws Exception {
-		setUpRecaptchaUtil(false);
-
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		MockHttpServletRequestBuilder request = post("/delete_account");
 
 		request.param("emailAddress", "test@test.com");
 		request.param("password", "password");
-		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		ResultActions resultActions = this.mockMvc.perform(request);
 
@@ -937,7 +934,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostForgotPassword() throws Exception {
-		setUpRecaptchaUtil(true);
+		setUpRecaptchaUtil();
 		setUpTransport();
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
@@ -963,7 +960,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostForgotPasswordWithInvalidEmailAddress() throws Exception {
-		setUpRecaptchaUtil(true);
+		setUpRecaptchaUtil();
 
 		MockHttpServletRequestBuilder request = post("/forgot_password");
 
@@ -980,14 +977,11 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostForgotPasswordWithInvalidRecaptcha() throws Exception {
-		setUpRecaptchaUtil(false);
-
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
 		MockHttpServletRequestBuilder request = post("/forgot_password");
 
 		request.param("emailAddress", "test@test.com");
-		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		this.mockMvc.perform(request)
 			.andExpect(status().is3xxRedirection())
@@ -1109,8 +1103,6 @@ public class UserControllerTest extends BaseTestCase {
 	public void testPostLogInExceedingLoginLimitAndFailingRecaptcha()
 		throws Exception {
 
-		setUpRecaptchaUtil(false);
-
 		setUpSecurityUtilsSession(
 			_INVALID_USER_ID, PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
 
@@ -1134,7 +1126,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		_FIRST_USER = UserUtil.addUser("test@test.com", "password");
 
-		setUpRecaptchaUtil(true);
+		setUpRecaptchaUtil();
 
 		setUpSecurityUtilsSession(
 			_FIRST_USER.getUserId(), PropertiesValues.LOGIN_ATTEMPT_LIMIT + 1);
@@ -1770,7 +1762,7 @@ public class UserControllerTest extends BaseTestCase {
 		);
 	}
 
-	protected static void setUpRecaptchaUtil(boolean isValid) throws Exception {
+	protected static void setUpRecaptchaUtil() throws Exception {
 		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
 			CloseableHttpResponse.class);
 
@@ -1793,20 +1785,11 @@ public class UserControllerTest extends BaseTestCase {
 
 		PowerMockito.spy(EntityUtils.class);
 
-		if (isValid) {
-			PowerMockito.doReturn(
-				"{\"success\": true}"
-			).when(
-				EntityUtils.class, "toString", Mockito.anyObject()
-			);
-		}
-		else {
-			PowerMockito.doReturn(
-				"{\"success\": false}"
-			).when(
-				EntityUtils.class, "toString", Mockito.anyObject()
-			);
-		}
+		PowerMockito.doReturn(
+			"{\"success\": true}"
+		).when(
+			EntityUtils.class, "toString", Mockito.anyObject()
+		);
 	}
 
 	protected static void setUpSubscription() throws Exception {
