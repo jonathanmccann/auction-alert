@@ -962,6 +962,23 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPostForgotPasswordWithInvalidEmailAddress() throws Exception {
+		setUpRecaptchaUtil(true);
+
+		MockHttpServletRequestBuilder request = post("/forgot_password");
+
+		request.param("emailAddress", "test@test.com");
+		request.param("g-recaptcha-response", "recaptchaResponse");
+
+		this.mockMvc.perform(request)
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:forgot_password"))
+			.andExpect(redirectedUrl("forgot_password"))
+			.andExpect(flash().attribute(
+				"success", LanguageUtil.getMessage("forgot-password-success")));
+	}
+
+	@Test
 	public void testPostForgotPasswordWithInvalidRecaptcha() throws Exception {
 		setUpRecaptchaUtil(false);
 

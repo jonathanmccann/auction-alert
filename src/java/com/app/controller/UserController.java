@@ -323,14 +323,21 @@ public class UserController {
 			recaptchaResponse);
 
 		if (valid) {
-			User user = UserUtil.getUserByEmailAddress(emailAddress);
+			try {
+				User user = UserUtil.getUserByEmailAddress(emailAddress);
 
-			String passwordResetToken = UserUtil.updatePasswordResetToken(
-				user.getUserId());
+				String passwordResetToken = UserUtil.updatePasswordResetToken(
+					user.getUserId());
 
-			MailSender mailSender = MailSenderFactory.getInstance();
+				MailSender mailSender = MailSenderFactory.getInstance();
 
-			mailSender.sendPasswordResetToken(emailAddress, passwordResetToken);
+				mailSender.sendPasswordResetToken(emailAddress, passwordResetToken);
+			}
+			catch (Exception e) {
+				_log.error(
+					"Unable to send password reset token for user with " +
+						"emailAddress {}", emailAddress, e);
+			}
 		}
 
 		redirectAttributes.addFlashAttribute(
