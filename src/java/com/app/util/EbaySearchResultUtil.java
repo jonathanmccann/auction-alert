@@ -60,7 +60,7 @@ public class EbaySearchResultUtil {
 			SearchQuery searchQuery)
 		throws DatabaseConnectionException, IOException, SQLException {
 
-		_log.debug("Searching for: {}", searchQuery.getKeywords());
+		_log.trace("Searching for: {}", searchQuery.getKeywords());
 
 		User user = UserUtil.getUserByUserId(searchQuery.getUserId());
 
@@ -198,7 +198,7 @@ public class EbaySearchResultUtil {
 			SearchQuery searchQuery, String preferredCurrency)
 		throws UnsupportedEncodingException {
 
-		_log.debug("Setting up advanced request");
+		_log.trace("Setting up advanced request");
 
 		int itemFilterCount = 0;
 
