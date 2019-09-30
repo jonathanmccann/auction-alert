@@ -22,6 +22,14 @@ public class SearchQuery {
 	public SearchQuery() {
 	}
 
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof SearchQuery)) {
+			return false;
+		}
+
+		return _searchQueryId == (((SearchQuery)obj).getSearchQueryId());
+	}
+
 	public String getCategoryId() {
 		return _categoryId;
 	}
@@ -52,6 +60,10 @@ public class SearchQuery {
 
 	public int getUserId() {
 		return _userId;
+	}
+
+	public int hashCode() {
+		return _searchQueryId;
 	}
 
 	public boolean isActive() {

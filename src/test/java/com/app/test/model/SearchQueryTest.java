@@ -39,6 +39,45 @@ public class SearchQueryTest {
 	}
 
 	@Test
+	public void testEqualsWithEqualObject() {
+		_searchQuery.setSearchQueryId(1);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(1);
+
+		Assert.assertTrue(_searchQuery.equals(searchQuery));
+	}
+
+	@Test
+	public void testEqualsWithInequalItemId() {
+		_searchQuery.setSearchQueryId(1);
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setSearchQueryId(2);
+
+		Assert.assertFalse(_searchQuery.equals(searchQuery));
+	}
+
+	@Test
+	public void testEqualsWithInequalObject() {
+		Assert.assertFalse(_searchQuery.equals(new Object()));
+	}
+
+	@Test
+	public void testEqualsWithNullObject() {
+		Assert.assertFalse(_searchQuery.equals(null));
+	}
+
+	@Test
+	public void testHashCode() {
+		_searchQuery.setSearchQueryId(1);
+
+		Assert.assertEquals(1, _searchQuery.hashCode());
+	}
+
+	@Test
 	public void testIsAuctionListing() {
 		_searchQuery.setAuctionListing(true);
 

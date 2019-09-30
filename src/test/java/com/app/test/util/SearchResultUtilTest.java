@@ -23,7 +23,9 @@ import com.app.util.SearchResultUtil;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -55,6 +57,8 @@ public class SearchResultUtilTest extends BaseTestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		SearchQueryUtil.deleteSearchQueries(_USER_ID);
+
 		SearchResultUtil.deleteSearchQueryResults(_SEARCH_QUERY_ID);
 	}
 
@@ -78,6 +82,143 @@ public class SearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
 		Assert.assertTrue(searchResult.isDelivered());
+	}
+
+	@Test
+	public void testAddUndeliveredSearchResultsWithNoUndeliveredResults()
+		throws Exception {
+
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+			new HashMap<>();
+
+		SearchResultUtil.applyUndeliveredSearchResults(
+			_USER_ID, searchQueryResultMap);
+
+		Assert.assertTrue(searchQueryResultMap.isEmpty());
+	}
+
+	@Test
+	public void testAddUndeliveredSearchResultsWithExistingQuery()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test Keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		searchQuery.setSearchQueryId(searchQueryId);
+
+		List<SearchResult> undeliveredSearchResults = new ArrayList<>();
+
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(searchQueryId);
+		searchResult.setUserId(_USER_ID);
+		searchResult.setItemId("1234");
+		searchResult.setDelivered(false);
+
+		undeliveredSearchResults.add(searchResult);
+
+		SearchResultUtil.addSearchResults(
+			searchQueryId, undeliveredSearchResults);
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
+
+		List<Integer> searchResultIds = new ArrayList<>();
+
+		searchResultIds.add(searchResults.get(0).getSearchResultId());
+
+		SearchResultUtil.updateSearchResultsDeliveredStatus(
+			searchResultIds, false);
+
+		searchResults = new ArrayList<>();
+
+		searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(searchQueryId);
+		searchResult.setUserId(_USER_ID);
+		searchResult.setItemId("2345");
+		searchResult.setDelivered(true);
+
+		searchResults.add(searchResult);
+
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+			new HashMap<>();
+
+		searchQueryResultMap.put(searchQuery, searchResults);
+
+		SearchResultUtil.applyUndeliveredSearchResults(
+			_USER_ID, searchQueryResultMap);
+
+		Assert.assertEquals(1, searchQueryResultMap.size());
+
+		searchResults = searchQueryResultMap.get(searchQuery);
+
+		Assert.assertEquals(2, searchResults.size());
+	}
+
+	@Test
+	public void testAddUndeliveredSearchResultsWithoutExistingQuery()
+		throws Exception {
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		searchQuery.setUserId(_USER_ID);
+		searchQuery.setKeywords("Test Keywords");
+
+		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
+
+		searchQuery.setSearchQueryId(searchQueryId);
+
+		List<SearchResult> undeliveredSearchResults = new ArrayList<>();
+
+		SearchResult searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(searchQueryId);
+		searchResult.setUserId(_USER_ID);
+		searchResult.setItemId("1234");
+		searchResult.setDelivered(false);
+
+		undeliveredSearchResults.add(searchResult);
+
+		SearchResultUtil.addSearchResults(
+			searchQueryId, undeliveredSearchResults);
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(searchQueryId);
+
+		List<Integer> searchResultIds = new ArrayList<>();
+
+		searchResultIds.add(searchResults.get(0).getSearchResultId());
+
+		SearchResultUtil.updateSearchResultsDeliveredStatus(
+			searchResultIds, false);
+
+		searchResults = new ArrayList<>();
+
+		searchResult = new SearchResult();
+
+		searchResult.setSearchQueryId(searchQueryId);
+		searchResult.setUserId(_USER_ID);
+		searchResult.setItemId("2345");
+		searchResult.setDelivered(true);
+
+		searchResults.add(searchResult);
+
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+			new HashMap<>();
+
+		SearchResultUtil.applyUndeliveredSearchResults(
+			_USER_ID, searchQueryResultMap);
+
+		Assert.assertEquals(1, searchQueryResultMap.size());
+
+		searchResults = searchQueryResultMap.get(searchQuery);
+
+		Assert.assertEquals(1, searchResults.size());
 	}
 
 	@Test

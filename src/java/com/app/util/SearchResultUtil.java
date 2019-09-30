@@ -22,7 +22,9 @@ import com.app.runnable.SearchResultRunnable;
 
 import java.sql.SQLException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +47,38 @@ public class SearchResultUtil {
 		throws DatabaseConnectionException, SQLException {
 
 		_searchResultDAO.addSearchResults(searchQueryId, searchResults);
+	}
+
+	public static void applyUndeliveredSearchResults(
+			int userId,
+			Map<SearchQuery, List<SearchResult>> searchQueryResultMap)
+		throws DatabaseConnectionException, SQLException {
+
+		List<SearchResult> undeliveredSearchResults =
+			getUndeliveredSearchResults(userId);
+
+		if (undeliveredSearchResults.size() == 0) {
+			return;
+		}
+
+		for (SearchResult undeliveredSearchResult : undeliveredSearchResults) {
+			SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
+				undeliveredSearchResult.getSearchQueryId());
+
+			List<SearchResult> searchResults = searchQueryResultMap.get(
+				searchQuery);
+
+			if (searchResults == null) {
+				searchResults = new ArrayList<>();
+
+				searchResults.add(undeliveredSearchResult);
+
+				searchQueryResultMap.put(searchQuery, searchResults);
+			}
+			else {
+				searchResults.add(undeliveredSearchResult);
+			}
+		}
 	}
 
 	public static void deleteSearchQueryResults(int searchQueryId)
