@@ -62,12 +62,24 @@ public class SearchResult {
 		return _searchResultId;
 	}
 
+	public int getUserId() {
+		return _userId;
+	}
+
 	public int hashCode() {
 		return Integer.parseInt(_itemId);
 	}
 
+	public boolean isDelivered() {
+		return _delivered;
+	}
+
 	public void setAuctionPrice(String auctionPrice) {
 		_auctionPrice = auctionPrice;
+	}
+
+	public void setDelivered(Boolean delivered) {
+		_delivered = delivered;
 	}
 
 	public void setFixedPrice(String fixedPrice) {
@@ -98,7 +110,12 @@ public class SearchResult {
 		_searchResultId = searchResultId;
 	}
 
+	public void setUserId(int userId) {
+		_userId = userId;
+	}
+
 	private String _auctionPrice;
+	private boolean _delivered;
 	private String _fixedPrice;
 	private String _galleryURL;
 	private String _itemId;
@@ -106,5 +123,6 @@ public class SearchResult {
 	private String _itemURL;
 	private int _searchQueryId;
 	private int _searchResultId;
+	private int _userId;
 
 }

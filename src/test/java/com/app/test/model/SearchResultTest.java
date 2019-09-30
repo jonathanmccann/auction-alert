@@ -70,6 +70,12 @@ public class SearchResultTest {
 	}
 
 	@Test
+	public void testSetAndGetDelivered() {
+		_searchResult.setDelivered(false);
+
+		Assert.assertFalse(_searchResult.isDelivered());
+	}
+	@Test
 	public void testSetAndGetAuctionPrice() {
 		_searchResult.setAuctionPrice("$14.99");
 
@@ -125,6 +131,13 @@ public class SearchResultTest {
 		_searchResult.setSearchResultId(1);
 
 		Assert.assertEquals(1, _searchResult.getSearchResultId());
+	}
+
+	@Test
+	public void testSetAndGetUserId() {
+		_searchResult.setUserId(1);
+
+		Assert.assertEquals(1, _searchResult.getUserId());
 	}
 
 	private SearchResult _searchResult;
