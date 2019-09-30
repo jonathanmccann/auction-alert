@@ -61,6 +61,8 @@ public class SearchResultUtil {
 			return;
 		}
 
+		List<Integer> undeliveredSearchResultIds = new ArrayList<>();
+
 		for (SearchResult undeliveredSearchResult : undeliveredSearchResults) {
 			SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
 				undeliveredSearchResult.getSearchQueryId());
@@ -78,7 +80,12 @@ public class SearchResultUtil {
 			else {
 				searchResults.add(undeliveredSearchResult);
 			}
+
+			undeliveredSearchResultIds.add(
+				undeliveredSearchResult.getSearchResultId());
 		}
+
+		updateSearchResultsDeliveredStatus(undeliveredSearchResultIds, true);
 	}
 
 	public static void deleteSearchQueryResults(int searchQueryId)

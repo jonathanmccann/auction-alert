@@ -158,6 +158,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 		searchResults = searchQueryResultMap.get(searchQuery);
 
 		Assert.assertEquals(2, searchResults.size());
+
+		searchResults = SearchResultUtil.getUndeliveredSearchResults(_USER_ID);
+
+		Assert.assertEquals(0, searchResults.size());
 	}
 
 	@Test
@@ -219,6 +223,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 		searchResults = searchQueryResultMap.get(searchQuery);
 
 		Assert.assertEquals(1, searchResults.size());
+
+		searchResults = SearchResultUtil.getUndeliveredSearchResults(_USER_ID);
+
+		Assert.assertEquals(0, searchResults.size());
 	}
 
 	@Test
