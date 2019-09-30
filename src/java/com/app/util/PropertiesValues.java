@@ -94,6 +94,12 @@ public class PropertiesValues {
 	public static final String SENDGRID_API_KEY =
 		PropertiesUtil.getConfigurationProperty("sendgrid.api.key");
 
+	public static final String SENDGRID_WEBHOOK_KEY =
+		PropertiesUtil.getConfigurationProperty("sendgrid.webhook.key");
+
+	public static final String SENDGRID_WEBHOOK_VALUE =
+		PropertiesUtil.getConfigurationProperty("sendgrid.webhook.value");
+
 	public static final String STRIPE_PUBLISHABLE_KEY =
 		PropertiesUtil.getConfigurationProperty("stripe.publishable.key");
 

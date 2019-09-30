@@ -29,6 +29,7 @@ import com.app.util.PropertiesValues;
 import com.app.util.RecaptchaUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
+import com.app.util.SendGridUtil;
 import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 import com.app.util.ValidatorUtil;
@@ -601,6 +602,18 @@ public class UserController {
 		throws Exception {
 
 		StripeUtil.handleStripeEvent(stripeJsonEvent, stripeSignature);
+
+		response.setStatus(HttpStatus.SC_OK);
+	}
+
+	@RequestMapping(value ="/sendgrid", method= RequestMethod.POST)
+	public void sendGridWebhookEndpoint(
+			@RequestBody String sendGridJsonEvent,
+			@RequestParam("key")String key, @RequestParam("value")String value,
+			HttpServletResponse response)
+		throws Exception {
+
+		SendGridUtil.handleSendGridEvent(sendGridJsonEvent, key, value);
 
 		response.setStatus(HttpStatus.SC_OK);
 	}
