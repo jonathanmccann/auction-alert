@@ -24,6 +24,7 @@ import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 import com.sendgrid.Content;
+import com.sendgrid.Email;
 import com.sendgrid.Mail;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sendgrid.Personalization;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -87,6 +89,51 @@ public class SendGridMailSenderTest extends BaseTestCase {
 	@After
 	public void tearDown() throws Exception {
 		UserUtil.deleteUserByUserId(_userId);
+	}
+
+	@Test
+	public void testAddSearchResultIdsToMail() throws Exception {
+		Method addSearchResultIdsToMailMethod = _clazz.getDeclaredMethod(
+			"_addSearchResultIdsToMail", Mail.class, Map.class);
+
+		addSearchResultIdsToMailMethod.setAccessible(true);
+
+		Email emailFrom = new Email("from@test.com");
+		Email emailTo = new Email("to@test.com");
+
+		Content content = new Content("text/html", "Content");
+
+		Mail mail = new Mail(emailFrom, "Subject", emailTo, content);
+
+		Map<SearchQuery, List<SearchResult>> searchQueryResultMap =
+			new HashMap<>();
+
+		SearchQuery searchQuery = new SearchQuery();
+
+		SearchResult firstSearchResult = new SearchResult();
+
+		firstSearchResult.setSearchResultId(1);
+
+		SearchResult secondSearchResult = new SearchResult();
+
+		secondSearchResult.setSearchResultId(2);
+
+		List<SearchResult> searchResults = new ArrayList<>();
+
+		searchResults.add(firstSearchResult);
+		searchResults.add(secondSearchResult);
+
+		searchQueryResultMap.put(searchQuery, searchResults);
+
+		addSearchResultIdsToMailMethod.invoke(
+			_classInstance, mail, searchQueryResultMap);
+
+		Personalization personalization = mail.getPersonalization().get(0);
+
+		Map<String, String> customArgs = personalization.getCustomArgs();
+
+		Assert.assertEquals(1, customArgs.size());
+		Assert.assertEquals("[1,2]", customArgs.get("searchResultIds"));
 	}
 
 	@Test

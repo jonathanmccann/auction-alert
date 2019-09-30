@@ -21,10 +21,12 @@ import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 
+import com.google.gson.Gson;
 import com.sendgrid.Content;
 import com.sendgrid.Email;
 import com.sendgrid.Mail;
 import com.sendgrid.Method;
+import com.sendgrid.Personalization;
 import com.sendgrid.Request;
 import com.sendgrid.SendGrid;
 
@@ -32,9 +34,12 @@ import java.io.IOException;
 
 import java.sql.SQLException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.NumberTool;
@@ -139,6 +144,8 @@ public class SendGridMailSender implements MailSender {
 		Mail mail = _populateEmailMessage(
 			searchQueryResultMap, user.getEmailAddress());
 
+		_addSearchResultIdsToMail(mail, searchQueryResultMap);
+
 		_sendEmail(mail);
 
 		emailsSent++;
@@ -152,6 +159,24 @@ public class SendGridMailSender implements MailSender {
 			emailAddress, "Welcome", "welcome_email.vm");
 
 		_sendEmail(mail);
+	}
+
+	private void _addSearchResultIdsToMail(
+		Mail mail, Map<SearchQuery, List<SearchResult>> searchQueryResultMap) {
+
+		List<Integer> searchQueryIds = new ArrayList<>();
+
+		searchQueryIds.addAll(
+			searchQueryResultMap.values()
+				.stream()
+				.flatMap(Collection::stream)
+				.map(SearchResult::getSearchResultId)
+				.collect(Collectors.toList()));
+
+		Personalization personalization = mail.getPersonalization().get(0);
+
+		personalization.addCustomArg(
+			"searchResultIds", new Gson().toJson(searchQueryIds));
 	}
 
 	private Mail _populateContactMessage(String emailAddress, String message) {
