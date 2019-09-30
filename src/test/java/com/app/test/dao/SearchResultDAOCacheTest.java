@@ -191,6 +191,64 @@ public class SearchResultDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
 	}
 
+	@Test
+	public void testUpdateSearchResultsDeliveredStatusCacheEvict()
+		throws Exception {
+
+		List<SearchResult> searchResultsToAdd = new ArrayList<>();
+
+		SearchResult firstSearchResult = new SearchResult();
+
+		firstSearchResult.setSearchQueryId(_SEARCH_QUERY_ID);
+		firstSearchResult.setItemId("itemId");
+
+		SearchResult secondSearchResult = new SearchResult();
+
+		secondSearchResult.setSearchQueryId(_SEARCH_QUERY_ID);
+		secondSearchResult.setItemId("itemId");
+
+		searchResultsToAdd.add(firstSearchResult);
+		searchResultsToAdd.add(secondSearchResult);
+
+		_searchResultDAO.addSearchResults(_SEARCH_QUERY_ID, searchResultsToAdd);
+
+		Cache cache = _cacheManager.getCache("searchResults");
+
+		StatisticsGateway statistics = cache.getStatistics();
+
+		long hitCount = statistics.cacheHitCount();
+		long missCount = statistics.cacheMissCount();
+
+		List<SearchResult> searchResults =
+			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
+
+		Assert.assertEquals(2, searchResults.size());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 1, statistics.cacheMissCount());
+
+		List<Integer> searchResultIds = new ArrayList<>();
+
+		searchResultIds.add(searchResults.get(0).getSearchResultId());
+		searchResultIds.add(searchResults.get(1).getSearchResultId());
+
+		_searchResultDAO.updateSearchResultsDeliveredStatus(
+			searchResultIds, false);
+
+		searchResults =
+			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
+
+		Assert.assertEquals(2, searchResults.size());
+		Assert.assertEquals(hitCount, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
+
+		searchResults =
+			_searchResultDAO.getSearchQueryResults(_SEARCH_QUERY_ID);
+
+		Assert.assertEquals(2, searchResults.size());
+		Assert.assertEquals(hitCount + 1, statistics.cacheHitCount());
+		Assert.assertEquals(missCount + 2, statistics.cacheMissCount());
+	}
+
 	@Autowired
 	private CacheManager _cacheManager;
 

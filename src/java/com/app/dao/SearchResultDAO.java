@@ -126,6 +126,64 @@ public class SearchResultDAO {
 		}
 	}
 
+	public List<SearchResult> getUndeliveredSearchResults(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Getting undelivered search results for user ID: {}", userId);
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				_GET_UNDELIVERED_SEARCH_RESULTS_SQL)) {
+
+			preparedStatement.setInt(1, userId);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			List<SearchResult> searchResults = new ArrayList<>();
+
+			while (resultSet.next()) {
+				searchResults.add(_createSearchResultFromResultSet(resultSet));
+			}
+
+			return searchResults;
+		}
+	}
+
+	@CacheEvict(value = "searchResults", allEntries = true)
+	public void updateSearchResultsDeliveredStatus(
+			List<Integer> searchResultIds, boolean delivered)
+		throws DatabaseConnectionException, SQLException {
+
+		_log.debug(
+			"Updating search result IDs: {} to delivered status of: {}",
+			searchResultIds, delivered);
+
+		StringBuilder sql = new StringBuilder((searchResultIds.size() * 2) + 1);
+
+		sql.append(_UPDATE_SEARCH_RESULTS_DELIVERED_STATUS_SQL_PREFIX);
+
+		for (int i = 0; i < searchResultIds.size(); i++) {
+			sql.append(searchResultIds.get(i));
+
+			if (i < (searchResultIds.size() - 1)) {
+				sql.append(", ");
+			}
+			else {
+				sql.append(")");
+			}
+		}
+
+		try (Connection connection = DatabaseUtil.getDatabaseConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(
+				sql.toString())) {
+
+			preparedStatement.setBoolean(1, delivered);
+
+			preparedStatement.executeUpdate();
+		}
+	}
+
 	private static SearchResult _createSearchResultFromResultSet(
 			ResultSet resultSet)
 		throws SQLException {
@@ -174,6 +232,14 @@ public class SearchResultDAO {
 	private static final String _GET_SEARCH_QUERY_RESULTS_SQL =
 		"SELECT * FROM SearchResult WHERE searchQueryId = ? ORDER BY " +
 			"searchResultId DESC";
+
+	private static final String _GET_UNDELIVERED_SEARCH_RESULTS_SQL =
+		"SELECT * FROM SearchResult WHERE userId = ? AND delivered = FALSE " +
+			"ORDER BY searchResultId DESC";
+
+	private static final String
+		_UPDATE_SEARCH_RESULTS_DELIVERED_STATUS_SQL_PREFIX =
+			"UPDATE SearchResult SET delivered = ? WHERE searchResultId IN (";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchResultDAO.class);

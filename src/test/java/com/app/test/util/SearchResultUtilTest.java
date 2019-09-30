@@ -257,6 +257,51 @@ public class SearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetUndeliveredSearchResults() throws Exception {
+		_addSearchResult("1234");
+		_addSearchResult("2345");
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
+
+		List<SearchResult> undeliveredSearchResults =
+			SearchResultUtil.getUndeliveredSearchResults(_USER_ID);
+
+		Assert.assertEquals(2, searchResults.size());
+		Assert.assertEquals(0, undeliveredSearchResults.size());
+
+		List<Integer> searchResultIds = new ArrayList<>();
+
+		searchResultIds.add(searchResults.get(0).getSearchResultId());
+
+		SearchResultUtil.updateSearchResultsDeliveredStatus(
+			searchResultIds, false);
+
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
+
+		undeliveredSearchResults = SearchResultUtil.getUndeliveredSearchResults(
+			_USER_ID);
+
+		Assert.assertEquals(2, searchResults.size());
+		Assert.assertEquals(1, undeliveredSearchResults.size());
+
+		SearchResult searchResult = undeliveredSearchResults.get(0);
+
+		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
+		Assert.assertEquals(_USER_ID, searchResult.getUserId());
+		Assert.assertEquals("2345", searchResult.getItemId());
+		Assert.assertEquals("First Item", searchResult.getItemTitle());
+		Assert.assertEquals("$10.00", searchResult.getAuctionPrice());
+		Assert.assertEquals("$14.99", searchResult.getFixedPrice());
+		Assert.assertEquals(
+			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
+		Assert.assertEquals(
+			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
+		Assert.assertFalse(searchResult.isDelivered());
+	}
+
+	@Test
 	public void testRemovePreviouslyNotifiedResults() throws Exception {
 		List<SearchResult> existingSearchResults = new ArrayList<>();
 
@@ -303,6 +348,48 @@ public class SearchResultUtilTest extends BaseTestCase {
 			_classInstance, existingSearchResults, newSearchResults);
 
 		Assert.assertEquals(0, searchResults.size());
+	}
+
+	@Test
+	public void testUpdateSearchResultsDeliveredStatus() throws Exception {
+		_addSearchResult("1234");
+
+		List<SearchResult> searchResults =
+			SearchResultUtil.getSearchQueryResults(_SEARCH_QUERY_ID);
+
+		List<SearchResult> undeliveredSearchResults =
+			SearchResultUtil.getUndeliveredSearchResults(_USER_ID);
+
+		Assert.assertEquals(1, searchResults.size());
+		Assert.assertEquals(0, undeliveredSearchResults.size());
+
+		List<Integer> searchResultIds = new ArrayList<>();
+
+		searchResultIds.add(searchResults.get(0).getSearchResultId());
+
+		SearchResultUtil.updateSearchResultsDeliveredStatus(
+			searchResultIds, false);
+
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
+
+		undeliveredSearchResults = SearchResultUtil.getUndeliveredSearchResults(
+			_USER_ID);
+
+		Assert.assertEquals(1, searchResults.size());
+		Assert.assertEquals(1, undeliveredSearchResults.size());
+
+		SearchResultUtil.updateSearchResultsDeliveredStatus(
+			searchResultIds, true);
+
+		searchResults = SearchResultUtil.getSearchQueryResults(
+			_SEARCH_QUERY_ID);
+
+		undeliveredSearchResults = SearchResultUtil.getUndeliveredSearchResults(
+			_USER_ID);
+
+		Assert.assertEquals(1, searchResults.size());
+		Assert.assertEquals(0, undeliveredSearchResults.size());
 	}
 
 	private static void _addSearchResult(String itemId) throws Exception {

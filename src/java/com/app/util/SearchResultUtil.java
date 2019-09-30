@@ -94,6 +94,12 @@ public class SearchResultUtil {
 		return _searchResultDAO.getSearchQueryResults(searchQueryId);
 	}
 
+	public static List<SearchResult> getUndeliveredSearchResults(int userId)
+		throws DatabaseConnectionException, SQLException {
+
+		return _searchResultDAO.getUndeliveredSearchResults(userId);
+	}
+
 	public static void performSearch()
 		throws DatabaseConnectionException, SQLException {
 
@@ -131,6 +137,14 @@ public class SearchResultUtil {
 	@Autowired
 	public void setSearchResultDAO(SearchResultDAO searchResultDAO) {
 		_searchResultDAO = searchResultDAO;
+	}
+
+	public static void updateSearchResultsDeliveredStatus(
+			List<Integer> searchResultIds, boolean delivered)
+		throws DatabaseConnectionException, SQLException {
+
+		_searchResultDAO.updateSearchResultsDeliveredStatus(
+			searchResultIds, delivered);
 	}
 
 	private static void _deleteOldResults(
