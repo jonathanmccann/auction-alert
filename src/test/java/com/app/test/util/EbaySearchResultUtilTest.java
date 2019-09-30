@@ -90,7 +90,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		_createSearchResultsMethod = clazz.getDeclaredMethod(
 			"_createSearchResults", FindItemsAdvancedResponse.class, int.class,
-			String.class, String.class);
+			int.class, String.class, String.class);
 
 		_createSearchResultsMethod.setAccessible(true);
 
@@ -151,7 +151,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		List<SearchResult> searchResults =
 			(List<SearchResult>)_createSearchResultsMethod.invoke(
-				_classInstance, findItemsAdvancedResponse, 1,
+				_classInstance, findItemsAdvancedResponse, 1, 1,
 				"http://www.ebay.com/itm/", "USD");
 
 		Assert.assertEquals(2, searchResults.size());

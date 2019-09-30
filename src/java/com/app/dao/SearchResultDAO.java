@@ -134,12 +134,14 @@ public class SearchResultDAO {
 
 		searchResult.setSearchResultId(resultSet.getInt("searchResultId"));
 		searchResult.setSearchQueryId(resultSet.getInt("searchQueryId"));
+		searchResult.setUserId(resultSet.getInt("userId"));
 		searchResult.setItemId(resultSet.getString("itemId"));
 		searchResult.setItemTitle(resultSet.getString("itemTitle"));
 		searchResult.setItemURL(resultSet.getString("itemURL"));
 		searchResult.setGalleryURL(resultSet.getString("galleryURL"));
 		searchResult.setAuctionPrice(resultSet.getString("auctionPrice"));
 		searchResult.setFixedPrice(resultSet.getString("fixedPrice"));
+		searchResult.setDelivered(resultSet.getBoolean("delivered"));
 
 		return searchResult;
 	}
@@ -149,18 +151,19 @@ public class SearchResultDAO {
 		throws SQLException {
 
 		preparedStatement.setInt(1, searchResult.getSearchQueryId());
-		preparedStatement.setString(2, searchResult.getItemId());
-		preparedStatement.setString(3, searchResult.getItemTitle());
-		preparedStatement.setString(4, searchResult.getItemURL());
-		preparedStatement.setString(5, searchResult.getGalleryURL());
-		preparedStatement.setString(6, searchResult.getAuctionPrice());
-		preparedStatement.setString(7, searchResult.getFixedPrice());
+		preparedStatement.setInt(2, searchResult.getUserId());
+		preparedStatement.setString(3, searchResult.getItemId());
+		preparedStatement.setString(4, searchResult.getItemTitle());
+		preparedStatement.setString(5, searchResult.getItemURL());
+		preparedStatement.setString(6, searchResult.getGalleryURL());
+		preparedStatement.setString(7, searchResult.getAuctionPrice());
+		preparedStatement.setString(8, searchResult.getFixedPrice());
 	}
 
 	private static final String _ADD_SEARCH_RESULT_SQL =
-		"INSERT INTO SearchResult(searchQueryId, itemId, itemTitle, itemURL, " +
-			"galleryURL, auctionPrice, fixedPrice) " +
-				"VALUES(?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO SearchResult(searchQueryId, userId, itemId, itemTitle, " +
+			"itemURL, galleryURL, auctionPrice, fixedPrice) " +
+				"VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _DELETE_SEARCH_QUERY_RESULTS_SQL =
 		"DELETE FROM SearchResult WHERE searchQueryId = ?";

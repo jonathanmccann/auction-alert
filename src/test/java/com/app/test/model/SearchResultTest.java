@@ -75,6 +75,7 @@ public class SearchResultTest {
 
 		Assert.assertFalse(_searchResult.isDelivered());
 	}
+
 	@Test
 	public void testSetAndGetAuctionPrice() {
 		_searchResult.setAuctionPrice("$14.99");

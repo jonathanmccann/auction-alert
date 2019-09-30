@@ -80,7 +80,7 @@ public class EbaySearchResultUtil {
 		if (isValidResponse) {
 			return _createSearchResults(
 				findItemsAdvancedResponse, searchQuery.getSearchQueryId(),
-				preferredDomain, preferredCurrency);
+				searchQuery.getUserId(), preferredDomain, preferredCurrency);
 		}
 		else {
 			return new ArrayList<>();
@@ -109,7 +109,8 @@ public class EbaySearchResultUtil {
 
 	private static List<SearchResult> _createSearchResults(
 		FindItemsAdvancedResponse findItemsAdvancedResponse,
-		int searchQueryId, String preferredDomain, String preferredCurrency) {
+		int searchQueryId, int userId, String preferredDomain,
+		String preferredCurrency) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -121,6 +122,7 @@ public class EbaySearchResultUtil {
 				item, preferredDomain, preferredCurrency);
 
 			searchResult.setSearchQueryId(searchQueryId);
+			searchResult.setUserId(userId);
 
 			searchResults.add(searchResult);
 		}

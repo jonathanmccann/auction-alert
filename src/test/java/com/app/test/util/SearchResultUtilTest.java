@@ -68,6 +68,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = searchResults.get(0);
 
 		Assert.assertEquals(_SEARCH_QUERY_ID, searchResult.getSearchQueryId());
+		Assert.assertEquals(_USER_ID, searchResult.getUserId());
 		Assert.assertEquals("1234", searchResult.getItemId());
 		Assert.assertEquals("First Item", searchResult.getItemTitle());
 		Assert.assertEquals("$10.00", searchResult.getAuctionPrice());
@@ -76,6 +77,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 			"http://www.ebay.com/itm/1234", searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/123.jpg", searchResult.getGalleryURL());
+		Assert.assertTrue(searchResult.isDelivered());
 	}
 
 	@Test
@@ -307,6 +309,7 @@ public class SearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		searchResult.setSearchQueryId(_SEARCH_QUERY_ID);
+		searchResult.setUserId(_USER_ID);
 		searchResult.setItemId(itemId);
 		searchResult.setItemTitle("First Item");
 		searchResult.setAuctionPrice("$10.00");
