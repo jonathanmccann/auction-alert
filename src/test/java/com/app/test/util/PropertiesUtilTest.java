@@ -93,6 +93,10 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"SendGrid API Key", PropertiesValues.SENDGRID_API_KEY);
 		Assert.assertEquals(
+			"sendGridWebhookKey", PropertiesValues.SENDGRID_WEBHOOK_KEY);
+		Assert.assertEquals(
+			"sendGridWebhookValue", PropertiesValues.SENDGRID_WEBHOOK_VALUE);
+		Assert.assertEquals(
 			"Stripe Publishable Key", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 		Assert.assertEquals(
 			"Stripe Secret Key", PropertiesValues.STRIPE_SECRET_KEY);
