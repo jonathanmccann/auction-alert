@@ -14,8 +14,22 @@
 
 package com.app.util;
 
+import com.app.exception.DatabaseConnectionException;
+import com.app.json.sendgrid.SendGridBounceJsonResponse;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Type;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Jonathan McCann
@@ -35,9 +49,64 @@ public class SendGridUtil {
 		}
 
 		_log.error("sendGridJsonEvent = {}", sendGridJsonEvent);
+
+		JsonDeserializer<SendGridBounceJsonResponse> deserializer =
+			(json, typeOfT, context) -> {
+				JsonObject jsonObject = json.getAsJsonObject();
+
+				String jsonSearchResultIds =
+					jsonObject.get("searchResultIds").getAsString();
+
+				List<Integer> searchResultIds = Arrays.stream(
+					jsonSearchResultIds.split(",")
+				).map(
+					Integer::parseInt
+				).collect(
+					Collectors.toList()
+				);
+
+				return new SendGridBounceJsonResponse(
+					searchResultIds, jsonObject.get("type").getAsString());
+			};
+
+		Gson gson = new GsonBuilder()
+			.registerTypeAdapter(
+				SendGridBounceJsonResponse.class, deserializer
+			).create();
+
+		Type listType =
+			new TypeToken<ArrayList<SendGridBounceJsonResponse>>(){}.getType();
+
+		List<SendGridBounceJsonResponse> sendGridBounceJsonResponses =
+			gson.fromJson(sendGridJsonEvent, listType);
+
+		for (SendGridBounceJsonResponse sendGridBounceJsonResponse :
+			sendGridBounceJsonResponses) {
+
+			String type = sendGridBounceJsonResponse.getType();
+
+			if (!type.equals(_BLOCKED_TYPE)) {
+				continue;
+			}
+
+			List<Integer> searchResultIds =
+				sendGridBounceJsonResponse.getSearchResultIds();
+
+			try {
+				SearchResultUtil.updateSearchResultsDeliveredStatus(
+					searchResultIds, false);
+			}
+			catch (DatabaseConnectionException | SQLException e) {
+				_log.error(
+					"Unable to set search result IDs as undelivered - {}",
+					searchResultIds);
+			}
+		}
 	}
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SendGridUtil.class);
+
+	private static final String _BLOCKED_TYPE = "blocked";
 
 }
