@@ -164,19 +164,17 @@ public class SendGridMailSender implements MailSender {
 	private void _addSearchResultIdsToMail(
 		Mail mail, Map<SearchQuery, List<SearchResult>> searchQueryResultMap) {
 
-		List<Integer> searchQueryIds = new ArrayList<>();
-
-		searchQueryIds.addAll(
+		String searchQueryIds =
 			searchQueryResultMap.values()
 				.stream()
 				.flatMap(Collection::stream)
 				.map(SearchResult::getSearchResultId)
-				.collect(Collectors.toList()));
+				.map(String::valueOf)
+				.collect(Collectors.joining(","));
 
 		Personalization personalization = mail.getPersonalization().get(0);
 
-		personalization.addCustomArg(
-			"searchResultIds", new Gson().toJson(searchQueryIds));
+		personalization.addCustomArg("searchResultIds", searchQueryIds);
 	}
 
 	private Mail _populateContactMessage(String emailAddress, String message) {
