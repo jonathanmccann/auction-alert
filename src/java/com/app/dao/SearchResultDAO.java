@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,20 +46,20 @@ public class SearchResultDAO {
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_ADD_SEARCH_RESULT_SQL)) {
-
-			connection.setAutoCommit(false);
+				_ADD_SEARCH_RESULT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
 			for (SearchResult searchResult : searchResults) {
 				_populateAddSearchResultPreparedStatement(
 					preparedStatement, searchResult);
 
-				preparedStatement.addBatch();
+				preparedStatement.executeUpdate();
+
+				ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+				resultSet.next();
+
+				searchResult.setSearchResultId(resultSet.getInt(1));
 			}
-
-			preparedStatement.executeBatch();
-
-			connection.commit();
 		}
 	}
 

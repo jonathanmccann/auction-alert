@@ -403,6 +403,10 @@ public class SearchResultUtilTest extends BaseTestCase {
 			searchQuery, nonCacheSearchResults);
 
 		Assert.assertEquals(1, nonCacheSearchResults.size());
+
+		int searchResultId = nonCacheSearchResults.get(0).getSearchResultId();
+
+		Assert.assertTrue(searchResultId > 0);
 	}
 
 	@Test
