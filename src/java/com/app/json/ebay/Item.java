@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.app.json;
+package com.app.json.ebay;
 
 import java.util.List;
 import com.google.gson.annotations.SerializedName;

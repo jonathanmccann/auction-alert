@@ -12,18 +12,24 @@
  * details.
  */
 
-package com.app.json;
+package com.app.json.ebay;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class EbaySearchResultJsonResponse {
+public class CurrentPrice {
 
-	@SerializedName("findItemsAdvancedResponse")
-	private List<FindItemsAdvancedResponse> findItemsAdvancedResponse = null;
+	@SerializedName("@currencyId")
+	private String currencyId;
 
-	public FindItemsAdvancedResponse getFindItemsAdvancedResponse() {
-		return findItemsAdvancedResponse.get(0);
+	@SerializedName("__value__")
+	private double value;
+
+	public String getCurrencyId() {
+		return currencyId;
+	}
+
+	public double getValue() {
+		return value;
 	}
 
 }

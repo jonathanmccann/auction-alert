@@ -15,15 +15,16 @@
 package com.app.util;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.json.BuyItNowPrice;
-import com.app.json.CurrentPrice;
-import com.app.json.EbaySearchResultJsonResponse;
-import com.app.json.ErrorMessage;
-import com.app.json.FindItemsAdvancedResponse;
-import com.app.json.Item;
-import com.app.json.JsonSearchResult;
-import com.app.json.ListingInfo;
-import com.app.json.SellingStatus;
+import com.app.json.ebay.BuyItNowPrice;
+import com.app.json.ebay.CurrentPrice;
+import com.app.json.ebay.EbaySearchResultJsonResponse;
+import com.app.json.ebay.ErrorMessage;
+import com.app.json.ebay.FindItemsAdvancedResponse;
+import com.app.json.ebay.Item;
+import com.app.json.ebay.JsonSearchResult;
+import com.app.json.ebay.ListingInfo;
+import com.app.json.ebay.SellingStatus;
+import com.app.json.ebay.Error;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
@@ -371,7 +372,7 @@ public class EbaySearchResultUtil {
 			return true;
 		}
 
-		com.app.json.Error error = errorMessage.getError();
+		Error error = errorMessage.getError();
 
 		_log.error(
 			"Unable to perform search request for search query ID: {}. " +

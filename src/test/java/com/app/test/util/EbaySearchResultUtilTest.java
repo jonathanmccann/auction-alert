@@ -14,14 +14,14 @@
 
 package com.app.test.util;
 
-import com.app.json.BuyItNowPrice;
-import com.app.json.CurrentPrice;
-import com.app.json.EbaySearchResultJsonResponse;
-import com.app.json.FindItemsAdvancedResponse;
-import com.app.json.Item;
-import com.app.json.JsonSearchResult;
-import com.app.json.ListingInfo;
-import com.app.json.SellingStatus;
+import com.app.json.ebay.BuyItNowPrice;
+import com.app.json.ebay.CurrentPrice;
+import com.app.json.ebay.EbaySearchResultJsonResponse;
+import com.app.json.ebay.FindItemsAdvancedResponse;
+import com.app.json.ebay.Item;
+import com.app.json.ebay.JsonSearchResult;
+import com.app.json.ebay.ListingInfo;
+import com.app.json.ebay.SellingStatus;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;

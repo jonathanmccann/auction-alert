@@ -12,24 +12,18 @@
  * details.
  */
 
-package com.app.json; 
+package com.app.json.ebay;
 
+import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class BuyItNowPrice {
+public class ErrorMessage {
 
-	@SerializedName("@currencyId")
-	private String currencyId;
+	@SerializedName("error")
+	private List<Error> error = null;
 
-	@SerializedName("__value__")
-	private double value;
-
-	public String getCurrencyId() {
-		return currencyId;
-	}
-
-	public double getValue() {
-		return value;
+	public Error getError() {
+		return error.get(0);
 	}
 
 }

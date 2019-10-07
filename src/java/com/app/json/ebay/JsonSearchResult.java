@@ -12,30 +12,20 @@
  * details.
  */
 
-package com.app.json;
+package com.app.json.ebay;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.annotations.SerializedName;
 
-public class FindItemsAdvancedResponse {
+public class JsonSearchResult {
 
-	@SerializedName("errorMessage")
-	private List<ErrorMessage> errorMessage = new ArrayList<>();
+	@SerializedName("item")
+	private List<Item> items = new ArrayList<>();
 
-	@SerializedName("searchResult")
-	private List<JsonSearchResult> jsonSearchResult = new ArrayList<>();
-
-	public ErrorMessage getErrorMessage() {
-		if (errorMessage.isEmpty()) {
-			return null;
-		}
-
-		return errorMessage.get(0);
-	}
-
-	public JsonSearchResult getJsonSearchResult() {
-		return jsonSearchResult.get(0);
+	public List<Item> getItems() {
+		return items;
 	}
 
 }

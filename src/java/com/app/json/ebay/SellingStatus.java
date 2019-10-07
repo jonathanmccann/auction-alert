@@ -12,30 +12,18 @@
  * details.
  */
 
-package com.app.json;
+package com.app.json.ebay;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class ListingInfo {
+public class SellingStatus {
 
-	@SerializedName("buyItNowPrice")
-	private List<BuyItNowPrice> buyItNowPrice = new ArrayList<>();
+	@SerializedName("currentPrice")
+	private List<CurrentPrice> currentPrice = null;
 
-	@SerializedName("listingType")
-	private List<String> listingType = new ArrayList<>();
-
-	public BuyItNowPrice getBuyItNowPrice() {
-		if (buyItNowPrice.isEmpty()) {
-			return null;
-		}
-
-		return buyItNowPrice.get(0);
-	}
-
-	public String getListingType() {
-		return listingType.get(0);
+	public CurrentPrice getCurrentPrice() {
+		return currentPrice.get(0);
 	}
 
 }

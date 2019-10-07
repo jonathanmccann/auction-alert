@@ -12,18 +12,30 @@
  * details.
  */
 
-package com.app.json;
+package com.app.json.ebay;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class ErrorMessage {
+public class ListingInfo {
 
-	@SerializedName("error")
-	private List<Error> error = null;
+	@SerializedName("buyItNowPrice")
+	private List<BuyItNowPrice> buyItNowPrice = new ArrayList<>();
 
-	public Error getError() {
-		return error.get(0);
+	@SerializedName("listingType")
+	private List<String> listingType = new ArrayList<>();
+
+	public BuyItNowPrice getBuyItNowPrice() {
+		if (buyItNowPrice.isEmpty()) {
+			return null;
+		}
+
+		return buyItNowPrice.get(0);
+	}
+
+	public String getListingType() {
+		return listingType.get(0);
 	}
 
 }
