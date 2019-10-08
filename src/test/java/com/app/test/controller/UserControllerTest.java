@@ -1383,11 +1383,25 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testSendGridWebhookEndpoint() throws Exception {
+		MockHttpServletRequestBuilder request = post("/sendgrid");
+
+		request.contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		request.param("sendGridJsonEvent", "sendGridJsonEvent");
+		request.param("key", "key");
+		request.param("value", "value");
+
+		ResultActions resultActions = this.mockMvc.perform(request);
+
+		resultActions.andExpect(status().isOk());
+	}
+
+	@Test
 	public void testStripeWebhookEndpoint() throws Exception {
 		_setUpStripeUtil();
 
-		MockHttpServletRequestBuilder request = post(
-			"/stripe");
+		MockHttpServletRequestBuilder request = post("/stripe");
 
 		request.contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
