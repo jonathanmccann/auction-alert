@@ -132,7 +132,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithSearchResults() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			_setUpGetEbaySearchResults("/json/auction.json");
+			_setUpGetEbaySearchResults("/json/ebay/auction.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 
@@ -170,7 +170,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithoutSearchResults() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			_setUpGetEbaySearchResults("/json/empty.json");
+			_setUpGetEbaySearchResults("/json/ebay/empty.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 
@@ -208,7 +208,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithoutSearchQueries() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			_setUpGetEbaySearchResults("/json/empty.json");
+			_setUpGetEbaySearchResults("/json/ebay/empty.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 

@@ -1,0 +1,30 @@
+[
+  {
+    "email": "test@test.com",
+    "event": "bounce",
+    "ip": "127.0.0.1",
+    "reason": "550",
+    "searchResultIds": "firstSearchResultIds",
+    "sg_event_id": "sgEventId",
+    "sg_message_id": "sgMessageId",
+    "smtp-id": "smtpId",
+    "status": "status",
+    "timestamp": 0,
+    "tls": 0,
+    "type": "blocked"
+  },
+  {
+    "email": "test@test.com",
+    "event": "bounce",
+    "ip": "127.0.0.1",
+    "reason": "550",
+    "searchResultIds": "secondSearchResultIds",
+    "sg_event_id": "sgEventId",
+    "sg_message_id": "sgMessageId",
+    "smtp-id": "smtpId",
+    "status": "status",
+    "timestamp": 0,
+    "tls": 0,
+    "type": "blocked"
+  }
+]

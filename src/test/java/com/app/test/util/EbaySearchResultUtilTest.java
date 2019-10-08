@@ -953,20 +953,20 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private static final String _AUCTION = "Auction";
 
-	private static final String _AUCTION_JSON_PATH = "/json/auction.json";
+	private static final String _AUCTION_JSON_PATH = "/json/ebay/auction.json";
 
 	private static final String _AUCTION_PRICE = "$10.00";
 
 	private static final String _AUCTION_WITH_BIN = "AuctionWithBIN";
 
 	private static final String _AUCTION_WITH_BIN_JSON_PATH =
-		"/json/auctionWithBIN.json";
+		"/json/ebay/auctionWithBIN.json";
 
 	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
 
-	private static final String _EMPTY_JSON_PATH = "/json/empty.json";
+	private static final String _EMPTY_JSON_PATH = "/json/ebay/empty.json";
 
-	private static final String _FAILURE_JSON_PATH = "/json/failure.json";
+	private static final String _FAILURE_JSON_PATH = "/json/ebay/failure.json";
 
 	private static final String _FIND_ITEMS_ADVANCED_URL_BASE =
 		"https://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME" +
@@ -978,7 +978,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private static final String _FIXED_PRICE = "FixedPrice";
 
-	private static final String _FIXED_PRICE_JSON_PATH = "/json/fixedPrice.json";
+	private static final String _FIXED_PRICE_JSON_PATH = "/json/ebay/fixedPrice.json";
 
 	private static final String _GALLERY_URL = "http://www.ebay.com/1.jpg";
 
@@ -989,7 +989,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	private static final String _STORE_INVENTORY = "StoreInventory";
 
 	private static final String _STORE_INVENTORY_JSON_PATH =
-		"/json/storeInventory.json";
+		"/json/ebay/storeInventory.json";
 
 	private static final String _UNKNOWN = "Unknown";
 
