@@ -133,7 +133,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		Map<String, String> customArgs = personalization.getCustomArgs();
 
 		Assert.assertEquals(1, customArgs.size());
-		Assert.assertEquals("[1,2]", customArgs.get("searchResultIds"));
+		Assert.assertEquals("1,2", customArgs.get("searchResultIds"));
 	}
 
 	@Test
