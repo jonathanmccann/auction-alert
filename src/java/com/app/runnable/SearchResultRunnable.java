@@ -76,8 +76,8 @@ public class SearchResultRunnable implements Runnable {
 			}
 
 			if (!searchQueryResultMap.isEmpty()) {
-				SearchResultUtil.applyUndeliveredSearchResults(
-					_userId, searchQueryResultMap);
+				//SearchResultUtil.applyUndeliveredSearchResults(
+					//_userId, searchQueryResultMap);
 
 				MailSender mailSender = MailSenderFactory.getInstance();
 
