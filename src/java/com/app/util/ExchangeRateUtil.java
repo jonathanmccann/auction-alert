@@ -50,7 +50,7 @@ public class ExchangeRateUtil {
 	}
 
 	public static void updateExchangeRates() throws Exception {
-		try {
+		/*try {
 			Gson gson = new Gson();
 
 			for (String fromCurrencyId : _CURRENCY_IDS) {
@@ -75,7 +75,7 @@ public class ExchangeRateUtil {
 		}
 		catch (Exception e) {
 			_log.error(
-				"Unable to fetch exchange rates from API", e.getMessage(), e);
+				"Unable to fetch exchange rates from API", e.getMessage(), e);*/
 
 			_exchangeRates.put("AUD_CAD", 0.95);
 			_exchangeRates.put("AUD_CHF", 0.71);
@@ -112,7 +112,7 @@ public class ExchangeRateUtil {
 			_exchangeRates.put("USD_CHF", 1.00);
 			_exchangeRates.put("USD_EUR", 0.89);
 			_exchangeRates.put("USD_GBP", 0.77);
-		}
+		//}
 	}
 
 	private static final String[] _CURRENCY_IDS = {
