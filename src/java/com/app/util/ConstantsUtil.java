@@ -50,10 +50,8 @@ public class ConstantsUtil {
 
 	public static void init() {
 		DEFAULT_PREFERRED_DOMAIN =
-			"http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=";
+			"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID;
 
 		_currencySymbols.put("USD", "$");
 		_currencySymbols.put("CAD", "C $");
@@ -77,161 +75,109 @@ public class ConstantsUtil {
 		_globalIds.put("EBAY-NL", "Netherlands");
 
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"USD");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/706-53473-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229529&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"CAD");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/710-53481-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229508&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"GBP");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/5221-53469-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229473&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/705-53470-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229515&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"AUD");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/1553-53471-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229522&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/5222-53480-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229536&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"CHF");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/707-53477-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229487&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/1185-53479-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229501&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/709-53476-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229480&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/5282-53468-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229543&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/724-53478-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229494&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 		_preferredCurrencies.put(
-			"http://rover.ebay.com/rover/1/1346-53482-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229557&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			"EUR");
 
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".com");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/706-53473-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229529&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".ca");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/710-53481-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229508&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".co.uk");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/5221-53469-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229473&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".at");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/705-53470-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229515&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".com.au");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/1553-53471-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229522&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".be");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/5222-53480-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229536&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".ch");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/707-53477-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229487&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".de");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/1185-53479-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229501&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".es");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/709-53476-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229480&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".fr");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/5282-53468-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229543&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".ie");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/724-53478-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229494&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".it");
 		_preferredDomains.put(
-			"http://rover.ebay.com/rover/1/1346-53482-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229557&kwid=902099&mtid=824&kw=lg&icep_item=",
+			"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+				PropertiesValues.EBAY_CAMPAIGN_ID,
 			".nl");
 
 		_rssGlobalIds.put("1", "United States");

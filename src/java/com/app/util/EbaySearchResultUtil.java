@@ -98,7 +98,8 @@ public class EbaySearchResultUtil {
 		searchResult.setItemId(item.getItemId());
 		searchResult.setItemTitle(
 			_ITEM_TITLE_PATTERN.matcher(item.getTitle()).replaceAll(""));
-		searchResult.setItemURL(preferredDomain + searchResult.getItemId());
+		searchResult.setItemURL(
+			_EBAY_ROOT_URL + searchResult.getItemId() + preferredDomain);
 		searchResult.setGalleryURL(item.getGalleryURL());
 
 		_setPrice(
@@ -387,6 +388,8 @@ public class EbaySearchResultUtil {
 
 	private static final DecimalFormat _DISPLAY_DECIMAL_FORMAT =
 		new DecimalFormat("#,##0.00");
+
+	private static final String _EBAY_ROOT_URL = "https://www.ebay.com/itm/";
 
 	private static final String _FIND_ITEMS_ADVANCED_URL_PREFIX =
 		"https://svcs.ebay.com/services/search/FindingService/v1?" +
