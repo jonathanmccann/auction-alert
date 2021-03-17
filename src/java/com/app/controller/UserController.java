@@ -83,26 +83,33 @@ public class UserController {
 
 		model.put("isActive", UserUtil.isCurrentUserActive());
 
+		model.put("recaptchaSiteKey", PropertiesValues.RECAPTCHA_SITE_KEY);
+
 		return "contact";
 	}
 
 	@RequestMapping(value ="/contact", method = RequestMethod.POST)
 	public String contact(
-			String emailAddress, String message, Map<String, Object> model)
+			String emailAddress, String message,
+			@RequestParam(value = "g-recaptcha-response", required = false)
+				String recaptchaResponse,
+			Map<String, Object> model)
 		throws Exception {
 
-		MailSender mailSender = MailSenderFactory.getInstance();
+		if (RecaptchaUtil.verifyRecaptchaResponse(recaptchaResponse)) {
+			MailSender mailSender = MailSenderFactory.getInstance();
 
-		try {
-			mailSender.sendContactMessage(emailAddress, message);
+			try {
+				mailSender.sendContactMessage(emailAddress, message);
 
-			model.put(
-				"success", LanguageUtil.getMessage("message-send-success"));
-		}
-		catch (Exception e) {
-			_log.error(e.getMessage(), e);
+				model.put(
+					"success", LanguageUtil.getMessage("message-send-success"));
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage(), e);
 
-			model.put("error", LanguageUtil.getMessage("message-send-fail"));
+				model.put("error", LanguageUtil.getMessage("message-send-fail"));
+			}
 		}
 
 		return contact(model);
