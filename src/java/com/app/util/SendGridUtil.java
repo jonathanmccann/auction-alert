@@ -85,12 +85,16 @@ public class SendGridUtil {
 
 			String type = sendGridBounceJsonResponse.getType();
 
+			_log.error("Type = {}", type);
+
 			if (!type.equals(_BLOCKED_TYPE)) {
 				continue;
 			}
 
 			List<Integer> searchResultIds =
 				sendGridBounceJsonResponse.getSearchResultIds();
+
+			_log.error("Search Result IDs = {}", searchResultIds);
 
 			try {
 				SearchResultUtil.updateSearchResultsDeliveredStatus(
