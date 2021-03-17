@@ -23,6 +23,10 @@ public class EbaySearchResultJsonResponse {
 	private List<FindItemsAdvancedResponse> findItemsAdvancedResponse = null;
 
 	public FindItemsAdvancedResponse getFindItemsAdvancedResponse() {
+		if (findItemsAdvancedResponse == null) {
+			return null;
+		}
+
 		return findItemsAdvancedResponse.get(0);
 	}
 

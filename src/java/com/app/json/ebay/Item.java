@@ -43,6 +43,10 @@ public class Item {
 	}
 
 	public String getGalleryURL() {
+		if (galleryURL == null) {
+			return null;
+		}
+
 		return galleryURL.get(0);
 	}
 
