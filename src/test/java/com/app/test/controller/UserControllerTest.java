@@ -942,6 +942,20 @@ public class UserControllerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testPostContactWithInvalidRecaptcha() throws Exception {
+		setUpTransport();
+
+		this.mockMvc.perform(post("/contact"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("contact"))
+			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
+			.andExpect(model().attributeDoesNotExist("success"))
+			.andExpect(model().attributeDoesNotExist("error"));
+
+		assertTransportCalled(0);
+	}
+
+	@Test
 	public void testPostForgotPassword() throws Exception {
 		setUpRecaptchaUtil();
 		setUpTransport();
