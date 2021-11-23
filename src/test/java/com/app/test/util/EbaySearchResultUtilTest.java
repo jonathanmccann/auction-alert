@@ -128,7 +128,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		SearchResult searchResult =
 			(SearchResult)_createSearchResultMethod.invoke(
-				_classInstance, items.get(0), "http://www.ebay.com/itm/",
+				_classInstance, items.get(0), "",
 				"USD");
 
 		Assert.assertEquals(_ITEM_ID, searchResult.getItemId());
@@ -897,7 +897,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Item Title " + itemNumber, searchResult.getItemTitle());
 		Assert.assertEquals(
-			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN + "itemId" + itemNumber,
+			_EBAY_URL_PREFIX + "itemId" + itemNumber +
+				ConstantsUtil.DEFAULT_PREFERRED_DOMAIN,
 			searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/" + itemNumber + ".jpg",
@@ -962,7 +963,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	private static final String _AUCTION_WITH_BIN_JSON_PATH =
 		"/json/ebay/auctionWithBIN.json";
 
-	private static final String _EBAY_URL_PREFIX = "http://www.ebay.com/itm/";
+	private static final String _EBAY_URL_PREFIX = "https://www.ebay.com/itm/";
 
 	private static final String _EMPTY_JSON_PATH = "/json/ebay/empty.json";
 
