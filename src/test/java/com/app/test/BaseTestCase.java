@@ -42,6 +42,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -53,6 +54,7 @@ import javax.mail.Transport;
 /**
  * @author Jonathan McCann
  */
+@PowerMockIgnore("javax.net.ssl.*")
 public abstract class BaseTestCase {
 
 	protected static void _addCategory(
