@@ -37,6 +37,7 @@ import java.util.Map;
 
 import com.sendgrid.Personalization;
 import org.apache.http.Header;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -202,7 +203,7 @@ public class SendGridMailSenderTest extends BaseTestCase {
 		}
 		catch (InvocationTargetException ite) {
 			Assert.assertTrue(
-				ite.getCause() instanceof SSLInitializationException);
+				ite.getCause() instanceof HttpResponseException);
 		}
 	}
 
