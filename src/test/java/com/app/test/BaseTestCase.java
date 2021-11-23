@@ -93,7 +93,7 @@ public abstract class BaseTestCase {
 	}
 
 	protected static void setUpDatabase() throws Exception {
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 
 		setUpDatabaseProperties();
 

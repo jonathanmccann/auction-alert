@@ -19,7 +19,7 @@ dependencies {
 	compile group: 'com.stripe', name: 'stripe-java', version:'5.8.0'
 	compile group: 'javax.mail', name: 'mail', version:'1.4.7'
 	compile group: 'jstl', name: 'jstl', version:'1.2'
-	compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.36'
+	compile group: 'mysql', name: 'mysql-connector-java', version:'8.0.27'
 	compile group: 'net.sf.ehcache', name: 'ehcache', version:'2.10.2'
 	compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.0'
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.9'

@@ -22,8 +22,6 @@ import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
-
 import com.stripe.Stripe;
 
 import java.sql.Driver;
@@ -45,8 +43,6 @@ public class AppServletContextListener implements ServletContextListener {
 		_log.info("Destroying servlet context");
 
 		try {
-			AbandonedConnectionCleanupThread.shutdown();
-
 			Driver driver = DriverManager.getDriver(
 				PropertiesValues.JDBC_DEFAULT_URL);
 
@@ -80,7 +76,7 @@ public class AppServletContextListener implements ServletContextListener {
 
 			_log.info("Loading database properties");
 
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			DatabaseUtil.loadDatabaseProperties();
 
