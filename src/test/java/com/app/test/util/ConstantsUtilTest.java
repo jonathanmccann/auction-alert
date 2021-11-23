@@ -69,82 +69,69 @@ public class ConstantsUtilTest extends BaseTestCase {
 	public void testGetPreferredCurrency() {
 		Assert.assertEquals(
 			"USD",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"CAD",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/706-53473-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229529&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"GBP",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/710-53481-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229508&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/5221-53469-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229473&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"AUD",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/705-53470-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229515&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/1553-53471-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229522&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"CHF",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/5222-53480-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229536&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/707-53477-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229487&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/1185-53479-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229501&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/709-53476-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229480&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/5282-53468-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229543&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/724-53478-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229494&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			"EUR",
-			ConstantsUtil.getPreferredCurrency("http://rover.ebay.com/rover/1/1346-53482-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229557&kwid=902099&mtid=824&kw=lg&icep_item="));
+			ConstantsUtil.getPreferredCurrency(
+				"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 	}
 
 	@Test
@@ -154,82 +141,69 @@ public class ConstantsUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(
 			".com",
-			preferredDomains.get("http://rover.ebay.com/rover/1/711-53200-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229466&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".ca",
-			preferredDomains.get("http://rover.ebay.com/rover/1/706-53473-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229529&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".co.uk",
-			preferredDomains.get("http://rover.ebay.com/rover/1/710-53481-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229508&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".at",
-			preferredDomains.get("http://rover.ebay.com/rover/1/5221-53469-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229473&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".com.au",
-			preferredDomains.get("http://rover.ebay.com/rover/1/705-53470-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229515&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".be",
-			preferredDomains.get("http://rover.ebay.com/rover/1/1553-53471-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229522&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".ch",
-			preferredDomains.get("http://rover.ebay.com/rover/1/5222-53480-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229536&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".de",
-			preferredDomains.get("http://rover.ebay.com/rover/1/707-53477-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229487&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".es",
-			preferredDomains.get("http://rover.ebay.com/rover/1/1185-53479-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229501&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".fr",
-			preferredDomains.get("http://rover.ebay.com/rover/1/709-53476-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229480&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".ie",
-			preferredDomains.get("http://rover.ebay.com/rover/1/5282-53468-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229543&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".it",
-			preferredDomains.get("http://rover.ebay.com/rover/1/724-53478-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229494&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 		Assert.assertEquals(
 			".nl",
-			preferredDomains.get("http://rover.ebay.com/rover/1/1346-53482-19255-0/1?icep_ff3=2&pub=" +
-				PropertiesValues.EBAY_PUBLISHER_ID + "&toolid=10001&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID +
-				"&customid=&ipn=psmain&icep_vectorid=229557&kwid=902099&mtid=824&kw=lg&icep_item="));
+			preferredDomains.get(
+				"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
+					PropertiesValues.EBAY_CAMPAIGN_ID));
 	}
 
 	@Test
