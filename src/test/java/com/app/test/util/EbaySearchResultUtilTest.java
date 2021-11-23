@@ -220,6 +220,29 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testGetEbaySearchResultsWithNullGalleryURL() throws Exception {
+		_setUpGetEbaySearchResults(_AUCTION_WITH_NULL_GALLERY_URL_JSON_PATH);
+
+		SearchQuery searchQuery = _createSearchQuery();
+
+		List<SearchResult> searchResults =
+			EbaySearchResultUtil.getEbaySearchResults(searchQuery);
+
+		Assert.assertNull(searchResults.get(0).getGalleryURL());
+	}
+
+	@Test
+	public void testGetEbaySearchResultsWithNullResults() throws Exception {
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
+			new EbaySearchResultJsonResponse();
+
+		FindItemsAdvancedResponse findItemsAdvancedResponse =
+			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
+
+		Assert.assertNull(findItemsAdvancedResponse);
+	}
+
+	@Test
 	public void testGetEbaySearchResultsWithFixedPriceResults()
 		throws Exception {
 
@@ -962,6 +985,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private static final String _AUCTION_WITH_BIN_JSON_PATH =
 		"/json/ebay/auctionWithBIN.json";
+
+	private static final String _AUCTION_WITH_NULL_GALLERY_URL_JSON_PATH =
+		"/json/ebay/auctionWithNullGalleryURL.json";
 
 	private static final String _EBAY_URL_PREFIX = "https://www.ebay.com/itm/";
 

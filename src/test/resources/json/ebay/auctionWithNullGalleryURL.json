@@ -1,0 +1,41 @@
+{
+  "findItemsAdvancedResponse": [
+    {
+      "ack": [
+        "Success"
+      ],
+      "searchResult": [
+        {
+          "@count": "1",
+          "item": [
+            {
+              "itemId": [
+                "itemId1"
+              ],
+              "title": [
+                "Item Title 1"
+              ],
+              "sellingStatus": [
+                {
+                  "currentPrice": [
+                    {
+                      "@currencyId": "USD",
+                      "__value__": "10.0"
+                    }
+                  ]
+                }
+              ],
+              "listingInfo": [
+                {
+                  "listingType": [
+                    "Auction"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
