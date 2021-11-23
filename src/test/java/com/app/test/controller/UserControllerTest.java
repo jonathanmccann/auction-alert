@@ -893,6 +893,8 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostContact() throws Exception {
+		setUpRecaptchaUtil();
+
 		setUpTransport();
 
 		setUpSecurityUtilsSession(false, _USER_ID);
@@ -901,6 +903,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		request.param("emailAddress", "user@test.com");
 		request.param("message", "Sample contact message");
+		request.param("g-recaptcha-response", "recaptchaResponse");
 
 		this.mockMvc.perform(request)
 			.andExpect(status().isOk())
@@ -916,11 +919,17 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testPostContactWithException() throws Exception {
+		setUpRecaptchaUtil();
+
 		setUpTransport();
 
 		setUpSecurityUtilsSession(false, _USER_ID);
 
-		this.mockMvc.perform(post("/contact"))
+		MockHttpServletRequestBuilder request = post("/contact");
+
+		request.param("g-recaptcha-response", "recaptchaResponse");
+
+		this.mockMvc.perform(request)
 			.andExpect(status().isOk())
 			.andExpect(view().name("contact"))
 			.andExpect(forwardedUrl("/WEB-INF/jsp/contact.jsp"))
