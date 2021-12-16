@@ -15,16 +15,11 @@
 package com.app.util;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.json.ebay.BuyItNowPrice;
-import com.app.json.ebay.CurrentPrice;
+import com.app.json.ebay.CurrentBidPrice;
 import com.app.json.ebay.EbaySearchResultJsonResponse;
-import com.app.json.ebay.ErrorMessage;
-import com.app.json.ebay.FindItemsAdvancedResponse;
-import com.app.json.ebay.Item;
-import com.app.json.ebay.JsonSearchResult;
-import com.app.json.ebay.ListingInfo;
-import com.app.json.ebay.SellingStatus;
 import com.app.json.ebay.Error;
+import com.app.json.ebay.ItemSummary;
+import com.app.json.ebay.Price;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
@@ -72,15 +67,15 @@ public class EbaySearchResultUtil {
 
 		String url = _setUpAdvancedRequest(searchQuery, preferredCurrency);
 
-		FindItemsAdvancedResponse findItemsAdvancedResponse =
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
 			_executeFindItemsAdvanced(url);
 
 		boolean isValidResponse = validateResponse(
-			findItemsAdvancedResponse, searchQuery.getSearchQueryId());
+			ebaySearchResultJsonResponse, searchQuery.getSearchQueryId());
 
 		if (isValidResponse) {
 			return _createSearchResults(
-				findItemsAdvancedResponse, searchQuery.getSearchQueryId(),
+				ebaySearchResultJsonResponse, searchQuery.getSearchQueryId(),
 				searchQuery.getUserId(), preferredDomain, preferredCurrency);
 		}
 		else {
@@ -89,39 +84,34 @@ public class EbaySearchResultUtil {
 	}
 
 	private static SearchResult _createSearchResult(
-		Item item, String preferredDomain, String preferredCurrency) {
+		ItemSummary itemSummary, String preferredDomain, String preferredCurrency) {
 
 		SearchResult searchResult = new SearchResult();
 
-		ListingInfo listingInfo = item.getListingInfo();
-
-		searchResult.setItemId(item.getItemId());
+		searchResult.setItemId(itemSummary.getLegacyItemId());
 		searchResult.setItemTitle(
-			_ITEM_TITLE_PATTERN.matcher(item.getTitle()).replaceAll(""));
+			_ITEM_TITLE_PATTERN.matcher(itemSummary.getTitle()).replaceAll(""));
 		searchResult.setItemURL(
 			_EBAY_ROOT_URL + searchResult.getItemId() + preferredDomain);
-		searchResult.setGalleryURL(item.getGalleryURL());
+		searchResult.setGalleryURL(itemSummary.getImage().getImageUrl());
 
-		_setPrice(
-			searchResult, preferredCurrency, listingInfo,
-			item.getSellingStatus());
+		_setPrice(searchResult, preferredCurrency, itemSummary);
 
 		return searchResult;
 	}
 
 	private static List<SearchResult> _createSearchResults(
-		FindItemsAdvancedResponse findItemsAdvancedResponse,
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse,
 		int searchQueryId, int userId, String preferredDomain,
 		String preferredCurrency) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
-		JsonSearchResult jsonSearchResult =
-			findItemsAdvancedResponse.getJsonSearchResult();
+		for (ItemSummary itemSummary :
+				ebaySearchResultJsonResponse.getItemSummaries()) {
 
-		for (Item item : jsonSearchResult.getItems()) {
 			SearchResult searchResult = _createSearchResult(
-				item, preferredDomain, preferredCurrency);
+				itemSummary, preferredDomain, preferredCurrency);
 
 			searchResult.setSearchQueryId(searchQueryId);
 			searchResult.setUserId(userId);
@@ -134,7 +124,7 @@ public class EbaySearchResultUtil {
 		return searchResults;
 	}
 
-	private static FindItemsAdvancedResponse _executeFindItemsAdvanced(
+	private static EbaySearchResultJsonResponse _executeFindItemsAdvanced(
 			String url)
 		throws IOException {
 
@@ -146,55 +136,40 @@ public class EbaySearchResultUtil {
 
 		Gson gson = new Gson();
 
-		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
+		return
 			gson.fromJson(
 				EntityUtils.toString(response.getEntity()),
 				EbaySearchResultJsonResponse.class);
-
-		return ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
 	}
 
 	private static void _setPrice(
 		SearchResult searchResult, String preferredCurrency,
-		ListingInfo listingInfo, SellingStatus sellingStatus) {
+		ItemSummary itemSummary) {
 
-		CurrentPrice currentPrice = sellingStatus.getCurrentPrice();
-		BuyItNowPrice buyItNowPrice = listingInfo.getBuyItNowPrice();
+		List<String> buyingOptions = itemSummary.getBuyingOptions();
 
-		String typeOfAuction = listingInfo.getListingType();
+		if (buyingOptions.contains("AUCTION")) {
+			CurrentBidPrice currentBidPrice = itemSummary.getCurrentBidPrice();
 
-		double auctionPrice = ExchangeRateUtil.convertCurrency(
-			currentPrice.getCurrencyId(), preferredCurrency,
-			currentPrice.getValue());
-
-		if ("Auction".equals(typeOfAuction)) {
-			searchResult.setAuctionPrice(
-				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
-		}
-		else if ("FixedPrice".equals(typeOfAuction) ||
-				 "StoreInventory".equals(typeOfAuction)) {
-
-			searchResult.setFixedPrice(
-				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
-		}
-		else if ("AuctionWithBIN".equals(typeOfAuction)) {
-			double fixedPrice = ExchangeRateUtil.convertCurrency(
-				buyItNowPrice.getCurrencyId(), preferredCurrency,
-				buyItNowPrice.getValue());
+			double auctionPrice = ExchangeRateUtil.convertCurrency(
+				currentBidPrice.getCurrency(), preferredCurrency,
+				Double.valueOf(currentBidPrice.getValue()));
 
 			searchResult.setAuctionPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
 					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
+		}
+
+		if (buyingOptions.contains("FIXED_PRICE")) {
+			Price price = itemSummary.getPrice();
+
+			double buyItNowPrice = ExchangeRateUtil.convertCurrency(
+				price.getCurrency(), preferredCurrency,
+				Double.valueOf(price.getValue()));
+
 			searchResult.setFixedPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-					_DISPLAY_DECIMAL_FORMAT.format(fixedPrice));
-		}
-		else {
-			_log.error(
-				"Unknown type of auction: {} for item ID: {}", typeOfAuction,
-				searchResult.getItemId());
+					_DISPLAY_DECIMAL_FORMAT.format(buyItNowPrice));
 		}
 	}
 
@@ -364,21 +339,21 @@ public class EbaySearchResultUtil {
 	}
 
 	private static boolean validateResponse(
-		FindItemsAdvancedResponse findItemsAdvancedResponse,
+		EbaySearchResultJsonResponse ebaySearchResultJsonResponse,
 		long searchQueryId) {
 
-		ErrorMessage errorMessage = findItemsAdvancedResponse.getErrorMessage();
+		List<Error> errors = ebaySearchResultJsonResponse.getErrors();
 
-		if (errorMessage == null) {
+		if (errors.isEmpty()) {
 			return true;
 		}
 
-		Error error = errorMessage.getError();
-
-		_log.error(
-			"Unable to perform search request for search query ID: {}. " +
-				"Received error ID: {} and error message: {}",
-			searchQueryId, error.getErrorId(), error.getMessage());
+		for (Error error : errors) {
+			_log.error(
+				"Unable to perform search request for search query ID: {}. " +
+					"Received error ID: {} and error message: {}",
+				searchQueryId, error.getErrorId(), error.getLongMessage());
+		}
 
 		return false;
 	}
