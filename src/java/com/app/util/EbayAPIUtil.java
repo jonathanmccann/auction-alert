@@ -14,35 +14,19 @@
 
 package com.app.util;
 
-import com.ebay.sdk.ApiContext;
-import com.ebay.sdk.ApiCredential;
-import com.ebay.soap.eBLBaseComponents.SiteCodeType;
+import com.ebay.api.client.auth.oauth2.CredentialUtil;
 
 /**
  * @author Jonathan McCann
  */
 public class EbayAPIUtil {
 
-	public static ApiContext getApiContext() {
-		return _apiContext;
-	}
-
 	public static void loadApiContext() {
-		loadApiContext(PropertiesValues.EBAY_TOKEN);
+		ClassLoader classLoader =
+			Thread.currentThread().getContextClassLoader();
+
+		CredentialUtil.load(
+			classLoader.getResourceAsStream("ebay-config.yaml"));
 	}
-
-	public static void loadApiContext(String ebayToken) {
-		ApiCredential apiCredential = new ApiCredential();
-
-		apiCredential.seteBayToken(ebayToken);
-
-		_apiContext = new ApiContext();
-
-		_apiContext.setApiCredential(apiCredential);
-		_apiContext.setApiServerUrl("https://api.ebay.com/wsapi");
-		_apiContext.setSite(SiteCodeType.US);
-	}
-
-	private static ApiContext _apiContext;
 
 }
