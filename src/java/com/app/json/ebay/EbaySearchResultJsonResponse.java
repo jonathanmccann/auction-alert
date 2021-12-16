@@ -15,19 +15,18 @@
 package com.app.json.ebay;
 
 import java.util.List;
-import com.google.gson.annotations.SerializedName;
 
 public class EbaySearchResultJsonResponse {
 
-	@SerializedName("findItemsAdvancedResponse")
-	private List<FindItemsAdvancedResponse> findItemsAdvancedResponse = null;
-
-	public FindItemsAdvancedResponse getFindItemsAdvancedResponse() {
-		if (findItemsAdvancedResponse == null) {
-			return null;
-		}
-
-		return findItemsAdvancedResponse.get(0);
+	public List<Error> getErrors() {
+		return errors;
 	}
+
+	public List<ItemSummary> getItemSummaries() {
+		return itemSummaries;
+	}
+
+	private List<Error> errors = null;
+	private List<ItemSummary> itemSummaries = null;
 
 }

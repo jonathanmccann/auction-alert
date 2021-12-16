@@ -14,22 +14,39 @@
 
 package com.app.json.ebay;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
-public class BuyItNowPrice {
+public class ItemSummary {
 
-	@SerializedName("@currencyId")
-	private String currencyId;
-
-	@SerializedName("__value__")
-	private double value;
-
-	public String getCurrencyId() {
-		return currencyId;
+	public String getTitle() {
+		return title;
 	}
 
-	public double getValue() {
-		return value;
+	public Image getImage() {
+		return image;
 	}
+
+	public Price getPrice() {
+		return price;
+	}
+
+	public List<String> getBuyingOptions() {
+		return buyingOptions;
+	}
+
+	public CurrentBidPrice getCurrentBidPrice() {
+		return currentBidPrice;
+	}
+
+	public String getLegacyItemId() {
+		return legacyItemId;
+	}
+
+	private String title;
+	private Image image;
+	private Price price;
+	private List<String> buyingOptions = null;
+	private CurrentBidPrice currentBidPrice;
+	private String legacyItemId;
 
 }

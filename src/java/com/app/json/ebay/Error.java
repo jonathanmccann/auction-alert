@@ -14,23 +14,17 @@
 
 package com.app.json.ebay;
 
-import java.util.List;
-import com.google.gson.annotations.SerializedName;
-
 public class Error {
 
-	@SerializedName("errorId")
-	private List<String> errorId = null;
-
-	@SerializedName("message")
-	private List<String> message = null;
-
-	public List<String> getErrorId() {
+	public Integer getErrorId() {
 		return errorId;
 	}
 
-	public List<String> getMessage() {
-		return message;
+	public String getLongMessage() {
+		return longMessage;
 	}
+
+	private Integer errorId;
+	private String longMessage;
 
 }

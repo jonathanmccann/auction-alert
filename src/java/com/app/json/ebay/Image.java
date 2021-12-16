@@ -14,18 +14,12 @@
 
 package com.app.json.ebay;
 
-import com.google.gson.annotations.SerializedName;
+public class Image {
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class JsonSearchResult {
-
-	@SerializedName("item")
-	private List<Item> items = new ArrayList<>();
-
-	public List<Item> getItems() {
-		return items;
+	public String getImageUrl() {
+		return imageUrl;
 	}
+
+	private String imageUrl;
 
 }

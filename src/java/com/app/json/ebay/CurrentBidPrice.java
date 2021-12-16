@@ -14,28 +14,17 @@
 
 package com.app.json.ebay;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.google.gson.annotations.SerializedName;
+public class CurrentBidPrice {
 
-public class FindItemsAdvancedResponse {
-
-	@SerializedName("errorMessage")
-	private List<ErrorMessage> errorMessage = new ArrayList<>();
-
-	@SerializedName("searchResult")
-	private List<JsonSearchResult> jsonSearchResult = new ArrayList<>();
-
-	public ErrorMessage getErrorMessage() {
-		if (errorMessage.isEmpty()) {
-			return null;
-		}
-
-		return errorMessage.get(0);
+	public String getValue() {
+		return value;
 	}
 
-	public JsonSearchResult getJsonSearchResult() {
-		return jsonSearchResult.get(0);
+	public String getCurrency() {
+		return currency;
 	}
+
+	private String value;
+	private String currency;
 
 }

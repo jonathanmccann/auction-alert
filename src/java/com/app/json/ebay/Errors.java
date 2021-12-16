@@ -15,15 +15,12 @@
 package com.app.json.ebay;
 
 import java.util.List;
-import com.google.gson.annotations.SerializedName;
 
-public class ErrorMessage {
+public class Errors {
 
-	@SerializedName("error")
-	private List<Error> error = null;
-
-	public Error getError() {
-		return error.get(0);
+	public List<Error> getErrors() {
+		return errors;
 	}
 
+	private List<Error> errors = null;
 }

@@ -14,22 +14,17 @@
 
 package com.app.json.ebay;
 
-import com.google.gson.annotations.SerializedName;
+public class Price {
 
-public class CurrentPrice {
-
-	@SerializedName("@currencyId")
-	private String currencyId;
-
-	@SerializedName("__value__")
-	private double value;
-
-	public String getCurrencyId() {
-		return currencyId;
-	}
-
-	public double getValue() {
+	public String getValue() {
 		return value;
 	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	private String value;
+	private String currency;
 
 }
