@@ -92,26 +92,6 @@ public class ActiveInterceptorTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetMonitorWithActiveUser() throws Exception {
-		_updateUserSubscription();
-
-		this.mockMvc.perform(get("/monitor"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("monitor"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor.jsp"));
-	}
-
-	@Test
-	public void testGetMonitorWithInactiveUser() throws Exception {
-		MvcResult result = this.mockMvc.perform(get("/monitor"))
-			.andReturn();
-
-		MockHttpServletResponse response = result.getResponse();
-
-		Assert.assertEquals("my_account", response.getRedirectedUrl());
-	}
-
-	@Test
 	public void testGetSearchQueryResultsWithActiveUser() throws Exception {
 		_updateUserSubscription();
 

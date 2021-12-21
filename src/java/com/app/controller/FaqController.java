@@ -49,13 +49,6 @@ public class FaqController {
 		return "general_faq";
 	}
 
-	@RequestMapping(value ="/monitor_faq", method = RequestMethod.GET)
-	public String monitorFaq(Map<String, Object> model) throws Exception {
-		model.put("isActive", UserUtil.isCurrentUserActive());
-
-		return "monitor_faq";
-	}
-
 	@RequestMapping(value ="/new_faq", method = RequestMethod.GET)
 	public String newFaq(Map<String, Object> model) throws Exception {
 		model.put("isActive", UserUtil.isCurrentUserActive());

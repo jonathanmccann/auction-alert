@@ -9,7 +9,6 @@
 
 					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;">
 						You can begin by <a href="${rootDomainName}/add_search_query">adding search queries</a> and start receiving updates right to your email.<br><br>
-						Be sure to check out our <a href="${rootDomainName}/monitor">real time monitoring</a> for up to the second results.<br><br>
 						Learn more about the site in our <a href="${rootDomainName}/faq">FAQ</a> and feel free to <a href="${rootDomainName}/contact">contact us</a> with any questions.
 					</p>
 				</td>

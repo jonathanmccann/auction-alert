@@ -147,33 +147,6 @@ public class FaqControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetMonitorFaqAsActiveUser() throws Exception {
-		UserUtil.updateUserSubscription(
-			_USER.getUserId(), "", "", true, false);
-
-		setUpSecurityUtilsSession(true, _USER.getUserId());
-
-		this.mockMvc.perform(get("/monitor_faq"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("monitor_faq"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor_faq.jsp"))
-			.andExpect(model().attributeExists("isActive"))
-			.andExpect(model().attribute("isActive", true));
-	}
-
-	@Test
-	public void testGetMonitorFaqAsInactiveUser() throws Exception {
-		setUpSecurityUtilsSession(false, _USER_ID);
-
-		this.mockMvc.perform(get("/monitor_faq"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("monitor_faq"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor_faq.jsp"))
-			.andExpect(model().attributeExists("isActive"))
-			.andExpect(model().attribute("isActive", false));
-	}
-
-	@Test
 	public void testGetNewFaqAsActiveUser() throws Exception {
 		UserUtil.updateUserSubscription(
 			_USER.getUserId(), "", "", true, false);

@@ -45,7 +45,7 @@ public class ExceptionHandlerControllerTest extends BaseTestCase {
 
 	@Test
 	public void testGetExceptionHandler() throws Exception {
-		this.mockMvc.perform(get("/monitor"))
+		this.mockMvc.perform(get("/invalid_path"))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(view().name("redirect:error"))
 			.andExpect(redirectedUrl("error"));

@@ -119,28 +119,6 @@ public class AuthenticationInterceptorTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetMonitorWithAuthenticatedUser() throws Exception {
-		setUpSecurityUtilsSession(true, _USER.getUserId());
-
-		this.mockMvc.perform(get("/monitor"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("monitor"))
-			.andExpect(forwardedUrl("/WEB-INF/jsp/monitor.jsp"));
-	}
-
-	@Test
-	public void testGetMonitorWithUnauthenticatedUser() throws Exception {
-		setUpSecurityUtilsSession(false, _USER_ID);
-
-		MvcResult result = this.mockMvc.perform(get("/monitor"))
-			.andReturn();
-
-		MockHttpServletResponse response = result.getResponse();
-
-		Assert.assertEquals("log_in", response.getRedirectedUrl());
-	}
-
-	@Test
 	public void testGetMyAccountWithAuthenticatedUser() throws Exception {
 		setUpSecurityUtilsSession(true, _USER.getUserId());
 

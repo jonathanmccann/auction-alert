@@ -186,42 +186,6 @@ public class SearchQueryController {
 		return subcategories;
 	}
 
-	@RequestMapping(value = "/monitor", method = RequestMethod.GET)
-	public String monitor(Integer searchQueryId, Map<String, Object> model)
-		throws DatabaseConnectionException, SQLException {
-
-		if (searchQueryId != null) {
-			SearchQuery searchQuery = SearchQueryUtil.getSearchQuery(
-				searchQueryId);
-
-			if (searchQuery.getUserId() == UserUtil.getCurrentUserId()) {
-				model.put("searchQuery", searchQuery);
-			}
-			else {
-				model.put("searchQuery", new SearchQuery());
-			}
-		}
-		else {
-			model.put("searchQuery", new SearchQuery());
-		}
-
-		User currentUser = UserUtil.getCurrentUser();
-
-		String preferredDomain = currentUser.getPreferredDomain();
-
-		model.put(
-			"preferredCurrency",
-			ConstantsUtil.getPreferredCurrency(preferredDomain));
-
-		model.put("preferredDomain", preferredDomain);
-
-		model.put("rssGlobalIds", ConstantsUtil.getRssGlobalIds());
-
-		_populateCategories(model);
-
-		return "monitor";
-	}
-
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
 	public String updateSearchQuery(
 			@ModelAttribute("error")String error,

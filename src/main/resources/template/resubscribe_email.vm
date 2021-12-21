@@ -7,7 +7,7 @@
 
 					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em; width: 75%">
 						Your resubscription request has been processed successfully.<br><br>
-						Start enjoying the benefits of <a href="${rootDomainName}/add_search_query">email alerts</a> and <a href="${rootDomainName}/monitor">real time monitoring</a> immediately.
+						Start enjoying the benefits of <a href="${rootDomainName}/add_search_query">email alerts</a> immediately.
 					</p>
 				</td>
 			</tr>

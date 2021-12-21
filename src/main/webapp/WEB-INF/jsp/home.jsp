@@ -83,7 +83,6 @@
 						<c:if test="${isActive}">
 							<li><a href="add_search_query">Add Search Query</a></li>
 							<li><a href="view_search_queries">Search Queries and Results</a></li>
-							<li><a href="monitor">Monitor</a></li>
 						</c:if>
 
 						<li><a href="my_account">My Account</a></li>
@@ -132,14 +131,6 @@
 									<p>New results are sent directly to your email.</p>
 								</section>
 							</div>
-
-							<div class="3u">
-								<section class="box special">
-									<i class="fa-refresh icon major"></i>
-									<h3>Monitor</h3>
-									<p>Keep tabs on a search query with real time updates.</p>
-								</section>
-							</div>
 						</div>
 					</div>
 				</section>
@@ -162,21 +153,6 @@
 							<div class="6u">
 								<div class="image fit">
 									<img alt="Adding Search Query" src="resources/images/adding_search_query.png">
-								</div>
-							</div>
-						</div>
-
-						<div class="row flex">
-							<div class="6u">
-								<h3 align="left">Monitoring</h3>
-								<p align="left">
-									Utilizing the monitoring tool, you can have real time updates for newly listed items on eBay, complete with desktop notifications.<br><br>
-									With this, gone are the days of manually refreshing the eBay site, looking for good deals. All the work is done for you. Just tell us what you're looking for.
-								</p>
-							</div>
-							<div class="6u">
-								<div class="image fit">
-									<img alt="Monitoring Results" src="resources/images/monitoring.png">
 								</div>
 							</div>
 						</div>
@@ -206,7 +182,6 @@
 							<p>
 								<b>10 search queries</b> <br>
 								<b>30 emails a day</b> <br>
-								<b>Unlimited monitoring</b>
 							</p>
 
 							<a class="button special" href="create_account">Sign Up Now</a>

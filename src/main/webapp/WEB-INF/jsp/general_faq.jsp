@@ -51,7 +51,6 @@
 						<c:if test="${isActive}">
 							<li><a href="add_search_query">Add Search Query</a></li>
 							<li><a href="view_search_queries">Search Queries and Results</a></li>
-							<li><a href="monitor">Monitor</a></li>
 						</c:if>
 
 						<li><a href="my_account">My Account</a></li>
@@ -118,7 +117,7 @@
 					<h2>What happens when I unsubscribe?</h2>
 					<p class="faq-paragraph">
 						When you unsubscribe, your credit card will not be charged again. You will be able to use the application for the remainder of the month, until the next charge would have occurred.
-						At that time, your account will become inactive, and you will no longer be able to add search queries, receive email notifications, or use the monitoring tool.
+						At that time, your account will become inactive, and you will no longer be able to add search queries or receive email notifications.
 						In order to regain access to these features, you will need to resubscribe, providing your credit card details again.<br><br>
 						For instance, let's say you subscribed on the 5th of February. You will be charged immediately and have full access to the site.
 						Then, on the 10th of February, you decided to unsubscribe. Your account will remain active until the 5th of March.

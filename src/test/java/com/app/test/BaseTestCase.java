@@ -420,7 +420,7 @@ public abstract class BaseTestCase {
 		"\n" +
 		"\t\t\t\t\t<p style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em; width: 75%\">\n" +
 		"\t\t\t\t\t\tYour resubscription request has been processed successfully.<br><br>\n" +
-		"\t\t\t\t\t\tStart enjoying the benefits of <a href=\"http://www.test.com/add_search_query\">email alerts</a> and <a href=\"http://www.test.com/monitor\">real time monitoring</a> immediately.\n" +
+		"\t\t\t\t\t\tStart enjoying the benefits of <a href=\"http://www.test.com/add_search_query\">email alerts</a> immediately.\n" +
 		"\t\t\t\t\t</p>\n" +
 		"\t\t\t\t</td>\n" +
 		"\t\t\t</tr>\n" +
@@ -440,7 +440,7 @@ public abstract class BaseTestCase {
 		"\n" +
 		"\t\t\t\t\t<p style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;\">\n" +
 		"\t\t\t\t\t\tWe were unable to process your payment for your monthly subscription. Please visit <a href=\"http://www.test.com/my_account\">your account</a> to update your credit card.<br><br>\n" +
-		"\t\t\t\t\t\tAs of now, your account is inactive and you will no longer receive any email notifications or be able to use the monitoring tool.\n" +
+		"\t\t\t\t\t\tAs of now, your account is inactive and you will no longer receive any email notifications.\n" +
 		"\t\t\t\t\t</p>\n" +
 		"\t\t\t\t</td>\n" +
 		"\t\t\t</tr>\n" +
@@ -487,7 +487,6 @@ public abstract class BaseTestCase {
 		"\n" +
 		"\t\t\t\t\t<p style=\"color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;\">\n" +
 		"\t\t\t\t\t\tYou can begin by <a href=\"http://www.test.com/add_search_query\">adding search queries</a> and start receiving updates right to your email.<br><br>\n" +
-		"\t\t\t\t\t\tBe sure to check out our <a href=\"http://www.test.com/monitor\">real time monitoring</a> for up to the second results.<br><br>\n" +
 		"\t\t\t\t\t\tLearn more about the site in our <a href=\"http://www.test.com/faq\">FAQ</a> and feel free to <a href=\"http://www.test.com/contact\">contact us</a> with any questions.\n" +
 		"\t\t\t\t\t</p>\n" +
 		"\t\t\t\t</td>\n" +

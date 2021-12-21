@@ -50,7 +50,6 @@
 			<mvc:mapping path="/delete_account" />
 			<mvc:mapping path="/delete_search_query" />
 			<mvc:mapping path="/delete_subscription" />
-			<mvc:mapping path="/monitor" />
 			<mvc:mapping path="/my_account" />
 			<mvc:mapping path="/resubscribe" />
 			<mvc:mapping path="/search_query_results" />

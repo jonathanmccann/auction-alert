@@ -7,7 +7,7 @@
 
 					<p style="color: #666f77; font-weight: 300; line-height: 0.5em; margin: 0 0 1em 0; letter-spacing: 0.125em; font-size: 1.10em; line-height: 1.5em;">
 						We were unable to process your payment for your monthly subscription. Please visit <a href="${rootDomainName}/my_account">your account</a> to update your credit card.<br><br>
-						As of now, your account is inactive and you will no longer receive any email notifications or be able to use the monitoring tool.
+						As of now, your account is inactive and you will no longer receive any email notifications.
 					</p>
 				</td>
 			</tr>
