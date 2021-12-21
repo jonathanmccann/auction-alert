@@ -12,19 +12,28 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.browse;
 
-public class CurrentBidPrice {
+import com.app.json.ebay.Error;
 
-	public String getValue() {
-		return value;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EbaySearchResultJsonResponse {
+
+	public List<Error> getErrors() {
+		if (errors == null) {
+			return new ArrayList<>();
+		}
+
+		return errors;
 	}
 
-	public String getCurrency() {
-		return currency;
+	public List<ItemSummary> getItemSummaries() {
+		return itemSummaries;
 	}
 
-	private String value;
-	private String currency;
+	private List<Error> errors = null;
+	private List<ItemSummary> itemSummaries = null;
 
 }

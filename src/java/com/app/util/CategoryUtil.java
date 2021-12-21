@@ -17,10 +17,10 @@ package com.app.util;
 import com.app.dao.CategoryDAO;
 import com.app.exception.CategoryException;
 import com.app.exception.DatabaseConnectionException;
-import com.app.json.ebay.CategoryJsonResponse;
-import com.app.json.ebay.ChildCategoryTreeNode;
-import com.app.json.ebay.EbayCategory;
-import com.app.json.ebay.RootCategoryNode;
+import com.app.json.ebay.category.CategoryJsonResponse;
+import com.app.json.ebay.category.ChildCategoryTreeNode;
+import com.app.json.ebay.category.EbayCategory;
+import com.app.json.ebay.category.RootCategoryNode;
 import com.app.json.ebay.Error;
 import com.app.model.Category;
 

@@ -12,26 +12,16 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.category;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryJsonResponse {
+public class RootCategoryNode {
 
-	public List<Error> getErrors() {
-		if (errors == null) {
-			return new ArrayList<>();
-		}
-
-		return errors;
+	public List<ChildCategoryTreeNode> getChildCategoryTreeNodes() {
+		return childCategoryTreeNodes;
 	}
 
-	public RootCategoryNode getRootCategoryNode() {
-		return rootCategoryNode;
-	}
-
-	private List<Error> errors = null;
-	private RootCategoryNode rootCategoryNode;
+	private List<ChildCategoryTreeNode> childCategoryTreeNodes = null;
 
 }

@@ -12,26 +12,14 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.browse;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Image {
 
-public class EbaySearchResultJsonResponse {
-
-	public List<Error> getErrors() {
-		if (errors == null) {
-			return new ArrayList<>();
-		}
-
-		return errors;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public List<ItemSummary> getItemSummaries() {
-		return itemSummaries;
-	}
-
-	private List<Error> errors = null;
-	private List<ItemSummary> itemSummaries = null;
+	private String imageUrl;
 
 }

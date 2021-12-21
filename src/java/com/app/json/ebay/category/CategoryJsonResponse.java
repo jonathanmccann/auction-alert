@@ -12,14 +12,28 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.category;
 
-public class Image {
+import com.app.json.ebay.Error;
 
-	public String getImageUrl() {
-		return imageUrl;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CategoryJsonResponse {
+
+	public List<Error> getErrors() {
+		if (errors == null) {
+			return new ArrayList<>();
+		}
+
+		return errors;
 	}
 
-	private String imageUrl;
+	public RootCategoryNode getRootCategoryNode() {
+		return rootCategoryNode;
+	}
+
+	private List<Error> errors = null;
+	private RootCategoryNode rootCategoryNode;
 
 }

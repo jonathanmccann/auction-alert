@@ -12,16 +12,19 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.category;
 
-import java.util.List;
+public class EbayCategory {
 
-public class RootCategoryNode {
-
-	public List<ChildCategoryTreeNode> getChildCategoryTreeNodes() {
-		return childCategoryTreeNodes;
+	public String getCategoryId() {
+		return categoryId;
 	}
 
-	private List<ChildCategoryTreeNode> childCategoryTreeNodes = null;
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	private String categoryId;
+	private String categoryName;
 
 }

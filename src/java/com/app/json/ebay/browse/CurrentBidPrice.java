@@ -12,19 +12,19 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.browse;
 
-public class EbayCategory {
+public class CurrentBidPrice {
 
-	public String getCategoryId() {
-		return categoryId;
+	public String getValue() {
+		return value;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+	public String getCurrency() {
+		return currency;
 	}
 
-	private String categoryId;
-	private String categoryName;
+	private String value;
+	private String currency;
 
 }

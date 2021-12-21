@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.category;
 
 import java.util.List;
 

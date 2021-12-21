@@ -15,11 +15,11 @@
 package com.app.util;
 
 import com.app.exception.DatabaseConnectionException;
-import com.app.json.ebay.CurrentBidPrice;
-import com.app.json.ebay.EbaySearchResultJsonResponse;
 import com.app.json.ebay.Error;
-import com.app.json.ebay.ItemSummary;
-import com.app.json.ebay.Price;
+import com.app.json.ebay.browse.CurrentBidPrice;
+import com.app.json.ebay.browse.EbaySearchResultJsonResponse;
+import com.app.json.ebay.browse.ItemSummary;
+import com.app.json.ebay.browse.Price;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;

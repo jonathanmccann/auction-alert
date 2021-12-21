@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.app.json.ebay;
+package com.app.json.ebay.browse;
 
 public class Price {
 
