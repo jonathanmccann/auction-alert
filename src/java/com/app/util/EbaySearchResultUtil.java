@@ -179,161 +179,114 @@ public class EbaySearchResultUtil {
 
 		_log.trace("Setting up advanced request");
 
-		int itemFilterCount = 0;
-
 		StringBuilder url = new StringBuilder();
 
-		url.append(_FIND_ITEMS_ADVANCED_URL_PREFIX);
+		url.append(_BROWSE_URL_PREFIX);
 
-		url.append("&GLOBAL-ID=");
-		url.append(searchQuery.getGlobalId());
-
-		url.append("&REST-PAYLOAD");
-
-		url.append("&affiliate.trackingId=");
-		url.append(PropertiesValues.EBAY_CAMPAIGN_ID);
-		url.append("&affiliate.networkId=");
-		url.append(_NETWORK_ID);
-
-		url.append("&paginationInput.entriesPerPage=");
+		url.append("limit=");
 		url.append(PropertiesValues.NUMBER_OF_SEARCH_RESULTS);
 
-		url.append("&sortOrder=StartTimeNewest");
+		url.append("&sort=newlyListed");
 
-		url.append("&keywords=");
+		url.append("&q=");
 		url.append(URLEncoder.encode(searchQuery.getKeywords(), "UTF-8"));
 
 		if (ValidatorUtil.isNotNull(searchQuery.getSubcategoryId())) {
-			url.append("&categoryId=");
+			url.append("&category_ids=");
 			url.append(searchQuery.getSubcategoryId());
 		}
 		else if (ValidatorUtil.isNotNull(searchQuery.getCategoryId())) {
-			url.append("&categoryId=");
+			url.append("&category_ids=");
 			url.append(searchQuery.getCategoryId());
 		}
 
+		StringBuilder filter = new StringBuilder();
+
 		if (searchQuery.isSearchDescription()) {
-			url.append("&descriptionSearch=true");
+			filter.append("searchInDescription:true");
 		}
 
 		if (searchQuery.isFreeShippingOnly()) {
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").name=FreeShippingOnly");
+			if (filter.length() > 0) {
+				filter.append(",");
+			}
 
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").value=true");
-
-			itemFilterCount++;
+			filter.append("maxDeliveryCost:0");
 		}
 
 		if (!searchQuery.isNewCondition() || !searchQuery.isUsedCondition() ||
 			!searchQuery.isUnspecifiedCondition()) {
 
-			int valueCount = 0;
-
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").name=Condition");
+			StringBuilder conditions = new StringBuilder();
 
 			if (searchQuery.isNewCondition()) {
-				url.append("&itemFilter(");
-				url.append(itemFilterCount);
-				url.append(").value(");
-				url.append(valueCount);
-				url.append(")=New");
-
-				valueCount++;
+				conditions.append("NEW");
 			}
 
 			if (searchQuery.isUsedCondition()) {
-				url.append("&itemFilter(");
-				url.append(itemFilterCount);
-				url.append(").value(");
-				url.append(valueCount);
-				url.append(")=Used");
+				if (conditions.length() > 0) {
+					conditions.append("|");
+				}
 
-				valueCount++;
+				conditions.append("USED");
 			}
 
 			if (searchQuery.isUnspecifiedCondition()) {
-				url.append("&itemFilter(");
-				url.append(itemFilterCount);
-				url.append(").value(");
-				url.append(valueCount);
-				url.append(")=Unspecified");
+				if (conditions.length() > 0) {
+					conditions.append("|");
+				}
+
+				conditions.append("UNSPECIFIED");
 			}
 
-			itemFilterCount++;
-		}
-
-		if (!searchQuery.isAuctionListing() ||
-			!searchQuery.isFixedPriceListing()) {
-
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").name=ListingType");
-
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").value(0)=AuctionWithBIN");
-
-			if (searchQuery.isAuctionListing()) {
-				url.append("&itemFilter(");
-				url.append(itemFilterCount);
-				url.append(").value(1)=Auction");
-			}
-			else {
-				url.append("&itemFilter(");
-				url.append(itemFilterCount);
-				url.append(").value(1)=FixedPrice");
+			if (filter.length() > 0) {
+				filter.append(",");
 			}
 
-			itemFilterCount++;
+			filter.append("conditions:{");
+			filter.append(conditions.toString());
+			filter.append("}");
 		}
 
-		if (searchQuery.getMinPrice() > 0) {
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").name=MinPrice");
+		StringBuilder listingTypes = new StringBuilder();
 
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").value=");
-			url.append(_DECIMAL_FORMAT.format(searchQuery.getMinPrice()));
-
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").paramName=Currency");
-
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").paramValue=");
-			url.append(preferredCurrency);
-
-			itemFilterCount++;
+		if (searchQuery.isAuctionListing()) {
+			listingTypes.append("AUCTION");
 		}
 
-		if (searchQuery.getMaxPrice() > 0) {
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").name=MaxPrice");
+		if (searchQuery.isFixedPriceListing()) {
+			if (listingTypes.length() > 0) {
+				listingTypes.append("|");
+			}
 
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").value=");
-			url.append(_DECIMAL_FORMAT.format(searchQuery.getMaxPrice()));
-
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").paramName=Currency");
-
-			url.append("&itemFilter(");
-			url.append(itemFilterCount);
-			url.append(").paramValue=");
-			url.append(preferredCurrency);
+			listingTypes.append("FIXED_PRICE");
 		}
+
+		if (filter.length() > 0) {
+			filter.append(",");
+		}
+
+		filter.append("buyingOptions:{");
+		filter.append(listingTypes.toString());
+		filter.append("}");
+
+		if ((searchQuery.getMinPrice() > 0) ||
+			(searchQuery.getMaxPrice() > 0)) {
+
+			if (filter.length() > 0) {
+				filter.append(",");
+			}
+
+			filter.append("price:[");
+			filter.append(searchQuery.getMinPrice());
+			filter.append("..");
+			filter.append(searchQuery.getMaxPrice());
+			filter.append("],");
+			filter.append("priceCurrency:USD");
+		}
+
+		url.append("&filter=");
+		url.append(URLEncoder.encode(filter.toString(), "UTF-8"));
 
 		return url.toString();
 	}
@@ -358,25 +311,16 @@ public class EbaySearchResultUtil {
 		return false;
 	}
 
-	private static final DecimalFormat _DECIMAL_FORMAT = new DecimalFormat(
-		"0.00");
-
 	private static final DecimalFormat _DISPLAY_DECIMAL_FORMAT =
 		new DecimalFormat("#,##0.00");
 
 	private static final String _EBAY_ROOT_URL = "https://www.ebay.com/itm/";
 
-	private static final String _FIND_ITEMS_ADVANCED_URL_PREFIX =
-		"https://svcs.ebay.com/services/search/FindingService/v1?" +
-			"OPERATION-NAME=findItemsAdvanced" +
-			"&SERVICE-VERSION=1.0.0" +
-			"&RESPONSE-DATA-FORMAT=JSON" +
-			"&SECURITY-APPNAME=" + PropertiesValues.APPLICATION_ID;
+	private static final String _BROWSE_URL_PREFIX =
+		"https://api.ebay.com/buy/browse/v1/item_summary/search?";
 
 	private static final Pattern _ITEM_TITLE_PATTERN = Pattern.compile(
 		"\\P{Print}");
-
-	private static final int _NETWORK_ID = 9;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		EbaySearchResultUtil.class);
