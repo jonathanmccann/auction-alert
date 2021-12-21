@@ -351,7 +351,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		String url = (String)_setUpAdvanceRequestMethod.invoke(
 			_classInstance, searchQuery, "USD");
@@ -369,7 +368,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(true);
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -396,7 +394,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -423,7 +420,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -448,7 +444,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(true);
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -477,7 +472,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -492,33 +486,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testSetUpAdvancedRequestWithGlobalId() throws Exception {
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setKeywords("Test keywords");
-		searchQuery.setNewCondition(true);
-		searchQuery.setUsedCondition(true);
-		searchQuery.setUnspecifiedCondition(true);
-		searchQuery.setAuctionListing(true);
-		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-CA");
-
-		String url = (String)_setUpAdvanceRequestMethod.invoke(
-			_classInstance, searchQuery, "USD");
-
-		String expectedUrl =
-			"https://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME" +
-			"=findItemsAdvanced&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON" +
-			"&SECURITY-APPNAME=applicationId&GLOBAL-ID=EBAY-CA&REST-PAYLOAD" +
-			"&affiliate.trackingId=ebayCampaignId&affiliate.networkId=9" +
-			"&paginationInput.entriesPerPage=5&sortOrder=StartTimeNewest" +
-			"&keywords=Test+keywords";
-
-		Assert.assertEquals(expectedUrl, url);
-	}
-
-	@Test
 	public void testSetUpAdvancedRequestWithMaxPrice() throws Exception {
 		SearchQuery searchQuery = new SearchQuery();
 
@@ -530,7 +497,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
 		searchQuery.setMaxPrice(10.00);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -558,7 +524,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
 		searchQuery.setMinPrice(5.00);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -591,7 +556,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setAuctionListing(true);
 		searchQuery.setMinPrice(5.00);
 		searchQuery.setMaxPrice(10.00);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -633,7 +597,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -660,7 +623,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -684,7 +646,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setNewCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -711,7 +672,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -735,7 +695,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -761,7 +720,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUnspecifiedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -785,7 +743,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUsedCondition(true);
 		searchQuery.setAuctionListing(true);
 		searchQuery.setFixedPriceListing(true);
-		searchQuery.setGlobalId("EBAY-US");
 
 		StringBuilder expectedURL = new StringBuilder();
 
@@ -848,7 +805,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER.getUserId());
 		searchQuery.setSearchQueryId(1);
 		searchQuery.setKeywords("Test Keywords");
-		searchQuery.setGlobalId("EBAY-US");
 
 		return searchQuery;
 	}

@@ -34,10 +34,6 @@ public class SearchQuery {
 		return _categoryId;
 	}
 
-	public String getGlobalId() {
-		return _globalId;
-	}
-
 	public String getKeywords() {
 		return _keywords;
 	}
@@ -118,10 +114,6 @@ public class SearchQuery {
 		_freeShippingOnly = freeShippingOnly;
 	}
 
-	public void setGlobalId(String globalId) {
-		_globalId = globalId;
-	}
-
 	public void setKeywords(String keywords) {
 		_keywords = keywords;
 	}
@@ -167,7 +159,6 @@ public class SearchQuery {
 	private String _categoryId;
 	private boolean _fixedPriceListing;
 	private boolean _freeShippingOnly;
-	private String _globalId;
 	private String _keywords;
 	private double _maxPrice;
 	private double _minPrice;

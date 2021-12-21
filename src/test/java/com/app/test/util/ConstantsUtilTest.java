@@ -47,25 +47,6 @@ public class ConstantsUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetGlobalIds() {
-		Map<String, String> globalIds = ConstantsUtil.getGlobalIds();
-
-		Assert.assertEquals("United States", globalIds.get("EBAY-US"));
-		Assert.assertEquals("Canada", globalIds.get("EBAY-ENCA"));
-		Assert.assertEquals("United Kingdom", globalIds.get("EBAY-GB"));
-		Assert.assertEquals("Austria", globalIds.get("EBAY-AT"));
-		Assert.assertEquals("Australia", globalIds.get("EBAY-AU"));
-		Assert.assertEquals("Belgium", globalIds.get("EBAY-FRBE"));
-		Assert.assertEquals("Switzerland", globalIds.get("EBAY-CH"));
-		Assert.assertEquals("Germany", globalIds.get("EBAY-DE"));
-		Assert.assertEquals("Spain", globalIds.get("EBAY-ES"));
-		Assert.assertEquals("France", globalIds.get("EBAY-FR"));
-		Assert.assertEquals("Ireland", globalIds.get("EBAY-IE"));
-		Assert.assertEquals("Italy", globalIds.get("EBAY-IT"));
-		Assert.assertEquals("Netherlands", globalIds.get("EBAY-NL"));
-	}
-
-	@Test
 	public void testGetPreferredCurrency() {
 		Assert.assertEquals(
 			"USD",

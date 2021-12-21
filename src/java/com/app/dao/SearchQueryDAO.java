@@ -306,7 +306,6 @@ public class SearchQueryDAO {
 			resultSet.getBoolean("fixedPriceListing"));
 		searchQuery.setMaxPrice(resultSet.getDouble("maxPrice"));
 		searchQuery.setMinPrice(resultSet.getDouble("minPrice"));
-		searchQuery.setGlobalId(resultSet.getString("globalId"));
 		searchQuery.setActive(resultSet.getBoolean("active"));
 
 		return searchQuery;
@@ -329,8 +328,7 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(11, searchQuery.isFixedPriceListing());
 		preparedStatement.setDouble(12, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(13, searchQuery.getMinPrice());
-		preparedStatement.setString(14, searchQuery.getGlobalId());
-		preparedStatement.setBoolean(15, searchQuery.isActive());
+		preparedStatement.setBoolean(14, searchQuery.isActive());
 	}
 
 	private static void _populateUpdateSearchQueryPreparedStatement(
@@ -350,10 +348,9 @@ public class SearchQueryDAO {
 		preparedStatement.setBoolean(10, searchQuery.isFixedPriceListing());
 		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(12, searchQuery.getMinPrice());
-		preparedStatement.setString(13, searchQuery.getGlobalId());
-		preparedStatement.setBoolean(14, searchQuery.isActive());
-		preparedStatement.setInt(15, searchQuery.getSearchQueryId());
-		preparedStatement.setInt(16, userId);
+		preparedStatement.setBoolean(13, searchQuery.isActive());
+		preparedStatement.setInt(14, searchQuery.getSearchQueryId());
+		preparedStatement.setInt(15, userId);
 	}
 
 	private static final String _ACTIVATION_SEARCH_QUERY_SQL =
@@ -365,8 +362,8 @@ public class SearchQueryDAO {
 			"subcategoryId, searchDescription, freeShippingOnly, " +
 				"newCondition, usedCondition, unspecifiedCondition, " +
 					"auctionListing, fixedPriceListing, maxPrice, minPrice, " +
-						"globalId, active) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-							"?, ?, ?, ?, ?, ?)";
+						"active) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+							"?, ?)";
 
 	private static final String _DELETE_SEARCH_QUERIES_SQL =
 		"DELETE FROM SearchQuery WHERE userId = ?";
@@ -392,8 +389,7 @@ public class SearchQueryDAO {
 				"newCondition = ?, usedCondition = ?, " +
 					"unspecifiedCondition = ?, auctionListing = ?, " +
 						"fixedPriceListing = ?, maxPrice = ?, minPrice = ?, " +
-							"globalId = ?, active = ? WHERE " +
-								"searchQueryId = ? AND userId = ?";
+							"active = ? WHERE searchQueryId = ? AND userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryDAO.class);

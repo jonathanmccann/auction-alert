@@ -141,13 +141,6 @@ public class SearchQueryTest {
 	}
 
 	@Test
-	public void testSetAndGetGlobalId() {
-		_searchQuery.setGlobalId("EBAY-US");
-
-		Assert.assertEquals("EBAY-US", _searchQuery.getGlobalId());
-	}
-
-	@Test
 	public void testSetAndGetSubcategoryId() {
 		_searchQuery.setSubcategoryId("100");
 

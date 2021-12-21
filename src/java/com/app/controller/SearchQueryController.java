@@ -98,8 +98,6 @@ public class SearchQueryController {
 
 		_populateCategories(model);
 
-		model.put("globalIds", ConstantsUtil.getGlobalIds());
-
 		model.put("isAdd", true);
 
 		return "add_search_query";
@@ -199,8 +197,6 @@ public class SearchQueryController {
 			model.put("searchQuery", searchQuery);
 
 			_populateCategories(model);
-
-			model.put("globalIds", ConstantsUtil.getGlobalIds());
 		}
 
 		model.put("error", error);
