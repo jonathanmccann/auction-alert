@@ -282,7 +282,8 @@ public class EbaySearchResultUtil {
 			filter.append("..");
 			filter.append(searchQuery.getMaxPrice());
 			filter.append("],");
-			filter.append("priceCurrency:USD");
+			filter.append("priceCurrency:");
+			filter.append(preferredCurrency);
 		}
 
 		url.append("&filter=");
