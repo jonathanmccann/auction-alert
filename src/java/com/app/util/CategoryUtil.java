@@ -171,7 +171,7 @@ public class CategoryUtil {
 				category = new Category(
 					childCategory.getCategoryId(),
 					childCategory.getCategoryName(),
-					childCategory.getCategoryId(), _CHILD_CATEGORY_LEVEL);
+					parentCategory.getCategoryId(), _CHILD_CATEGORY_LEVEL);
 
 				categories.add(category);
 			}
