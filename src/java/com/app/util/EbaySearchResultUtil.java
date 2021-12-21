@@ -14,7 +14,6 @@
 
 package com.app.util;
 
-import com.app.exception.DatabaseConnectionException;
 import com.app.json.ebay.Error;
 import com.app.json.ebay.browse.CurrentBidPrice;
 import com.app.json.ebay.browse.EbaySearchResultJsonResponse;
@@ -26,23 +25,18 @@ import com.app.model.User;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import java.net.URLEncoder;
-import java.sql.SQLException;
 
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +48,7 @@ public class EbaySearchResultUtil {
 
 	public static List<SearchResult> getEbaySearchResults(
 			SearchQuery searchQuery)
-		throws DatabaseConnectionException, IOException, SQLException {
+		throws Exception {
 
 		_log.trace("Searching for: {}", searchQuery.getKeywords());
 
@@ -68,7 +62,7 @@ public class EbaySearchResultUtil {
 		String url = _setUpAdvancedRequest(searchQuery, preferredCurrency);
 
 		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
-			_executeFindItemsAdvanced(url);
+			_executeFindItemsAdvanced(url, marketplaceId);
 
 		boolean isValidResponse = validateResponse(
 			ebaySearchResultJsonResponse, searchQuery.getSearchQueryId());
@@ -125,20 +119,22 @@ public class EbaySearchResultUtil {
 	}
 
 	private static EbaySearchResultJsonResponse _executeFindItemsAdvanced(
-			String url)
-		throws IOException {
+			String url, String marketplaceId)
+		throws Exception {
 
-		HttpClient httpClient = HttpClients.createDefault();
+		Map<String, String> headers = new HashMap<>();
 
-		HttpGet httpGet = new HttpGet(url);
+		headers.put(
+			"X-EBAY-C-ENDUSERCTX",
+			"affiliateCampaignId=" + PropertiesValues.EBAY_CAMPAIGN_ID);
 
-		HttpResponse response = httpClient.execute(httpGet);
+		headers.put("X-EBAY-C-MARKETPLACE-ID", marketplaceId);
 
 		Gson gson = new Gson();
 
 		return
 			gson.fromJson(
-				EntityUtils.toString(response.getEntity()),
+				OAuthTokenUtil.executeRequest(url, headers),
 				EbaySearchResultJsonResponse.class);
 	}
 
