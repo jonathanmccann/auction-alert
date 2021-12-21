@@ -70,7 +70,7 @@ public class EbaySearchResultUtil {
 		if (isValidResponse) {
 			return _createSearchResults(
 				ebaySearchResultJsonResponse, searchQuery.getSearchQueryId(),
-				searchQuery.getUserId(), marketplaceId, preferredCurrency);
+				searchQuery.getUserId(), preferredCurrency);
 		}
 		else {
 			return new ArrayList<>();
@@ -78,15 +78,14 @@ public class EbaySearchResultUtil {
 	}
 
 	private static SearchResult _createSearchResult(
-		ItemSummary itemSummary, String marketplaceId, String preferredCurrency) {
+		ItemSummary itemSummary, String preferredCurrency) {
 
 		SearchResult searchResult = new SearchResult();
 
 		searchResult.setItemId(itemSummary.getLegacyItemId());
 		searchResult.setItemTitle(
 			_ITEM_TITLE_PATTERN.matcher(itemSummary.getTitle()).replaceAll(""));
-		searchResult.setItemURL(
-			_EBAY_ROOT_URL + searchResult.getItemId() + marketplaceId);
+		searchResult.setItemURL(itemSummary.getItemAffiliateWebUrl());
 		searchResult.setGalleryURL(itemSummary.getImage().getImageUrl());
 
 		_setPrice(searchResult, preferredCurrency, itemSummary);
@@ -96,8 +95,7 @@ public class EbaySearchResultUtil {
 
 	private static List<SearchResult> _createSearchResults(
 		EbaySearchResultJsonResponse ebaySearchResultJsonResponse,
-		int searchQueryId, int userId, String marketplaceId,
-		String preferredCurrency) {
+		int searchQueryId, int userId, String preferredCurrency) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
 
@@ -105,7 +103,7 @@ public class EbaySearchResultUtil {
 				ebaySearchResultJsonResponse.getItemSummaries()) {
 
 			SearchResult searchResult = _createSearchResult(
-				itemSummary, marketplaceId, preferredCurrency);
+				itemSummary, preferredCurrency);
 
 			searchResult.setSearchQueryId(searchQueryId);
 			searchResult.setUserId(userId);

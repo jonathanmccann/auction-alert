@@ -26,6 +26,10 @@ public class ItemSummary {
 		return image;
 	}
 
+	public String getItemAffiliateWebUrl() {
+		return itemAffiliateWebUrl;
+	}
+
 	public Price getPrice() {
 		return price;
 	}
@@ -44,6 +48,7 @@ public class ItemSummary {
 
 	private String title;
 	private Image image;
+	private String itemAffiliateWebUrl;
 	private Price price;
 	private List<String> buyingOptions = null;
 	private CurrentBidPrice currentBidPrice;
