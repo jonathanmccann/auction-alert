@@ -23,6 +23,7 @@ import com.ebay.api.client.auth.oauth2.model.OAuthResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.http.HttpResponse;
@@ -55,9 +56,25 @@ public class OAuthTokenUtil {
 	}
 
 	public static String executeRequest(String url) throws Exception {
-		HttpClient httpClient = HttpClients.createDefault();
+		HttpGet httpGet = new HttpGet(url);
+
+		return execute(httpGet);
+	}
+
+	public static String executeRequest(String url, Map<String, String> headers)
+		throws Exception {
 
 		HttpGet httpGet = new HttpGet(url);
+
+		for (Map.Entry<String,String> header : headers.entrySet()) {
+			httpGet.addHeader(header.getKey(), header.getValue());
+		}
+
+		return execute(httpGet);
+	}
+
+	private static String execute(HttpGet httpGet) throws Exception {
+		HttpClient httpClient = HttpClients.createDefault();
 
 		httpGet.addHeader("Authorization", "Bearer " + getAccessToken());
 
