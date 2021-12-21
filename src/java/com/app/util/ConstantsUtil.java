@@ -40,10 +40,6 @@ public class ConstantsUtil {
 		return _preferredCurrencies.get(marketplaceId);
 	}
 
-	public static Map<String, String> getRssGlobalIds() {
-		return _rssGlobalIds;
-	}
-
 	public static void init() {
 		_currencySymbols.put("USD", "$");
 		_currencySymbols.put("CAD", "C $");
@@ -79,28 +75,12 @@ public class ConstantsUtil {
 		_preferredCurrencies.put("EBAY_IE", "EUR");
 		_preferredCurrencies.put("EBAY_IT", "EUR");
 		_preferredCurrencies.put("EBAY_NL", "EUR");
-
-		_rssGlobalIds.put("1", "United States");
-		_rssGlobalIds.put("7", "Canada");
-		_rssGlobalIds.put("15", "United Kingdom");
-		_rssGlobalIds.put("3", "Austria");
-		_rssGlobalIds.put("4", "Australia");
-		_rssGlobalIds.put("5", "Belgium");
-		_rssGlobalIds.put("14", "Switzerland");
-		_rssGlobalIds.put("11", "Germany");
-		_rssGlobalIds.put("13", "Spain");
-		_rssGlobalIds.put("10", "France");
-		_rssGlobalIds.put("2", "Ireland");
-		_rssGlobalIds.put("12", "Italy");
-		_rssGlobalIds.put("16", "Netherlands");
 	}
 
 	private static final Map<String, String> _currencySymbols = new HashMap<>();
 	private static final Map<String, String> _preferredCurrencies =
 		new HashMap<>();
 	private static final Map<String, String> _marketplaceIds =
-		new LinkedHashMap<>();
-	private static final Map<String, String> _rssGlobalIds =
 		new LinkedHashMap<>();
 
 }

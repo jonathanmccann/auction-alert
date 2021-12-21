@@ -160,23 +160,4 @@ public class ConstantsUtilTest extends BaseTestCase {
 			"Netherlands (.nl)", marketplaceIds.get("EBAY_NL"));
 	}
 
-	@Test
-	public void testGetRssGlobalIds()  {
-		Map<String, String> rssGlobalIds = ConstantsUtil.getRssGlobalIds();
-
-		Assert.assertEquals("United States", rssGlobalIds.get("1"));
-		Assert.assertEquals("Canada", rssGlobalIds.get("7"));
-		Assert.assertEquals("United Kingdom", rssGlobalIds.get("15"));
-		Assert.assertEquals("Austria", rssGlobalIds.get("3"));
-		Assert.assertEquals("Australia", rssGlobalIds.get("4"));
-		Assert.assertEquals("Belgium", rssGlobalIds.get("5"));
-		Assert.assertEquals("Switzerland", rssGlobalIds.get("14"));
-		Assert.assertEquals("Germany", rssGlobalIds.get("11"));
-		Assert.assertEquals("Spain", rssGlobalIds.get("13"));
-		Assert.assertEquals("France", rssGlobalIds.get("10"));
-		Assert.assertEquals("Ireland", rssGlobalIds.get("2"));
-		Assert.assertEquals("Italy", rssGlobalIds.get("12"));
-		Assert.assertEquals("Netherlands", rssGlobalIds.get("16"));
-	}
-
 }
