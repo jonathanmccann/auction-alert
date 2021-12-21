@@ -16,7 +16,7 @@ package com.app.test.util;
 
 import com.app.json.ebay.BuyItNowPrice;
 import com.app.json.ebay.CurrentPrice;
-import com.app.json.ebay.EbaySearchResultJsonResponse;
+import com.app.json.ebay.browse.EbaySearchResultJsonResponse;
 import com.app.json.ebay.FindItemsAdvancedResponse;
 import com.app.json.ebay.Item;
 import com.app.json.ebay.JsonSearchResult;
