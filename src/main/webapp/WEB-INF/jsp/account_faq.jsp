@@ -112,18 +112,17 @@
 					</p>
 
 					<span class="anchor" id="domain"></span>
-					<h2>What is the preferred domain?</h2>
+					<h2>What is the marketplace?</h2>
 					<p class="faq-paragraph">
-						The preferred domain is the domain that you wish to view your results on. If you are from the United States, then you would choose the <b>.com</b> domain.
-						Likewise, if you are from the United Kingdom, then you would choose the <b>.co.uk</b> domain.
+						The marketplace is the domain that you wish to view your results on. If you are from the United States, then you would choose the <b>United States (.com)</b> marketplace.
+						Likewise, if you are from the United Kingdom, then you would choose the <b>United Kingdom (.co.uk)</b> marketplace.
 						All results will use this domain so that you are always directed to your preferred location for purchasing.
 					</p>
 
 					<span class="anchor" id="currency"></span>
 					<h2>What currency are the prices in?</h2>
 					<p class="faq-paragraph">
-						The currency is determined by your preferred domain. If you have chosen <b>.com</b> for your preferred domain, then all prices will be in <b>USD</b>.
-						If you are searching for items from a location other than your preferred location, the currencies will be converted to your local currency.
+						The currency is determined by your marketplace. If you have chosen <b>United States (.com)</b> for your marketplace, then all prices will be in <b>USD</b>.
 					</p>
 				</div>
 			</div>

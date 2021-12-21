@@ -104,7 +104,7 @@
 				</div>
 
 				<div class="padding-top">
-					<b>Preferred Domain:</b>
+					<b>marketplace:</b>
 					<form:select path="marketplaceId">
 						<form:options items="${marketplaceIds}" />
 					</form:select>

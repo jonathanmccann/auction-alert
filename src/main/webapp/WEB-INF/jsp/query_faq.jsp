@@ -99,20 +99,6 @@
 					</p>
 
 					<p class="faq-paragraph">
-						<b>Location</b>
-					</p>
-
-					<p class="faq-paragraph-indent">
-						This selection box determines which eBay site will be searched.<br><br>
-						For example, choosing United Kingdom will return results from the http://www.ebay.co.uk site.
-						Likewise, searching the Australia site will fetch results from http://www.ebay.com.au.<br><br>
-						Please note that not all listings from foreign countries will deliver to your location.
-						You may have to work with the seller to see if they are willing to ship internationally to you.<br><br>
-						This also works with the preferred domain you have set within your account. All prices will be converted to match your preferred domain.
-						If you are searching the United Kingdom site, which has prices in GBP, but you the United States as your preferred domain, then the item's price will be converted from GBP to USD for displaying purposes.
-					</p>
-
-					<p class="faq-paragraph">
 						<b>Search Description</b>
 					</p>
 
@@ -156,16 +142,8 @@
 						Setting these values all you to specify a minimum, maximum, or range of prices you are looking for.<br><br>
 						If you do not want to pay more than $100 for an item, you can set 100 as the maximum price.
 						If you are looking to pay between $30 and $50 for an item, you can $30 and $50 for the minimum and maximum prices respectively.<br><br>
-						These currency for these values is determined by your preferred domain set in your account. If your preferred domain is <b>.co.uk</b>, these values will be in <b>GBP</b>.
-						Likewise, if your preferred domain is <b>.com</b>, then the values will be in <b>USD</b>. If you are searching a location other than your preferred location, then these values will be converted automatically.<br><br>
-						Let's take the following example:<br><br>
-
-						1. Your preferred domain is .co.uk<br>
-						2. Search query location is .com.au<br>
-						3. Maximum price is set to 100<br><br>
-
-						The maximum price will be 100 GBP and this 100 GBP will be converted into AUD, thus any items returned will be less than 100 GBP or in other words, less than roughly 166 AUD.
-						This conversion is done because your currency is in GBP and you are willing to spend up to 100 GBP so you shouldn't be limited by the exchange rate.
+						These currency for these values is determined by the marketplace set in your account. If your marketplace is <b>United Kingdom (.co.uk)</b>, these values will be in <b>GBP</b>.
+						Likewise, if your marketplace is <b>United States (.com)</b>, then the values will be in <b>USD</b>.<br><br>
 					</p>
 
 					<span class="anchor" id="edit"></span>

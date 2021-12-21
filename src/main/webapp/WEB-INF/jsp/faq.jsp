@@ -107,7 +107,7 @@
 								<li><a href="/account_faq#account">How do I change my account details?</a></li>
 								<li><a href="/account_faq#notifications">How do I turn off email notifications?</a></li>
 								<li><a href="/account_faq#safety">How safe is my credit card and password?</a></li>
-								<li><a href="/account_faq#domain">What is the preferred domain?</a></li>
+								<li><a href="/account_faq#domain">What is the marketplace?</a></li>
 								<li><a href="/account_faq#currency">What currency are the prices in?</a></li>
 							</div>
 						</section>

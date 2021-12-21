@@ -147,7 +147,7 @@
 								<p align="left">
 									You will have the ability to craft search queries that will then be run against eBay and any new results are sent directly to your email.<br><br>
 									These queries are run every minute so you are up to date with every new listing that is posted on eBay.<br><br>
-									Many options are available to you so you can narrow down the items by category, type of listing, price, and even location.
+									Many options are available to you so you can narrow down the items by category, type of listing, and price.
 								</p>
 							</div>
 							<div class="6u">
