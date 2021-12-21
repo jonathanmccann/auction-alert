@@ -116,75 +116,48 @@ public class ConstantsUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetPreferredDomains() {
-		Map<String, String> preferredDomains =
-			ConstantsUtil.getPreferredDomains();
+	public void testGetMarketplaceIds() {
+		Map<String, String> marketplaceIds =
+			ConstantsUtil.getMarketplaceIds();
 
 		Assert.assertEquals(
-			".com",
-			preferredDomains.get(
-				"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"United States (.com)", marketplaceIds.get("EBAY_US"));
+
 		Assert.assertEquals(
-			".ca",
-			preferredDomains.get(
-				"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Canada (.ca)", marketplaceIds.get("EBAY_CA"));
+
 		Assert.assertEquals(
-			".co.uk",
-			preferredDomains.get(
-				"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"United Kingdom (.co.uk)", marketplaceIds.get("EBAY_GB"));
+
 		Assert.assertEquals(
-			".at",
-			preferredDomains.get(
-				"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Austria (.at)", marketplaceIds.get("EBAY_AT"));
+
 		Assert.assertEquals(
-			".com.au",
-			preferredDomains.get(
-				"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Australia (.com.au)", marketplaceIds.get("EBAY_AU"));
+
 		Assert.assertEquals(
-			".be",
-			preferredDomains.get(
-				"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Belgium (.be)", marketplaceIds.get("EBAY_BE"));
+
 		Assert.assertEquals(
-			".ch",
-			preferredDomains.get(
-				"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Switzerland (.ch)", marketplaceIds.get("EBAY_CH"));
+
 		Assert.assertEquals(
-			".de",
-			preferredDomains.get(
-				"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Germany (.de)", marketplaceIds.get("EBAY_DE"));
+
 		Assert.assertEquals(
-			".es",
-			preferredDomains.get(
-				"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Spain (.es)", marketplaceIds.get("EBAY_ES"));
+
 		Assert.assertEquals(
-			".fr",
-			preferredDomains.get(
-				"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"France (.fr)", marketplaceIds.get("EBAY_FR"));
+
 		Assert.assertEquals(
-			".ie",
-			preferredDomains.get(
-				"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Ireland (.ie)", marketplaceIds.get("EBAY_IE"));
+
 		Assert.assertEquals(
-			".it",
-			preferredDomains.get(
-				"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Italy (.it)", marketplaceIds.get("EBAY_IT"));
+
 		Assert.assertEquals(
-			".nl",
-			preferredDomains.get(
-				"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"Netherlands (.nl)", marketplaceIds.get("EBAY_NL"));
 	}
 
 	@Test

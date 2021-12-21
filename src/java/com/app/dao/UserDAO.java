@@ -50,7 +50,7 @@ public class UserDAO {
 	)
 	public User addUser(
 			String emailAddress, String password, String salt,
-			String preferredDomain)
+			String marketplaceId)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Adding user with emailAddress: {}", emailAddress);
@@ -62,7 +62,7 @@ public class UserDAO {
 			preparedStatement.setString(1, emailAddress);
 			preparedStatement.setString(2, password);
 			preparedStatement.setString(3, salt);
-			preparedStatement.setString(4, preferredDomain);
+			preparedStatement.setString(4, marketplaceId);
 
 			preparedStatement.executeUpdate();
 
@@ -72,7 +72,7 @@ public class UserDAO {
 
 			return new User(
 				resultSet.getInt(1), emailAddress, password, salt, true,
-				preferredDomain);
+				marketplaceId);
 		}
 	}
 
@@ -328,7 +328,7 @@ public class UserDAO {
 	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUserDetails(
 			int userId, String emailAddress, String password, String salt,
-			String preferredDomain, boolean emailNotification)
+			String marketplaceId, boolean emailNotification)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Updating user ID: {}", userId);
@@ -340,7 +340,7 @@ public class UserDAO {
 			preparedStatement.setString(1, emailAddress);
 			preparedStatement.setString(2, password);
 			preparedStatement.setString(3, salt);
-			preparedStatement.setString(4, preferredDomain);
+			preparedStatement.setString(4, marketplaceId);
 			preparedStatement.setBoolean(5, emailNotification);
 			preparedStatement.setInt(6, userId);
 
@@ -350,7 +350,7 @@ public class UserDAO {
 
 	@CacheEvict(value = "userByUserId", key = "#userId")
 	public void updateUserEmailDetails(
-			int userId, String emailAddress, String preferredDomain,
+			int userId, String emailAddress, String marketplaceId,
 			boolean emailNotification)
 		throws DatabaseConnectionException, SQLException {
 
@@ -361,7 +361,7 @@ public class UserDAO {
 				_UPDATE_USER_EMAIL_DETAILS_SQL)) {
 
 			preparedStatement.setString(1, emailAddress);
-			preparedStatement.setString(2, preferredDomain);
+			preparedStatement.setString(2, marketplaceId);
 			preparedStatement.setBoolean(3, emailNotification);
 			preparedStatement.setInt(4, userId);
 
@@ -419,7 +419,7 @@ public class UserDAO {
 		user.setUserId(resultSet.getInt("userId"));
 		user.setPassword(resultSet.getString("password"));
 		user.setSalt(resultSet.getString("salt"));
-		user.setPreferredDomain(resultSet.getString("preferredDomain"));
+		user.setMarketplaceId(resultSet.getString("marketplaceId"));
 		user.setEmailNotification(resultSet.getBoolean("emailNotification"));
 		user.setEmailsSent(resultSet.getInt("emailsSent"));
 		user.setCustomerId(resultSet.getString("customerId"));
@@ -437,7 +437,7 @@ public class UserDAO {
 	}
 
 	private static final String _ADD_USER_SQL =
-		"INSERT INTO User_(emailAddress, password, salt, preferredDomain) " +
+		"INSERT INTO User_(emailAddress, password, salt, marketplaceId) " +
 			"VALUES(?, ?, ?, ?)";
 
 	private static final String _DEACTIVATE_USER_SQL =
@@ -478,10 +478,10 @@ public class UserDAO {
 
 	private static final String _UPDATE_USER_DETAILS_SQL =
 		"UPDATE User_ SET emailAddress = ?, password = ?, salt = ?, " +
-			"preferredDomain = ?, emailNotification = ? WHERE userId = ?";
+			"marketplaceId = ?, emailNotification = ? WHERE userId = ?";
 
 	private static final String _UPDATE_USER_EMAIL_DETAILS_SQL =
-		"UPDATE User_ SET emailAddress = ?, preferredDomain = ?, " +
+		"UPDATE User_ SET emailAddress = ?, marketplaceId = ?, " +
 			"emailNotification = ? WHERE userId = ?";
 
 	private static final String _UPDATE_USER_LOGIN_DETAILS_SQL =

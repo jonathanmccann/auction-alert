@@ -408,15 +408,13 @@ public class UserUtilTest extends BaseTestCase {
 		String salt = _FIRST_USER.getSalt();
 
 		UserUtil.updateUserDetails(
-			"update@test.com", "password", "newPassword",
-			"http://www.ebay.ca/itm/", false);
+			"update@test.com", "password", "newPassword", "EBAY_CA", false);
 
 		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
-		Assert.assertEquals(
-			"http://www.ebay.ca/itm/", user.getPreferredDomain());
+		Assert.assertEquals("EBAY_CA", user.getMarketplaceId());
 		Assert.assertFalse(user.isEmailNotification());
 		Assert.assertNotEquals(password, user.getPassword());
 		Assert.assertNotEquals(salt, user.getSalt());
@@ -430,7 +428,7 @@ public class UserUtilTest extends BaseTestCase {
 		String salt = _FIRST_USER.getSalt();
 
 		UserUtil.updateUserDetails(
-			"update@test.com", "password", "short", "http://www.ebay.ca/itm/",
+			"update@test.com", "password", "short", "EBAY_CA",
 			false);
 
 		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
@@ -438,7 +436,7 @@ public class UserUtilTest extends BaseTestCase {
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
 		Assert.assertEquals(
-			"http://www.ebay.ca/itm/", user.getPreferredDomain());
+			"EBAY_CA", user.getMarketplaceId());
 		Assert.assertFalse(user.isEmailNotification());
 		Assert.assertNotEquals(password, user.getPassword());
 		Assert.assertNotEquals(salt, user.getSalt());
@@ -454,14 +452,13 @@ public class UserUtilTest extends BaseTestCase {
 		String salt = _FIRST_USER.getSalt();
 
 		UserUtil.updateUserDetails(
-			"update@test.com", "", "", "http://www.ebay.ca/itm/", false);
+			"update@test.com", "", "", "EBAY_CA", false);
 
 		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertNotNull(user);
 		Assert.assertEquals("update@test.com", user.getEmailAddress());
-		Assert.assertEquals(
-			"http://www.ebay.ca/itm/", user.getPreferredDomain());
+		Assert.assertEquals("EBAY_CA", user.getMarketplaceId());
 		Assert.assertFalse(user.isEmailNotification());
 		Assert.assertEquals(password, user.getPassword());
 		Assert.assertEquals(salt, user.getSalt());
@@ -474,8 +471,7 @@ public class UserUtilTest extends BaseTestCase {
 		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserDetails(
-			"update@test.com", "currentPassword", "", "http://www.ebay.ca/itm/",
-			false);
+			"update@test.com", "currentPassword", "", "EBAY_CA", false);
 	}
 
 	@Test(expected = CredentialsException.class)
@@ -485,8 +481,7 @@ public class UserUtilTest extends BaseTestCase {
 		setUpSecurityUtilsSession(_FIRST_USER.getUserId());
 
 		UserUtil.updateUserDetails(
-			"test@test.com", "", "newPassword", "http://www.ebay.ca/itm/",
-			false);
+			"test@test.com", "", "newPassword", "EBAY_CA", false);
 	}
 
 	@Test

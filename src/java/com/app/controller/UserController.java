@@ -633,7 +633,7 @@ public class UserController {
 		try {
 			UserUtil.updateUserDetails(
 				user.getEmailAddress(), user.getCurrentPassword(),
-				user.getNewPassword(), user.getPreferredDomain(),
+				user.getNewPassword(), user.getMarketplaceId(),
 				user.isEmailNotification());
 
 			StripeUtil.updateCustomerEmailAddress();
@@ -707,7 +707,7 @@ public class UserController {
 		model.put("isActive", UserUtil.isCurrentUserActive());
 		model.put("success", success);
 		model.put("user", UserUtil.getCurrentUser());
-		model.put("preferredDomains", ConstantsUtil.getPreferredDomains());
+		model.put("marketplaceIds", ConstantsUtil.getMarketplaceIds());
 		model.put(
 			"stripePublishableKey", PropertiesValues.STRIPE_PUBLISHABLE_KEY);
 

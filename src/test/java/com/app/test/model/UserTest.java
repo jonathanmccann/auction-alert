@@ -44,7 +44,7 @@ public class UserTest {
 		Assert.assertEquals("salt", user.getSalt());
 		Assert.assertTrue(user.isEmailNotification());
 		Assert.assertEquals(
-			"http://www.ebay.com/itm/", user.getPreferredDomain());
+			"http://www.ebay.com/itm/", user.getMarketplaceId());
 	}
 
 	@Test
@@ -113,6 +113,13 @@ public class UserTest {
 	}
 
 	@Test
+	public void testSetAndGetMarketplaceId() {
+		_user.setMarketplaceId("EBAY_US");
+
+		Assert.assertEquals("BAY_US", _user.getMarketplaceId());
+	}
+
+	@Test
 	public void testSetAndGetNewPassword() {
 		_user.setNewPassword("newPassword");
 
@@ -140,13 +147,6 @@ public class UserTest {
 		_user.setPasswordResetToken("passwordResetToken");
 
 		Assert.assertEquals("passwordResetToken", _user.getPasswordResetToken());
-	}
-
-	@Test
-	public void testSetAndGetPreferredDomain() {
-		_user.setPreferredDomain("http://www.ebay.com/itm/");
-
-		Assert.assertEquals("http://www.ebay.com/itm/", _user.getPreferredDomain());
 	}
 
 	@Test

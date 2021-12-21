@@ -60,10 +60,10 @@ public class EbaySearchResultUtil {
 
 		User user = UserUtil.getUserByUserId(searchQuery.getUserId());
 
-		String preferredDomain = user.getPreferredDomain();
+		String marketplaceId = user.getMarketplaceId();
 
 		String preferredCurrency = ConstantsUtil.getPreferredCurrency(
-			preferredDomain);
+			marketplaceId);
 
 		String url = _setUpAdvancedRequest(searchQuery, preferredCurrency);
 
@@ -76,7 +76,7 @@ public class EbaySearchResultUtil {
 		if (isValidResponse) {
 			return _createSearchResults(
 				ebaySearchResultJsonResponse, searchQuery.getSearchQueryId(),
-				searchQuery.getUserId(), preferredDomain, preferredCurrency);
+				searchQuery.getUserId(), marketplaceId, preferredCurrency);
 		}
 		else {
 			return new ArrayList<>();
@@ -84,7 +84,7 @@ public class EbaySearchResultUtil {
 	}
 
 	private static SearchResult _createSearchResult(
-		ItemSummary itemSummary, String preferredDomain, String preferredCurrency) {
+		ItemSummary itemSummary, String marketplaceId, String preferredCurrency) {
 
 		SearchResult searchResult = new SearchResult();
 
@@ -92,7 +92,7 @@ public class EbaySearchResultUtil {
 		searchResult.setItemTitle(
 			_ITEM_TITLE_PATTERN.matcher(itemSummary.getTitle()).replaceAll(""));
 		searchResult.setItemURL(
-			_EBAY_ROOT_URL + searchResult.getItemId() + preferredDomain);
+			_EBAY_ROOT_URL + searchResult.getItemId() + marketplaceId);
 		searchResult.setGalleryURL(itemSummary.getImage().getImageUrl());
 
 		_setPrice(searchResult, preferredCurrency, itemSummary);
@@ -102,7 +102,7 @@ public class EbaySearchResultUtil {
 
 	private static List<SearchResult> _createSearchResults(
 		EbaySearchResultJsonResponse ebaySearchResultJsonResponse,
-		int searchQueryId, int userId, String preferredDomain,
+		int searchQueryId, int userId, String marketplaceId,
 		String preferredCurrency) {
 
 		List<SearchResult> searchResults = new ArrayList<>();
@@ -111,7 +111,7 @@ public class EbaySearchResultUtil {
 				ebaySearchResultJsonResponse.getItemSummaries()) {
 
 			SearchResult searchResult = _createSearchResult(
-				itemSummary, preferredDomain, preferredCurrency);
+				itemSummary, marketplaceId, preferredCurrency);
 
 			searchResult.setSearchQueryId(searchQueryId);
 			searchResult.setUserId(userId);

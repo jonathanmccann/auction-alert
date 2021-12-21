@@ -26,22 +26,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConstantsUtil {
 
-	public static String DEFAULT_PREFERRED_DOMAIN;
+	public static final String DEFAULT_MARKETPLACE_ID = "EBAY_US";
 
 	public static String getCurrencySymbol(String currency) {
 		return _currencySymbols.get(currency);
 	}
 
-	public static Map<String, String> getGlobalIds() {
-		return _globalIds;
+	public static Map<String, String> getMarketplaceIds() {
+		return _marketplaceIds;
 	}
 
-	public static String getPreferredCurrency(String preferredDomain) {
-		return _preferredCurrencies.get(preferredDomain);
-	}
-
-	public static Map<String, String> getPreferredDomains() {
-		return _preferredDomains;
+	public static String getPreferredCurrency(String marketplaceId) {
+		return _preferredCurrencies.get(marketplaceId);
 	}
 
 	public static Map<String, String> getRssGlobalIds() {
@@ -49,10 +45,6 @@ public class ConstantsUtil {
 	}
 
 	public static void init() {
-		DEFAULT_PREFERRED_DOMAIN =
-			"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID;
-
 		_currencySymbols.put("USD", "$");
 		_currencySymbols.put("CAD", "C $");
 		_currencySymbols.put("GBP", "£");
@@ -60,125 +52,33 @@ public class ConstantsUtil {
 		_currencySymbols.put("AUD", "AU $");
 		_currencySymbols.put("CHF", "CHF ");
 
-		_globalIds.put("EBAY-US", "United States");
-		_globalIds.put("EBAY-ENCA", "Canada");
-		_globalIds.put("EBAY-GB", "United Kingdom");
-		_globalIds.put("EBAY-AT", "Austria");
-		_globalIds.put("EBAY-AU", "Australia");
-		_globalIds.put("EBAY-FRBE", "Belgium");
-		_globalIds.put("EBAY-CH", "Switzerland");
-		_globalIds.put("EBAY-DE", "Germany");
-		_globalIds.put("EBAY-ES", "Spain");
-		_globalIds.put("EBAY-FR", "France");
-		_globalIds.put("EBAY-IE", "Ireland");
-		_globalIds.put("EBAY-IT", "Italy");
-		_globalIds.put("EBAY-NL", "Netherlands");
+		_marketplaceIds.put("EBAY_US", "United States (.com)");
+		_marketplaceIds.put("EBAY_CA", "Canada (.ca)");
+		_marketplaceIds.put("EBAY_GB", "United Kingdom (.co.uk)");
+		_marketplaceIds.put("EBAY_AT", "Austria (.at)");
+		_marketplaceIds.put("EBAY_AU", "Australia (.com.au)");
+		_marketplaceIds.put("EBAY_BE", "Belgium (.be)");
+		_marketplaceIds.put("EBAY_CH", "Switzerland (.ch)");
+		_marketplaceIds.put("EBAY_DE", "Germany (.de)");
+		_marketplaceIds.put("EBAY_ES", "Spain (.es)");
+		_marketplaceIds.put("EBAY_FR", "France (.fr)");
+		_marketplaceIds.put("EBAY_IE", "Ireland (.ie)");
+		_marketplaceIds.put("EBAY_IT", "Italy (.it)");
+		_marketplaceIds.put("EBAY_NL", "Netherlands (.nl)");
 
-		_preferredCurrencies.put(
-			"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"USD");
-		_preferredCurrencies.put(
-			"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"CAD");
-		_preferredCurrencies.put(
-			"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"GBP");
-		_preferredCurrencies.put(
-			"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-		_preferredCurrencies.put(
-			"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"AUD");
-		_preferredCurrencies.put(
-			"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-		_preferredCurrencies.put(
-			"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"CHF");
-		_preferredCurrencies.put(
-			"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-		_preferredCurrencies.put(
-			"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-		_preferredCurrencies.put(
-			"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-		_preferredCurrencies.put(
-			"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-		_preferredCurrencies.put(
-			"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-		_preferredCurrencies.put(
-			"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			"EUR");
-
-		_preferredDomains.put(
-			"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".com");
-		_preferredDomains.put(
-			"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".ca");
-		_preferredDomains.put(
-			"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".co.uk");
-		_preferredDomains.put(
-			"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".at");
-		_preferredDomains.put(
-			"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".com.au");
-		_preferredDomains.put(
-			"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".be");
-		_preferredDomains.put(
-			"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".ch");
-		_preferredDomains.put(
-			"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".de");
-		_preferredDomains.put(
-			"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".es");
-		_preferredDomains.put(
-			"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".fr");
-		_preferredDomains.put(
-			"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".ie");
-		_preferredDomains.put(
-			"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".it");
-		_preferredDomains.put(
-			"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-				PropertiesValues.EBAY_CAMPAIGN_ID,
-			".nl");
+		_preferredCurrencies.put("EBAY_US", "USD");
+		_preferredCurrencies.put("EBAY_CA", "CAD");
+		_preferredCurrencies.put("EBAY_GB", "GBP");
+		_preferredCurrencies.put("EBAY_AT", "EUR");
+		_preferredCurrencies.put("EBAY_AU", "AUD");
+		_preferredCurrencies.put("EBAY_BE", "EUR");
+		_preferredCurrencies.put("EBAY_CH", "CHF");
+		_preferredCurrencies.put("EBAY_DE", "EUR");
+		_preferredCurrencies.put("EBAY_ES", "EUR");
+		_preferredCurrencies.put("EBAY_FR", "EUR");
+		_preferredCurrencies.put("EBAY_IE", "EUR");
+		_preferredCurrencies.put("EBAY_IT", "EUR");
+		_preferredCurrencies.put("EBAY_NL", "EUR");
 
 		_rssGlobalIds.put("1", "United States");
 		_rssGlobalIds.put("7", "Canada");
@@ -196,10 +96,9 @@ public class ConstantsUtil {
 	}
 
 	private static final Map<String, String> _currencySymbols = new HashMap<>();
-	private static final Map<String, String> _globalIds = new LinkedHashMap<>();
 	private static final Map<String, String> _preferredCurrencies =
 		new HashMap<>();
-	private static final Map<String, String> _preferredDomains =
+	private static final Map<String, String> _marketplaceIds =
 		new LinkedHashMap<>();
 	private static final Map<String, String> _rssGlobalIds =
 		new LinkedHashMap<>();

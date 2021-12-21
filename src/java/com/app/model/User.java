@@ -26,14 +26,14 @@ public class User {
 
 	public User(
 		int userId, String emailAddress, String password, String salt,
-		boolean emailNotification, String preferredDomain) {
+		boolean emailNotification, String marketplaceId) {
 
 		_userId = userId;
 		_emailAddress = emailAddress;
 		_password = password;
 		_salt = salt;
 		_emailNotification = emailNotification;
-		_preferredDomain = preferredDomain;
+		_marketplaceId = marketplaceId;
 	}
 
 	public String getCurrentPassword() {
@@ -76,8 +76,8 @@ public class User {
 		return _passwordResetToken;
 	}
 
-	public String getPreferredDomain() {
-		return _preferredDomain;
+	public String getMarketplaceId() {
+		return _marketplaceId;
 	}
 
 	public String getSalt() {
@@ -156,8 +156,8 @@ public class User {
 		_pendingCancellation = pendingCancellation;
 	}
 
-	public void setPreferredDomain(String preferredDomain) {
-		_preferredDomain = preferredDomain;
+	public void setMarketplaceId(String marketplaceId) {
+		_marketplaceId = marketplaceId;
 	}
 
 	public void setSalt(String salt) {
@@ -185,7 +185,7 @@ public class User {
 	private Timestamp _passwordResetExpiration;
 	private String _passwordResetToken;
 	private boolean _pendingCancellation;
-	private String _preferredDomain;
+	private String _marketplaceId;
 	private String _salt;
 	private String _subscriptionId;
 	private int _userId;

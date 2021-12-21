@@ -1551,7 +1551,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		request.param("userId", String.valueOf(_FIRST_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
-		request.param("preferredDomain", "http://www.ebay.ca/itm/");
+		request.param("marketplaceId", "EBAY_CA");
 		request.param("emailNotification", "false");
 		request.param("currentPassword", "password");
 		request.param("newPassword", "short");
@@ -1667,7 +1667,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("isActive"))
 			.andExpect(model().attributeExists("user"))
-			.andExpect(model().attributeExists("preferredDomains"))
+			.andExpect(model().attributeExists("marketplaceIds"))
 			.andExpect(model().attributeExists("stripePublishableKey"))
 			.andExpect(model().attributeExists("error"))
 			.andExpect(model().attributeExists("info"))
@@ -1693,7 +1693,7 @@ public class UserControllerTest extends BaseTestCase {
 			.andExpect(forwardedUrl("/WEB-INF/jsp/my_account.jsp"))
 			.andExpect(model().attributeExists("isActive"))
 			.andExpect(model().attributeExists("user"))
-			.andExpect(model().attributeExists("preferredDomains"))
+			.andExpect(model().attributeExists("marketplaceIds"))
 			.andExpect(model().attributeExists("stripePublishableKey"))
 			.andExpect(model().attributeExists("error"))
 			.andExpect(model().attributeExists("info"))
@@ -1860,7 +1860,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		Assert.assertEquals("test@test.com", user.getEmailAddress());
 		Assert.assertEquals(
-			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN, user.getPreferredDomain());
+			ConstantsUtil.DEFAULT_MARKETPLACE_ID, user.getMarketplaceId());
 		Assert.assertTrue(user.isEmailNotification());
 	}
 
@@ -1868,8 +1868,7 @@ public class UserControllerTest extends BaseTestCase {
 		User user = UserUtil.getUserByUserId(_FIRST_USER.getUserId());
 
 		Assert.assertEquals("test2@test.com", user.getEmailAddress());
-		Assert.assertEquals(
-			"http://www.ebay.ca/itm/", user.getPreferredDomain());
+		Assert.assertEquals("EBAY_CA", user.getMarketplaceId());
 		Assert.assertFalse(user.isEmailNotification());
 	}
 
@@ -1879,7 +1878,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		request.param("userId", String.valueOf(_FIRST_USER.getUserId()));
 		request.param("emailAddress", "test2@test.com");
-		request.param("preferredDomain", "http://www.ebay.ca/itm/");
+		request.param("marketplaceId", "EBAY_CA");
 		request.param("emailNotification", "false");
 		request.param("currentPassword", "password");
 		request.param("newPassword", "updatedPassword");

@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS User_(
 	emailAddress VARCHAR(100) NOT NULL UNIQUE,
 	password VARCHAR(128),
 	salt VARCHAR(128),
-	preferredDomain VARCHAR(250) NOT NULL,
+	marketplaceId VARCHAR(10) NOT NULL,
 	emailNotification BOOLEAN DEFAULT TRUE,
 	emailsSent INT DEFAULT 0,
 	customerId VARCHAR(100),
