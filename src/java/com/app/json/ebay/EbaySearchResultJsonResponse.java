@@ -14,11 +14,16 @@
 
 package com.app.json.ebay;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EbaySearchResultJsonResponse {
 
 	public List<Error> getErrors() {
+		if (errors == null) {
+			return new ArrayList<>();
+		}
+
 		return errors;
 	}
 
