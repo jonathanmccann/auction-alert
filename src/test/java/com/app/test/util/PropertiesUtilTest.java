@@ -105,9 +105,6 @@ public class PropertiesUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			"Stripe Subscription Plan ID",
 			PropertiesValues.STRIPE_SUBSCRIPTION_PLAN_ID);
-		Assert.assertEquals(
-			"Currency Converter API Key",
-			PropertiesValues.CURRENCY_CONVERTER_API_KEY);
 	}
 
 	@Test

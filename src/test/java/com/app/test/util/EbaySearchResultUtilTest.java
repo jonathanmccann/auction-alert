@@ -107,8 +107,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		setUpDatabase();
 
-		setUpExchangeRateUtil();
-
 		ConstantsUtil.init();
 	}
 

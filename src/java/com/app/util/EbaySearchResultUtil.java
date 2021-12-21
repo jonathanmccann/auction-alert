@@ -145,25 +145,17 @@ public class EbaySearchResultUtil {
 		if (buyingOptions.contains("AUCTION")) {
 			CurrentBidPrice currentBidPrice = itemSummary.getCurrentBidPrice();
 
-			double auctionPrice = ExchangeRateUtil.convertCurrency(
-				currentBidPrice.getCurrency(), preferredCurrency,
-				Double.valueOf(currentBidPrice.getValue()));
-
 			searchResult.setAuctionPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-					_DISPLAY_DECIMAL_FORMAT.format(auctionPrice));
+					_DISPLAY_DECIMAL_FORMAT.format(currentBidPrice.getValue()));
 		}
 
 		if (buyingOptions.contains("FIXED_PRICE")) {
 			Price price = itemSummary.getPrice();
 
-			double buyItNowPrice = ExchangeRateUtil.convertCurrency(
-				price.getCurrency(), preferredCurrency,
-				Double.valueOf(price.getValue()));
-
 			searchResult.setFixedPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-					_DISPLAY_DECIMAL_FORMAT.format(buyItNowPrice));
+					_DISPLAY_DECIMAL_FORMAT.format(price.getValue()));
 		}
 	}
 

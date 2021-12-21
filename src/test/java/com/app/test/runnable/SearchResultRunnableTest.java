@@ -68,8 +68,6 @@ public class SearchResultRunnableTest extends BaseTestCase {
 
 		setUpProperties();
 
-		setUpExchangeRateUtil();
-
 		ConstantsUtil.init();
 	}
 

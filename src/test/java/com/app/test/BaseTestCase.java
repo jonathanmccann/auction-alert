@@ -17,7 +17,6 @@ package com.app.test;
 import com.app.model.Category;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
-import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
 
 import java.lang.reflect.Field;
@@ -116,28 +115,6 @@ public abstract class BaseTestCase {
 
 	protected static void setUpInvalidDatabaseProperties() throws Exception {
 		DatabaseUtil.setDatabaseProperties(null, null, null);
-	}
-
-	protected static void setUpExchangeRateUtil() throws Exception {
-		Class clazz = Class.forName(ExchangeRateUtil.class.getName());
-
-		Field exchangeRates = clazz.getDeclaredField("_exchangeRates");
-
-		exchangeRates.setAccessible(true);
-
-		Field modifiersField = Field.class.getDeclaredField("modifiers");
-
-		modifiersField.setAccessible(true);
-		modifiersField.setInt(
-			exchangeRates, exchangeRates.getModifiers() & ~Modifier.FINAL);
-
-		Map<String, Double> usdRates = new HashMap<>();
-
-		usdRates.put("GBP_USD", _GBP_TO_USD);
-		usdRates.put("USD_CAD", _USD_TO_CAD);
-		usdRates.put("USD_GBP", _USD_TO_GBP);
-
-		exchangeRates.set(clazz, usdRates);
 	}
 
 	protected static void setUpProperties() throws Exception {

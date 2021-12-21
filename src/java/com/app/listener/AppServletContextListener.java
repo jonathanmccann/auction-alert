@@ -18,7 +18,6 @@ import com.app.util.CategoryUtil;
 import com.app.util.ConstantsUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.EbayAPIUtil;
-import com.app.util.ExchangeRateUtil;
 import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 
@@ -69,10 +68,6 @@ public class AppServletContextListener implements ServletContextListener {
 			_log.info("Initializing eBay API context");
 
 			EbayAPIUtil.loadApiContext();
-
-			_log.info("Initializing exchange rates");
-
-			ExchangeRateUtil.updateExchangeRates();
 
 			_log.info("Loading database properties");
 
