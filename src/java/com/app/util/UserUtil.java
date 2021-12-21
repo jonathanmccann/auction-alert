@@ -63,7 +63,7 @@ public class UserUtil {
 
 		return _userDAO.addUser(
 			emailAddress, passwordAndSalt.get(0), passwordAndSalt.get(1),
-			ConstantsUtil.DEFAULT_PREFERRED_DOMAIN);
+			ConstantsUtil.DEFAULT_MARKETPLACE_ID);
 	}
 
 	public static void deactivateUser(String customerId)
