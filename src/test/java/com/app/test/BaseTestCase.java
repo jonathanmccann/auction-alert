@@ -26,7 +26,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import com.ebay.api.client.auth.oauth2.OAuth2Api;
+import com.ebay.api.client.auth.oauth2.model.AccessToken;
+import com.ebay.api.client.auth.oauth2.model.OAuthResponse;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.session.Session;
@@ -115,6 +119,30 @@ public abstract class BaseTestCase {
 
 	protected static void setUpInvalidDatabaseProperties() throws Exception {
 		DatabaseUtil.setDatabaseProperties(null, null, null);
+	}
+
+	protected static void setUpOAuth2Api() throws Exception {
+		AccessToken token = new AccessToken();
+
+		token.setToken("ACCESS_TOKEN");
+
+		OAuth2Api oAuth2Api = Mockito.mock(OAuth2Api.class);
+
+		Mockito.doReturn(
+			new OAuthResponse(Optional.of(token), null)
+		).when(
+			oAuth2Api
+		).getApplicationToken(
+			Mockito.anyObject(), Mockito.anyObject()
+		);
+
+		PowerMockito.spy(OAuth2Api.class);
+
+		PowerMockito.whenNew(
+			OAuth2Api.class
+		).withAnyArguments().thenReturn(
+			oAuth2Api
+		);
 	}
 
 	protected static void setUpProperties() throws Exception {

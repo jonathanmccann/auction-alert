@@ -82,13 +82,9 @@ public class SearchResultRunnableTest extends BaseTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		PowerMockito.spy(Transport.class);
+		setUpOAuth2Api();
 
-		PowerMockito.doNothing().when(
-			Transport.class, "send", Mockito.anyObject()
-		);
-
-		_setUpOAuth2Api();
+		setUpTransport();
 	}
 
 	@After
@@ -297,30 +293,6 @@ public class SearchResultRunnableTest extends BaseTestCase {
 		);
 
 		return closeableHttpClient;
-	}
-
-	private void _setUpOAuth2Api() throws Exception {
-		AccessToken token = new AccessToken();
-
-		token.setToken("ACCESS_TOKEN");
-
-		OAuth2Api oAuth2Api = Mockito.mock(OAuth2Api.class);
-
-		Mockito.doReturn(
-			new OAuthResponse(Optional.of(token), null)
-		).when(
-			oAuth2Api
-		).getApplicationToken(
-			Mockito.anyObject(), Mockito.anyObject()
-		);
-
-		PowerMockito.spy(OAuth2Api.class);
-
-		PowerMockito.whenNew(
-			OAuth2Api.class
-		).withAnyArguments().thenReturn(
-			oAuth2Api
-		);
 	}
 
 	private static int _searchQueryId;
