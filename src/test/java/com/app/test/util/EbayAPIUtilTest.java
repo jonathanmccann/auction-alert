@@ -18,9 +18,8 @@ import com.app.util.EbayAPIUtil;
 
 import com.app.test.BaseTestCase;
 
-import com.ebay.sdk.ApiContext;
-import com.ebay.sdk.ApiCredential;
-import com.ebay.soap.eBLBaseComponents.SiteCodeType;
+import com.ebay.api.client.auth.oauth2.CredentialUtil;
+import com.ebay.api.client.auth.oauth2.model.Environment;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,9 +31,10 @@ public class EbayAPIUtilTest extends BaseTestCase {
 
 	@Test
 	public void testLoadApiContext() throws Exception {
-		setUpProperties();
-
 		EbayAPIUtil.loadApiContext();
+
+		Assert.assertNotNull(
+			CredentialUtil.getCredentials(Environment.PRODUCTION));
 	}
 
 }
