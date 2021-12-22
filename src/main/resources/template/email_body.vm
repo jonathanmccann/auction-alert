@@ -16,7 +16,7 @@
 								<tr>
 									<td>
 										<div style="display: inline-block; padding: 10px; width: 140px;">
-											<img alt="$searchResult.galleryURL" src="$searchResult.galleryURL">
+											<img alt="$searchResult.galleryURL" src="$searchResult.galleryURL" style="max-height: 100%; max-width: 100%;">
 										</div>
 
 										<div style="display: inline-block; text-align: left; vertical-align: top;">
