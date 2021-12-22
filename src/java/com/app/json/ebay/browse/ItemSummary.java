@@ -18,8 +18,12 @@ import java.util.List;
 
 public class ItemSummary {
 
-	public String getTitle() {
-		return title;
+	public List<String> getBuyingOptions() {
+		return buyingOptions;
+	}
+
+	public CurrentBidPrice getCurrentBidPrice() {
+		return currentBidPrice;
 	}
 
 	public Image getImage() {
@@ -30,28 +34,24 @@ public class ItemSummary {
 		return itemAffiliateWebUrl;
 	}
 
-	public Price getPrice() {
-		return price;
-	}
-
-	public List<String> getBuyingOptions() {
-		return buyingOptions;
-	}
-
-	public CurrentBidPrice getCurrentBidPrice() {
-		return currentBidPrice;
-	}
-
 	public String getLegacyItemId() {
 		return legacyItemId;
 	}
 
-	private String title;
-	private Image image;
-	private String itemAffiliateWebUrl;
-	private Price price;
+	public Price getPrice() {
+		return price;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
 	private List<String> buyingOptions = null;
 	private CurrentBidPrice currentBidPrice;
+	private Image image;
+	private String itemAffiliateWebUrl;
 	private String legacyItemId;
+	private Price price;
+	private String title;
 
 }
