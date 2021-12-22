@@ -14,14 +14,10 @@
 
 package com.app.test.util;
 
-import com.app.json.ebay.BuyItNowPrice;
-import com.app.json.ebay.CurrentPrice;
+import com.app.json.ebay.browse.CurrentBidPrice;
 import com.app.json.ebay.browse.EbaySearchResultJsonResponse;
-import com.app.json.ebay.FindItemsAdvancedResponse;
-import com.app.json.ebay.Item;
-import com.app.json.ebay.JsonSearchResult;
-import com.app.json.ebay.ListingInfo;
-import com.app.json.ebay.SellingStatus;
+import com.app.json.ebay.browse.ItemSummary;
+import com.app.json.ebay.browse.Price;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
@@ -84,19 +80,18 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		_classInstance = clazz.newInstance();
 
 		_createSearchResultMethod = clazz.getDeclaredMethod(
-			"_createSearchResult", Item.class, String.class, String.class);
+			"_createSearchResult", ItemSummary.class, String.class);
 
 		_createSearchResultMethod.setAccessible(true);
 
 		_createSearchResultsMethod = clazz.getDeclaredMethod(
-			"_createSearchResults", FindItemsAdvancedResponse.class, int.class,
-			int.class, String.class, String.class);
+			"_createSearchResults", EbaySearchResultJsonResponse.class,
+			int.class, int.class, String.class);
 
 		_createSearchResultsMethod.setAccessible(true);
 
 		_setPriceMethod = clazz.getDeclaredMethod(
-			"_setPrice", SearchResult.class, String.class, ListingInfo.class,
-			SellingStatus.class);
+			"_setPrice", SearchResult.class, String.class, ItemSummary.class);
 
 		_setPriceMethod.setAccessible(true);
 
@@ -122,7 +117,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testCreateSearchResult() throws Exception {
-		List<Item> items = _getItems(_getEbaySearchResultJsonResponse());
+		List<ItemSummary> items = _getItems(_getEbaySearchResultJsonResponse());
 
 		SearchResult searchResult =
 			(SearchResult)_createSearchResultMethod.invoke(
@@ -144,13 +139,9 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
 			_getEbaySearchResultJsonResponse();
 
-		FindItemsAdvancedResponse findItemsAdvancedResponse =
-			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
-
 		List<SearchResult> searchResults =
 			(List<SearchResult>)_createSearchResultsMethod.invoke(
-				_classInstance, findItemsAdvancedResponse, 1, 1,
-				"http://www.ebay.com/itm/", "USD");
+				_classInstance, ebaySearchResultJsonResponse, 1, 1, "USD");
 
 		Assert.assertEquals(2, searchResults.size());
 
@@ -234,10 +225,10 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		EbaySearchResultJsonResponse ebaySearchResultJsonResponse =
 			new EbaySearchResultJsonResponse();
 
-		FindItemsAdvancedResponse findItemsAdvancedResponse =
-			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
+		List<ItemSummary> itemSummaries =
+			ebaySearchResultJsonResponse.getItemSummaries();
 
-		Assert.assertNull(findItemsAdvancedResponse);
+		Assert.assertNull(itemSummaries);
 	}
 
 	@Test
@@ -279,8 +270,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, "USD", _createListingInfo(_AUCTION),
-			_createSellingStatus());
+			_classInstance, searchResult, "USD", _createItemSummary(_AUCTION));
 
 		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
 		Assert.assertNull(searchResult.getFixedPrice());
@@ -292,7 +282,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		_setPriceMethod.invoke(
 			_classInstance, searchResult, "USD",
-			_createListingInfo(_AUCTION_WITH_BIN), _createSellingStatus());
+			_createItemSummary(_AUCTION_WITH_BIN));
 
 		Assert.assertEquals("$5.00", searchResult.getAuctionPrice());
 		Assert.assertEquals("$10.00", searchResult.getFixedPrice());
@@ -308,7 +298,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		_setPriceMethod.invoke(
 			_classInstance, searchResult, "USD",
-			_createListingInfo(_FIXED_PRICE), _createSellingStatus());
+			_createItemSummary(_FIXED_PRICE));
 
 		Assert.assertNull(searchResult.getAuctionPrice());
 		Assert.assertEquals("$5.00", searchResult.getFixedPrice());
@@ -320,7 +310,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		_setPriceMethod.invoke(
 			_classInstance, searchResult, "USD",
-			_createListingInfo(_STORE_INVENTORY), _createSellingStatus());
+			_createItemSummary(_STORE_INVENTORY));
 
 		Assert.assertNull(searchResult.getAuctionPrice());
 		Assert.assertEquals("$5.00", searchResult.getFixedPrice());
@@ -331,8 +321,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		SearchResult searchResult = new SearchResult();
 
 		_setPriceMethod.invoke(
-			_classInstance, searchResult, "USD", _createListingInfo(_UNKNOWN),
-			_createSellingStatus());
+			_classInstance, searchResult, "USD", _createItemSummary(_UNKNOWN));
 
 		Assert.assertNull(searchResult.getAuctionPrice());
 		Assert.assertNull(searchResult.getFixedPrice());
@@ -754,47 +743,57 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(expectedURL.toString(), url);
 	}
 
-	private static ListingInfo _createListingInfo(String listingType)
+	private static ItemSummary _createItemSummary(String listingType)
 		throws Exception {
 
-		BuyItNowPrice buyItNowPrice = new BuyItNowPrice();
+		ItemSummary itemSummary = new ItemSummary();
 
-		Class<?> buyItNowPriceClass = buyItNowPrice.getClass();
+		Class<?> itemSummaryClass = itemSummary.getClass();
 
-		Field currencyId = buyItNowPriceClass.getDeclaredField("currencyId");
-		Field value = buyItNowPriceClass.getDeclaredField("value");
+		Field buyingOptionsField = itemSummaryClass.getDeclaredField(
+			"buyingOptions");
 
-		currencyId.setAccessible(true);
-		value.setAccessible(true);
+		Field currentBidPriceField = itemSummaryClass.getDeclaredField(
+			"currentBidPrice");
 
-		currencyId.set(buyItNowPrice, "USD");
-		value.setDouble(buyItNowPrice, 10.00);
+		Field priceField = itemSummaryClass.getDeclaredField("price");
 
-		ListingInfo listingInfo = new ListingInfo();
+		buyingOptionsField.setAccessible(true);
+		currentBidPriceField.setAccessible(true);
+		priceField.setAccessible(true);
 
-		Class<?> clazz = listingInfo.getClass();
+		List<String> buyingOptionsList = new ArrayList<>();
 
-		Field listingTypeField = clazz.getDeclaredField("listingType");
+		buyingOptionsList.add(listingType);
 
-		listingTypeField.setAccessible(true);
+		buyingOptionsField.set(itemSummary, buyingOptionsList);
 
-		List<String> listingTypes = new ArrayList<>();
+		CurrentBidPrice currentBidPrice = new CurrentBidPrice();
 
-		listingTypes.add(listingType);
+		Class<?> currentBidPriceClass = currentBidPrice.getClass();
 
-		listingTypeField.set(listingInfo, listingTypes);
+		Field currentBidPriceValue = currentBidPriceClass.getDeclaredField(
+			"value");
 
-		Field buyItNowPriceField = clazz.getDeclaredField("buyItNowPrice");
+		currentBidPriceValue.setAccessible(true);
 
-		buyItNowPriceField.setAccessible(true);
+		currentBidPriceValue.set(currentBidPrice, "5");
 
-		List<BuyItNowPrice> buyItNowPrices = new ArrayList<>();
+		currentBidPriceField.set(itemSummary, currentBidPrice);
 
-		buyItNowPrices.add(buyItNowPrice);
+		Price price = new Price();
 
-		buyItNowPriceField.set(listingInfo, buyItNowPrices);
+		Class<?> priceClass = price.getClass();
 
-		return listingInfo;
+		Field priceValue = priceClass.getDeclaredField("value");
+
+		priceValue.setAccessible(true);
+
+		priceValue.set(price, "10");
+
+		priceField.set(itemSummary, price);
+
+		return itemSummary;
 	}
 
 	private static SearchQuery _createSearchQuery() throws Exception {
@@ -807,47 +806,10 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		return searchQuery;
 	}
 
-	private static SellingStatus _createSellingStatus() throws Exception {
-		CurrentPrice currentPrice = new CurrentPrice();
-
-		Class<?> currentPriceClass = currentPrice.getClass();
-
-		Field currencyId = currentPriceClass.getDeclaredField("currencyId");
-		Field value = currentPriceClass.getDeclaredField("value");
-
-		currencyId.setAccessible(true);
-		value.setAccessible(true);
-
-		currencyId.set(currentPrice, "USD");
-		value.setDouble(currentPrice, 5.00);
-
-		SellingStatus sellingStatus = new SellingStatus();
-
-		Class<?> clazz = sellingStatus.getClass();
-
-		Field currentPriceField = clazz.getDeclaredField("currentPrice");
-
-		currentPriceField.setAccessible(true);
-
-		List<CurrentPrice> currentPrices = new ArrayList<>();
-
-		currentPrices.add(currentPrice);
-
-		currentPriceField.set(sellingStatus, currentPrices);
-
-		return sellingStatus;
-	}
-
-	private static List<Item> _getItems(
+	private static List<ItemSummary> _getItems(
 		EbaySearchResultJsonResponse ebaySearchResultJsonResponse) {
 
-		FindItemsAdvancedResponse findItemsAdvancedResponse =
-			ebaySearchResultJsonResponse.getFindItemsAdvancedResponse();
-
-		JsonSearchResult jsonSearchResult =
-			findItemsAdvancedResponse.getJsonSearchResult();
-
-		return jsonSearchResult.getItems();
+		return ebaySearchResultJsonResponse.getItemSummaries();
 	}
 
 	private static EbaySearchResultJsonResponse
@@ -875,7 +837,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			"Item Title " + itemNumber, searchResult.getItemTitle());
 		Assert.assertEquals(
 			_EBAY_URL_PREFIX + "itemId" + itemNumber +
-				ConstantsUtil.DEFAULT_PREFERRED_DOMAIN,
+				ConstantsUtil.DEFAULT_MARKETPLACE_ID,
 			searchResult.getItemURL());
 		Assert.assertEquals(
 			"http://www.ebay.com/" + itemNumber + ".jpg",
@@ -929,7 +891,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		);
 	}
 
-	private static final String _AUCTION = "Auction";
+	private static final String _AUCTION = "AUCTION";
 
 	private static final String _AUCTION_JSON_PATH = "/json/ebay/auction.json";
 
@@ -957,7 +919,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 			"&paginationInput.entriesPerPage=5&sortOrder=StartTimeNewest" +
 			"&keywords=Test+keywords";
 
-	private static final String _FIXED_PRICE = "FixedPrice";
+	private static final String _FIXED_PRICE = "FIXED_PRICE";
 
 	private static final String _FIXED_PRICE_JSON_PATH = "/json/ebay/fixedPrice.json";
 

@@ -83,27 +83,6 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testCreateGetCategoriesCall() throws Exception {
-		EbayAPIUtil.loadApiContext("ebay.token");
-
-		Method method = _clazz.getDeclaredMethod("_createGetCategoriesCall");
-
-		method.setAccessible(true);
-
-		GetCategoriesCall getCategoriesCall = (GetCategoriesCall)method.invoke(
-			_classInstance);
-
-		ApiContext apiContext = getCategoriesCall.getApiContext();
-
-		Assert.assertNotNull(apiContext);
-		Assert.assertEquals(
-			SiteCodeType.US, getCategoriesCall.getCategorySiteID());
-		Assert.assertEquals(
-			_SUB_CATEGORY_LEVEL_LIMIT, getCategoriesCall.getLevelLimit());
-		Assert.assertTrue(getCategoriesCall.getViewAllNodes());
-	}
-
-	@Test
 	public void testDeleteCategories() throws Exception {
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
@@ -260,8 +239,6 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		return getCategoriesCall;
 	}
-
-	private static final int _SUB_CATEGORY_LEVEL_LIMIT = 2;
 
 	private static Object _classInstance;
 	private static Class _clazz;

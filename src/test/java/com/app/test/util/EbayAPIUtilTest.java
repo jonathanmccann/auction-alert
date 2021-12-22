@@ -35,16 +35,6 @@ public class EbayAPIUtilTest extends BaseTestCase {
 		setUpProperties();
 
 		EbayAPIUtil.loadApiContext();
-
-		ApiContext apiContext = EbayAPIUtil.getApiContext();
-
-		ApiCredential apiCredential = apiContext.getApiCredential();
-
-		Assert.assertEquals("eBay Token", apiCredential.geteBayToken());
-		Assert.assertEquals(_API_SERVER_URL, apiContext.getApiServerUrl());
-		Assert.assertEquals(SiteCodeType.US, apiContext.getSite());
 	}
-
-	private static final String _API_SERVER_URL = "https://api.ebay.com/wsapi";
 
 }
