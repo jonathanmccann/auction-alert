@@ -20,11 +20,6 @@ public class Price {
 		return value;
 	}
 
-	public String getCurrency() {
-		return currency;
-	}
-
 	private String value;
-	private String currency;
 
 }

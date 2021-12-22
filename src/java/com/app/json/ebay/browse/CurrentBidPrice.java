@@ -20,11 +20,6 @@ public class CurrentBidPrice {
 		return value;
 	}
 
-	public String getCurrency() {
-		return currency;
-	}
-
 	private String value;
-	private String currency;
 
 }
