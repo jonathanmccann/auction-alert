@@ -30,6 +30,10 @@ public class EbaySearchResultJsonResponse {
 	}
 
 	public List<ItemSummary> getItemSummaries() {
+		if (itemSummaries == null) {
+			return new ArrayList<>();
+		}
+
 		return itemSummaries;
 	}
 
