@@ -1,0 +1,21 @@
+{
+  "categoryTreeVersion" : "200",
+  "rootCategoryNode": {
+    "childCategoryTreeNodes": [
+      {
+        "category": {
+          "categoryId": "10",
+          "categoryName": "newParentCategory"
+        },
+        "childCategoryTreeNodes": [
+          {
+            "category": {
+              "categoryId": "20",
+              "categoryName": "newSubcategory"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -26,20 +26,12 @@ import com.app.util.UserUtil;
 
 import com.app.test.BaseTestCase;
 
-import com.ebay.api.client.auth.oauth2.OAuth2Api;
-import com.ebay.api.client.auth.oauth2.model.AccessToken;
-import com.ebay.api.client.auth.oauth2.model.OAuthResponse;
-
 import java.io.IOException;
 
 import javax.mail.Transport;
 
-import java.nio.file.Files;
-
 import java.util.List;
-import java.util.Optional;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -54,7 +46,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -135,7 +126,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithSearchResults() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			setUpGetEbaySearchResults("/json/ebay/auction.json");
+			setUpHttpRequest("/json/ebay/auction.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 
@@ -171,7 +162,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithoutSearchResults() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			setUpGetEbaySearchResults("/json/ebay/empty.json");
+			setUpHttpRequest("/json/ebay/empty.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 
@@ -207,7 +198,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithoutSearchQueries() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			setUpGetEbaySearchResults("/json/ebay/empty.json");
+			setUpHttpRequest("/json/ebay/empty.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 

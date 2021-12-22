@@ -122,8 +122,7 @@ public abstract class BaseTestCase {
 			databaseURL, databaseUsername, databasePassword);
 	}
 
-	protected static CloseableHttpClient setUpGetEbaySearchResults(
-			String jsonPath)
+	protected static CloseableHttpClient setUpHttpRequest(String jsonPath)
 		throws Exception {
 
 		setUpOAuth2Api();

@@ -150,7 +150,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetEbaySearchResultsWithAuctionResults() throws Exception {
-		setUpGetEbaySearchResults(_AUCTION_JSON_PATH);
+		setUpHttpRequest(_AUCTION_JSON_PATH);
 
 		SearchQuery searchQuery = _createSearchQuery();
 
@@ -167,7 +167,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testGetEbaySearchResultsWithAuctionAndFixedPriceResults()
 		throws Exception {
 
-		setUpGetEbaySearchResults(_AUCTION_AND_FIXED_PRICE_JSON_PATH);
+		setUpHttpRequest(_AUCTION_AND_FIXED_PRICE_JSON_PATH);
 
 		SearchQuery searchQuery = _createSearchQuery();
 
@@ -182,7 +182,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetEbaySearchResultsWithEmptyResults() throws Exception {
-		setUpGetEbaySearchResults(_EMPTY_JSON_PATH);
+		setUpHttpRequest(_EMPTY_JSON_PATH);
 
 		SearchQuery searchQuery = _createSearchQuery();
 
@@ -193,8 +193,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetEbaySearchResultsWithFailure() throws Exception {
-		setUpGetEbaySearchResults(_FAILURE_JSON_PATH);
+	public void testGetEbaySearchResultsWithError() throws Exception {
+		setUpHttpRequest(_ERROR_JSON_PATH);
 
 		SearchQuery searchQuery = _createSearchQuery();
 
@@ -219,7 +219,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 	public void testGetEbaySearchResultsWithFixedPriceResults()
 		throws Exception {
 
-		setUpGetEbaySearchResults(_FIXED_PRICE_JSON_PATH);
+		setUpHttpRequest(_FIXED_PRICE_JSON_PATH);
 
 		SearchQuery searchQuery = _createSearchQuery();
 
@@ -873,7 +873,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private static final String _EMPTY_JSON_PATH = "/json/ebay/empty.json";
 
-	private static final String _FAILURE_JSON_PATH = "/json/ebay/failure.json";
+	private static final String _ERROR_JSON_PATH = "/json/ebay/error.json";
 
 	private static final String _FIND_ITEMS_ADVANCED_URL_BASE =
 		"https://api.ebay.com/buy/browse/v1/item_summary/search?limit=5&" +

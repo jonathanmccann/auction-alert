@@ -14,23 +14,23 @@
 
 package com.app.test.util;
 
+import com.app.exception.CategoryException;
 import com.app.model.Category;
 import com.app.test.BaseTestCase;
 import com.app.util.CategoryUtil;
-import com.app.util.EbayAPIUtil;
+import com.app.util.OAuthTokenUtil;
 import com.app.util.ReleaseUtil;
 
-import com.ebay.sdk.ApiContext;
-import com.ebay.sdk.call.GetCategoriesCall;
-import com.ebay.soap.eBLBaseComponents.CategoryType;
-import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
-import com.ebay.soap.eBLBaseComponents.SiteCodeType;
-
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -39,6 +39,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
+
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -47,7 +52,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
+@PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+@PrepareForTest({
+	EntityUtils.class, HttpClients.class, OAuthTokenUtil.class
+})
+@RunWith(PowerMockRunner.class)
 @WebAppConfiguration
 public class CategoryUtilTest extends BaseTestCase {
 
@@ -153,19 +162,23 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testPopulateCategoriesWithNewerVersion() throws Exception {
-		GetCategoriesCall getCategoriesCall = _setUpGetCategoriesCall();
+	public void testInitializeCategoriesWithError() throws Exception {
+		setUpOAuth2Api();
 
-		Method populateCategories = _clazz.getDeclaredMethod(
-			"_populateCategories", GetCategoriesCall.class);
-
-		populateCategories.setAccessible(true);
+		CloseableHttpClient closeableHttpClient = setUpHttpRequest(
+			_ERROR_JSON_PATH);
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
 		_addCategory("1", "parentCategory", "1", 1);
 
-		populateCategories.invoke(_classInstance, getCategoriesCall);
+		CategoryUtil.initializeCategories();
+
+		Mockito.verify(
+			closeableHttpClient, Mockito.times(1)
+		).execute(
+			Mockito.anyObject()
+		);
 
 		List<Category> categories = CategoryUtil.getParentCategories();
 
@@ -173,29 +186,122 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Category category = categories.get(0);
 
-		Assert.assertEquals("2", category.getCategoryId());
-		Assert.assertEquals("newParentCategory", category.getCategoryName());
-		Assert.assertEquals("2", category.getCategoryParentId());
+		Assert.assertEquals("1", category.getCategoryId());
+		Assert.assertEquals("parentCategory", category.getCategoryName());
+		Assert.assertEquals("1", category.getCategoryParentId());
 		Assert.assertEquals(1, category.getCategoryLevel());
+
+		Assert.assertEquals(
+			"100", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
+	}
+
+	@Test
+	public void testInitializeCategoriesWithNewerVersion() throws Exception {
+		setUpOAuth2Api();
+
+		CloseableHttpClient closeableHttpClient = setUpHttpRequest(
+			_CATEGORY_NEWER_VERSION_PATH);
+
+		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
+
+		_addCategory("1", "parentCategory", "1", 1);
+
+		CategoryUtil.initializeCategories();
+
+		Mockito.verify(
+			closeableHttpClient, Mockito.times(2)
+		).execute(
+			Mockito.anyObject()
+		);
+
+		List<Category> categories = CategoryUtil.getParentCategories();
+
+		Assert.assertEquals(1, categories.size());
+
+		Category category = categories.get(0);
+
+		Assert.assertEquals("10", category.getCategoryId());
+		Assert.assertEquals("newParentCategory", category.getCategoryName());
+		Assert.assertEquals("10", category.getCategoryParentId());
+		Assert.assertEquals(1, category.getCategoryLevel());
+
+		categories = CategoryUtil.getSubcategories(category.getCategoryId());
+
+		Assert.assertEquals(1, categories.size());
+
+		category = categories.get(0);
+
+		Assert.assertEquals("20", category.getCategoryId());
+		Assert.assertEquals("newSubcategory", category.getCategoryName());
+		Assert.assertEquals("10", category.getCategoryParentId());
+		Assert.assertEquals(2, category.getCategoryLevel());
 
 		Assert.assertEquals(
 			"200", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
 	}
 
 	@Test
-	public void testPopulateCategoriesWithOlderVersion() throws Exception {
-		GetCategoriesCall getCategoriesCall = _setUpGetCategoriesCall();
+	public void testInitializeCategoriesWithOlderVersion() throws Exception {
+		setUpOAuth2Api();
 
-		Method populateCategories = _clazz.getDeclaredMethod(
-			"_populateCategories", GetCategoriesCall.class);
+		CloseableHttpClient closeableHttpClient = setUpHttpRequest(
+			_CATEGORY_OLDER_VERSION_PATH);
 
-		populateCategories.setAccessible(true);
-
-		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "300");
+		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
 		_addCategory("1", "parentCategory", "1", 1);
 
-		populateCategories.invoke(_classInstance, getCategoriesCall);
+		CategoryUtil.initializeCategories();
+
+		Mockito.verify(
+			closeableHttpClient, Mockito.times(1)
+		).execute(
+			Mockito.anyObject()
+		);
+
+		List<Category> categories = CategoryUtil.getParentCategories();
+
+		Assert.assertEquals(1, categories.size());
+
+		Category category = categories.get(0);
+
+		Assert.assertEquals("1", category.getCategoryId());
+		Assert.assertEquals("parentCategory", category.getCategoryName());
+		Assert.assertEquals("1", category.getCategoryParentId());
+		Assert.assertEquals(1, category.getCategoryLevel());
+
+		Assert.assertEquals(
+			"100", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
+	}
+
+	@Test
+	public void testPopulateCategoriesWithError() throws Exception {
+		setUpOAuth2Api();
+
+		CloseableHttpClient closeableHttpClient =
+			setUpHttpRequest("/json/ebay/error.json");
+
+		Method populateCategories = _clazz.getDeclaredMethod(
+			"_populateCategories");
+
+		populateCategories.setAccessible(true);
+
+		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
+
+		_addCategory("1", "parentCategory", "1", 1);
+
+		try {
+			populateCategories.invoke(_classInstance);
+		}
+		catch (InvocationTargetException ite) {
+			Assert.assertTrue(ite.getCause() instanceof CategoryException);
+		}
+
+		Mockito.verify(
+			closeableHttpClient, Mockito.times(1)
+		).execute(
+			Mockito.anyObject()
+		);
 
 		List<Category> categories = CategoryUtil.getParentCategories();
 
@@ -209,36 +315,13 @@ public class CategoryUtilTest extends BaseTestCase {
 		Assert.assertEquals(1, category.getCategoryLevel());
 	}
 
-	private static GetCategoriesCall _setUpGetCategoriesCall()
-		throws Exception {
+	private static final String _CATEGORY_NEWER_VERSION_PATH =
+		"/json/ebay/categoryNewerVersion.json";
 
-		GetCategoriesCall getCategoriesCall = Mockito.mock(
-			GetCategoriesCall.class);
+	private static final String _CATEGORY_OLDER_VERSION_PATH =
+		"/json/ebay/categoryOlderVersion.json";
 
-		Mockito.doReturn(
-			"200"
-		).when(
-			getCategoriesCall
-		).getReturnedCategoryVersion();
-
-		CategoryType[] ebayCategories = new CategoryType[1];
-
-		ebayCategories[0] = new CategoryType();
-
-		ebayCategories[0].setCategoryID("2");
-		ebayCategories[0].setCategoryName("newParentCategory");
-		ebayCategories[0].setCategoryParentID(new String[1]);
-		ebayCategories[0].setCategoryParentID(0, "2");
-		ebayCategories[0].setCategoryLevel(1);
-
-		Mockito.doReturn(
-			ebayCategories
-		).when(
-			getCategoriesCall
-		).getCategories();
-
-		return getCategoriesCall;
-	}
+	private static final String _ERROR_JSON_PATH = "/json/ebay/error.json";
 
 	private static Object _classInstance;
 	private static Class _clazz;
