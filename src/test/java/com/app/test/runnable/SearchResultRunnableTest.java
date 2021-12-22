@@ -19,12 +19,26 @@ import com.app.model.SearchResult;
 import com.app.model.User;
 import com.app.runnable.SearchResultRunnable;
 import com.app.util.ConstantsUtil;
+import com.app.util.OAuthTokenUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
+import com.app.util.UserUtil;
 
 import com.app.test.BaseTestCase;
 
-import com.app.util.UserUtil;
+import com.ebay.api.client.auth.oauth2.OAuth2Api;
+import com.ebay.api.client.auth.oauth2.model.AccessToken;
+import com.ebay.api.client.auth.oauth2.model.OAuthResponse;
+
+import java.io.IOException;
+
+import javax.mail.Transport;
+
+import java.nio.file.Files;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -45,18 +59,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
-import javax.mail.Transport;
-
 /**
  * @author Jonathan McCann
  */
 @ContextConfiguration("/test-dispatcher-servlet.xml")
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
 @PrepareForTest({
-	EntityUtils.class, HttpClients.class, Transport.class
+	EntityUtils.class, HttpClients.class, OAuthTokenUtil.class, Transport.class
 })
 @RunWith(PowerMockRunner.class)
 @WebAppConfiguration
@@ -78,6 +87,8 @@ public class SearchResultRunnableTest extends BaseTestCase {
 		PowerMockito.doNothing().when(
 			Transport.class, "send", Mockito.anyObject()
 		);
+
+		_setUpOAuth2Api();
 	}
 
 	@After
@@ -286,6 +297,30 @@ public class SearchResultRunnableTest extends BaseTestCase {
 		);
 
 		return closeableHttpClient;
+	}
+
+	private void _setUpOAuth2Api() throws Exception {
+		AccessToken token = new AccessToken();
+
+		token.setToken("ACCESS_TOKEN");
+
+		OAuth2Api oAuth2Api = Mockito.mock(OAuth2Api.class);
+
+		Mockito.doReturn(
+			new OAuthResponse(Optional.of(token), null)
+		).when(
+			oAuth2Api
+		).getApplicationToken(
+			Mockito.anyObject(), Mockito.anyObject()
+		);
+
+		PowerMockito.spy(OAuth2Api.class);
+
+		PowerMockito.whenNew(
+			OAuth2Api.class
+		).withAnyArguments().thenReturn(
+			oAuth2Api
+		);
 	}
 
 	private static int _searchQueryId;
