@@ -62,7 +62,7 @@ public class UserDAOCacheTest extends BaseTestCase {
 	@Test
 	public void testAddUserCacheEvict() throws Exception {
 		User user = _userDAO.addUser(
-			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
+			"test@test.com", "password", "salt", "EBAY_US");
 
 		_userIds.add(user.getUserId());
 
@@ -96,7 +96,7 @@ public class UserDAOCacheTest extends BaseTestCase {
 		long removeCount = statistics.cacheRemoveCount();
 
 		User user = _userDAO.addUser(
-			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
+			"test@test.com", "password", "salt", "EBAY_US");
 
 		_userIds.add(user.getUserId());
 
@@ -153,12 +153,12 @@ public class UserDAOCacheTest extends BaseTestCase {
 		long removeCount = statistics.cacheRemoveCount();
 
 		User user = _userDAO.addUser(
-			"test@test.com", "password", "salt", "http://www.ebay.com/itm/");
+			"test@test.com", "password", "salt", "EBAY_US");
 
 		_userIds.add(user.getUserId());
 
 		user = _userDAO.addUser(
-			"test2@test.com", "password", "salt", "http://www.ebay.com/itm/");
+			"test2@test.com", "password", "salt", "EBAY_US");
 
 		_userIds.add(user.getUserId());
 
@@ -174,7 +174,7 @@ public class UserDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(missCount + 1, statistics.cacheHitCount());
 
 		user = _userDAO.addUser(
-			"test3@test.com", "password", "salt", "http://www.ebay.com/itm/");
+			"test3@test.com", "password", "salt", "EBAY_US");
 
 		_userIds.add(user.getUserId());
 
@@ -253,7 +253,7 @@ public class UserDAOCacheTest extends BaseTestCase {
 		throws Exception {
 
 		_userDAO.updateUserDetails(
-			1, "test@test.com", "password", "salt", "http://www.ebay.com/itm/",
+			1, "test@test.com", "password", "salt", "EBAY_US",
 			true);
 
 		_assertCacheEvictUserByUserId();
@@ -264,7 +264,7 @@ public class UserDAOCacheTest extends BaseTestCase {
 		throws Exception {
 
 		_userDAO.updateUserEmailDetails(
-			1, "test@test.com", "http://www.ebay.com/itm/", true);
+			1, "test@test.com", "EBAY_US", true);
 
 		_assertCacheEvictUserByUserId();
 	}

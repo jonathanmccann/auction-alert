@@ -116,7 +116,7 @@ public class UserTest {
 	public void testSetAndGetMarketplaceId() {
 		_user.setMarketplaceId("EBAY_US");
 
-		Assert.assertEquals("BAY_US", _user.getMarketplaceId());
+		Assert.assertEquals("EBAY_US", _user.getMarketplaceId());
 	}
 
 	@Test
