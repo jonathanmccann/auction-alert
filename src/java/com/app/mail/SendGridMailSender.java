@@ -21,7 +21,6 @@ import com.app.model.User;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 
-import com.google.gson.Gson;
 import com.sendgrid.Content;
 import com.sendgrid.Email;
 import com.sendgrid.Mail;
@@ -34,7 +33,6 @@ import java.io.IOException;
 
 import java.sql.SQLException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;

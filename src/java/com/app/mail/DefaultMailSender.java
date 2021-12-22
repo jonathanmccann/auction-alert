@@ -18,7 +18,6 @@ import com.app.exception.DatabaseConnectionException;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
 import com.app.model.User;
-import com.app.util.PropertiesUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.UserUtil;
 

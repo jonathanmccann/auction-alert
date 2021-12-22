@@ -301,8 +301,6 @@ public class EbaySearchResultUtil {
 	private static final DecimalFormat _DISPLAY_DECIMAL_FORMAT =
 		new DecimalFormat("#,##0.00");
 
-	private static final String _EBAY_ROOT_URL = "https://www.ebay.com/itm/";
-
 	private static final String _BROWSE_URL_PREFIX =
 		"https://api.ebay.com/buy/browse/v1/item_summary/search?";
 
