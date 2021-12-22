@@ -49,70 +49,31 @@ public class ConstantsUtilTest extends BaseTestCase {
 	@Test
 	public void testGetPreferredCurrency() {
 		Assert.assertEquals(
-			"USD",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=711-53200-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"USD", ConstantsUtil.getPreferredCurrency("EBAY_US"));
 		Assert.assertEquals(
-			"CAD",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=706-53473-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"CAD", ConstantsUtil.getPreferredCurrency("EBAY_CA"));
 		Assert.assertEquals(
-			"GBP",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=710-53481-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"GBP", ConstantsUtil.getPreferredCurrency("EBAY_GB"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=5221-53469-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_AT"));
 		Assert.assertEquals(
-			"AUD",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=705-53470-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"AUD", ConstantsUtil.getPreferredCurrency("EBAY_AU"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=1553-53471-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_BE"));
 		Assert.assertEquals(
-			"CHF",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=5222-53480-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"CHF", ConstantsUtil.getPreferredCurrency("EBAY_CH"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=707-53477-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_DE"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=1185-53479-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_ES"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=709-53476-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_FR"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=5282-53468-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_IE"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=724-53478-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_IT"));
 		Assert.assertEquals(
-			"EUR",
-			ConstantsUtil.getPreferredCurrency(
-				"?mkrid=1346-53482-19255-0&mkcid=1&toolid=10001&mkevt=1&campid=" +
-					PropertiesValues.EBAY_CAMPAIGN_ID));
+			"EUR", ConstantsUtil.getPreferredCurrency("EBAY_NL"));
 	}
 
 	@Test
