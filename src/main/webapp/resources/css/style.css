@@ -1293,6 +1293,11 @@
 		width: 25%;
 	}
 
+	.result-image img {
+		max-height: 100%;
+		max-width: 100%;
+	}
+
 	.result-information {
 		display: inline-block;
 		text-align: left;
