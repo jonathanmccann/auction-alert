@@ -18,7 +18,7 @@
         "currency": "USD"
       },
       "legacyItemId": "itemId1",
-      "itemAffiliateWebUrl": "http://www.ebay.com/itm/1"
+      "itemAffiliateWebUrl": "http://www.ebay.com/itm/itemId1"
     },
     {
       "title": "Item Title 2",
@@ -38,7 +38,7 @@
         "currency": "USD"
       },
       "legacyItemId": "itemId2",
-      "itemAffiliateWebUrl": "http://www.ebay.com/itm/2"
+      "itemAffiliateWebUrl": "http://www.ebay.com/itm/itemId2"
     }
   ]
 }
