@@ -22,6 +22,7 @@ import com.app.util.PropertiesUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,10 @@ import java.util.Optional;
 import com.ebay.api.client.auth.oauth2.OAuth2Api;
 import com.ebay.api.client.auth.oauth2.model.AccessToken;
 import com.ebay.api.client.auth.oauth2.model.OAuthResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.session.Session;
@@ -115,6 +120,46 @@ public abstract class BaseTestCase {
 
 		DatabaseUtil.setDatabaseProperties(
 			databaseURL, databaseUsername, databasePassword);
+	}
+
+	protected static CloseableHttpClient setUpGetEbaySearchResults(
+			String jsonPath)
+		throws Exception {
+
+		setUpOAuth2Api();
+
+		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
+			CloseableHttpResponse.class);
+
+		CloseableHttpClient closeableHttpClient = Mockito.mock(
+			CloseableHttpClient.class);
+
+		PowerMockito.spy(HttpClients.class);
+
+		PowerMockito.doReturn(
+			closeableHttpClient
+		).when(
+			HttpClients.class, "createDefault"
+		);
+
+		Mockito.when(
+			closeableHttpClient.execute(Mockito.anyObject())
+		).thenReturn(
+			closeableHttpResponse
+		);
+
+		PowerMockito.spy(EntityUtils.class);
+
+		PowerMockito.doReturn(
+			new String(
+				Files.readAllBytes(
+					new ClassPathResource(jsonPath)
+				.getFile().toPath()))
+		).when(
+			EntityUtils.class, "toString", Mockito.anyObject()
+		);
+
+		return closeableHttpClient;
 	}
 
 	protected static void setUpInvalidDatabaseProperties() throws Exception {

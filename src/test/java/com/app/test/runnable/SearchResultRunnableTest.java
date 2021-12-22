@@ -135,7 +135,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithSearchResults() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			_setUpGetEbaySearchResults("/json/ebay/auction.json");
+			setUpGetEbaySearchResults("/json/ebay/auction.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 
@@ -171,7 +171,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithoutSearchResults() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			_setUpGetEbaySearchResults("/json/ebay/empty.json");
+			setUpGetEbaySearchResults("/json/ebay/empty.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 
@@ -207,7 +207,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 	@Test
 	public void testRunWithoutSearchQueries() throws Exception {
 		CloseableHttpClient closeableHttpClient =
-			_setUpGetEbaySearchResults("/json/ebay/empty.json");
+			setUpGetEbaySearchResults("/json/ebay/empty.json");
 
 		User user = UserUtil.addUser("user@test.com", "password");
 
@@ -245,43 +245,6 @@ public class SearchResultRunnableTest extends BaseTestCase {
 			closeableHttpClient.execute(Mockito.anyObject())
 		).thenThrow(
 			new IOException()
-		);
-
-		return closeableHttpClient;
-	}
-
-	private CloseableHttpClient _setUpGetEbaySearchResults(String jsonPath)
-		throws Exception {
-
-		CloseableHttpResponse closeableHttpResponse = Mockito.mock(
-			CloseableHttpResponse.class);
-
-		CloseableHttpClient closeableHttpClient = Mockito.mock(
-			CloseableHttpClient.class);
-
-		PowerMockito.spy(HttpClients.class);
-
-		PowerMockito.doReturn(
-			closeableHttpClient
-		).when(
-			HttpClients.class, "createDefault"
-		);
-
-		Mockito.when(
-			closeableHttpClient.execute(Mockito.anyObject())
-		).thenReturn(
-			closeableHttpResponse
-		);
-
-		PowerMockito.spy(EntityUtils.class);
-
-		PowerMockito.doReturn(
-			new String(
-				Files.readAllBytes(
-					new ClassPathResource(jsonPath)
-				.getFile().toPath()))
-		).when(
-			EntityUtils.class, "toString", Mockito.anyObject()
 		);
 
 		return closeableHttpClient;
