@@ -37,7 +37,7 @@ import org.apache.http.util.EntityUtils;
  */
 public class OAuthTokenUtil {
 
-	public static String getAccessToken() throws Exception {
+	public static synchronized String getAccessToken() throws Exception {
 		OAuth2Api oauth2Api = new OAuth2Api();
 
 		OAuthResponse oauth2Response = oauth2Api.getApplicationToken(
