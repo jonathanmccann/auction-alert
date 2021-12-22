@@ -1,39 +1,4 @@
 {
-  "findItemsAdvancedResponse": [
-    {
-      "ack": [
-        "Success"
-      ],
-      "version": [
-        "1.13.0"
-      ],
-      "timestamp": [
-        "2019-08-23T16:10:31.955Z"
-      ],
-      "searchResult": [
-        {
-          "@count": "0"
-        }
-      ],
-      "paginationOutput": [
-        {
-          "pageNumber": [
-            "0"
-          ],
-          "entriesPerPage": [
-            "100"
-          ],
-          "totalPages": [
-            "0"
-          ],
-          "totalEntries": [
-            "0"
-          ]
-        }
-      ],
-      "itemSearchURL": [
-        "https://rover.ebay.com/rover/1/5221-53469-19255-0/1?ff3=4&toolid=10044&campid=5337929320&customid=&lgeo=1&mpre=http%3A%2F%2Fwww.ebay.at%2Fsch%2Fi.html%3FLH_Auction%3D1%26_nkw%3Dhjkashdfuiyhwerjnbakjsndfvkh%26_ddo%3D1%26_incaucbin%3D1%26_ipg%3D100%26_pgn%3D1%26_sop%3D10"
-      ]
-    }
+  "itemSummaries": [
   ]
 }

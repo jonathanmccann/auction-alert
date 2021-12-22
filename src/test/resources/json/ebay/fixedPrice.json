@@ -1,72 +1,34 @@
 {
-  "findItemsAdvancedResponse": [
+  "itemSummaries": [
     {
-      "ack": [
-        "Success"
+      "title": "Item Title 1",
+      "image": {
+        "imageUrl": "http://www.ebay.com/1.jpg"
+      },
+      "price": {
+        "value": "100.00",
+        "currency": "USD"
+      },
+      "buyingOptions": [
+        "FIXED_PRICE"
       ],
-      "searchResult": [
-        {
-          "@count": "2",
-          "item": [
-            {
-              "itemId": [
-                "itemId1"
-              ],
-              "title": [
-                "Item Title 1"
-              ],
-              "galleryURL": [
-                "http://www.ebay.com/1.jpg"
-              ],
-              "sellingStatus": [
-                {
-                  "currentPrice": [
-                    {
-                      "@currencyId": "USD",
-                      "__value__": "100.0"
-                    }
-                  ]
-                }
-              ],
-              "listingInfo": [
-                {
-                  "listingType": [
-                    "StoreInventory"
-                  ]
-                }
-              ]
-            },
-            {
-              "itemId": [
-                "itemId2"
-              ],
-              "title": [
-                "Item Title 2"
-              ],
-              "galleryURL": [
-                "http://www.ebay.com/2.jpg"
-              ],
-              "sellingStatus": [
-                {
-                  "currentPrice": [
-                    {
-                      "@currencyId": "GBP",
-                      "__value__": "200.0"
-                    }
-                  ]
-                }
-              ],
-              "listingInfo": [
-                {
-                  "listingType": [
-                    "StoreInventory"
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "legacyItemId": "itemId1",
+      "itemAffiliateWebUrl": "http://www.ebay.com/itm/1"
+    },
+    {
+      "title": "Item Title 2",
+      "image": {
+        "imageUrl": "http://www.ebay.com/2.jpg"
+      },
+      "price": {
+        "value": "200.00",
+        "currency": "USD"
+      },
+      "buyingOptions": [
+        "FIXED_PRICE"
+      ],
+      "legacyItemId": "itemId2",
+      "itemAffiliateWebUrl": "http://www.ebay.com/itm/2"
     }
   ]
 }
