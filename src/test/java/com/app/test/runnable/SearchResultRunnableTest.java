@@ -124,9 +124,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		PowerMockito.verifyStatic(Mockito.times(0));
-
-		Transport.send(Mockito.anyObject());
+		assertTransportCalled(0);
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_searchQueryId);
@@ -162,9 +160,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-
-		Transport.send(Mockito.anyObject());
+		assertTransportCalled(1);
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_searchQueryId);
@@ -200,9 +196,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		PowerMockito.verifyStatic(Mockito.times(0));
-
-		Transport.send(Mockito.anyObject());
+		assertTransportCalled(0);
 
 		List<SearchResult> searchResults =
 			SearchResultUtil.getSearchQueryResults(_searchQueryId);
@@ -230,9 +224,7 @@ public class SearchResultRunnableTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		PowerMockito.verifyStatic(Mockito.times(0));
-
-		Transport.send(Mockito.anyObject());
+		assertTransportCalled(0);
 	}
 
 	private static CloseableHttpClient _setUpGetEbaySearchResultsWithException()
