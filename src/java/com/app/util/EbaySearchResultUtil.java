@@ -147,7 +147,8 @@ public class EbaySearchResultUtil {
 
 			searchResult.setAuctionPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-					_DISPLAY_DECIMAL_FORMAT.format(currentBidPrice.getValue()));
+					_DISPLAY_DECIMAL_FORMAT.format(
+						Double.parseDouble(currentBidPrice.getValue())));
 		}
 
 		if (buyingOptions.contains("FIXED_PRICE")) {
@@ -155,7 +156,8 @@ public class EbaySearchResultUtil {
 
 			searchResult.setFixedPrice(
 				ConstantsUtil.getCurrencySymbol(preferredCurrency) +
-					_DISPLAY_DECIMAL_FORMAT.format(price.getValue()));
+					_DISPLAY_DECIMAL_FORMAT.format(
+						Double.parseDouble(price.getValue())));
 		}
 	}
 
