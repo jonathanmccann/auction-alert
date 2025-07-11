@@ -18,6 +18,7 @@ import com.app.json.ebay.Error;
 import com.app.json.ebay.browse.CurrentBidPrice;
 import com.app.json.ebay.browse.EbaySearchResultJsonResponse;
 import com.app.json.ebay.browse.ItemSummary;
+import com.app.json.ebay.browse.Image;
 import com.app.json.ebay.browse.Price;
 import com.app.model.SearchQuery;
 import com.app.model.SearchResult;
@@ -86,7 +87,17 @@ public class EbaySearchResultUtil {
 		searchResult.setItemTitle(
 			_ITEM_TITLE_PATTERN.matcher(itemSummary.getTitle()).replaceAll(""));
 		searchResult.setItemURL(itemSummary.getItemAffiliateWebUrl());
-		searchResult.setGalleryURL(itemSummary.getImage().getImageUrl());
+
+		Image image = itemSummary.getImage();
+
+		if (image != null) {
+			String imageURL = image.getImageUrl();
+
+			searchResult.setGalleryURL(imageURL);
+		}
+		else {
+			_log.error("Image is null for item ID " + itemSummary.getLegacyItemId());
+		}
 
 		_setPrice(searchResult, preferredCurrency, itemSummary);
 
