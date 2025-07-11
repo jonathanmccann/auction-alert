@@ -40,7 +40,7 @@
 	<bean class="com.app.dao.SearchQueryDAO" id="searchQueryDAO" />
 	<bean class="com.app.dao.SearchResultDAO" id="searchResultDAO" />
 	<bean class="com.app.dao.UserDAO" id="userDAO" />
-	<bean class="com.app.mail.SendGridMailSender" id="mailSender" />
+	<bean class="com.app.mail.DefaultMailSender" id="mailSender" />
 
 	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
 		<property name="velocityProperties">
