@@ -234,6 +234,18 @@ public class DefaultMailSender implements MailSender {
 			_outboundEmailSessionProperties.put(
 				"mail.smtp.starttls.enable",
 				PropertiesValues.MAIL_SMTP_STARTTLS_ENABLE);
+
+			_outboundEmailSessionProperties.put(
+				"mail.smtp.starttls.required",
+				PropertiesValues.MAIL_SMTP_STARTTLS_REQUIRED);
+
+			_outboundEmailSessionProperties.put(
+				"mail.smtp.ssl.protocols",
+				PropertiesValues.MAIL_SMTP_SSL_PROTOCOLS);
+
+			_outboundEmailSessionProperties.put(
+				"mail.smtp.socketFactory.class",
+				PropertiesValues.MAIL_SMTP_SOCKETFACTORY_CLASS);
 		}
 
 		return Session.getInstance(

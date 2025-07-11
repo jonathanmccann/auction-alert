@@ -52,8 +52,17 @@ public class PropertiesValues {
 	public static final String MAIL_SMTP_PORT =
 		PropertiesUtil.getConfigurationProperty("mail.smtp.port");
 
+	public static final String MAIL_SMTP_SOCKETFACTORY_CLASS =
+		PropertiesUtil.getConfigurationProperty("mail.smtp.socketFactory.class");
+
+	public static final String MAIL_SMTP_SSL_PROTOCOLS =
+		PropertiesUtil.getConfigurationProperty("mail.smtp.ssl.protocols");
+
 	public static final String MAIL_SMTP_STARTTLS_ENABLE =
 		PropertiesUtil.getConfigurationProperty("mail.smtp.starttls.enable");
+
+	public static final String MAIL_SMTP_STARTTLS_REQUIRED =
+		PropertiesUtil.getConfigurationProperty("mail.smtp.starttls.required");
 
 	public static final int MAXIMUM_NUMBER_OF_SEARCH_RESULTS = Integer.parseInt(
 		PropertiesUtil.getConfigurationProperty(
