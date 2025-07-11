@@ -3,11 +3,6 @@ Auction Alert
 
 This Java webapp will hook into eBay's API in order to serve custom search results via email to recipients on a set interval.
 
-In Action
-========
-
-See this web application in action at http://auctionalert.io/
-
 Configuration
 ========
 
