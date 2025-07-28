@@ -26,6 +26,7 @@ dependencies {
 	compile group: 'org.apache.shiro', name: 'shiro-spring', version:'1.2.4'
 	compile group: 'org.apache.velocity', name: 'velocity', version:'1.7'
 	compile group: 'org.apache.velocity', name: 'velocity-tools', version:'2.0'
+	compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version:'3.5.4'
 	compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
 	compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
 	compile group: 'org.springframework', name: 'spring-context', version:'4.1.2.RELEASE'

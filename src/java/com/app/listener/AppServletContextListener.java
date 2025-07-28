@@ -72,6 +72,7 @@ public class AppServletContextListener implements ServletContextListener {
 			_log.info("Loading database properties");
 
 			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("org.mariadb.jdbc.Driver");
 
 			DatabaseUtil.loadDatabaseProperties();
 
