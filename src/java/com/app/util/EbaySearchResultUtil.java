@@ -86,7 +86,11 @@ public class EbaySearchResultUtil {
 		searchResult.setItemId(itemSummary.getLegacyItemId());
 		searchResult.setItemTitle(
 			_ITEM_TITLE_PATTERN.matcher(itemSummary.getTitle()).replaceAll(""));
-		searchResult.setItemURL(itemSummary.getItemAffiliateWebUrl());
+
+		String itemAffiliateWebUrl = itemSummary.getItemAffiliateWebUrl();
+
+		searchResult.setItemURL(
+			itemAffiliateWebUrl.substring(0, itemAffiliateWebUrl.indexOf('?')));
 
 		Image image = itemSummary.getImage();
 
