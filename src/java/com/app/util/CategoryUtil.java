@@ -28,8 +28,8 @@ import com.google.gson.Gson;
 
 import java.sql.SQLException;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -119,6 +119,29 @@ public class CategoryUtil {
 		return false;
 	}
 
+	private static void _parseCategories(
+		HashSet<Category> categories,
+		List<ChildCategoryTreeNode> childCategoryTreeNodes) {
+
+		if (childCategoryTreeNodes == null) {
+			return;
+		}
+
+		for (ChildCategoryTreeNode childCategoryTreeNode :
+				childCategoryTreeNodes) {
+
+			EbayCategory ebayCategory = childCategoryTreeNode.getCategory();
+
+			Category category = new Category(
+				ebayCategory.getCategoryId(), ebayCategory.getCategoryName());
+
+			categories.add(category);
+
+			_parseCategories(
+				categories, childCategoryTreeNode.getChildCategoryTreeNodes());
+		}
+	}
+
 	private static void _populateCategories() throws Exception {
 		Gson gson = new Gson();
 
@@ -139,41 +162,18 @@ public class CategoryUtil {
 			throw new CategoryException();
 		}
 
-		List<Category> categories = new ArrayList<>();
-
 		RootCategoryNode rootCategoryNode =
 			categoryJsonResponse.getRootCategoryNode();
 
-		for (ChildCategoryTreeNode parentCategoryTreeNode :
-				rootCategoryNode.getChildCategoryTreeNodes()) {
+		HashSet<Category> categories = new HashSet<>();
 
-			EbayCategory parentCategory = parentCategoryTreeNode.getCategory();
+		_parseCategories(
+			categories, rootCategoryNode.getChildCategoryTreeNodes());
 
-			Category category = new Category(
-				parentCategory.getCategoryId(),
-				parentCategory.getCategoryName());
-
-			categories.add(category);
-
-			for (ChildCategoryTreeNode childCategoryTreeNode :
-					parentCategoryTreeNode.getChildCategoryTreeNodes()) {
-
-				EbayCategory childCategory =
-					childCategoryTreeNode.getCategory();
-
-				category = new Category(
-					childCategory.getCategoryId(),
-					childCategory.getCategoryName());
-
-				categories.add(category);
-			}
-		}
-
-		categories = categories.stream()
-			.sorted(Comparator.comparing(Category::getCategoryName))
-			.collect(Collectors.toList());
-
-		addCategories(categories);
+		addCategories(
+			categories.stream()
+				.sorted(Comparator.comparing(Category::getCategoryName))
+				.collect(Collectors.toList()));
 	}
 
 	private static final String _CATEGORY_RELEASE_NAME = "category";

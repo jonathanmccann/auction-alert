@@ -12,6 +12,28 @@
             "category": {
               "categoryId": "20",
               "categoryName": "newChildCategory"
+            },
+            "childCategoryTreeNodes": [
+              {
+                "category": {
+                  "categoryId": "30",
+                  "categoryName": "newGrandchildCategory"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "category": {
+          "categoryId": "100",
+          "categoryName": "newCategory2"
+        },
+        "childCategoryTreeNodes": [
+          {
+            "category": {
+              "categoryId": "20",
+              "categoryName": "newChildCategory"
             }
           }
         ]
