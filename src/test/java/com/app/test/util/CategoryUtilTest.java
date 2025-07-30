@@ -212,12 +212,15 @@ public class CategoryUtilTest extends BaseTestCase {
 		category = categories.get(2);
 
 		Assert.assertEquals("20", category.getCategoryId());
-		Assert.assertEquals("newChildCategory", category.getCategoryName());
+		Assert.assertEquals(
+			"newCategory > newChildCategory", category.getCategoryName());
 
 		category = categories.get(3);
 
 		Assert.assertEquals("30", category.getCategoryId());
-		Assert.assertEquals("newGrandchildCategory", category.getCategoryName());
+		Assert.assertEquals(
+			"newChildCategory > newGrandchildCategory",
+			category.getCategoryName());
 
 		Assert.assertEquals(
 			"200", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
