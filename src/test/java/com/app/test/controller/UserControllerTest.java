@@ -27,7 +27,6 @@ import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
-import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 
 import com.stripe.exception.APIConnectionException;
@@ -56,7 +55,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
@@ -65,7 +63,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -76,17 +73,11 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.URL;
-import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.mail.Message;
 import javax.mail.Transport;
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * @author Jonathan McCann

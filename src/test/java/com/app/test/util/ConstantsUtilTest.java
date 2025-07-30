@@ -17,7 +17,6 @@ package com.app.test.util;
 import com.app.test.BaseTestCase;
 
 import com.app.util.ConstantsUtil;
-import com.app.util.PropertiesValues;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -223,6 +223,4 @@ public class SearchResultControllerTest extends BaseTestCase {
 	@Autowired
 	private WebApplicationContext wac;
 
-	private static final int _SEARCH_QUERY_ID = 1;
-
 }

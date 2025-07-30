@@ -55,7 +55,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -839,20 +838,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 			.andExpect(model().attributeDoesNotExist("isAdd"))
 			.andExpect(model().attribute("currentSearchQueryId", "100"))
 			.andExpect(model().attribute("isCurrentSearchQueryActive", "true"));
-	}
-
-	private static void addCategories() throws Exception {
-		HashSet<Category> categories = new HashSet<>();
-
-		Category category = new Category("100", "Category Name");
-
-		categories.add(category);
-
-		category = new Category("200", "Category Name 2");
-
-		categories.add(category);
-
-		CategoryUtil.addCategories(categories);
 	}
 
 	private static void addSearchQuery(boolean isActive) throws Exception {

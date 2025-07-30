@@ -43,7 +43,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicStatusLine;
-import org.apache.http.ssl.SSLInitializationException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
