@@ -27,12 +27,24 @@ public class Category {
 		_categoryName = categoryName;
 	}
 
+	public boolean equals(Object obj) {
+		if ((obj == null) || !(obj instanceof Category)) {
+			return false;
+		}
+
+		return _categoryId.equals(((Category)obj).getCategoryId());
+	}
+
 	public String getCategoryId() {
 		return _categoryId;
 	}
 
 	public String getCategoryName() {
 		return _categoryName;
+	}
+
+	public int hashCode() {
+		return Integer.valueOf(_categoryId);
 	}
 
 	public void setCategoryId(String categoryId) {
