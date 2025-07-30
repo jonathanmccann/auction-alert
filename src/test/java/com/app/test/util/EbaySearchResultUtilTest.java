@@ -212,7 +212,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		List<ItemSummary> itemSummaries =
 			ebaySearchResultJsonResponse.getItemSummaries();
 
-		Assert.assertNull(itemSummaries);
+		Assert.assertTrue(itemSummaries.isEmpty());
 	}
 
 	@Test
