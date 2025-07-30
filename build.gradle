@@ -68,6 +68,10 @@ sourceSets {
 	}
 }
 
+jacoco {
+	toolVersion = "0.8.13"
+}
+
 test {
 	systemProperties System.getProperties()
 	systemProperties['user.dir'] = workingDir
