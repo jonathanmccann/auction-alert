@@ -433,7 +433,7 @@ public abstract class BaseTestCase {
 		"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr>\n" +
 		"\t\t\t\t\t\t\t\t\t<td>\n" +
 		"\t\t\t\t\t\t\t\t\t\t<div style=\"display: inline-block; padding: 10px; width: 140px;\">\n" +
-		"\t\t\t\t\t\t\t\t\t\t\t<img alt=\"http://www.ebay.com/123.jpg\" src=\"http://www.ebay.com/123.jpg\">\n" +
+		"\t\t\t\t\t\t\t\t\t\t\t<img alt=\"http://www.ebay.com/123.jpg\" src=\"http://www.ebay.com/123.jpg\" style=\"max-height: 100%; max-width: 100%;\">\n" +
 		"\t\t\t\t\t\t\t\t\t\t</div>\n" +
 		"\n" +
 		"\t\t\t\t\t\t\t\t\t\t<div style=\"display: inline-block; text-align: left; vertical-align: top;\">\n" +
