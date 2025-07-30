@@ -55,6 +55,8 @@ public class ActiveInterceptorTest extends BaseTestCase {
 		setUpProperties();
 
 		ConstantsUtil.init();
+
+		setUpStripeUtil();
 	}
 
 	@Before

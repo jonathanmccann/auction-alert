@@ -109,7 +109,7 @@ public class UserControllerTest extends BaseTestCase {
 
 		ConstantsUtil.init();
 
-		_setUpStripeUtil();
+		setUpStripeUtil();
 	}
 
 	@Before
@@ -1869,16 +1869,6 @@ public class UserControllerTest extends BaseTestCase {
 		request.param("newPassword", "updatedPassword");
 
 		return request;
-	}
-
-	private static void _setUpStripeUtil() throws Exception {
-		Class clazz = Class.forName(StripeUtil.class.getName());
-
-		Field field = clazz.getDeclaredField("_IS_ENABLED");
-
-		field.setAccessible(true);
-
-		field.set(clazz, true);
 	}
 
 	private static void _setUpWebhook() throws Exception {

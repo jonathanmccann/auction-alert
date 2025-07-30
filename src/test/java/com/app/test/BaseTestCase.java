@@ -18,6 +18,7 @@ import com.app.model.Category;
 import com.app.util.CategoryUtil;
 import com.app.util.DatabaseUtil;
 import com.app.util.PropertiesUtil;
+import com.app.util.StripeUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -303,6 +304,16 @@ public abstract class BaseTestCase {
 		).thenReturn(
 			session
 		);
+	}
+
+	protected static void setUpStripeUtil() throws Exception {
+		Class clazz = Class.forName(StripeUtil.class.getName());
+
+		Field field = clazz.getDeclaredField("_IS_ENABLED");
+
+		field.setAccessible(true);
+
+		field.set(clazz, true);
 	}
 
 	protected static void setUpTransport() throws Exception {
