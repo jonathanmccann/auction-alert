@@ -17,9 +17,6 @@
     },
     {
       "title": "Item Title 2",
-      "image": {
-        "imageUrl": "http://www.ebay.com/2.jpg"
-      },
       "buyingOptions": [
         "AUCTION"
       ],
@@ -28,7 +25,7 @@
         "currency": "USD"
       },
       "legacyItemId": "itemId2",
-      "itemAffiliateWebUrl": "http://www.ebay.com/itm/itemId2"
+      "itemAffiliateWebUrl": "http://www.ebay.com/itm/itemId2?urlParam=test"
     }
   ]
 }

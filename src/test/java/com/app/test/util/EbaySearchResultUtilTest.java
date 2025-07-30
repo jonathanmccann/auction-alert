@@ -159,8 +159,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(2, searchResults.size());
 
-		_assertSearchResult(searchResults.get(0), "2", "$20.00", null);
-		_assertSearchResult(searchResults.get(1), "1", "$10.00", null);
+		_assertSearchResult(searchResults.get(0), "2", "$20.00", null, false);
+		_assertSearchResult(searchResults.get(1), "1", "$10.00", null, true);
 	}
 
 	@Test
@@ -176,8 +176,10 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(2, searchResults.size());
 
-		_assertSearchResult(searchResults.get(0), "2", "$20.00", "$200.00");
-		_assertSearchResult(searchResults.get(1), "1", "$10.00", "$100.00");
+		_assertSearchResult(
+			searchResults.get(0), "2", "$20.00", "$200.00", true);
+		_assertSearchResult(
+			searchResults.get(1), "1", "$10.00", "$100.00", true);
 	}
 
 	@Test
@@ -228,8 +230,8 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(2, searchResults.size());
 
-		_assertSearchResult(searchResults.get(0), "2", null, "$200.00");
-		_assertSearchResult(searchResults.get(1), "1", null, "$100.00");
+		_assertSearchResult(searchResults.get(0), "2", null, "$200.00", true);
+		_assertSearchResult(searchResults.get(1), "1", null, "$100.00", true);
 	}
 
 	@Test
@@ -832,7 +834,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 
 	private void _assertSearchResult(
 			SearchResult searchResult, String itemNumber, String auctionPrice,
-			String fixedPrice)
+			String fixedPrice, boolean hasImage)
 		throws Exception {
 
 		Assert.assertEquals("itemId" + itemNumber, searchResult.getItemId());
@@ -841,9 +843,15 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		Assert.assertEquals(
 			_EBAY_URL_PREFIX + "itemId" + itemNumber,
 			searchResult.getItemURL());
-		Assert.assertEquals(
-			"http://www.ebay.com/" + itemNumber + ".jpg",
-			searchResult.getGalleryURL());
+
+		if (hasImage) {
+			Assert.assertEquals(
+				"http://www.ebay.com/" + itemNumber + ".jpg",
+				searchResult.getGalleryURL());
+		}
+		else {
+			Assert.assertNull(searchResult.getGalleryURL());
+		}
 
 		if (ValidatorUtil.isNull(auctionPrice)) {
 			Assert.assertNull(searchResult.getAuctionPrice());
