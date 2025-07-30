@@ -89,8 +89,13 @@ public class EbaySearchResultUtil {
 
 		String itemAffiliateWebUrl = itemSummary.getItemAffiliateWebUrl();
 
-		searchResult.setItemURL(
-			itemAffiliateWebUrl.substring(0, itemAffiliateWebUrl.indexOf('?')));
+		if (itemAffiliateWebUrl.indexOf('?') > 0) {
+			itemAffiliateWebUrl =
+				itemAffiliateWebUrl.substring(
+					0, itemAffiliateWebUrl.indexOf('?'));
+		}
+
+		searchResult.setItemURL(itemAffiliateWebUrl);
 
 		Image image = itemSummary.getImage();
 
