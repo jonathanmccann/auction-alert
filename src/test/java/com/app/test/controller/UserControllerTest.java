@@ -25,9 +25,9 @@ import com.app.model.User;
 import com.app.test.BaseTestCase;
 import com.app.util.ConstantsUtil;
 import com.app.util.PropertiesValues;
-import com.app.util.RecaptchaUtil;
 import com.app.util.SearchQueryUtil;
 import com.app.util.SearchResultUtil;
+import com.app.util.StripeUtil;
 import com.app.util.UserUtil;
 
 import com.stripe.exception.APIConnectionException;
@@ -78,6 +78,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.SQLException;
@@ -107,6 +108,8 @@ public class UserControllerTest extends BaseTestCase {
 		setUpDatabase();
 
 		ConstantsUtil.init();
+
+		_setUpStripeUtil();
 	}
 
 	@Before
@@ -1422,7 +1425,7 @@ public class UserControllerTest extends BaseTestCase {
 
 	@Test
 	public void testStripeWebhookEndpoint() throws Exception {
-		_setUpStripeUtil();
+		_setUpWebhook();
 
 		MockHttpServletRequestBuilder request = post("/stripe");
 
@@ -1771,24 +1774,6 @@ public class UserControllerTest extends BaseTestCase {
 		);
 	}
 
-	private static void _setUpStripeUtil() throws Exception {
-		PowerMockito.spy(Webhook.class);
-
-		Event event = new Event();
-
-		EventData eventData = new EventData();
-
-		event.setData(eventData);
-		event.setType("Invalid Type");
-
-		PowerMockito.doReturn(
-			event
-		).when(
-			Webhook.class, "constructEvent", Mockito.anyString(),
-			Mockito.anyString(), Mockito.anyString()
-		);
-	}
-
 	protected static void setUpInvalidSubscription() throws Exception {
 		PowerMockito.spy(Subscription.class);
 
@@ -1884,6 +1869,34 @@ public class UserControllerTest extends BaseTestCase {
 		request.param("newPassword", "updatedPassword");
 
 		return request;
+	}
+
+	private static void _setUpStripeUtil() throws Exception {
+		Class clazz = Class.forName(StripeUtil.class.getName());
+
+		Field field = clazz.getDeclaredField("_IS_ENABLED");
+
+		field.setAccessible(true);
+
+		field.set(clazz, true);
+	}
+
+	private static void _setUpWebhook() throws Exception {
+		PowerMockito.spy(Webhook.class);
+
+		Event event = new Event();
+
+		EventData eventData = new EventData();
+
+		event.setData(eventData);
+		event.setType("Invalid Type");
+
+		PowerMockito.doReturn(
+			event
+		).when(
+			Webhook.class, "constructEvent", Mockito.anyString(),
+			Mockito.anyString(), Mockito.anyString()
+		);
 	}
 
 	private MockMvc mockMvc;

@@ -162,7 +162,7 @@ public class StripeUtil {
 	}
 
 	public static boolean isEnabled() {
-		return false;
+		return _IS_ENABLED;
 	}
 
 	public static void resubscribe(
@@ -236,6 +236,8 @@ public class StripeUtil {
 
 		customer.update(customerParams);
 	}
+
+	private static boolean _IS_ENABLED = false;
 
 	private static final String _CHARGE_FAILED = "charge.failed";
 
