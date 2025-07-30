@@ -67,14 +67,12 @@ import javax.mail.Transport;
 public abstract class BaseTestCase {
 
 	protected static void _addCategory(
-			String categoryId, String categoryName, String categoryParentId,
-			int categoryLevel)
+			String categoryId, String categoryName)
 		throws Exception {
 
 		List<Category> categories = new ArrayList<>();
 
-		Category category = new Category(
-			categoryId, categoryName, categoryParentId, categoryLevel);
+		Category category = new Category(categoryId, categoryName);
 
 		categories.add(category);
 

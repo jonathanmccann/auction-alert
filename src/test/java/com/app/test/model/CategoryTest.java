@@ -32,12 +32,49 @@ public class CategoryTest {
 
 	@Test
 	public void testConstructor() {
-		Category category = new Category("1", "Category", "1", 1);
+		Category category = new Category("1", "Category");
 
 		Assert.assertEquals("1", category.getCategoryId());
 		Assert.assertEquals("Category", category.getCategoryName());
-		Assert.assertEquals("1", category.getCategoryParentId());
-		Assert.assertEquals(1, category.getCategoryLevel());
+	}
+
+	@Test
+	public void testEqualsWithEqualObject() {
+		_category.setCategoryId("1");
+
+		Category category = new Category();
+
+		category.setCategoryId("1");
+
+		Assert.assertTrue(_category.equals(category));
+	}
+
+	@Test
+	public void testEqualsWithInequalCategoryId() {
+		_category.setCategoryId("1");
+
+		Category category = new Category();
+
+		category.setCategoryId("2");
+
+		Assert.assertFalse(_category.equals(category));
+	}
+
+	@Test
+	public void testEqualsWithInequalObject() {
+		Assert.assertFalse(_category.equals(new Object()));
+	}
+
+	@Test
+	public void testEqualsWithNullObject() {
+		Assert.assertFalse(_category.equals(null));
+	}
+
+	@Test
+	public void testHashCode() {
+		_category.setCategoryId("1");
+
+		Assert.assertEquals(1, _category.hashCode());
 	}
 
 	@Test
@@ -48,24 +85,10 @@ public class CategoryTest {
 	}
 
 	@Test
-	public void testSetAndGetCategoryLevel() {
-		_category.setCategoryLevel(1);
-
-		Assert.assertEquals(1, _category.getCategoryLevel());
-	}
-
-	@Test
 	public void testSetAndGetCategoryName() {
 		_category.setCategoryName("Category");
 
 		Assert.assertEquals("Category", _category.getCategoryName());
-	}
-
-	@Test
-	public void testSetAndGetCategoryParentId() {
-		_category.setCategoryParentId("1");
-
-		Assert.assertEquals("1", _category.getCategoryParentId());
 	}
 
 	private static Category _category;

@@ -76,8 +76,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testAddCategory() throws Exception {
-		_addCategory(
-			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
+		_addCategory(_CATEGORY_ID, _CATEGORY_NAME);
 
 		List<Category> categories = CategoryUtil.getParentCategories();
 
@@ -87,20 +86,16 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals(_CATEGORY_ID, category.getCategoryId());
 		Assert.assertEquals(_CATEGORY_NAME, category.getCategoryName());
-		Assert.assertEquals(_CATEGORY_PARENT_ID, category.getCategoryParentId());
-		Assert.assertEquals(_CATEGORY_LEVEL, category.getCategoryLevel());
 	}
 
 	@Test
 	public void testDeleteCategories() throws Exception {
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5), 1);
+			RandomStringUtils.randomAlphanumeric(5));
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5), 1);
+			RandomStringUtils.randomAlphanumeric(5));
 
 		List<Category> categories = CategoryUtil.getParentCategories();
 
@@ -117,12 +112,10 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testGetParentCategories() throws Exception {
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5), 1);
+			RandomStringUtils.randomAlphanumeric(5));
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5),
-			RandomStringUtils.randomAlphanumeric(5), 1);
+			RandomStringUtils.randomAlphanumeric(5));
 
 		List<Category> categories = CategoryUtil.getParentCategories();
 
@@ -131,8 +124,8 @@ public class CategoryUtilTest extends BaseTestCase {
 
 	@Test
 	public void testGetSubcategories() throws Exception {
-		_addCategory("1", "parentCategory", "1", 1);
-		_addCategory("2", "subcategory", "1", 2);
+		_addCategory("1", "parentCategory");
+		_addCategory("2", "subcategory");
 
 		List<Category> categories = CategoryUtil.getSubcategories("1");
 
@@ -170,7 +163,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory", "1", 1);
+		_addCategory("1", "parentCategory");
 
 		CategoryUtil.initializeCategories();
 
@@ -188,8 +181,6 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("1", category.getCategoryId());
 		Assert.assertEquals("parentCategory", category.getCategoryName());
-		Assert.assertEquals("1", category.getCategoryParentId());
-		Assert.assertEquals(1, category.getCategoryLevel());
 
 		Assert.assertEquals(
 			"100", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
@@ -204,7 +195,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory", "1", 1);
+		_addCategory("1", "parentCategory");
 
 		CategoryUtil.initializeCategories();
 
@@ -222,8 +213,6 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("10", category.getCategoryId());
 		Assert.assertEquals("newParentCategory", category.getCategoryName());
-		Assert.assertEquals("10", category.getCategoryParentId());
-		Assert.assertEquals(1, category.getCategoryLevel());
 
 		categories = CategoryUtil.getSubcategories(category.getCategoryId());
 
@@ -233,8 +222,6 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("20", category.getCategoryId());
 		Assert.assertEquals("newSubcategory", category.getCategoryName());
-		Assert.assertEquals("10", category.getCategoryParentId());
-		Assert.assertEquals(2, category.getCategoryLevel());
 
 		Assert.assertEquals(
 			"200", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
@@ -249,7 +236,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory", "1", 1);
+		_addCategory("1", "parentCategory");
 
 		CategoryUtil.initializeCategories();
 
@@ -267,8 +254,6 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("1", category.getCategoryId());
 		Assert.assertEquals("parentCategory", category.getCategoryName());
-		Assert.assertEquals("1", category.getCategoryParentId());
-		Assert.assertEquals(1, category.getCategoryLevel());
 
 		Assert.assertEquals(
 			"100", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
@@ -288,7 +273,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory", "1", 1);
+		_addCategory("1", "parentCategory");
 
 		try {
 			populateCategories.invoke(_classInstance);
@@ -311,8 +296,6 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("1", category.getCategoryId());
 		Assert.assertEquals("parentCategory", category.getCategoryName());
-		Assert.assertEquals("1", category.getCategoryParentId());
-		Assert.assertEquals(1, category.getCategoryLevel());
 	}
 
 	private static final String _CATEGORY_NEWER_VERSION_PATH =

@@ -386,8 +386,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		List<Category> categoriesToAdd = new ArrayList<>();
 
-		Category category = new Category(
-			_CATEGORY_ID, _CATEGORY_NAME, _CATEGORY_PARENT_ID, _CATEGORY_LEVEL);
+		Category category = new Category(_CATEGORY_ID, _CATEGORY_NAME);
 
 		categoriesToAdd.add(category);
 
@@ -1028,11 +1027,11 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	private static void addCategories() throws Exception {
 		List<Category> categories = new ArrayList<>();
 
-		Category category = new Category("100", "Category Name", "100", 1);
+		Category category = new Category("100", "Category Name");
 
 		categories.add(category);
 
-		category = new Category("200", "Category Name 2", "100", 2);
+		category = new Category("200", "Category Name 2");
 
 		categories.add(category);
 

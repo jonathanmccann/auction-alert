@@ -77,7 +77,7 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		long subCategoriesMissCount = subCategoriesStatistics.cacheMissCount();
 		long subCategoriesHitCount = subCategoriesStatistics.cacheHitCount();
 
-		_addCategory("1", "test1", "1", 1);
+		_addCategory("1", "test1");
 
 		_categoryDAO.getParentCategories();
 
@@ -96,7 +96,7 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		Assert.assertEquals(
 			subCategoriesHitCount, subCategoriesStatistics.cacheHitCount());
 
-		_addCategory("2", "test2", "2", 1);
+		_addCategory("2", "test2");
 
 		_categoryDAO.getParentCategories();
 
@@ -187,8 +187,8 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		long parentCategoriesMissCount = statistics.cacheMissCount();
 		long parentCategoriesHitCount = statistics.cacheHitCount();
 
-		_addCategory("1", "test1", "1", 1);
-		_addCategory("2", "test2", "2", 1);
+		_addCategory("1", "test1");
+		_addCategory("2", "test2");
 
 		List<Category> categories = _categoryDAO.getParentCategories();
 
@@ -228,8 +228,8 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 		long subCategoriesMissCount = statistics.cacheMissCount();
 		long subCategoriesHitCount = statistics.cacheHitCount();
 
-		_addCategory("1", "test1", "1", 1);
-		_addCategory("2", "test2", "1", 2);
+		_addCategory("1", "test1");
+		_addCategory("2", "test2");
 
 		List<Category> categories = _categoryDAO.getSubcategories("1");
 
@@ -280,7 +280,6 @@ public class CategoryDAOCacheTest extends BaseTestCase {
 
 		Assert.assertEquals("2", subcategory.getCategoryId());
 		Assert.assertEquals("test2", subcategory.getCategoryName());
-		Assert.assertEquals("1", subcategory.getCategoryParentId());
 	}
 
 	@Autowired
