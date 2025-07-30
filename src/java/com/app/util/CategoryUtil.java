@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryUtil {
 
-	public static void addCategories(List<Category> categories)
+	public static void addCategories(HashSet<Category> categories)
 		throws DatabaseConnectionException, SQLException {
 
 		_categoryDAO.addCategories(categories);
@@ -178,10 +178,7 @@ public class CategoryUtil {
 		_parseCategories(
 			categories, rootCategoryNode.getChildCategoryTreeNodes(), "");
 
-		addCategories(
-			categories.stream()
-				.sorted(Comparator.comparing(Category::getCategoryName))
-				.collect(Collectors.toList()));
+		addCategories(categories);
 	}
 
 	private static final String _CATEGORY_RELEASE_NAME = "category";

@@ -21,12 +21,10 @@ import com.app.util.PropertiesUtil;
 import com.app.util.StripeUtil;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -70,7 +68,7 @@ public abstract class BaseTestCase {
 			String categoryId, String categoryName)
 		throws Exception {
 
-		List<Category> categories = new ArrayList<>();
+		HashSet<Category> categories = new HashSet<>();
 
 		Category category = new Category(categoryId, categoryName);
 

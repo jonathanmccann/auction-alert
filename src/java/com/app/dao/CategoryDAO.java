@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class CategoryDAO {
 			@CacheEvict(value = "categories", allEntries = true)
 		}
 	)
-	public void addCategories(List<Category> categories)
+	public void addCategories(HashSet<Category> categories)
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Adding {} categories", categories.size());
@@ -124,7 +125,8 @@ public class CategoryDAO {
 	private static final String _DELETE_CATEGORIES_SQL =
 		"TRUNCATE TABLE Category";
 
-	private static final String _GET_CATEGORIES_SQL = "SELECT * FROM Category";
+	private static final String _GET_CATEGORIES_SQL =
+		"SELECT * FROM Category ORDER BY categoryName";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryDAO.class);

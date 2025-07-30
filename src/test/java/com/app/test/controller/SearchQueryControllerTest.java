@@ -38,6 +38,7 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -356,7 +357,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 
 		Assert.assertEquals(0, categories.size());
 
-		List<Category> categoriesToAdd = new ArrayList<>();
+		HashSet<Category> categoriesToAdd = new HashSet<>();
 
 		Category category = new Category(_CATEGORY_ID, _CATEGORY_NAME);
 
@@ -841,7 +842,7 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	private static void addCategories() throws Exception {
-		List<Category> categories = new ArrayList<>();
+		HashSet<Category> categories = new HashSet<>();
 
 		Category category = new Category("100", "Category Name");
 
