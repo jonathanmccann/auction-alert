@@ -34,15 +34,18 @@
 		</c:choose>
 
 		<link href="/resources/css/tooltipster.css" rel="stylesheet">
+		<link href="/resources/css/select2.css" rel="stylesheet">
 
 		<script src="/resources/js/jquery-2.1.3.min.js" type="text/javascript"></script>
 		<script src="/resources/js/jquery-tooltipster-3.0.min.js" type="text/javascript"></script>
 		<script src="/resources/js/jquery-validate-1.14.0.min.js" type="text/javascript"></script>
+		<script src="/resources/js/select2.min.js" type="text/javascript"></script>
 
 		<script src="/resources/js/skel.min.js" type="text/javascript"></script>
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
 
+		<script src="/resources/js/category.js" type="text/javascript"></script>
 		<script src="/resources/js/validate-search-query.js" type="text/javascript"></script>
 
 		<noscript>
