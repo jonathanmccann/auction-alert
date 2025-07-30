@@ -109,7 +109,7 @@ public class CategoryUtilTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetParentCategories() throws Exception {
+	public void testGetCategories() throws Exception {
 		_addCategory(
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
@@ -153,7 +153,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory");
+		_addCategory("1", "category");
 
 		CategoryUtil.initializeCategories();
 
@@ -170,7 +170,7 @@ public class CategoryUtilTest extends BaseTestCase {
 		Category category = categories.get(0);
 
 		Assert.assertEquals("1", category.getCategoryId());
-		Assert.assertEquals("parentCategory", category.getCategoryName());
+		Assert.assertEquals("category", category.getCategoryName());
 
 		Assert.assertEquals(
 			"100", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
@@ -185,7 +185,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory");
+		_addCategory("1", "category");
 
 		CategoryUtil.initializeCategories();
 
@@ -202,7 +202,7 @@ public class CategoryUtilTest extends BaseTestCase {
 		Category category = categories.get(0);
 
 		Assert.assertEquals("10", category.getCategoryId());
-		Assert.assertEquals("newParentCategory", category.getCategoryName());
+		Assert.assertEquals("newCategory", category.getCategoryName());
 
 		Assert.assertEquals(
 			"200", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
@@ -217,7 +217,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory");
+		_addCategory("1", "category");
 
 		CategoryUtil.initializeCategories();
 
@@ -234,7 +234,7 @@ public class CategoryUtilTest extends BaseTestCase {
 		Category category = categories.get(0);
 
 		Assert.assertEquals("1", category.getCategoryId());
-		Assert.assertEquals("parentCategory", category.getCategoryName());
+		Assert.assertEquals("category", category.getCategoryName());
 
 		Assert.assertEquals(
 			"100", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
@@ -254,7 +254,7 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		ReleaseUtil.addRelease(_CATEGORY_RELEASE_NAME, "100");
 
-		_addCategory("1", "parentCategory");
+		_addCategory("1", "category");
 
 		try {
 			populateCategories.invoke(_classInstance);
@@ -276,7 +276,7 @@ public class CategoryUtilTest extends BaseTestCase {
 		Category category = categories.get(0);
 
 		Assert.assertEquals("1", category.getCategoryId());
-		Assert.assertEquals("parentCategory", category.getCategoryName());
+		Assert.assertEquals("category", category.getCategoryName());
 	}
 
 	private static final String _CATEGORY_NEWER_VERSION_PATH =

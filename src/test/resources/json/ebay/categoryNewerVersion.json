@@ -5,13 +5,13 @@
       {
         "category": {
           "categoryId": "10",
-          "categoryName": "newParentCategory"
+          "categoryName": "newCategory"
         },
         "childCategoryTreeNodes": [
           {
             "category": {
               "categoryId": "20",
-              "categoryName": "newSubcategory"
+              "categoryName": "newChildCategory"
             }
           }
         ]

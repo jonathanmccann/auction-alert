@@ -237,10 +237,10 @@ public class SearchQueryController {
 		throws DatabaseConnectionException, SQLException {
 
 		if (_categories.isEmpty()) {
-			for (Category parentCategory : CategoryUtil.getCategories()) {
+			for (Category category : CategoryUtil.getCategories()) {
 				_categories.put(
-					parentCategory.getCategoryId(),
-					parentCategory.getCategoryName());
+					category.getCategoryId(),
+					category.getCategoryName());
 			}
 		}
 
