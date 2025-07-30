@@ -42,6 +42,10 @@ public class StripeUtil {
 			int userId, String emailAddress, String stripeToken)
 		throws Exception {
 
+		if (!isEnabled()) {
+			return;
+		}
+
 		Map<String, Object> customerParams = new HashMap<>();
 
 		customerParams.put("email", emailAddress);
@@ -61,6 +65,10 @@ public class StripeUtil {
 	}
 
 	public static void deleteCustomer(String customerId) throws Exception {
+		if (!isEnabled()) {
+			return;
+		}
+
 		Customer customer = Customer.retrieve(customerId);
 
 		customer.delete();
@@ -68,6 +76,10 @@ public class StripeUtil {
 
 	public static void deleteSubscription(String subscriptionId)
 		throws Exception {
+
+		if (!isEnabled()) {
+			return;
+		}
 
 		Subscription subscription = Subscription.retrieve(subscriptionId);
 
@@ -85,6 +97,10 @@ public class StripeUtil {
 	}
 
 	public static String getNextChargeDate() throws Exception {
+		if (!isEnabled()) {
+			return "";
+		}
+
 		User user = UserUtil.getCurrentUser();
 
 		String subscriptionId = user.getSubscriptionId();
@@ -103,6 +119,10 @@ public class StripeUtil {
 	public static void handleStripeEvent(
 			String stripeJsonEvent, String stripeSignature)
 		throws Exception {
+
+		if (!isEnabled()) {
+			return;
+		}
 
 		Event event = Webhook.constructEvent(
 			stripeJsonEvent, stripeSignature,
@@ -141,9 +161,17 @@ public class StripeUtil {
 		}
 	}
 
+	public static boolean isEnabled() {
+		return false;
+	}
+
 	public static void resubscribe(
 			String customerId, String subscriptionId, String stripeToken)
 		throws Exception {
+
+		if (!isEnabled()) {
+			return;
+		}
 
 		Map<String, Object> customerParameters = new HashMap<>();
 
@@ -178,6 +206,10 @@ public class StripeUtil {
 	}
 
 	public static void updateCustomerEmailAddress() throws Exception {
+		if (!isEnabled()) {
+			return;
+		}
+
 		User user = UserUtil.getCurrentUser();
 
 		Customer customer = Customer.retrieve(user.getCustomerId());
@@ -191,6 +223,10 @@ public class StripeUtil {
 
 	public static void updateSubscription(String stripeToken, String customerId)
 		throws Exception {
+
+		if (!isEnabled()) {
+			return;
+		}
 
 		Map<String, Object> customerParams = new HashMap<>();
 
