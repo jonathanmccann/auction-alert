@@ -297,34 +297,6 @@ public class SearchQueryControllerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetSubcategories() throws Exception {
-		addCategories();
-
-		MvcResult mvcResult = this.mockMvc.perform(get("/subcategories")
-			.param("categoryParentId", "100")
-			.accept("application/json"))
-			.andReturn();
-
-		Assert.assertEquals(
-			"{\"Category Name 2\":\"200\"}",
-			mvcResult.getResponse().getContentAsString());
-	}
-
-	@Test
-	public void testGetSubcategoriesWithInvalidCategoryParentId()
-		throws Exception {
-
-		addCategories();
-
-		MvcResult mvcResult = this.mockMvc.perform(get("/subcategories")
-			.param("categoryParentId", "1")
-			.accept("application/json"))
-			.andReturn();
-
-		Assert.assertEquals("{}", mvcResult.getResponse().getContentAsString());
-	}
-
-	@Test
 	public void testGetUpdateSearchQuery() throws Exception {
 		setUpSecurityUtilsSession(true, _USER.getUserId());
 

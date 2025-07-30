@@ -78,7 +78,7 @@ public class CategoryUtilTest extends BaseTestCase {
 	public void testAddCategory() throws Exception {
 		_addCategory(_CATEGORY_ID, _CATEGORY_NAME);
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(1, categories.size());
 
@@ -97,13 +97,13 @@ public class CategoryUtilTest extends BaseTestCase {
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(2, categories.size());
 
 		CategoryUtil.deleteCategories();
 
-		categories = CategoryUtil.getParentCategories();
+		categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(0, categories.size());
 	}
@@ -117,19 +117,9 @@ public class CategoryUtilTest extends BaseTestCase {
 			RandomStringUtils.randomAlphanumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(2, categories.size());
-	}
-
-	@Test
-	public void testGetSubcategories() throws Exception {
-		_addCategory("1", "parentCategory");
-		_addCategory("2", "subcategory");
-
-		List<Category> categories = CategoryUtil.getSubcategories("1");
-
-		Assert.assertEquals(1, categories.size());
 	}
 
 	@Test
@@ -173,7 +163,7 @@ public class CategoryUtilTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(1, categories.size());
 
@@ -205,7 +195,7 @@ public class CategoryUtilTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(1, categories.size());
 
@@ -213,15 +203,6 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		Assert.assertEquals("10", category.getCategoryId());
 		Assert.assertEquals("newParentCategory", category.getCategoryName());
-
-		categories = CategoryUtil.getSubcategories(category.getCategoryId());
-
-		Assert.assertEquals(1, categories.size());
-
-		category = categories.get(0);
-
-		Assert.assertEquals("20", category.getCategoryId());
-		Assert.assertEquals("newSubcategory", category.getCategoryName());
 
 		Assert.assertEquals(
 			"200", ReleaseUtil.getReleaseVersion(_CATEGORY_RELEASE_NAME));
@@ -246,7 +227,7 @@ public class CategoryUtilTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(1, categories.size());
 
@@ -288,7 +269,7 @@ public class CategoryUtilTest extends BaseTestCase {
 			Mockito.anyObject()
 		);
 
-		List<Category> categories = CategoryUtil.getParentCategories();
+		List<Category> categories = CategoryUtil.getCategories();
 
 		Assert.assertEquals(1, categories.size());
 

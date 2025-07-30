@@ -58,16 +58,10 @@ public class CategoryUtil {
 		_categoryDAO.deleteCategories();
 	}
 
-	public static List<Category> getParentCategories()
+	public static List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
-		return _categoryDAO.getParentCategories();
-	}
-
-	public static List<Category> getSubcategories(String categoryParentId)
-		throws DatabaseConnectionException, SQLException {
-
-		return _categoryDAO.getSubcategories(categoryParentId);
+		return _categoryDAO.getCategories();
 	}
 
 	public static void initializeCategories() throws Exception {
@@ -157,8 +151,7 @@ public class CategoryUtil {
 
 			Category category = new Category(
 				parentCategory.getCategoryId(),
-				parentCategory.getCategoryName(),
-				parentCategory.getCategoryId(), _PARENT_CATEGORY_LEVEL);
+				parentCategory.getCategoryName());
 
 			categories.add(category);
 
@@ -170,8 +163,7 @@ public class CategoryUtil {
 
 				category = new Category(
 					childCategory.getCategoryId(),
-					childCategory.getCategoryName(),
-					parentCategory.getCategoryId(), _CHILD_CATEGORY_LEVEL);
+					childCategory.getCategoryName());
 
 				categories.add(category);
 			}
@@ -189,16 +181,12 @@ public class CategoryUtil {
 	private static final String _CATEGORY_TREE_VERSION_KEY =
 		"categoryTreeVersion";
 
-	private static final int _CHILD_CATEGORY_LEVEL = 2;
-
 	private static final String _GET_CATEGORIES_URL =
 		"https://api.ebay.com/commerce/taxonomy/v1/category_tree/0";
 
 	private static final String _GET_CATEGORY_VERSION_URL =
 		"https://api.ebay.com/commerce/taxonomy/v1/" +
 			"get_default_category_tree_id?marketplace_id=EBAY_US";
-
-	private static final int _PARENT_CATEGORY_LEVEL = 1;
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryUtil.class);

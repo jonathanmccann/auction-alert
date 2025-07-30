@@ -40,8 +40,7 @@ public class CategoryDAO {
 
 	@Caching(
 		evict = {
-			@CacheEvict(value = "parentCategories", allEntries = true),
-			@CacheEvict(value = "subcategories", allEntries = true)
+			@CacheEvict(value = "categories", allEntries = true)
 		}
 	)
 	public void addCategories(List<Category> categories)
@@ -58,8 +57,6 @@ public class CategoryDAO {
 			for (Category category : categories) {
 				preparedStatement.setString(1, category.getCategoryId());
 				preparedStatement.setString(2, category.getCategoryName());
-				preparedStatement.setString(3, category.getCategoryParentId());
-				preparedStatement.setInt(4, category.getCategoryLevel());
 
 				preparedStatement.addBatch();
 			}
@@ -72,8 +69,7 @@ public class CategoryDAO {
 
 	@Caching(
 		evict = {
-			@CacheEvict(value = "parentCategories", allEntries = true),
-			@CacheEvict(value = "subcategories", allEntries = true)
+			@CacheEvict(value = "categories", allEntries = true)
 		}
 	)
 	public void deleteCategories()
@@ -89,41 +85,15 @@ public class CategoryDAO {
 		}
 	}
 
-	@Cacheable(value = "parentCategories")
-	public List<Category> getParentCategories()
+	@Cacheable(value = "categories")
+	public List<Category> getCategories()
 		throws DatabaseConnectionException, SQLException {
 
 		_log.debug("Getting all parent categories");
 
 		try (Connection connection = DatabaseUtil.getDatabaseConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_PARENT_CATEGORIES_SQL)) {
-
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			List<Category> categories = new ArrayList<>();
-
-			while (resultSet.next()) {
-				categories.add(_createCategoryFromResultSet(resultSet));
-			}
-
-			return categories;
-		}
-	}
-
-	@Cacheable(value = "subcategories", key = "#categoryParentId")
-	public List<Category> getSubcategories(String categoryParentId)
-		throws DatabaseConnectionException, SQLException {
-
-		_log.debug(
-			"Getting all subcategories for category parent ID: {}",
-			categoryParentId);
-
-		try (Connection connection = DatabaseUtil.getDatabaseConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(
-				_GET_SUBCATEGORIES_SQL)) {
-
-			preparedStatement.setString(1, categoryParentId);
+				_GET_CATEGORIES_SQL)) {
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -144,25 +114,17 @@ public class CategoryDAO {
 
 		category.setCategoryId(resultSet.getString("categoryId"));
 		category.setCategoryName(resultSet.getString("categoryName"));
-		category.setCategoryParentId(resultSet.getString("categoryParentId"));
-		category.setCategoryLevel(resultSet.getInt("categoryLevel"));
 
 		return category;
 	}
 
 	private static final String _ADD_CATEGORY_SQL =
-		"INSERT INTO Category(categoryId, categoryName, categoryParentId, " +
-			"categoryLevel) VALUES(?, ?, ?, ?)";
+		"INSERT INTO Category(categoryId, categoryName) VALUES(?, ?)";
 
 	private static final String _DELETE_CATEGORIES_SQL =
 		"TRUNCATE TABLE Category";
 
-	private static final String _GET_PARENT_CATEGORIES_SQL =
-		"SELECT * FROM Category WHERE categoryLevel = 1";
-
-	private static final String _GET_SUBCATEGORIES_SQL =
-		"SELECT * FROM Category WHERE categoryParentId = ? AND " +
-			"categoryLevel = 2";
+	private static final String _GET_CATEGORIES_SQL = "SELECT * FROM Category";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		CategoryDAO.class);

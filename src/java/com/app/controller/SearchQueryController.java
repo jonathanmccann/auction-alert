@@ -26,7 +26,6 @@ import com.app.util.UserUtil;
 
 import java.sql.SQLException;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -165,23 +163,6 @@ public class SearchQueryController {
 		return "redirect:view_search_queries";
 	}
 
-	@RequestMapping(value = "/subcategories", method = RequestMethod.GET)
-	public @ResponseBody Map<String, String> getParentSubcategories(
-			String categoryParentId)
-		throws DatabaseConnectionException, SQLException {
-
-		Map<String, String> subcategories = new HashMap<>();
-
-		for (Category subcategory :
-				CategoryUtil.getSubcategories(categoryParentId)) {
-
-			subcategories.put(
-				subcategory.getCategoryName(), subcategory.getCategoryId());
-		}
-
-		return subcategories;
-	}
-
 	@RequestMapping(value = "/update_search_query", method = RequestMethod.GET)
 	public String updateSearchQuery(
 			@ModelAttribute("error")String error,
@@ -256,7 +237,7 @@ public class SearchQueryController {
 		throws DatabaseConnectionException, SQLException {
 
 		if (_categories.isEmpty()) {
-			for (Category parentCategory : CategoryUtil.getParentCategories()) {
+			for (Category parentCategory : CategoryUtil.getCategories()) {
 				_categories.put(
 					parentCategory.getCategoryId(),
 					parentCategory.getCategoryName());

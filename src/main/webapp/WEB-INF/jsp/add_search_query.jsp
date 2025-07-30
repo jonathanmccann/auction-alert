@@ -43,7 +43,6 @@
 		<script src="/resources/js/skel-layers.min.js" type="text/javascript"></script>
 		<script src="/resources/js/init.js" type="text/javascript"></script>
 
-		<script src="/resources/js/subcategory.js" type="text/javascript"></script>
 		<script src="/resources/js/validate-search-query.js" type="text/javascript"></script>
 
 		<noscript>
