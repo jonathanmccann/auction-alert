@@ -112,8 +112,6 @@
 						<form:input path="searchQueryId" type="hidden" value="${searchQuery.searchQueryId}" />
 						<form:input path="userId" type="hidden" value="${searchQuery.userId}" />
 
-						<input id="initialSubcategoryId" type="hidden" value="${searchQuery.subcategoryId}" />
-
 						<fmt:formatNumber pattern="0.00" value="${searchQuery.minPrice}" var="minPrice" />
 						<fmt:formatNumber pattern="0.00" value="${searchQuery.maxPrice}" var="maxPrice" />
 
@@ -123,10 +121,6 @@
 								<form:select path="categoryId">
 									<form:option value="All Categories"></form:option>
 									<form:options items="${searchQueryCategories}" />
-								</form:select>
-
-								<form:select disabled="true" id="subcategoryId" path="subcategoryId">
-									<form:option value="All Subcategories"></form:option>
 								</form:select>
 							</li>
 							<li>

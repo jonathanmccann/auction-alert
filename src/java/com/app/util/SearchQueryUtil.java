@@ -144,19 +144,11 @@ public class SearchQueryUtil {
 		}
 
 		String categoryId = searchQuery.getCategoryId();
-		String subcategoryId = searchQuery.getSubcategoryId();
 
 		if (ValidatorUtil.isNull(categoryId) ||
 			categoryId.equalsIgnoreCase("All Categories")) {
 
 			searchQuery.setCategoryId("");
-			searchQuery.setSubcategoryId("");
-		}
-
-		if (ValidatorUtil.isNull(subcategoryId) ||
-			subcategoryId.equalsIgnoreCase("All Subcategories")) {
-
-			searchQuery.setSubcategoryId("");
 		}
 	}
 

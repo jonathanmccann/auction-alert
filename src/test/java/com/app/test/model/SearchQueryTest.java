@@ -141,13 +141,6 @@ public class SearchQueryTest {
 	}
 
 	@Test
-	public void testSetAndGetSubcategoryId() {
-		_searchQuery.setSubcategoryId("100");
-
-		Assert.assertEquals("100", _searchQuery.getSubcategoryId());
-	}
-
-	@Test
 	public void testSetAndGetKeywords() {
 		_searchQuery.setKeywords("Test keywords");
 

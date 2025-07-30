@@ -199,11 +199,7 @@ public class EbaySearchResultUtil {
 		url.append("&q=");
 		url.append(URLEncoder.encode(searchQuery.getKeywords(), "UTF-8"));
 
-		if (ValidatorUtil.isNotNull(searchQuery.getSubcategoryId())) {
-			url.append("&category_ids=");
-			url.append(searchQuery.getSubcategoryId());
-		}
-		else if (ValidatorUtil.isNotNull(searchQuery.getCategoryId())) {
+		if (ValidatorUtil.isNotNull(searchQuery.getCategoryId())) {
 			url.append("&category_ids=");
 			url.append(searchQuery.getCategoryId());
 		}

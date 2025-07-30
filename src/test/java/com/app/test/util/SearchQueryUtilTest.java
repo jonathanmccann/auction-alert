@@ -65,7 +65,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("Test keywords");
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -83,7 +82,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("Test keywords");
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
 		searchQuery.setSearchDescription(true);
 		searchQuery.setFreeShippingOnly(true);
 		searchQuery.setNewCondition(true);
@@ -102,7 +100,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -179,7 +176,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("Test keywords");
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
 		searchQuery.setSearchDescription(true);
 		searchQuery.setFreeShippingOnly(true);
 		searchQuery.setMinPrice(5.00);
@@ -193,7 +189,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -213,7 +208,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("Test keywords");
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
 		searchQuery.setActive(true);
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
@@ -399,60 +393,46 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		SearchQuery searchQuery = new SearchQuery();
 
 		searchQuery.setCategoryId("");
-		searchQuery.setSubcategoryId("");
 
 		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
 
 		searchQuery.setCategoryId("All Categories");
-		searchQuery.setSubcategoryId("All Subcategories");
 
 		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
 
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("All Subcategories");
 
 		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
 
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("");
 
 		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
 
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
 
 		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 
 		searchQuery.setCategoryId("");
-		searchQuery.setSubcategoryId("200");
 
 		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
 
 		searchQuery.setCategoryId("All Categories");
-		searchQuery.setSubcategoryId("200");
 
 		method.invoke(_classInstance, searchQuery);
 
 		Assert.assertEquals("", searchQuery.getCategoryId());
-		Assert.assertEquals("", searchQuery.getSubcategoryId());
 	}
 
 	@Test
@@ -584,7 +564,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("Test keywords");
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
 
 		int searchQueryId = SearchQueryUtil.addSearchQuery(searchQuery);
 
@@ -593,7 +572,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("Test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("100", searchQuery.getCategoryId());
-		Assert.assertEquals("200", searchQuery.getSubcategoryId());
 		Assert.assertFalse(searchQuery.isSearchDescription());
 		Assert.assertFalse(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());
@@ -611,7 +589,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("New test keywords");
 		searchQuery.setCategoryId("101");
-		searchQuery.setSubcategoryId("201");
 		searchQuery.setSearchDescription(true);
 		searchQuery.setFreeShippingOnly(true);
 		searchQuery.setNewCondition(true);
@@ -627,7 +604,6 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		Assert.assertEquals(_USER_ID, searchQuery.getUserId());
 		Assert.assertEquals("New test keywords", searchQuery.getKeywords());
 		Assert.assertEquals("101", searchQuery.getCategoryId());
-		Assert.assertEquals("201", searchQuery.getSubcategoryId());
 		Assert.assertTrue(searchQuery.isSearchDescription());
 		Assert.assertTrue(searchQuery.isFreeShippingOnly());
 		Assert.assertTrue(searchQuery.isNewCondition());

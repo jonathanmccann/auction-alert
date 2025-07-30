@@ -91,14 +91,6 @@
 					</p>
 
 					<p class="faq-paragraph">
-						<b>Subcategory</b>
-					</p>
-
-					<p class="faq-paragraph-indent">
-						After selecting a category, you are then able to choose a subcategory. For example if you chose the category Books you could then narrow it down further to Cookbooks or Nonfiction.
-					</p>
-
-					<p class="faq-paragraph">
 						<b>Search Description</b>
 					</p>
 

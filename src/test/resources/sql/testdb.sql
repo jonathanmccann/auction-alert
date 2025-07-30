@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS SearchQuery(
 	userId INT NOT NULL,
 	keywords VARCHAR(300) null,
 	categoryId VARCHAR(15) null,
-	subcategoryId VARCHAR(15) null,
 	searchDescription BOOLEAN,
 	freeShippingOnly BOOLEAN,
 	newCondition BOOLEAN,

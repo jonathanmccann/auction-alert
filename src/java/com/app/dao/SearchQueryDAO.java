@@ -292,7 +292,6 @@ public class SearchQueryDAO {
 		searchQuery.setUserId(resultSet.getInt("userId"));
 		searchQuery.setKeywords(resultSet.getString("keywords"));
 		searchQuery.setCategoryId(resultSet.getString("categoryId"));
-		searchQuery.setSubcategoryId(resultSet.getString("subcategoryId"));
 		searchQuery.setSearchDescription(
 			resultSet.getBoolean("searchDescription"));
 		searchQuery.setFreeShippingOnly(
@@ -318,27 +317,6 @@ public class SearchQueryDAO {
 		preparedStatement.setInt(1, searchQuery.getUserId());
 		preparedStatement.setString(2, searchQuery.getKeywords());
 		preparedStatement.setString(3, searchQuery.getCategoryId());
-		preparedStatement.setString(4, searchQuery.getSubcategoryId());
-		preparedStatement.setBoolean(5, searchQuery.isSearchDescription());
-		preparedStatement.setBoolean(6, searchQuery.isFreeShippingOnly());
-		preparedStatement.setBoolean(7, searchQuery.isNewCondition());
-		preparedStatement.setBoolean(8, searchQuery.isUsedCondition());
-		preparedStatement.setBoolean(9, searchQuery.isUnspecifiedCondition());
-		preparedStatement.setBoolean(10, searchQuery.isAuctionListing());
-		preparedStatement.setBoolean(11, searchQuery.isFixedPriceListing());
-		preparedStatement.setDouble(12, searchQuery.getMaxPrice());
-		preparedStatement.setDouble(13, searchQuery.getMinPrice());
-		preparedStatement.setBoolean(14, searchQuery.isActive());
-	}
-
-	private static void _populateUpdateSearchQueryPreparedStatement(
-			PreparedStatement preparedStatement, SearchQuery searchQuery,
-			int userId)
-		throws SQLException {
-
-		preparedStatement.setString(1, searchQuery.getKeywords());
-		preparedStatement.setString(2, searchQuery.getCategoryId());
-		preparedStatement.setString(3, searchQuery.getSubcategoryId());
 		preparedStatement.setBoolean(4, searchQuery.isSearchDescription());
 		preparedStatement.setBoolean(5, searchQuery.isFreeShippingOnly());
 		preparedStatement.setBoolean(6, searchQuery.isNewCondition());
@@ -349,8 +327,27 @@ public class SearchQueryDAO {
 		preparedStatement.setDouble(11, searchQuery.getMaxPrice());
 		preparedStatement.setDouble(12, searchQuery.getMinPrice());
 		preparedStatement.setBoolean(13, searchQuery.isActive());
-		preparedStatement.setInt(14, searchQuery.getSearchQueryId());
-		preparedStatement.setInt(15, userId);
+	}
+
+	private static void _populateUpdateSearchQueryPreparedStatement(
+			PreparedStatement preparedStatement, SearchQuery searchQuery,
+			int userId)
+		throws SQLException {
+
+		preparedStatement.setString(1, searchQuery.getKeywords());
+		preparedStatement.setString(2, searchQuery.getCategoryId());
+		preparedStatement.setBoolean(3, searchQuery.isSearchDescription());
+		preparedStatement.setBoolean(4, searchQuery.isFreeShippingOnly());
+		preparedStatement.setBoolean(5, searchQuery.isNewCondition());
+		preparedStatement.setBoolean(6, searchQuery.isUsedCondition());
+		preparedStatement.setBoolean(7, searchQuery.isUnspecifiedCondition());
+		preparedStatement.setBoolean(8, searchQuery.isAuctionListing());
+		preparedStatement.setBoolean(9, searchQuery.isFixedPriceListing());
+		preparedStatement.setDouble(10, searchQuery.getMaxPrice());
+		preparedStatement.setDouble(11, searchQuery.getMinPrice());
+		preparedStatement.setBoolean(12, searchQuery.isActive());
+		preparedStatement.setInt(13, searchQuery.getSearchQueryId());
+		preparedStatement.setInt(14, userId);
 	}
 
 	private static final String _ACTIVATION_SEARCH_QUERY_SQL =
@@ -359,11 +356,10 @@ public class SearchQueryDAO {
 
 	private static final String _ADD_ADVANCED_SEARCH_QUERY_SQL =
 		"INSERT INTO SearchQuery(userId, keywords, categoryId, " +
-			"subcategoryId, searchDescription, freeShippingOnly, " +
-				"newCondition, usedCondition, unspecifiedCondition, " +
-					"auctionListing, fixedPriceListing, maxPrice, minPrice, " +
-						"active) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-							"?, ?)";
+			"searchDescription, freeShippingOnly, newCondition, " +
+				"usedCondition, unspecifiedCondition, auctionListing, " +
+					"fixedPriceListing, maxPrice, minPrice, active) " +
+						"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String _DELETE_SEARCH_QUERIES_SQL =
 		"DELETE FROM SearchQuery WHERE userId = ?";
@@ -385,11 +381,11 @@ public class SearchQueryDAO {
 
 	private static final String _UPDATE_ADVANCED_SEARCH_QUERY_SQL =
 		"UPDATE SearchQuery SET keywords = ?, categoryId = ?, " +
-			"subcategoryId = ?, searchDescription = ?, freeShippingOnly = ?, " +
-				"newCondition = ?, usedCondition = ?, " +
-					"unspecifiedCondition = ?, auctionListing = ?, " +
-						"fixedPriceListing = ?, maxPrice = ?, minPrice = ?, " +
-							"active = ? WHERE searchQueryId = ? AND userId = ?";
+			"searchDescription = ?, freeShippingOnly = ?, newCondition = ?, " +
+				"usedCondition = ?, unspecifiedCondition = ?, " +
+					"auctionListing = ?, fixedPriceListing = ?, " +
+						"maxPrice = ?, minPrice = ?, active = ? WHERE " +
+							"searchQueryId = ? AND userId = ?";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		SearchQueryDAO.class);

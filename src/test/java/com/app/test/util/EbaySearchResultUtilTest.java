@@ -509,7 +509,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		searchQuery.setUserId(_USER_ID);
 		searchQuery.setKeywords("Test keywords");
 		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
 		searchQuery.setSearchDescription(true);
 		searchQuery.setFreeShippingOnly(true);
 		searchQuery.setNewCondition(true);
@@ -521,7 +520,7 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		StringBuilder expectedURL = new StringBuilder();
 
 		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
-		expectedURL.append("&category_ids=200");
+		expectedURL.append("&category_ids=100");
 		expectedURL.append("&filter=");
 
 		StringBuilder filter = new StringBuilder();
@@ -624,34 +623,6 @@ public class EbaySearchResultUtilTest extends BaseTestCase {
 		filter.append("buyingOptions:{AUCTION|FIXED_PRICE}");
 
 		expectedURL.append(URLEncoder.encode(filter.toString(), "UTF-8"));
-
-		String url = (String)_setUpAdvanceRequestMethod.invoke(
-			_classInstance, searchQuery, "USD");
-
-		Assert.assertEquals(expectedURL.toString(), url);
-	}
-
-	@Test
-	public void testSetUpAdvancedRequestWithSubcategoryId() throws Exception {
-		SearchQuery searchQuery = new SearchQuery();
-
-		searchQuery.setUserId(_USER_ID);
-		searchQuery.setKeywords("Test keywords");
-		searchQuery.setCategoryId("100");
-		searchQuery.setSubcategoryId("200");
-		searchQuery.setNewCondition(true);
-		searchQuery.setUsedCondition(true);
-		searchQuery.setUnspecifiedCondition(true);
-		searchQuery.setAuctionListing(true);
-		searchQuery.setFixedPriceListing(true);
-
-		StringBuilder expectedURL = new StringBuilder();
-
-		expectedURL.append(_FIND_ITEMS_ADVANCED_URL_BASE);
-		expectedURL.append("&category_ids=200");
-		expectedURL.append("&filter=");
-		expectedURL.append(
-			URLEncoder.encode("buyingOptions:{AUCTION|FIXED_PRICE}", "UTF-8"));
 
 		String url = (String)_setUpAdvanceRequestMethod.invoke(
 			_classInstance, searchQuery, "USD");
