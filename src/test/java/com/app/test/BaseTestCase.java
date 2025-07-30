@@ -358,7 +358,7 @@ public abstract class BaseTestCase {
 
 	protected static final int _USER_ID = 1;
 
-	protected static final String _CATEGORY_ID = "categoryId";
+	protected static final String _CATEGORY_ID = "1";
 
 	protected static final String _CATEGORY_NAME = "categoryName";
 

@@ -91,10 +91,10 @@ public class CategoryUtilTest extends BaseTestCase {
 	@Test
 	public void testDeleteCategories() throws Exception {
 		_addCategory(
-			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomNumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 		_addCategory(
-			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomNumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 
 		List<Category> categories = CategoryUtil.getCategories();
@@ -111,10 +111,10 @@ public class CategoryUtilTest extends BaseTestCase {
 	@Test
 	public void testGetCategories() throws Exception {
 		_addCategory(
-			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomNumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 		_addCategory(
-			RandomStringUtils.randomAlphanumeric(5),
+			RandomStringUtils.randomNumeric(5),
 			RandomStringUtils.randomAlphanumeric(5));
 
 		List<Category> categories = CategoryUtil.getCategories();
@@ -206,14 +206,14 @@ public class CategoryUtilTest extends BaseTestCase {
 
 		category = categories.get(1);
 
-		Assert.assertEquals("100", category.getCategoryId());
-		Assert.assertEquals("newCategory2", category.getCategoryName());
-
-		category = categories.get(2);
-
 		Assert.assertEquals("20", category.getCategoryId());
 		Assert.assertEquals(
 			"newCategory > newChildCategory", category.getCategoryName());
+
+		category = categories.get(2);
+
+		Assert.assertEquals("100", category.getCategoryId());
+		Assert.assertEquals("newCategory2", category.getCategoryName());
 
 		category = categories.get(3);
 
