@@ -121,7 +121,8 @@ public class CategoryUtil {
 
 	private static void _parseCategories(
 		HashSet<Category> categories,
-		List<ChildCategoryTreeNode> childCategoryTreeNodes) {
+		List<ChildCategoryTreeNode> childCategoryTreeNodes,
+		String parentCategoryName) {
 
 		if (childCategoryTreeNodes == null) {
 			return;
@@ -132,13 +133,20 @@ public class CategoryUtil {
 
 			EbayCategory ebayCategory = childCategoryTreeNode.getCategory();
 
+			String categoryName = ebayCategory.getCategoryName();
+
+			if (ValidatorUtil.isNotNull(parentCategoryName)) {
+				categoryName = parentCategoryName + " > " + categoryName;
+			}
+
 			Category category = new Category(
-				ebayCategory.getCategoryId(), ebayCategory.getCategoryName());
+				ebayCategory.getCategoryId(), categoryName);
 
 			categories.add(category);
 
 			_parseCategories(
-				categories, childCategoryTreeNode.getChildCategoryTreeNodes());
+				categories, childCategoryTreeNode.getChildCategoryTreeNodes(),
+				ebayCategory.getCategoryName());
 		}
 	}
 
@@ -168,7 +176,7 @@ public class CategoryUtil {
 		HashSet<Category> categories = new HashSet<>();
 
 		_parseCategories(
-			categories, rootCategoryNode.getChildCategoryTreeNodes());
+			categories, rootCategoryNode.getChildCategoryTreeNodes(), "");
 
 		addCategories(
 			categories.stream()
