@@ -371,7 +371,8 @@ public class SearchQueryDAO {
 		"SELECT * FROM SearchQuery WHERE userId = ? and active = ?";
 
 	private static final String _GET_SEARCH_QUERIES_BY_USER_ID_SQL =
-		"SELECT * FROM SearchQuery WHERE userId = ?";
+		"SELECT * FROM SearchQuery WHERE userId = ? ORDER BY REPLACE(" +
+			"keywords, '(', '')";
 
 	private static final String _GET_SEARCH_QUERY_COUNT_SQL =
 		"SELECT COUNT(*) FROM SearchQuery WHERE userId = ?";

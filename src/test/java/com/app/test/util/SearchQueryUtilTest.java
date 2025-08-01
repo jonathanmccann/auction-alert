@@ -295,7 +295,7 @@ public class SearchQueryUtilTest extends BaseTestCase {
 		SearchQuery secondSearchQuery = new SearchQuery();
 
 		secondSearchQuery.setUserId(_USER_ID);
-		secondSearchQuery.setKeywords("Second test keywords");
+		secondSearchQuery.setKeywords("Alphabetical test keywords");
 		secondSearchQuery.setActive(false);
 
 		SearchQueryUtil.addSearchQuery(firstSearchQuery);
@@ -305,6 +305,11 @@ public class SearchQueryUtilTest extends BaseTestCase {
 			_USER_ID);
 
 		Assert.assertEquals(2, searchQueries.size());
+
+		SearchQuery searchQuery = searchQueries.get(0);
+
+		Assert.assertEquals(
+			"Alphabetical test keywords", searchQuery.getKeywords());
 	}
 
 	@Test
